@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSP Engineers - Open Cases Review Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --warning-color: #e74c3c;
+            --success-color: #27ae60;
+            --light-gray: #f8f9fa;
+            --dark-gray: #7f8c8d;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .warning-card {
+            border-left: 5px solid var(--warning-color);
+        }
+        
+        .success-card {
+            border-left: 5px solid var(--success-color);
+        }
+        
+        .case-card {
+            border-left: 5px solid var(--secondary-color);
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-violated {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--warning-color);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+        }
+        
+        .status-non-violated {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+        
+        .priority-high {
+            color: var(--warning-color);
+            font-weight: 600;
+        }
+        
+        .priority-medium {
+            color: #f39c12;
+            font-weight: 600;
+        }
+        
+        .priority-low {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+        
+        .recommendation-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .recommendation-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #ddd;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--secondary-color);
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .tab-content {
+            background-color: white;
+            border-radius: 0 0 10px 10px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: white;
+            border-bottom: 3px solid var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 30px;
+        }
+        
+        .owner-tag {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 2px;
+        }
+        
+        .aging-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .aging-0-5 { background-color: var(--success-color); }
+        .aging-6-10 { background-color: #f39c12; }
+        .aging-11-15 { background-color: #e67e22; }
+        .aging-16-plus { background-color: var(--warning-color); }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .action-btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .action-btn-secondary {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+            border: 1px solid #dee2e6;
+        }
+        
+        .action-btn-secondary:hover {
+            background-color: #e9ecef;
+        }
+        
+        .filter-section {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--primary-color);">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-clipboard-data me-2"></i>
+                MSP Engineers Dashboard
+            </a>
+            <div class="d-flex align-items-center text-white">
+                <span id="last-updated" class="me-3"></span>
+                <span id="total-cases" class="badge bg-light text-dark"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- File Upload Section -->
+        <div class="row mb-4" id="upload-section">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-upload me-2"></i>Upload Data File</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="upload-area" id="drop-area">
+                            <i class="bi bi-cloud-arrow-up"></i>
+                            <h4>Drag & Drop Excel/CSV File Here</h4>
+                            <p class="text-muted">Or click to browse files</p>
+                            <input type="file" id="file-input" accept=".xlsx,.xls,.csv" style="display: none;">
+                            <p class="small text-muted mt-3">Supports Excel (.xlsx, .xls) and CSV formats</p>
+                        </div>
+                        <div id="file-info" class="mt-3" style="display: none;">
+                            <div class="alert alert-success d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-file-earmark-spreadsheet me-2"></i>
+                                    <span id="file-name"></span>
+                                    <span id="row-count" class="badge bg-secondary ms-2"></span>
+                                </div>
+                                <button class="btn btn-sm btn-outline-success" id="process-data-btn">
+                                    <i class="bi bi-play-circle me-1"></i> Process Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section (Initially Hidden) -->
+        <div id="dashboard-section" style="display: none;">
+            <!-- Summary Metrics -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card metric-card">
+                        <div class="card-body">
+                            <div class="metric-value" id="total-open-cases">0</div>
+                            <div class="metric-label">Total Open Cases</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card metric-card">
+                        <div class="card-body">
+                            <div class="metric-value" id="total-sr">0</div>
+                            <div class="metric-label">Service Requests</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card metric-card">
+                        <div class="card-body">
+                            <div class="metric-value" id="total-inc">0</div>
+                            <div class="metric-label">Incidents</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card metric-card" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                        <div class="card-body">
+                            <div class="metric-value" id="sla-violated">0</div>
+                            <div class="metric-label">SLA Violations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Cases by Status</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="statusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Aging Analysis</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="agingChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="cases-tab" data-bs-toggle="tab" data-bs-target="#cases" type="button" role="tab">
+                        <i class="bi bi-list-task me-1"></i> All Cases
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="sla-tab" data-bs-toggle="tab" data-bs-target="#sla" type="button" role="tab">
+                        <i class="bi bi-exclamation-triangle me-1"></i> SLA Violations
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="aging-tab" data-bs-toggle="tab" data-bs-target="#aging" type="button" role="tab">
+                        <i class="bi bi-clock-history me-1"></i> Aging >15 Days
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="recommendations-tab" data-bs-toggle="tab" data-bs-target="#recommendations" type="button" role="tab">
+                        <i class="bi bi-lightbulb me-1"></i> Recommendations
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="owners-tab" data-bs-toggle="tab" data-bs-target="#owners" type="button" role="tab">
+                        <i class="bi bi-people me-1"></i> Owner Analysis
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="dashboardTabsContent">
+                <!-- All Cases Tab -->
+                <div class="tab-pane fade show active" id="cases" role="tabpanel">
+                    <div class="filter-section">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <select class="form-select" id="filter-service">
+                                    <option value="">All Service Types</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filter-owner">
+                                    <option value="">All Owners</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filter-status">
+                                    <option value="">All Statuses</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filter-sla">
+                                    <option value="">All SLA Status</option>
+                                    <option value="Violated">SLA Violated</option>
+                                    <option value="Non-Violated">SLA Non-Violated</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="cases-container">
+                        <!-- Cases will be dynamically inserted here -->
+                    </div>
+                </div>
+
+                <!-- SLA Violations Tab -->
+                <div class="tab-pane fade" id="sla" role="tabpanel">
+                    <div id="sla-violations-container"></div>
+                </div>
+
+                <!-- Aging Tab -->
+                <div class="tab-pane fade" id="aging" role="tabpanel">
+                    <div id="aging-cases-container"></div>
+                </div>
+
+                <!-- Recommendations Tab -->
+                <div class="tab-pane fade" id="recommendations" role="tabpanel">
+                    <div class="row" id="recommendations-container"></div>
+                </div>
+
+                <!-- Owner Analysis Tab -->
+                <div class="tab-pane fade" id="owners" role="tabpanel">
+                    <div class="chart-container">
+                        <canvas id="ownerChart"></canvas>
+                    </div>
+                    <div id="owner-breakdown"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Detail Modal -->
+    <div class="modal fade" id="caseDetailModal" tabindex="-1" aria-labelledby="caseDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="caseDetailModalLabel">Case Details & Action Plan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="case-detail-content"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="download-action-plan">
+                        <i class="bi bi-download me-1"></i> Download Action Plan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let rawData = [];
+        let processedData = [];
+        let recommendations = [];
+        let charts = {
+            statusChart: null,
+            agingChart: null,
+            ownerChart: null
+        };
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            const fileInput = document.getElementById('file-input');
+            const dropArea = document.getElementById('drop-area');
+            const processBtn = document.getElementById('process-data-btn');
+            const downloadBtn = document.getElementById('download-action-plan');
+            
+            dropArea.addEventListener('click', () => fileInput.click());
+            
+            dropArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropArea.style.borderColor = '#3498db';
+                dropArea.style.backgroundColor = 'rgba(52, 152, 219, 0.1)';
+            });
+            
+            dropArea.addEventListener('dragleave', () => {
+                dropArea.style.borderColor = '#ddd';
+                dropArea.style.backgroundColor = 'white';
+            });
+            
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.style.borderColor = '#ddd';
+                dropArea.style.backgroundColor = 'white';
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileUpload(e.dataTransfer.files[0]);
+                }
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) {
+                    handleFileUpload(e.target.files[0]);
+                }
+            });
+            
+            processBtn.addEventListener('click', processData);
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', generateActionPlan);
+            }
+            
+            // Setup filter change listeners
+            ['filter-service', 'filter-owner', 'filter-status', 'filter-sla'].forEach(id => {
+                document.getElementById(id).addEventListener('change', filterCases);
+            });
+        }
+
+        function handleFileUpload(file) {
+            const fileName = file.name;
+            document.getElementById('file-name').textContent = fileName;
+            document.getElementById('file-info').style.display = 'block';
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const data = e.target.result;
+                
+                if (fileName.endsWith('.csv')) {
+                    parseCSV(data);
+                } else {
+                    parseExcel(data);
+                }
+            };
+            
+            if (fileName.endsWith('.csv')) {
+                reader.readAsText(file);
+            } else {
+                reader.readAsBinaryString(file);
+            }
+        }
+
+        function parseExcel(data) {
+            try {
+                const workbook = XLSX.read(data, { type: 'binary' });
+                
+                // Look for OpenCases sheet
+                let sheetName = 'OpenCases';
+                if (!workbook.SheetNames.includes('OpenCases')) {
+                    // Try to find any sheet that might contain the data
+                    sheetName = workbook.SheetNames.find(name => 
+                        name.toLowerCase().includes('open') || 
+                        name.toLowerCase().includes('case')
+                    ) || workbook.SheetNames[0];
+                }
+                
+                const worksheet = workbook.Sheets[sheetName];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+                
+                console.log(`Found sheet: ${sheetName} with ${jsonData.length} rows`);
+                processExcelData(jsonData);
+            } catch (error) {
+                console.error('Error parsing Excel:', error);
+                alert('Error parsing Excel file. Please check the file format.');
+            }
+        }
+
+        function parseCSV(data) {
+            try {
+                const rows = data.split('\n').map(row => {
+                    // Handle quoted CSV values
+                    const regex = /,(?=(?:[^"]*"[^"]*")*[^"]*$)/;
+                    return row.split(regex).map(cell => cell.replace(/^"|"$/g, '').trim());
+                });
+                processExcelData(rows);
+            } catch (error) {
+                console.error('Error parsing CSV:', error);
+                alert('Error parsing CSV file. Please check the file format.');
+            }
+        }
+
+        function processExcelData(data) {
+            if (!data || data.length < 2) {
+                alert('No data found in the file.');
+                return;
+            }
+            
+            // Assuming first row is headers
+            const headers = data[0].map(h => h.trim());
+            rawData = [];
+            
+            console.log('Headers:', headers);
+            
+            for (let i = 1; i < data.length; i++) {
+                if (data[i] && data[i].length > 0) {
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = data[i][index] || '';
+                    });
+                    
+                    // Only add rows that have an Incident ID
+                    if (row['Incident ID'] && row['Incident ID'].toString().trim()) {
+                        rawData.push(row);
+                    }
+                }
+            }
+            
+            document.getElementById('row-count').textContent = `${rawData.length} cases found`;
+            console.log(`Processed ${rawData.length} cases`);
+        }
+
+        function processData() {
+            if (rawData.length === 0) {
+                alert('Please upload a valid file first');
+                return;
+            }
+            
+            console.log('Processing data...');
+            
+            // Process the data for dashboard
+            processedData = rawData.map(row => {
+                // Parse aging days - handle various formats
+                let agingDays = 0;
+                const agingValue = row['Aging(Roundoff)'];
+                if (agingValue !== undefined && agingValue !== null && agingValue !== '') {
+                    if (typeof agingValue === 'number') {
+                        agingDays = Math.round(agingValue);
+                    } else if (typeof agingValue === 'string') {
+                        const num = parseFloat(agingValue);
+                        agingDays = isNaN(num) ? 0 : Math.round(num);
+                    }
+                }
+                
+                // Parse aging from last modified
+                let agingFromLastModified = 0;
+                const agingModValue = row['Ageing from Last modified time'];
+                if (agingModValue !== undefined && agingModValue !== null && agingModValue !== '') {
+                    if (typeof agingModValue === 'number') {
+                        agingFromLastModified = Math.round(agingModValue);
+                    } else if (typeof agingModValue === 'string') {
+                        const num = parseFloat(agingModValue);
+                        agingFromLastModified = isNaN(num) ? 0 : Math.round(num);
+                    }
+                }
+                
+                return {
+                    incidentId: row['Incident ID'] || row['IncidentID'] || '',
+                    title: row['Title'] || '',
+                    submittedBy: row['SubmittedBy'] || row['Submitted By'] || '',
+                    currentStatus: row['CurrentStatus'] || row['Current Status'] || 'Assign',
+                    service: row['Service'] || '',
+                    owner: row['Owner'] || '',
+                    agingStatus: row['Aging >15 days Status'] || row['Aging Status'] || 'Non-Violated',
+                    expectedResolution: row['Expected Resolution Time'] || row['ExpectedResolutionTime'] || '',
+                    sLAStatus: row['SLA Status'] || row['SLAStatus'] || 'Non-Violated',
+                    slaViolationStatus: row['SLA Violation Status'] || row['SLAViolationStatus'] || 'Non-Violated',
+                    agingDays: agingDays,
+                    nextFollowUp: row['Next Follow-up Date'] || row['NextFollowupDate'] || '',
+                    emailCompliance: row['Email Response Compliance'] || row['EmailCompliance'] || '',
+                    steps: row['Steps to be followed to resolve this SR/INC'] || row['Steps'] || '',
+                    lastModified: row['Last Modified Time'] || row['LastModifiedTime'] || '',
+                    submitterEmail: row['Submitter Email'] || row['SubmitterEmail'] || '',
+                    agingFromLastModified: agingFromLastModified
+                };
+            });
+            
+            console.log('Processed data sample:', processedData[0]);
+            
+            // Generate recommendations
+            generateRecommendations();
+            
+            // Update dashboard
+            updateDashboard();
+            
+            // Show dashboard
+            document.getElementById('dashboard-section').style.display = 'block';
+            document.getElementById('upload-section').style.display = 'none';
+            
+            // Scroll to dashboard
+            document.getElementById('dashboard-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateDashboard() {
+            // Destroy existing charts if they exist
+            Object.values(charts).forEach(chart => {
+                if (chart) {
+                    try {
+                        chart.destroy();
+                    } catch (e) {
+                        console.log('Error destroying chart:', e);
+                    }
+                }
+            });
+            
+            // Reset charts object
+            charts = {
+                statusChart: null,
+                agingChart: null,
+                ownerChart: null
+            };
+            
+            // Update metrics
+            const totalCases = processedData.length;
+            const totalSR = processedData.filter(d => d.service === 'Service Request').length;
+            const totalINC = processedData.filter(d => d.service === 'Incident Management').length;
+            const slaViolated = processedData.filter(d => d.slaViolationStatus === 'Violated').length;
+            
+            document.getElementById('total-open-cases').textContent = totalCases;
+            document.getElementById('total-sr').textContent = totalSR;
+            document.getElementById('total-inc').textContent = totalINC;
+            document.getElementById('sla-violated').textContent = slaViolated;
+            document.getElementById('last-updated').textContent = `Last Updated: ${new Date().toLocaleDateString()}`;
+            document.getElementById('total-cases').textContent = `${totalCases} Open Cases`;
+            
+            // Update filters
+            updateFilters();
+            
+            // Render charts with delay to ensure canvas is ready
+            setTimeout(renderCharts, 100);
+            
+            // Render cases
+            renderAllCases();
+            renderSLAViolations();
+            renderAgingCases();
+            renderRecommendations();
+            renderOwnerAnalysis();
+        }
+
+        function updateFilters() {
+            const services = [...new Set(processedData.map(d => d.service).filter(Boolean))];
+            const owners = [...new Set(processedData.map(d => d.owner).filter(Boolean))];
+            const statuses = [...new Set(processedData.map(d => d.currentStatus).filter(Boolean))];
+            
+            const serviceSelect = document.getElementById('filter-service');
+            const ownerSelect = document.getElementById('filter-owner');
+            const statusSelect = document.getElementById('filter-status');
+            
+            serviceSelect.innerHTML = '<option value="">All Service Types</option>';
+            ownerSelect.innerHTML = '<option value="">All Owners</option>';
+            statusSelect.innerHTML = '<option value="">All Statuses</option>';
+            
+            services.forEach(service => {
+                serviceSelect.innerHTML += `<option value="${service}">${service}</option>`;
+            });
+            
+            owners.forEach(owner => {
+                ownerSelect.innerHTML += `<option value="${owner}">${owner}</option>`;
+            });
+            
+            statuses.forEach(status => {
+                statusSelect.innerHTML += `<option value="${status}">${status}</option>`;
+            });
+        }
+
+        function renderCharts() {
+            // Status Distribution Chart
+            const statusData = processedData.reduce((acc, d) => {
+                const status = d.currentStatus || 'Unknown';
+                acc[status] = (acc[status] || 0) + 1;
+                return acc;
+            }, {});
+            
+            const statusCtx = document.getElementById('statusChart');
+            if (statusCtx) {
+                charts.statusChart = new Chart(statusCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(statusData),
+                        datasets: [{
+                            data: Object.values(statusData),
+                            backgroundColor: [
+                                '#3498db', '#2ecc71', '#e74c3c', '#f39c12', 
+                                '#9b59b6', '#1abc9c', '#d35400', '#34495e'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Aging Analysis Chart
+            const agingGroups = {
+                '0-5 days': 0,
+                '6-10 days': 0,
+                '11-15 days': 0,
+                '16+ days': 0
+            };
+            
+            processedData.forEach(d => {
+                const days = d.agingDays || 0;
+                if (days <= 5) agingGroups['0-5 days']++;
+                else if (days <= 10) agingGroups['6-10 days']++;
+                else if (days <= 15) agingGroups['11-15 days']++;
+                else agingGroups['16+ days']++;
+            });
+            
+            const agingCtx = document.getElementById('agingChart');
+            if (agingCtx) {
+                charts.agingChart = new Chart(agingCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(agingGroups),
+                        datasets: [{
+                            label: 'Number of Cases',
+                            data: Object.values(agingGroups),
+                            backgroundColor: [
+                                '#27ae60', '#f39c12', '#e67e22', '#e74c3c'
+                            ],
+                            borderColor: [
+                                '#219653', '#e67e22', '#d35400', '#c0392b'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Cases'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function filterCases() {
+            const serviceFilter = document.getElementById('filter-service').value;
+            const ownerFilter = document.getElementById('filter-owner').value;
+            const statusFilter = document.getElementById('filter-status').value;
+            const slaFilter = document.getElementById('filter-sla').value;
+            
+            let filteredData = processedData;
+            
+            if (serviceFilter) {
+                filteredData = filteredData.filter(d => d.service === serviceFilter);
+            }
+            
+            if (ownerFilter) {
+                filteredData = filteredData.filter(d => d.owner === ownerFilter);
+            }
+            
+            if (statusFilter) {
+                filteredData = filteredData.filter(d => d.currentStatus === statusFilter);
+            }
+            
+            if (slaFilter) {
+                if (slaFilter === 'Violated') {
+                    filteredData = filteredData.filter(d => d.slaViolationStatus === 'Violated');
+                } else if (slaFilter === 'Non-Violated') {
+                    filteredData = filteredData.filter(d => d.slaViolationStatus === 'Non-Violated');
+                }
+            }
+            
+            renderFilteredCases(filteredData);
+        }
+
+        function renderAllCases() {
+            renderFilteredCases(processedData);
+        }
+
+        function renderFilteredCases(cases) {
+            const container = document.getElementById('cases-container');
+            container.innerHTML = '';
+            
+            if (cases.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        No cases match the selected filters.
+                    </div>
+                `;
+                return;
+            }
+            
+            cases.forEach((caseData, index) => {
+                const priority = getPriority(caseData);
+                const caseHtml = `
+                    <div class="card case-card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="d-flex align-items-start">
+                                        <div class="me-3">
+                                            <span class="aging-indicator aging-${getAgingClass(caseData.agingDays)}"></span>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">${caseData.title || 'No Title'}</h6>
+                                            <div class="mb-2">
+                                                <span class="badge bg-secondary me-2">${caseData.incidentId}</span>
+                                                <span class="badge ${caseData.service === 'Service Request' ? 'bg-info' : 'bg-warning'} me-2">
+                                                    ${caseData.service || 'Unknown'}
+                                                </span>
+                                                <span class="status-badge ${caseData.slaViolationStatus === 'Violated' ? 'status-violated' : 'status-non-violated'}">
+                                                    ${caseData.slaViolationStatus || 'Unknown'}
+                                                </span>
+                                            </div>
+                                            <div class="small text-muted">
+                                                <span class="me-3"><i class="bi bi-person me-1"></i> ${caseData.owner || 'Unassigned'}</span>
+                                                <span class="me-3"><i class="bi bi-calendar me-1"></i> ${caseData.agingDays} days</span>
+                                                <span class="priority-${priority}">
+                                                    <i class="bi bi-flag me-1"></i> ${priority.toUpperCase()} Priority
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex justify-content-end align-items-center h-100">
+                                        <span class="me-3 badge bg-light text-dark">${caseData.currentStatus || 'Unknown'}</span>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${index})">
+                                            <i class="bi bi-eye me-1"></i> View Details
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += caseHtml;
+            });
+        }
+
+        function renderSLAViolations() {
+            const violations = processedData.filter(d => d.slaViolationStatus === 'Violated');
+            const container = document.getElementById('sla-violations-container');
+            container.innerHTML = '';
+            
+            if (violations.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle me-2"></i>
+                        No SLA violations found. Great job!
+                    </div>
+                `;
+                return;
+            }
+            
+            violations.forEach((violation, index) => {
+                const violationHtml = `
+                    <div class="card warning-card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <h6 class="mb-1">${violation.title || 'No Title'}</h6>
+                                    <div class="mb-2">
+                                        <span class="badge bg-danger me-2">SLA VIOLATED</span>
+                                        <span class="badge bg-secondary me-2">${violation.incidentId}</span>
+                                    </div>
+                                    <div class="small text-muted">
+                                        <span class="me-3"><i class="bi bi-person me-1"></i> ${violation.owner || 'Unassigned'}</span>
+                                        <span class="me-3"><i class="bi bi-clock me-1"></i> ${violation.agingDays} days old</span>
+                                        <span><i class="bi bi-envelope me-1"></i> ${violation.emailCompliance || 'No compliance data'}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="d-flex flex-column align-items-end h-100 justify-content-center">
+                                        <span class="badge bg-warning text-dark mb-2">${violation.service || 'Unknown'}</span>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="viewCaseDetail(${processedData.findIndex(d => d.incidentId === violation.incidentId)})">
+                                            <i class="bi bi-exclamation-triangle me-1"></i> Take Action
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += violationHtml;
+            });
+        }
+
+        function renderAgingCases() {
+            const agingCases = processedData.filter(d => d.agingDays > 15);
+            const container = document.getElementById('aging-cases-container');
+            container.innerHTML = '';
+            
+            if (agingCases.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle me-2"></i>
+                        No cases aging beyond 15 days.
+                    </div>
+                `;
+                return;
+            }
+            
+            agingCases.forEach((caseData, index) => {
+                const agingHtml = `
+                    <div class="card mb-3" style="border-left: 5px solid #e74c3c;">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="d-flex align-items-start">
+                                        <div class="me-3">
+                                            <span class="aging-indicator" style="background-color: #e74c3c;"></span>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">${caseData.title || 'No Title'}</h6>
+                                            <div class="mb-2">
+                                                <span class="badge bg-secondary me-2">${caseData.incidentId}</span>
+                                                <span class="badge bg-danger me-2">${caseData.agingDays} DAYS OLD</span>
+                                            </div>
+                                            <div class="small text-muted">
+                                                <span class="me-3"><i class="bi bi-person me-1"></i> ${caseData.owner || 'Unassigned'}</span>
+                                                <span class="me-3">Status: ${caseData.currentStatus || 'Unknown'}</span>
+                                                <span>SLA: ${caseData.slaViolationStatus || 'Unknown'}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex flex-column align-items-end">
+                                        <div class="mb-2">
+                                            <span class="badge ${caseData.nextFollowUp ? 'bg-warning text-dark' : 'bg-secondary'}">
+                                                <i class="bi bi-calendar-check me-1"></i>
+                                                ${caseData.nextFollowUp || 'No follow-up'}
+                                            </span>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="viewCaseDetail(${processedData.findIndex(d => d.incidentId === caseData.incidentId)})">
+                                            <i class="bi bi-arrow-clockwise me-1"></i> Escalate
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += agingHtml;
+            });
+        }
+
+        function generateRecommendations() {
+            recommendations = [];
+            
+            processedData.forEach((caseData, index) => {
+                const caseRec = {
+                    incidentId: caseData.incidentId,
+                    title: caseData.title,
+                    owner: caseData.owner,
+                    recommendations: []
+                };
+                
+                // SLA Violation Recommendations
+                if (caseData.slaViolationStatus === 'Violated') {
+                    caseRec.recommendations.push({
+                        type: 'critical',
+                        text: `SLA Violation - Escalate immediately to ${caseData.owner}'s manager`,
+                        action: `Contact ${caseData.owner} for immediate resolution plan`
+                    });
+                }
+                
+                // Aging Recommendations
+                if (caseData.agingDays > 15) {
+                    caseRec.recommendations.push({
+                        type: 'high',
+                        text: `Case aging ${caseData.agingDays} days - Review for possible closure or escalation`,
+                        action: 'Schedule meeting with customer to discuss progress'
+                    });
+                }
+                
+                // Follow-up Recommendations
+                if (!caseData.nextFollowUp || new Date(caseData.nextFollowUp) < new Date()) {
+                    caseRec.recommendations.push({
+                        type: 'medium',
+                        text: 'Next follow-up date missing or overdue',
+                        action: `Set next follow-up date with ${caseData.submitterEmail || 'customer'}`
+                    });
+                }
+                
+                // Email Compliance Recommendations
+                if (caseData.emailCompliance && caseData.emailCompliance.includes('Missed')) {
+                    caseRec.recommendations.push({
+                        type: 'medium',
+                        text: 'Email response compliance issue detected',
+                        action: 'Review communication history and send update'
+                    });
+                }
+                
+                // Status-based Recommendations
+                if (caseData.currentStatus === 'Assign') {
+                    caseRec.recommendations.push({
+                        type: 'low',
+                        text: 'Case still in "Assign" status for extended period',
+                        action: 'Reassign or update status based on current progress'
+                    });
+                }
+                
+                if (caseData.currentStatus === 'Waiting on Customer') {
+                    const waitingDays = caseData.agingFromLastModified || caseData.agingDays;
+                    if (waitingDays > 3) {
+                        caseRec.recommendations.push({
+                            type: 'medium',
+                            text: `Waiting on customer for ${waitingDays} days`,
+                            action: 'Send follow-up email to customer for update'
+                        });
+                    }
+                }
+                
+                if (caseRec.recommendations.length > 0) {
+                    recommendations.push(caseRec);
+                }
+            });
+        }
+
+        function renderRecommendations() {
+            const container = document.getElementById('recommendations-container');
+            container.innerHTML = '';
+            
+            if (recommendations.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle me-2"></i>
+                        No recommendations at this time.
+                    </div>
+                `;
+                return;
+            }
+            
+            recommendations.forEach(rec => {
+                const recHtml = `
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">${rec.incidentId} - ${(rec.title || '').substring(0, 50)}...</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="owner-tag mb-2">
+                                    <i class="bi bi-person-circle me-1"></i> ${rec.owner || 'Unassigned'}
+                                </div>
+                                ${rec.recommendations.map(r => `
+                                    <div class="recommendation-box mb-2">
+                                        <div class="recommendation-title">
+                                            <i class="bi bi-${getRecommendationIcon(r.type)} me-1 text-${getRecommendationColor(r.type)}"></i>
+                                            ${r.text}
+                                        </div>
+                                        <div class="small text-muted">
+                                            <strong>Action:</strong> ${r.action}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                                <button class="btn btn-sm btn-outline-primary mt-2" onclick="viewCaseDetailByIncidentId('${rec.incidentId}')">
+                                    <i class="bi bi-gear me-1"></i> View Detailed Actions
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += recHtml;
+            });
+        }
+
+        function renderOwnerAnalysis() {
+            const ownerBreakdown = processedData.reduce((acc, d) => {
+                const owner = d.owner || 'Unassigned';
+                if (!acc[owner]) {
+                    acc[owner] = {
+                        total: 0,
+                        sr: 0,
+                        inc: 0,
+                        violated: 0,
+                        aging: 0
+                    };
+                }
+                
+                acc[owner].total++;
+                if (d.service === 'Service Request') acc[owner].sr++;
+                if (d.service === 'Incident Management') acc[owner].inc++;
+                if (d.slaViolationStatus === 'Violated') acc[owner].violated++;
+                if (d.agingDays > 15) acc[owner].aging++;
+                
+                return acc;
+            }, {});
+            
+            const container = document.getElementById('owner-breakdown');
+            container.innerHTML = '';
+            
+            Object.entries(ownerBreakdown).forEach(([owner, stats]) => {
+                const ownerHtml = `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h6>${owner}</h6>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <div class="h4">${stats.total}</div>
+                                        <small class="text-muted">Total Cases</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <div class="h4 ${stats.violated > 0 ? 'text-danger' : 'text-success'}">${stats.violated}</div>
+                                        <small class="text-muted">SLA Violations</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <div class="h4 ${stats.aging > 0 ? 'text-warning' : 'text-success'}">${stats.aging}</div>
+                                        <small class="text-muted">Aging >15 days</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <div class="h4">${stats.sr}/${stats.inc}</div>
+                                        <small class="text-muted">SR/INC Ratio</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += ownerHtml;
+            });
+            
+            // Render owner chart
+            const ownerChartCtx = document.getElementById('ownerChart');
+            if (ownerChartCtx) {
+                const sortedOwners = Object.entries(ownerBreakdown)
+                    .sort((a, b) => b[1].total - a[1].total)
+                    .slice(0, 10);
+                
+                if (charts.ownerChart) {
+                    charts.ownerChart.destroy();
+                }
+                
+                charts.ownerChart = new Chart(ownerChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedOwners.map(o => o[0]),
+                        datasets: [{
+                            label: 'Number of Cases',
+                            data: sortedOwners.map(o => o[1].total),
+                            backgroundColor: '#3498db',
+                            borderColor: '#2980b9',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function viewCaseDetail(index) {
+            const caseData = processedData[index];
+            const modal = document.getElementById('caseDetailModal');
+            const modalContent = document.getElementById('case-detail-content');
+            
+            const recommendations = generateCaseRecommendations(caseData);
+            
+            modalContent.innerHTML = `
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5>${caseData.title || 'No Title'}</h5>
+                        <div class="mb-4">
+                            <span class="badge bg-primary me-2">${caseData.incidentId}</span>
+                            <span class="badge ${caseData.service === 'Service Request' ? 'bg-info' : 'bg-warning'} me-2">${caseData.service || 'Unknown'}</span>
+                            <span class="badge ${caseData.slaViolationStatus === 'Violated' ? 'bg-danger' : 'bg-success'} me-2">${caseData.slaViolationStatus || 'Unknown'}</span>
+                            <span class="badge bg-secondary">${caseData.agingDays} days</span>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-muted">Case Details</h6>
+                                        <p><strong>Owner:</strong> ${caseData.owner || 'Unassigned'}</p>
+                                        <p><strong>Status:</strong> ${caseData.currentStatus || 'Unknown'}</p>
+                                        <p><strong>Submitted By:</strong> ${caseData.submittedBy || 'Unknown'}</p>
+                                        <p><strong>Last Modified:</strong> ${caseData.lastModified || 'Unknown'}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-muted">Compliance Details</h6>
+                                        <p><strong>Email Compliance:</strong> ${caseData.emailCompliance || 'Not specified'}</p>
+                                        <p><strong>Next Follow-up:</strong> ${caseData.nextFollowUp || 'Not scheduled'}</p>
+                                        <p><strong>Expected Resolution:</strong> ${caseData.expectedResolution || 'Not specified'}</p>
+                                        <p><strong>Aging from Last Modified:</strong> ${caseData.agingFromLastModified} days</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">Steps to Resolve</h6>
+                                <p>${caseData.steps || 'No steps provided'}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0">Action Plan & Recommendations</h6>
+                            </div>
+                            <div class="card-body">
+                                ${recommendations.map(rec => `
+                                    <div class="alert alert-${rec.type} mb-3">
+                                        <h6><i class="bi bi-${rec.icon} me-1"></i> ${rec.title}</h6>
+                                        <p class="mb-1 small">${rec.description}</p>
+                                        ${rec.actions ? `
+                                            <hr class="my-2">
+                                            <strong>Actions:</strong>
+                                            <ul class="small mb-0">
+                                                ${rec.actions.map(action => `<li>${action}</li>`).join('')}
+                                            </ul>
+                                        ` : ''}
+                                    </div>
+                                `).join('')}
+                                
+                                <div class="mt-4">
+                                    <h6>Immediate Actions</h6>
+                                    <div class="list-group">
+                                        <button class="list-group-item list-group-item-action" onclick="sendFollowUpEmail('${caseData.incidentId}', '${caseData.submitterEmail}')">
+                                            <i class="bi bi-envelope me-2"></i> Send Follow-up Email
+                                        </button>
+                                        <button class="list-group-item list-group-item-action" onclick="updateCaseStatus('${caseData.incidentId}')">
+                                            <i class="bi bi-pencil-square me-2"></i> Update Case Status
+                                        </button>
+                                        <button class="list-group-item list-group-item-action" onclick="escalateCase('${caseData.incidentId}')">
+                                            <i class="bi bi-arrow-up-right me-2"></i> Escalate to Manager
+                                        </button>
+                                        <button class="list-group-item list-group-item-action" onclick="scheduleFollowUp('${caseData.incidentId}')">
+                                            <i class="bi bi-calendar-plus me-2"></i> Schedule Follow-up
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            new bootstrap.Modal(modal).show();
+        }
+
+        function viewCaseDetailByIncidentId(incidentId) {
+            const index = processedData.findIndex(d => d.incidentId === incidentId);
+            if (index !== -1) {
+                viewCaseDetail(index);
+            } else {
+                alert('Case not found');
+            }
+        }
+
+        function generateCaseRecommendations(caseData) {
+            const recs = [];
+            
+            if (caseData.slaViolationStatus === 'Violated') {
+                recs.push({
+                    type: 'danger',
+                    icon: 'exclamation-triangle',
+                    title: 'CRITICAL: SLA Violation',
+                    description: 'This case has already violated SLA. Immediate action required.',
+                    actions: [
+                        'Notify manager immediately',
+                        'Contact customer with resolution timeline',
+                        'Prepare escalation report'
+                    ]
+                });
+            }
+            
+            if (caseData.agingDays > 10) {
+                recs.push({
+                    type: 'warning',
+                    icon: 'clock-history',
+                    title: 'High Aging Alert',
+                    description: `Case is ${caseData.agingDays} days old. Review for potential closure or escalation.`,
+                    actions: [
+                        'Review case progress with team',
+                        'Check for dependencies blocking resolution',
+                        'Update customer with revised timeline'
+                    ]
+                });
+            }
+            
+            if (caseData.currentStatus === 'Assign') {
+                recs.push({
+                    type: 'info',
+                    icon: 'person-check',
+                    title: 'Status Review Needed',
+                    description: 'Case has been in "Assign" status. Consider updating status based on progress.',
+                    actions: [
+                        'Check if work has started',
+                        'Update status to "Work InProgress" if applicable',
+                        'Reassign if necessary'
+                    ]
+                });
+            }
+            
+            if (!caseData.nextFollowUp) {
+                recs.push({
+                    type: 'info',
+                    icon: 'calendar',
+                    title: 'Follow-up Missing',
+                    description: 'No follow-up date scheduled. Set one to ensure timely updates.',
+                    actions: [
+                        'Schedule follow-up within 48 hours',
+                        'Set calendar reminder',
+                        'Document follow-up plan'
+                    ]
+                });
+            }
+            
+            return recs;
+        }
+
+        function getPriority(caseData) {
+            if (caseData.slaViolationStatus === 'Violated') return 'high';
+            if (caseData.agingDays > 15) return 'high';
+            if (caseData.agingDays > 10) return 'medium';
+            if (caseData.currentStatus === 'Waiting on Customer' && (caseData.agingFromLastModified || caseData.agingDays) > 5) return 'medium';
+            return 'low';
+        }
+
+        function getAgingClass(days) {
+            if (days <= 5) return '0-5';
+            if (days <= 10) return '6-10';
+            if (days <= 15) return '11-15';
+            return '16-plus';
+        }
+
+        function getRecommendationIcon(type) {
+            switch(type) {
+                case 'critical': return 'exclamation-triangle-fill';
+                case 'high': return 'exclamation-circle-fill';
+                case 'medium': return 'info-circle-fill';
+                case 'low': return 'info-circle';
+                default: return 'info-circle';
+            }
+        }
+
+        function getRecommendationColor(type) {
+            switch(type) {
+                case 'critical': return 'danger';
+                case 'high': return 'warning';
+                case 'medium': return 'info';
+                case 'low': return 'secondary';
+                default: return 'info';
+            }
+        }
+
+        // Action Functions
+        function sendFollowUpEmail(incidentId, email) {
+            alert(`Follow-up email would be sent for ${incidentId} to ${email || 'customer'}`);
+            // Implement email sending logic here
+        }
+
+        function updateCaseStatus(incidentId) {
+            alert(`Update status dialog would open for ${incidentId}`);
+            // Implement status update logic here
+        }
+
+        function escalateCase(incidentId) {
+            alert(`Escalation process would start for ${incidentId}`);
+            // Implement escalation logic here
+        }
+
+        function scheduleFollowUp(incidentId) {
+            alert(`Schedule follow-up dialog would open for ${incidentId}`);
+            // Implement scheduling logic here
+        }
+
+        function generateActionPlan() {
+            // Create a simple action plan text
+            const actionPlan = `Action Plan Generated: ${new Date().toLocaleString()}\n\n` +
+                processedData.map(d => 
+                    `${d.incidentId} - ${d.title}\n` +
+                    `Owner: ${d.owner}\n` +
+                    `Status: ${d.slaViolationStatus === 'Violated' ? 'CRITICAL' : 'Normal'}\n` +
+                    `Aging: ${d.agingDays} days\n` +
+                    `Actions Needed: ${generateCaseRecommendations(d).map(r => r.title).join(', ')}\n` +
+                    `---\n`
+                ).join('\n');
+            
+            const blob = new Blob([actionPlan], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'action_plan.txt';
+            link.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        // Export Functions
+        function exportToCSV() {
+            if (processedData.length === 0) {
+                alert('No data to export');
+                return;
+            }
+            
+            const headers = Object.keys(processedData[0]);
+            const csvContent = "data:text/csv;charset=utf-8," 
+                + headers.join(",")
+                + "\n"
+                + processedData.map(d => 
+                    headers.map(header => 
+                        `"${(d[header] || '').toString().replace(/"/g, '""')}"`
+                    ).join(",")
+                ).join("\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "msp_cases_export.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function generateReport() {
+            if (processedData.length === 0) {
+                alert('No data to generate report');
+                return;
+            }
+            
+            const reportData = {
+                summary: {
+                    totalCases: processedData.length,
+                    totalSR: processedData.filter(d => d.service === 'Service Request').length,
+                    totalINC: processedData.filter(d => d.service === 'Incident Management').length,
+                    slaViolated: processedData.filter(d => d.slaViolationStatus === 'Violated').length,
+                    agingOver15: processedData.filter(d => d.agingDays > 15).length
+                },
+                generatedAt: new Date().toISOString(),
+                recommendations: recommendations
+            };
+            
+            const reportContent = JSON.stringify(reportData, null, 2);
+            const blob = new Blob([reportContent], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'msp_report.json';
+            link.click();
+            
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
