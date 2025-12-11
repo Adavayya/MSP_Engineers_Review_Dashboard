@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSP Engineers - Open Cases Review Dashboard</title>
+    <title>MSP Support Engineers - Daily Review Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -166,6 +168,16 @@
             margin: 2px;
         }
         
+        .submittedby-tag {
+            background-color: #e8f5e9;
+            color: #388e3c;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin: 2px;
+        }
+        
         .aging-indicator {
             display: inline-block;
             width: 10px;
@@ -214,24 +226,134 @@
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
+        
+        .global-filters {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        
+        .logo-img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .review-info-badge {
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            margin-left: 10px;
+        }
+        
+        .help-modal-content {
+            border-radius: 15px;
+        }
+        
+        .help-modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+        }
+        
+        .help-step {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .help-step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--primary-color);">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="bi bi-clipboard-data me-2"></i>
-                MSP Engineers Dashboard
-            </a>
+            <div class="logo-container">
+                <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" 
+                     alt="SapphireIMS Logo" class="logo-img">
+                <a class="navbar-brand" href="#">
+                    MSP Support Engineers - Daily Review Dashboard
+                </a>
+            </div>
             <div class="d-flex align-items-center text-white">
                 <span id="last-updated" class="me-3"></span>
                 <span id="total-cases" class="badge bg-light text-dark"></span>
+                <button class="btn btn-sm btn-outline-light ms-3" data-bs-toggle="modal" data-bs-target="#helpModal">
+                    <i class="bi bi-question-circle me-1"></i> Help
+                </button>
             </div>
         </div>
     </nav>
 
     <div class="container-fluid mt-4">
+        <!-- Export Section -->
+        <div class="row mb-3" id="export-section" style="display: none;">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="bi bi-download me-2"></i>Export Options</h5>
+                        <div>
+                            <span id="current-review-info" class="badge bg-info review-info-badge me-2"></span>
+                            <span id="current-filters-info" class="badge bg-secondary review-info-badge"></span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <button class="btn btn-success w-100" onclick="exportToExcel()">
+                                    <i class="bi bi-file-earmark-excel me-2"></i>Export to Excel
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <button class="btn btn-danger w-100" onclick="exportToPDF()">
+                                    <i class="bi bi-file-earmark-pdf me-2"></i>Export to PDF
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <button class="btn btn-primary w-100" onclick="exportActionPlanToPDF()">
+                                    <i class="bi bi-file-text me-2"></i>Action Plan PDF
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <button class="btn btn-warning w-100" onclick="saveAsHTML()">
+                                    <i class="bi bi-save me-2"></i>Save HTML Report
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="alert alert-info small">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    <strong>Export Includes:</strong> All data with current filters applied. 
+                                    Files are named as MSPReview_YYYY-MM-DD_HH-MM.pdf/excel/html
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- File Upload Section -->
         <div class="row mb-4" id="upload-section">
             <div class="col-12">
@@ -240,6 +362,20 @@
                         <h5 class="mb-0"><i class="bi bi-upload me-2"></i>Upload Data File</h5>
                     </div>
                     <div class="card-body">
+                        <div class="alert alert-info mb-4">
+                            <h6><i class="bi bi-question-circle me-2"></i>How to Use This Dashboard</h6>
+                            <ol class="mb-0">
+                                <li>Take a copy of MSP_Review_Record from the SapphireIMS Support portal</li>
+                                <li>The file should be available under Public Profile section</li>
+                                <li>Upload the downloaded file without changing its format</li>
+                                <li>Review the performance metrics and case analysis</li>
+                                <li>Use the export options to save reports in PDF, Excel, or HTML format</li>
+                            </ol>
+                            <div class="mt-2 small text-muted">
+                                <strong>NOTE:</strong> Do not change the format of the downloaded file.
+                            </div>
+                        </div>
+                        
                         <div class="upload-area" id="drop-area">
                             <i class="bi bi-cloud-arrow-up"></i>
                             <h4>Drag & Drop Excel/CSV File Here</h4>
@@ -266,6 +402,52 @@
 
         <!-- Dashboard Section (Initially Hidden) -->
         <div id="dashboard-section" style="display: none;">
+            <!-- Global Filters -->
+            <div class="row mb-4" id="global-filters-container">
+                <div class="col-12">
+                    <div class="global-filters">
+                        <h6 class="mb-3"><i class="bi bi-funnel me-2"></i>Global Filters</h6>
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <select class="form-select form-select-sm" id="global-filter-service">
+                                    <option value="">All Service Types</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select form-select-sm" id="global-filter-owner">
+                                    <option value="">All Owners</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select form-select-sm" id="global-filter-status">
+                                    <option value="">All Statuses</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select form-select-sm" id="global-filter-sla">
+                                    <option value="">All SLA Status</option>
+                                    <option value="Violated">SLA Violated</option>
+                                    <option value="Non-Violated">SLA Non-Violated</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-select form-select-sm" id="global-filter-submittedby">
+                                    <option value="">All Submitted By</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-sm btn-outline-secondary w-100" id="clear-filters-btn">
+                                    <i class="bi bi-x-circle me-1"></i> Clear Filters
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-2 small text-muted">
+                            <span id="active-filters-count">0 filters active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Summary Metrics -->
             <div class="row mb-4">
                 <div class="col-md-3">
@@ -357,6 +539,11 @@
                         <i class="bi bi-people me-1"></i> Owner Analysis
                     </button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="submittedby-tab" data-bs-toggle="tab" data-bs-target="#submittedby" type="button" role="tab">
+                        <i class="bi bi-person-lines-fill me-1"></i> Submitted By Analysis
+                    </button>
+                </li>
             </ul>
 
             <!-- Tab Content -->
@@ -387,6 +574,16 @@
                                     <option value="Non-Violated">SLA Non-Violated</option>
                                 </select>
                             </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="filter-submittedby">
+                                    <option value="">All Submitted By</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('cases')">
+                                    <i class="bi bi-x-circle me-1"></i> Clear Filters
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
@@ -397,25 +594,182 @@
 
                 <!-- SLA Violations Tab -->
                 <div class="tab-pane fade" id="sla" role="tabpanel">
+                    <div class="filter-section">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <select class="form-select" id="sla-filter-service">
+                                    <option value="">All Service Types</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="sla-filter-owner">
+                                    <option value="">All Owners</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="sla-filter-status">
+                                    <option value="">All Statuses</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="sla-filter-submittedby">
+                                    <option value="">All Submitted By</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('sla')">
+                                    <i class="bi bi-x-circle me-1"></i> Clear Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <div id="sla-violations-container"></div>
                 </div>
 
                 <!-- Aging Tab -->
                 <div class="tab-pane fade" id="aging" role="tabpanel">
+                    <div class="filter-section">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <select class="form-select" id="aging-filter-service">
+                                    <option value="">All Service Types</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="aging-filter-owner">
+                                    <option value="">All Owners</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="aging-filter-status">
+                                    <option value="">All Statuses</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="aging-filter-submittedby">
+                                    <option value="">All Submitted By</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('aging')">
+                                    <i class="bi bi-x-circle me-1"></i> Clear Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <div id="aging-cases-container"></div>
                 </div>
 
                 <!-- Recommendations Tab -->
                 <div class="tab-pane fade" id="recommendations" role="tabpanel">
+                    <div class="filter-section">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <select class="form-select" id="rec-filter-service">
+                                    <option value="">All Service Types</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="rec-filter-owner">
+                                    <option value="">All Owners</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="rec-filter-status">
+                                    <option value="">All Statuses</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="rec-filter-submittedby">
+                                    <option value="">All Submitted By</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('recommendations')">
+                                    <i class="bi bi-x-circle me-1"></i> Clear Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row" id="recommendations-container"></div>
                 </div>
 
                 <!-- Owner Analysis Tab -->
                 <div class="tab-pane fade" id="owners" role="tabpanel">
+                    <div class="filter-section">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <select class="form-select" id="owner-filter-service">
+                                    <option value="">All Service Types</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="owner-filter-status">
+                                    <option value="">All Statuses</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="owner-filter-sla">
+                                    <option value="">All SLA Status</option>
+                                    <option value="Violated">SLA Violated</option>
+                                    <option value="Non-Violated">SLA Non-Violated</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="owner-filter-submittedby">
+                                    <option value="">All Submitted By</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('owners')">
+                                    <i class="bi bi-x-circle me-1"></i> Clear Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="chart-container">
                         <canvas id="ownerChart"></canvas>
                     </div>
                     <div id="owner-breakdown"></div>
+                </div>
+
+                <!-- Submitted By Analysis Tab -->
+                <div class="tab-pane fade" id="submittedby" role="tabpanel">
+                    <div class="filter-section">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <select class="form-select" id="sb-filter-service">
+                                    <option value="">All Service Types</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="sb-filter-owner">
+                                    <option value="">All Owners</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="sb-filter-status">
+                                    <option value="">All Statuses</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" id="sb-filter-sla">
+                                    <option value="">All SLA Status</option>
+                                    <option value="Violated">SLA Violated</option>
+                                    <option value="Non-Violated">SLA Non-Violated</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('submittedby')">
+                                    <i class="bi bi-x-circle me-1"></i> Clear Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="submittedbyChart"></canvas>
+                    </div>
+                    <div id="submittedby-breakdown"></div>
                 </div>
             </div>
         </div>
@@ -442,20 +796,102 @@
         </div>
     </div>
 
+    <!-- Help Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content help-modal-content">
+                <div class="modal-header help-modal-header">
+                    <h5 class="modal-title" id="helpModalLabel">
+                        <i class="bi bi-question-circle me-2"></i>MSP Support Engineers Dashboard - Help Guide
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="help-step">
+                        <div class="help-step-number">1</div>
+                        <strong>Get Data Source</strong>
+                        <p class="mb-0">Take a copy of MSP_Review_Record from the SapphireIMS Support portal, which is available under Public Profile.</p>
+                    </div>
+                    
+                    <div class="help-step">
+                        <div class="help-step-number">2</div>
+                        <strong>Upload File</strong>
+                        <p class="mb-0">Upload the downloaded file without changing its format. The system supports Excel (.xlsx, .xls) and CSV formats.</p>
+                    </div>
+                    
+                    <div class="help-step">
+                        <div class="help-step-number">3</div>
+                        <strong>Review Performance</strong>
+                        <p class="mb-0">Use the dashboard tabs to review all cases, SLA violations, aging cases, recommendations, owner analysis, and submitted by analysis.</p>
+                    </div>
+                    
+                    <div class="help-step">
+                        <div class="help-step-number">4</div>
+                        <strong>Apply Filters</strong>
+                        <p class="mb-0">Use global filters to focus on specific service types, owners, statuses, SLA status, or submitted by categories. The current review information is displayed in the export section.</p>
+                    </div>
+                    
+                    <div class="help-step">
+                        <div class="help-step-number">5</div>
+                        <strong>Export Reports</strong>
+                        <p class="mb-0">Export data in multiple formats:
+                            <ul class="mb-0">
+                                <li><strong>Excel:</strong> Complete dataset with current filters</li>
+                                <li><strong>PDF:</strong> Dashboard overview and metrics</li>
+                                <li><strong>Action Plan PDF:</strong> Detailed action items</li>
+                                <li><strong>HTML Report:</strong> Self-contained presentation</li>
+                            </ul>
+                        </p>
+                    </div>
+                    
+                    <div class="alert alert-warning mt-3">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>IMPORTANT:</strong> Do not change the format of the downloaded file from SapphireIMS.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Initialize jsPDF
+        const { jsPDF } = window.jspdf;
+        
         let rawData = [];
         let processedData = [];
+        let filteredData = [];
         let recommendations = [];
         let charts = {
             statusChart: null,
             agingChart: null,
-            ownerChart: null
+            ownerChart: null,
+            submittedbyChart: null
+        };
+
+        let currentFilters = {
+            service: '',
+            owner: '',
+            status: '',
+            sla: '',
+            submittedby: ''
         };
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             setupEventListeners();
+            
+            // Show help modal on first visit
+            if (!localStorage.getItem('helpShown')) {
+                setTimeout(() => {
+                    const helpModal = new bootstrap.Modal(document.getElementById('helpModal'));
+                    helpModal.show();
+                    localStorage.setItem('helpShown', 'true');
+                }, 1000);
+            }
         });
 
         function setupEventListeners() {
@@ -463,6 +899,7 @@
             const dropArea = document.getElementById('drop-area');
             const processBtn = document.getElementById('process-data-btn');
             const downloadBtn = document.getElementById('download-action-plan');
+            const clearFiltersBtn = document.getElementById('clear-filters-btn');
             
             dropArea.addEventListener('click', () => fileInput.click());
             
@@ -498,10 +935,65 @@
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', generateActionPlan);
             }
+            if (clearFiltersBtn) {
+                clearFiltersBtn.addEventListener('click', clearAllFilters);
+            }
             
-            // Setup filter change listeners
-            ['filter-service', 'filter-owner', 'filter-status', 'filter-sla'].forEach(id => {
-                document.getElementById(id).addEventListener('change', filterCases);
+            // Setup global filter change listeners
+            ['global-filter-service', 'global-filter-owner', 'global-filter-status', 'global-filter-sla', 'global-filter-submittedby'].forEach(id => {
+                document.getElementById(id).addEventListener('change', updateGlobalFilters);
+            });
+            
+            setupTabFilterListeners();
+        }
+
+        function setupTabFilterListeners() {
+            // All Cases tab filters
+            ['filter-service', 'filter-owner', 'filter-status', 'filter-sla', 'filter-submittedby'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', filterCases);
+                }
+            });
+            
+            // SLA Violations tab filters
+            ['sla-filter-service', 'sla-filter-owner', 'sla-filter-status', 'sla-filter-submittedby'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', filterSLAViolations);
+                }
+            });
+            
+            // Aging tab filters
+            ['aging-filter-service', 'aging-filter-owner', 'aging-filter-status', 'aging-filter-submittedby'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', filterAgingCases);
+                }
+            });
+            
+            // Recommendations tab filters
+            ['rec-filter-service', 'rec-filter-owner', 'rec-filter-status', 'rec-filter-submittedby'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', filterRecommendations);
+                }
+            });
+            
+            // Owner Analysis tab filters
+            ['owner-filter-service', 'owner-filter-status', 'owner-filter-sla', 'owner-filter-submittedby'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', filterOwnerAnalysis);
+                }
+            });
+            
+            // Submitted By Analysis tab filters
+            ['sb-filter-service', 'sb-filter-owner', 'sb-filter-status', 'sb-filter-sla'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', filterSubmittedByAnalysis);
+                }
             });
         }
 
@@ -533,10 +1025,8 @@
             try {
                 const workbook = XLSX.read(data, { type: 'binary' });
                 
-                // Look for OpenCases sheet
                 let sheetName = 'OpenCases';
                 if (!workbook.SheetNames.includes('OpenCases')) {
-                    // Try to find any sheet that might contain the data
                     sheetName = workbook.SheetNames.find(name => 
                         name.toLowerCase().includes('open') || 
                         name.toLowerCase().includes('case')
@@ -557,7 +1047,6 @@
         function parseCSV(data) {
             try {
                 const rows = data.split('\n').map(row => {
-                    // Handle quoted CSV values
                     const regex = /,(?=(?:[^"]*"[^"]*")*[^"]*$)/;
                     return row.split(regex).map(cell => cell.replace(/^"|"$/g, '').trim());
                 });
@@ -574,7 +1063,6 @@
                 return;
             }
             
-            // Assuming first row is headers
             const headers = data[0].map(h => h.trim());
             rawData = [];
             
@@ -587,7 +1075,6 @@
                         row[header] = data[i][index] || '';
                     });
                     
-                    // Only add rows that have an Incident ID
                     if (row['Incident ID'] && row['Incident ID'].toString().trim()) {
                         rawData.push(row);
                     }
@@ -606,9 +1093,7 @@
             
             console.log('Processing data...');
             
-            // Process the data for dashboard
             processedData = rawData.map(row => {
-                // Parse aging days - handle various formats
                 let agingDays = 0;
                 const agingValue = row['Aging(Roundoff)'];
                 if (agingValue !== undefined && agingValue !== null && agingValue !== '') {
@@ -620,7 +1105,6 @@
                     }
                 }
                 
-                // Parse aging from last modified
                 let agingFromLastModified = 0;
                 const agingModValue = row['Ageing from Last modified time'];
                 if (agingModValue !== undefined && agingModValue !== null && agingModValue !== '') {
@@ -652,6 +1136,8 @@
                     agingFromLastModified: agingFromLastModified
                 };
             });
+            
+            filteredData = [...processedData];
             
             console.log('Processed data sample:', processedData[0]);
             
@@ -685,14 +1171,15 @@
             charts = {
                 statusChart: null,
                 agingChart: null,
-                ownerChart: null
+                ownerChart: null,
+                submittedbyChart: null
             };
             
-            // Update metrics
-            const totalCases = processedData.length;
-            const totalSR = processedData.filter(d => d.service === 'Service Request').length;
-            const totalINC = processedData.filter(d => d.service === 'Incident Management').length;
-            const slaViolated = processedData.filter(d => d.slaViolationStatus === 'Violated').length;
+            // Update metrics based on filtered data
+            const totalCases = filteredData.length;
+            const totalSR = filteredData.filter(d => d.service === 'Service Request').length;
+            const totalINC = filteredData.filter(d => d.service === 'Incident Management').length;
+            const slaViolated = filteredData.filter(d => d.slaViolationStatus === 'Violated').length;
             
             document.getElementById('total-open-cases').textContent = totalCases;
             document.getElementById('total-sr').textContent = totalSR;
@@ -701,49 +1188,259 @@
             document.getElementById('last-updated').textContent = `Last Updated: ${new Date().toLocaleDateString()}`;
             document.getElementById('total-cases').textContent = `${totalCases} Open Cases`;
             
+            // Show export section
+            document.getElementById('export-section').style.display = 'block';
+            
+            // Update review info
+            updateReviewInfo();
+            
             // Update filters
-            updateFilters();
+            updateAllFilters();
             
             // Render charts with delay to ensure canvas is ready
             setTimeout(renderCharts, 100);
             
-            // Render cases
+            // Render all tabs
             renderAllCases();
             renderSLAViolations();
             renderAgingCases();
             renderRecommendations();
             renderOwnerAnalysis();
+            renderSubmittedByAnalysis();
+            
+            // Update active filters count
+            updateActiveFiltersCount();
         }
 
-        function updateFilters() {
-            const services = [...new Set(processedData.map(d => d.service).filter(Boolean))];
-            const owners = [...new Set(processedData.map(d => d.owner).filter(Boolean))];
-            const statuses = [...new Set(processedData.map(d => d.currentStatus).filter(Boolean))];
+        function updateReviewInfo() {
+            const ownerFilter = document.getElementById('global-filter-owner').value;
+            const submitterFilter = document.getElementById('global-filter-submittedby').value;
             
-            const serviceSelect = document.getElementById('filter-service');
-            const ownerSelect = document.getElementById('filter-owner');
-            const statusSelect = document.getElementById('filter-status');
+            let infoText = '';
+            if (ownerFilter) {
+                infoText += `Reviewing: ${ownerFilter}`;
+            }
+            if (submitterFilter) {
+                if (infoText) infoText += ' | ';
+                infoText += `Submitted by: ${submitterFilter}`;
+            }
             
-            serviceSelect.innerHTML = '<option value="">All Service Types</option>';
-            ownerSelect.innerHTML = '<option value="">All Owners</option>';
-            statusSelect.innerHTML = '<option value="">All Statuses</option>';
+            if (!infoText) {
+                infoText = 'Reviewing: All Data';
+            }
             
-            services.forEach(service => {
-                serviceSelect.innerHTML += `<option value="${service}">${service}</option>`;
+            document.getElementById('current-review-info').textContent = infoText;
+            
+            // Update filters info
+            const activeFilters = Object.values(currentFilters).filter(value => value).length;
+            document.getElementById('current-filters-info').textContent = 
+                `${activeFilters} active filter${activeFilters !== 1 ? 's' : ''}`;
+        }
+
+        function updateAllFilters() {
+            // Get unique values from filtered data
+            const services = [...new Set(filteredData.map(d => d.service).filter(Boolean))];
+            const owners = [...new Set(filteredData.map(d => d.owner).filter(Boolean))];
+            const statuses = [...new Set(filteredData.map(d => d.currentStatus).filter(Boolean))];
+            const submittedBys = [...new Set(filteredData.map(d => d.submittedBy).filter(Boolean))];
+            
+            // Update global filters
+            updateFilterSelect('global-filter-service', services, currentFilters.service);
+            updateFilterSelect('global-filter-owner', owners, currentFilters.owner);
+            updateFilterSelect('global-filter-status', statuses, currentFilters.status);
+            updateFilterSelect('global-filter-submittedby', submittedBys, currentFilters.submittedby);
+            
+            // Update tab-specific filters
+            updateFilterSelect('filter-service', services, '');
+            updateFilterSelect('filter-owner', owners, '');
+            updateFilterSelect('filter-status', statuses, '');
+            updateFilterSelect('filter-submittedby', submittedBys, '');
+            
+            updateFilterSelect('sla-filter-service', services, '');
+            updateFilterSelect('sla-filter-owner', owners, '');
+            updateFilterSelect('sla-filter-status', statuses, '');
+            updateFilterSelect('sla-filter-submittedby', submittedBys, '');
+            
+            updateFilterSelect('aging-filter-service', services, '');
+            updateFilterSelect('aging-filter-owner', owners, '');
+            updateFilterSelect('aging-filter-status', statuses, '');
+            updateFilterSelect('aging-filter-submittedby', submittedBys, '');
+            
+            updateFilterSelect('rec-filter-service', services, '');
+            updateFilterSelect('rec-filter-owner', owners, '');
+            updateFilterSelect('rec-filter-status', statuses, '');
+            updateFilterSelect('rec-filter-submittedby', submittedBys, '');
+            
+            updateFilterSelect('owner-filter-service', services, '');
+            updateFilterSelect('owner-filter-status', statuses, '');
+            updateFilterSelect('owner-filter-submittedby', submittedBys, '');
+            
+            updateFilterSelect('sb-filter-service', services, '');
+            updateFilterSelect('sb-filter-owner', owners, '');
+            updateFilterSelect('sb-filter-status', statuses, '');
+        }
+
+        function updateFilterSelect(selectId, options, selectedValue) {
+            const select = document.getElementById(selectId);
+            if (!select) return;
+            
+            const currentValue = select.value;
+            select.innerHTML = `<option value="">All ${selectId.includes('service') ? 'Service Types' : 
+                selectId.includes('owner') ? 'Owners' : 
+                selectId.includes('status') ? 'Statuses' : 
+                selectId.includes('sla') ? 'SLA Status' : 
+                selectId.includes('submittedby') ? 'Submitted By' : 'Items'}</option>`;
+            
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
+                if (selectedValue && option === selectedValue) {
+                    optionElement.selected = true;
+                }
+                select.appendChild(optionElement);
             });
             
-            owners.forEach(owner => {
-                ownerSelect.innerHTML += `<option value="${owner}">${owner}</option>`;
-            });
+            // Restore current value if it exists in new options
+            if (currentValue && options.includes(currentValue)) {
+                select.value = currentValue;
+            }
+        }
+
+        function updateGlobalFilters() {
+            // Update current filters
+            currentFilters = {
+                service: document.getElementById('global-filter-service').value,
+                owner: document.getElementById('global-filter-owner').value,
+                status: document.getElementById('global-filter-status').value,
+                sla: document.getElementById('global-filter-sla').value,
+                submittedby: document.getElementById('global-filter-submittedby').value
+            };
             
-            statuses.forEach(status => {
-                statusSelect.innerHTML += `<option value="${status}">${status}</option>`;
+            // Apply filters to data
+            applyGlobalFilters();
+            
+            // Update dashboard with filtered data
+            updateDashboard();
+        }
+
+        function applyGlobalFilters() {
+            filteredData = processedData.filter(d => {
+                // Apply service filter
+                if (currentFilters.service && d.service !== currentFilters.service) {
+                    return false;
+                }
+                
+                // Apply owner filter
+                if (currentFilters.owner && d.owner !== currentFilters.owner) {
+                    return false;
+                }
+                
+                // Apply status filter
+                if (currentFilters.status && d.currentStatus !== currentFilters.status) {
+                    return false;
+                }
+                
+                // Apply SLA filter
+                if (currentFilters.sla) {
+                    if (currentFilters.sla === 'Violated' && d.slaViolationStatus !== 'Violated') {
+                        return false;
+                    }
+                    if (currentFilters.sla === 'Non-Violated' && d.slaViolationStatus !== 'Non-Violated') {
+                        return false;
+                    }
+                }
+                
+                // Apply submitted by filter
+                if (currentFilters.submittedby && d.submittedBy !== currentFilters.submittedby) {
+                    return false;
+                }
+                
+                return true;
             });
+        }
+
+        function updateActiveFiltersCount() {
+            const activeFilters = Object.values(currentFilters).filter(value => value).length;
+            document.getElementById('active-filters-count').textContent = 
+                `${activeFilters} filter${activeFilters !== 1 ? 's' : ''} active`;
+        }
+
+        function clearAllFilters() {
+            // Reset global filters
+            document.getElementById('global-filter-service').value = '';
+            document.getElementById('global-filter-owner').value = '';
+            document.getElementById('global-filter-status').value = '';
+            document.getElementById('global-filter-sla').value = '';
+            document.getElementById('global-filter-submittedby').value = '';
+            
+            // Reset current filters
+            currentFilters = {
+                service: '',
+                owner: '',
+                status: '',
+                sla: '',
+                submittedby: ''
+            };
+            
+            // Reset filtered data to all processed data
+            filteredData = [...processedData];
+            
+            // Clear all tab filters
+            clearAllTabFilters();
+            
+            // Update dashboard
+            updateDashboard();
+        }
+
+        function clearAllTabFilters() {
+            // Clear all tab-specific filters
+            const filterSelects = [
+                'filter-service', 'filter-owner', 'filter-status', 'filter-sla', 'filter-submittedby',
+                'sla-filter-service', 'sla-filter-owner', 'sla-filter-status', 'sla-filter-submittedby',
+                'aging-filter-service', 'aging-filter-owner', 'aging-filter-status', 'aging-filter-submittedby',
+                'rec-filter-service', 'rec-filter-owner', 'rec-filter-status', 'rec-filter-submittedby',
+                'owner-filter-service', 'owner-filter-status', 'owner-filter-sla', 'owner-filter-submittedby',
+                'sb-filter-service', 'sb-filter-owner', 'sb-filter-status', 'sb-filter-sla'
+            ];
+            
+            filterSelects.forEach(id => {
+                const select = document.getElementById(id);
+                if (select) select.value = '';
+            });
+        }
+
+        function clearTabFilters(tabName) {
+            const filterIds = {
+                'cases': ['filter-service', 'filter-owner', 'filter-status', 'filter-sla', 'filter-submittedby'],
+                'sla': ['sla-filter-service', 'sla-filter-owner', 'sla-filter-status', 'sla-filter-submittedby'],
+                'aging': ['aging-filter-service', 'aging-filter-owner', 'aging-filter-status', 'aging-filter-submittedby'],
+                'recommendations': ['rec-filter-service', 'rec-filter-owner', 'rec-filter-status', 'rec-filter-submittedby'],
+                'owners': ['owner-filter-service', 'owner-filter-status', 'owner-filter-sla', 'owner-filter-submittedby'],
+                'submittedby': ['sb-filter-service', 'sb-filter-owner', 'sb-filter-status', 'sb-filter-sla']
+            };
+            
+            if (filterIds[tabName]) {
+                filterIds[tabName].forEach(id => {
+                    const select = document.getElementById(id);
+                    if (select) select.value = '';
+                });
+                
+                // Re-render the tab
+                switch(tabName) {
+                    case 'cases': renderAllCases(); break;
+                    case 'sla': renderSLAViolations(); break;
+                    case 'aging': renderAgingCases(); break;
+                    case 'recommendations': renderRecommendations(); break;
+                    case 'owners': renderOwnerAnalysis(); break;
+                    case 'submittedby': renderSubmittedByAnalysis(); break;
+                }
+            }
         }
 
         function renderCharts() {
             // Status Distribution Chart
-            const statusData = processedData.reduce((acc, d) => {
+            const statusData = filteredData.reduce((acc, d) => {
                 const status = d.currentStatus || 'Unknown';
                 acc[status] = (acc[status] || 0) + 1;
                 return acc;
@@ -784,7 +1481,7 @@
                 '16+ days': 0
             };
             
-            processedData.forEach(d => {
+            filteredData.forEach(d => {
                 const days = d.agingDays || 0;
                 if (days <= 5) agingGroups['0-5 days']++;
                 else if (days <= 10) agingGroups['6-10 days']++;
@@ -832,38 +1529,43 @@
             const ownerFilter = document.getElementById('filter-owner').value;
             const statusFilter = document.getElementById('filter-status').value;
             const slaFilter = document.getElementById('filter-sla').value;
+            const submittedbyFilter = document.getElementById('filter-submittedby').value;
             
-            let filteredData = processedData;
+            let filteredCases = filteredData;
             
             if (serviceFilter) {
-                filteredData = filteredData.filter(d => d.service === serviceFilter);
+                filteredCases = filteredCases.filter(d => d.service === serviceFilter);
             }
             
             if (ownerFilter) {
-                filteredData = filteredData.filter(d => d.owner === ownerFilter);
+                filteredCases = filteredCases.filter(d => d.owner === ownerFilter);
             }
             
             if (statusFilter) {
-                filteredData = filteredData.filter(d => d.currentStatus === statusFilter);
+                filteredCases = filteredCases.filter(d => d.currentStatus === statusFilter);
             }
             
             if (slaFilter) {
                 if (slaFilter === 'Violated') {
-                    filteredData = filteredData.filter(d => d.slaViolationStatus === 'Violated');
+                    filteredCases = filteredCases.filter(d => d.slaViolationStatus === 'Violated');
                 } else if (slaFilter === 'Non-Violated') {
-                    filteredData = filteredData.filter(d => d.slaViolationStatus === 'Non-Violated');
+                    filteredCases = filteredCases.filter(d => d.slaViolationStatus === 'Non-Violated');
                 }
             }
             
-            renderFilteredCases(filteredData);
+            if (submittedbyFilter) {
+                filteredCases = filteredCases.filter(d => d.submittedBy === submittedbyFilter);
+            }
+            
+            renderFilteredCases(filteredCases, 'cases-container');
         }
 
         function renderAllCases() {
-            renderFilteredCases(processedData);
+            renderFilteredCases(filteredData, 'cases-container');
         }
 
-        function renderFilteredCases(cases) {
-            const container = document.getElementById('cases-container');
+        function renderFilteredCases(cases, containerId) {
+            const container = document.getElementById(containerId);
             container.innerHTML = '';
             
             if (cases.length === 0) {
@@ -876,7 +1578,14 @@
                 return;
             }
             
-            cases.forEach((caseData, index) => {
+            // Store the filtered cases with their original indices
+            const casesWithIndices = cases.map((caseData, localIndex) => {
+                // Find the original index in the filteredData array
+                const originalIndex = filteredData.findIndex(d => d.incidentId === caseData.incidentId);
+                return { caseData, originalIndex: originalIndex >= 0 ? originalIndex : localIndex };
+            });
+            
+            casesWithIndices.forEach(({ caseData, originalIndex }) => {
                 const priority = getPriority(caseData);
                 const caseHtml = `
                     <div class="card case-card mb-3">
@@ -900,6 +1609,7 @@
                                             </div>
                                             <div class="small text-muted">
                                                 <span class="me-3"><i class="bi bi-person me-1"></i> ${caseData.owner || 'Unassigned'}</span>
+                                                <span class="me-3"><i class="bi bi-building me-1"></i> ${caseData.submittedBy || 'Unknown'}</span>
                                                 <span class="me-3"><i class="bi bi-calendar me-1"></i> ${caseData.agingDays} days</span>
                                                 <span class="priority-${priority}">
                                                     <i class="bi bi-flag me-1"></i> ${priority.toUpperCase()} Priority
@@ -911,7 +1621,7 @@
                                 <div class="col-md-4">
                                     <div class="d-flex justify-content-end align-items-center h-100">
                                         <span class="me-3 badge bg-light text-dark">${caseData.currentStatus || 'Unknown'}</span>
-                                        <button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${index})">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${originalIndex})">
                                             <i class="bi bi-eye me-1"></i> View Details
                                         </button>
                                     </div>
@@ -924,8 +1634,39 @@
             });
         }
 
+        function filterSLAViolations() {
+            const serviceFilter = document.getElementById('sla-filter-service').value;
+            const ownerFilter = document.getElementById('sla-filter-owner').value;
+            const statusFilter = document.getElementById('sla-filter-status').value;
+            const submittedbyFilter = document.getElementById('sla-filter-submittedby').value;
+            
+            let filteredCases = filteredData.filter(d => d.slaViolationStatus === 'Violated');
+            
+            if (serviceFilter) {
+                filteredCases = filteredCases.filter(d => d.service === serviceFilter);
+            }
+            
+            if (ownerFilter) {
+                filteredCases = filteredCases.filter(d => d.owner === ownerFilter);
+            }
+            
+            if (statusFilter) {
+                filteredCases = filteredCases.filter(d => d.currentStatus === statusFilter);
+            }
+            
+            if (submittedbyFilter) {
+                filteredCases = filteredCases.filter(d => d.submittedBy === submittedbyFilter);
+            }
+            
+            renderSLAViolationsList(filteredCases);
+        }
+
         function renderSLAViolations() {
-            const violations = processedData.filter(d => d.slaViolationStatus === 'Violated');
+            const violations = filteredData.filter(d => d.slaViolationStatus === 'Violated');
+            renderSLAViolationsList(violations);
+        }
+
+        function renderSLAViolationsList(violations) {
             const container = document.getElementById('sla-violations-container');
             container.innerHTML = '';
             
@@ -940,6 +1681,8 @@
             }
             
             violations.forEach((violation, index) => {
+                // Find original index in filteredData
+                const originalIndex = filteredData.findIndex(d => d.incidentId === violation.incidentId);
                 const violationHtml = `
                     <div class="card warning-card mb-3">
                         <div class="card-body">
@@ -949,6 +1692,9 @@
                                     <div class="mb-2">
                                         <span class="badge bg-danger me-2">SLA VIOLATED</span>
                                         <span class="badge bg-secondary me-2">${violation.incidentId}</span>
+                                        <span class="submittedby-tag me-2">
+                                            <i class="bi bi-building me-1"></i> ${violation.submittedBy || 'Unknown'}
+                                        </span>
                                     </div>
                                     <div class="small text-muted">
                                         <span class="me-3"><i class="bi bi-person me-1"></i> ${violation.owner || 'Unassigned'}</span>
@@ -959,7 +1705,7 @@
                                 <div class="col-md-3">
                                     <div class="d-flex flex-column align-items-end h-100 justify-content-center">
                                         <span class="badge bg-warning text-dark mb-2">${violation.service || 'Unknown'}</span>
-                                        <button class="btn btn-sm btn-outline-danger" onclick="viewCaseDetail(${processedData.findIndex(d => d.incidentId === violation.incidentId)})">
+                                        <button class="btn btn-sm btn-outline-danger" onclick="viewCaseDetail(${originalIndex})">
                                             <i class="bi bi-exclamation-triangle me-1"></i> Take Action
                                         </button>
                                     </div>
@@ -972,8 +1718,39 @@
             });
         }
 
+        function filterAgingCases() {
+            const serviceFilter = document.getElementById('aging-filter-service').value;
+            const ownerFilter = document.getElementById('aging-filter-owner').value;
+            const statusFilter = document.getElementById('aging-filter-status').value;
+            const submittedbyFilter = document.getElementById('aging-filter-submittedby').value;
+            
+            let filteredCases = filteredData.filter(d => d.agingDays > 15);
+            
+            if (serviceFilter) {
+                filteredCases = filteredCases.filter(d => d.service === serviceFilter);
+            }
+            
+            if (ownerFilter) {
+                filteredCases = filteredCases.filter(d => d.owner === ownerFilter);
+            }
+            
+            if (statusFilter) {
+                filteredCases = filteredCases.filter(d => d.currentStatus === statusFilter);
+            }
+            
+            if (submittedbyFilter) {
+                filteredCases = filteredCases.filter(d => d.submittedBy === submittedbyFilter);
+            }
+            
+            renderAgingCasesList(filteredCases);
+        }
+
         function renderAgingCases() {
-            const agingCases = processedData.filter(d => d.agingDays > 15);
+            const agingCases = filteredData.filter(d => d.agingDays > 15);
+            renderAgingCasesList(agingCases);
+        }
+
+        function renderAgingCasesList(agingCases) {
             const container = document.getElementById('aging-cases-container');
             container.innerHTML = '';
             
@@ -988,6 +1765,8 @@
             }
             
             agingCases.forEach((caseData, index) => {
+                // Find original index in filteredData
+                const originalIndex = filteredData.findIndex(d => d.incidentId === caseData.incidentId);
                 const agingHtml = `
                     <div class="card mb-3" style="border-left: 5px solid #e74c3c;">
                         <div class="card-body">
@@ -1002,6 +1781,9 @@
                                             <div class="mb-2">
                                                 <span class="badge bg-secondary me-2">${caseData.incidentId}</span>
                                                 <span class="badge bg-danger me-2">${caseData.agingDays} DAYS OLD</span>
+                                                <span class="submittedby-tag me-2">
+                                                    <i class="bi bi-building me-1"></i> ${caseData.submittedBy || 'Unknown'}
+                                                </span>
                                             </div>
                                             <div class="small text-muted">
                                                 <span class="me-3"><i class="bi bi-person me-1"></i> ${caseData.owner || 'Unassigned'}</span>
@@ -1019,7 +1801,7 @@
                                                 ${caseData.nextFollowUp || 'No follow-up'}
                                             </span>
                                         </div>
-                                        <button class="btn btn-sm btn-outline-danger" onclick="viewCaseDetail(${processedData.findIndex(d => d.incidentId === caseData.incidentId)})">
+                                        <button class="btn btn-sm btn-outline-danger" onclick="viewCaseDetail(${originalIndex})">
                                             <i class="bi bi-arrow-clockwise me-1"></i> Escalate
                                         </button>
                                     </div>
@@ -1035,11 +1817,12 @@
         function generateRecommendations() {
             recommendations = [];
             
-            processedData.forEach((caseData, index) => {
+            filteredData.forEach((caseData, index) => {
                 const caseRec = {
                     incidentId: caseData.incidentId,
                     title: caseData.title,
                     owner: caseData.owner,
+                    submittedBy: caseData.submittedBy,
                     recommendations: []
                 };
                 
@@ -1105,11 +1888,39 @@
             });
         }
 
+        function filterRecommendations() {
+            const serviceFilter = document.getElementById('rec-filter-service').value;
+            const ownerFilter = document.getElementById('rec-filter-owner').value;
+            const statusFilter = document.getElementById('rec-filter-status').value;
+            const submittedbyFilter = document.getElementById('rec-filter-submittedby').value;
+            
+            // Filter recommendations based on filtered data
+            let filteredRecs = recommendations.filter(rec => {
+                // Find the case in filteredData
+                const caseData = filteredData.find(d => d.incidentId === rec.incidentId);
+                if (!caseData) return false;
+                
+                // Apply filters
+                if (serviceFilter && caseData.service !== serviceFilter) return false;
+                if (ownerFilter && caseData.owner !== ownerFilter) return false;
+                if (statusFilter && caseData.currentStatus !== statusFilter) return false;
+                if (submittedbyFilter && caseData.submittedBy !== submittedbyFilter) return false;
+                
+                return true;
+            });
+            
+            renderRecommendationsList(filteredRecs);
+        }
+
         function renderRecommendations() {
+            renderRecommendationsList(recommendations);
+        }
+
+        function renderRecommendationsList(recs) {
             const container = document.getElementById('recommendations-container');
             container.innerHTML = '';
             
-            if (recommendations.length === 0) {
+            if (recs.length === 0) {
                 container.innerHTML = `
                     <div class="alert alert-success">
                         <i class="bi bi-check-circle me-2"></i>
@@ -1119,7 +1930,9 @@
                 return;
             }
             
-            recommendations.forEach(rec => {
+            recs.forEach(rec => {
+                // Find original index in filteredData
+                const originalIndex = filteredData.findIndex(d => d.incidentId === rec.incidentId);
                 const recHtml = `
                     <div class="col-md-6 mb-3">
                         <div class="card">
@@ -1127,8 +1940,13 @@
                                 <h6 class="mb-0">${rec.incidentId} - ${(rec.title || '').substring(0, 50)}...</h6>
                             </div>
                             <div class="card-body">
-                                <div class="owner-tag mb-2">
-                                    <i class="bi bi-person-circle me-1"></i> ${rec.owner || 'Unassigned'}
+                                <div class="d-flex flex-wrap mb-2">
+                                    <div class="owner-tag me-2">
+                                        <i class="bi bi-person-circle me-1"></i> ${rec.owner || 'Unassigned'}
+                                    </div>
+                                    <div class="submittedby-tag">
+                                        <i class="bi bi-building me-1"></i> ${rec.submittedBy || 'Unknown'}
+                                    </div>
                                 </div>
                                 ${rec.recommendations.map(r => `
                                     <div class="recommendation-box mb-2">
@@ -1141,7 +1959,7 @@
                                         </div>
                                     </div>
                                 `).join('')}
-                                <button class="btn btn-sm btn-outline-primary mt-2" onclick="viewCaseDetailByIncidentId('${rec.incidentId}')">
+                                <button class="btn btn-sm btn-outline-primary mt-2" onclick="viewCaseDetail(${originalIndex})">
                                     <i class="bi bi-gear me-1"></i> View Detailed Actions
                                 </button>
                             </div>
@@ -1152,8 +1970,43 @@
             });
         }
 
+        function filterOwnerAnalysis() {
+            const serviceFilter = document.getElementById('owner-filter-service').value;
+            const statusFilter = document.getElementById('owner-filter-status').value;
+            const slaFilter = document.getElementById('owner-filter-sla').value;
+            const submittedbyFilter = document.getElementById('owner-filter-submittedby').value;
+            
+            let filteredCases = filteredData;
+            
+            if (serviceFilter) {
+                filteredCases = filteredCases.filter(d => d.service === serviceFilter);
+            }
+            
+            if (statusFilter) {
+                filteredCases = filteredCases.filter(d => d.currentStatus === statusFilter);
+            }
+            
+            if (slaFilter) {
+                if (slaFilter === 'Violated') {
+                    filteredCases = filteredCases.filter(d => d.slaViolationStatus === 'Violated');
+                } else if (slaFilter === 'Non-Violated') {
+                    filteredCases = filteredCases.filter(d => d.slaViolationStatus === 'Non-Violated');
+                }
+            }
+            
+            if (submittedbyFilter) {
+                filteredCases = filteredCases.filter(d => d.submittedBy === submittedbyFilter);
+            }
+            
+            renderOwnerAnalysisData(filteredCases);
+        }
+
         function renderOwnerAnalysis() {
-            const ownerBreakdown = processedData.reduce((acc, d) => {
+            renderOwnerAnalysisData(filteredData);
+        }
+
+        function renderOwnerAnalysisData(data) {
+            const ownerBreakdown = data.reduce((acc, d) => {
                 const owner = d.owner || 'Unassigned';
                 if (!acc[owner]) {
                     acc[owner] = {
@@ -1250,12 +2103,150 @@
             }
         }
 
+        function filterSubmittedByAnalysis() {
+            const serviceFilter = document.getElementById('sb-filter-service').value;
+            const ownerFilter = document.getElementById('sb-filter-owner').value;
+            const statusFilter = document.getElementById('sb-filter-status').value;
+            const slaFilter = document.getElementById('sb-filter-sla').value;
+            
+            let filteredCases = filteredData;
+            
+            if (serviceFilter) {
+                filteredCases = filteredCases.filter(d => d.service === serviceFilter);
+            }
+            
+            if (ownerFilter) {
+                filteredCases = filteredCases.filter(d => d.owner === ownerFilter);
+            }
+            
+            if (statusFilter) {
+                filteredCases = filteredCases.filter(d => d.currentStatus === statusFilter);
+            }
+            
+            if (slaFilter) {
+                if (slaFilter === 'Violated') {
+                    filteredCases = filteredCases.filter(d => d.slaViolationStatus === 'Violated');
+                } else if (slaFilter === 'Non-Violated') {
+                    filteredCases = filteredCases.filter(d => d.slaViolationStatus === 'Non-Violated');
+                }
+            }
+            
+            renderSubmittedByAnalysisData(filteredCases);
+        }
+
+        function renderSubmittedByAnalysis() {
+            renderSubmittedByAnalysisData(filteredData);
+        }
+
+        function renderSubmittedByAnalysisData(data) {
+            const submittedByBreakdown = data.reduce((acc, d) => {
+                const submittedBy = d.submittedBy || 'Unknown';
+                if (!acc[submittedBy]) {
+                    acc[submittedBy] = {
+                        total: 0,
+                        sr: 0,
+                        inc: 0,
+                        violated: 0,
+                        aging: 0
+                    };
+                }
+                
+                acc[submittedBy].total++;
+                if (d.service === 'Service Request') acc[submittedBy].sr++;
+                if (d.service === 'Incident Management') acc[submittedBy].inc++;
+                if (d.slaViolationStatus === 'Violated') acc[submittedBy].violated++;
+                if (d.agingDays > 15) acc[submittedBy].aging++;
+                
+                return acc;
+            }, {});
+            
+            const container = document.getElementById('submittedby-breakdown');
+            container.innerHTML = '';
+            
+            Object.entries(submittedByBreakdown).forEach(([submittedBy, stats]) => {
+                const submittedByHtml = `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h6>${submittedBy}</h6>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <div class="h4">${stats.total}</div>
+                                        <small class="text-muted">Total Cases</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <div class="h4 ${stats.violated > 0 ? 'text-danger' : 'text-success'}">${stats.violated}</div>
+                                        <small class="text-muted">SLA Violations</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <div class="h4 ${stats.aging > 0 ? 'text-warning' : 'text-success'}">${stats.aging}</div>
+                                        <small class="text-muted">Aging >15 days</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center">
+                                        <div class="h4">${stats.sr}/${stats.inc}</div>
+                                        <small class="text-muted">SR/INC Ratio</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += submittedByHtml;
+            });
+            
+            // Render submitted by chart
+            const submittedbyChartCtx = document.getElementById('submittedbyChart');
+            if (submittedbyChartCtx) {
+                const sortedSubmittedBys = Object.entries(submittedByBreakdown)
+                    .sort((a, b) => b[1].total - a[1].total)
+                    .slice(0, 10);
+                
+                if (charts.submittedbyChart) {
+                    charts.submittedbyChart.destroy();
+                }
+                
+                charts.submittedbyChart = new Chart(submittedbyChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedSubmittedBys.map(o => o[0]),
+                        datasets: [{
+                            label: 'Number of Cases',
+                            data: sortedSubmittedBys.map(o => o[1].total),
+                            backgroundColor: '#9b59b6',
+                            borderColor: '#8e44ad',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
         function viewCaseDetail(index) {
-            const caseData = processedData[index];
+            if (index < 0 || index >= filteredData.length) {
+                alert('Case not found. Please try again.');
+                return;
+            }
+            
+            const caseData = filteredData[index];
             const modal = document.getElementById('caseDetailModal');
             const modalContent = document.getElementById('case-detail-content');
             
-            const recommendations = generateCaseRecommendations(caseData);
+            const caseRecommendations = generateCaseRecommendations(caseData);
             
             modalContent.innerHTML = `
                 <div class="row">
@@ -1274,8 +2265,8 @@
                                     <div class="card-body">
                                         <h6 class="card-subtitle mb-2 text-muted">Case Details</h6>
                                         <p><strong>Owner:</strong> ${caseData.owner || 'Unassigned'}</p>
-                                        <p><strong>Status:</strong> ${caseData.currentStatus || 'Unknown'}</p>
                                         <p><strong>Submitted By:</strong> ${caseData.submittedBy || 'Unknown'}</p>
+                                        <p><strong>Status:</strong> ${caseData.currentStatus || 'Unknown'}</p>
                                         <p><strong>Last Modified:</strong> ${caseData.lastModified || 'Unknown'}</p>
                                     </div>
                                 </div>
@@ -1307,7 +2298,7 @@
                                 <h6 class="mb-0">Action Plan & Recommendations</h6>
                             </div>
                             <div class="card-body">
-                                ${recommendations.map(rec => `
+                                ${caseRecommendations.map(rec => `
                                     <div class="alert alert-${rec.type} mb-3">
                                         <h6><i class="bi bi-${rec.icon} me-1"></i> ${rec.title}</h6>
                                         <p class="mb-1 small">${rec.description}</p>
@@ -1345,15 +2336,6 @@
             `;
             
             new bootstrap.Modal(modal).show();
-        }
-
-        function viewCaseDetailByIncidentId(incidentId) {
-            const index = processedData.findIndex(d => d.incidentId === incidentId);
-            if (index !== -1) {
-                viewCaseDetail(index);
-            } else {
-                alert('Case not found');
-            }
         }
 
         function generateCaseRecommendations(caseData) {
@@ -1477,9 +2459,10 @@
         function generateActionPlan() {
             // Create a simple action plan text
             const actionPlan = `Action Plan Generated: ${new Date().toLocaleString()}\n\n` +
-                processedData.map(d => 
+                filteredData.map(d => 
                     `${d.incidentId} - ${d.title}\n` +
                     `Owner: ${d.owner}\n` +
+                    `Submitted By: ${d.submittedBy}\n` +
                     `Status: ${d.slaViolationStatus === 'Violated' ? 'CRITICAL' : 'Normal'}\n` +
                     `Aging: ${d.agingDays} days\n` +
                     `Actions Needed: ${generateCaseRecommendations(d).map(r => r.title).join(', ')}\n` +
@@ -1497,61 +2480,576 @@
             URL.revokeObjectURL(url);
         }
 
-        // Export Functions
-        function exportToCSV() {
-            if (processedData.length === 0) {
+        // ============================
+        // EXPORT FUNCTIONS
+        // ============================
+
+        function exportToExcel() {
+            if (filteredData.length === 0) {
                 alert('No data to export');
                 return;
             }
             
-            const headers = Object.keys(processedData[0]);
-            const csvContent = "data:text/csv;charset=utf-8," 
-                + headers.join(",")
-                + "\n"
-                + processedData.map(d => 
-                    headers.map(header => 
-                        `"${(d[header] || '').toString().replace(/"/g, '""')}"`
-                    ).join(",")
-                ).join("\n");
+            const now = new Date();
+            const timestamp = now.toISOString().slice(0, 19).replace(/[:T]/g, '-');
+            const fileName = `MSPReview_${timestamp}.xlsx`;
             
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "msp_cases_export.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // Prepare data for export
+            const exportData = filteredData.map(d => ({
+                'Incident ID': d.incidentId,
+                'Title': d.title,
+                'Submitted By': d.submittedBy,
+                'Status': d.currentStatus,
+                'Service Type': d.service,
+                'Owner': d.owner,
+                'Aging Days': d.agingDays,
+                'SLA Status': d.slaViolationStatus,
+                'Next Follow-up': d.nextFollowUp,
+                'Email Compliance': d.emailCompliance,
+                'Last Modified': d.lastModified
+            }));
+            
+            // Create worksheet
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "MSP_Review");
+            
+            // Add metadata sheet
+            const metadata = [
+                ['MSP Support Engineers - Daily Review Dashboard'],
+                ['Generated:', now.toLocaleString()],
+                ['Total Cases:', filteredData.length],
+                ['Service Requests:', filteredData.filter(d => d.service === 'Service Request').length],
+                ['Incidents:', filteredData.filter(d => d.service === 'Incident Management').length],
+                ['SLA Violations:', filteredData.filter(d => d.slaViolationStatus === 'Violated').length],
+                ['Active Filters:', Object.values(currentFilters).filter(v => v).join(', ') || 'None']
+            ];
+            const wsMeta = XLSX.utils.aoa_to_sheet(metadata);
+            XLSX.utils.book_append_sheet(wb, wsMeta, "Metadata");
+            
+            // Download file
+            XLSX.writeFile(wb, fileName);
+            
+            alert(`Excel file "${fileName}" downloaded successfully!`);
         }
 
-        function generateReport() {
-            if (processedData.length === 0) {
-                alert('No data to generate report');
+        function exportToPDF() {
+            if (filteredData.length === 0) {
+                alert('No data to export');
                 return;
             }
             
-            const reportData = {
-                summary: {
-                    totalCases: processedData.length,
-                    totalSR: processedData.filter(d => d.service === 'Service Request').length,
-                    totalINC: processedData.filter(d => d.service === 'Incident Management').length,
-                    slaViolated: processedData.filter(d => d.slaViolationStatus === 'Violated').length,
-                    agingOver15: processedData.filter(d => d.agingDays > 15).length
-                },
-                generatedAt: new Date().toISOString(),
-                recommendations: recommendations
+            const now = new Date();
+            const timestamp = now.toISOString().slice(0, 19).replace(/[:T]/g, '-');
+            const fileName = `MSPReview_${timestamp}.pdf`;
+            
+            // Create PDF document
+            const doc = new jsPDF('landscape');
+            
+            // Add header
+            doc.setFontSize(20);
+            doc.setTextColor(44, 62, 80);
+            doc.text('MSP Support Engineers - Daily Review Dashboard', 15, 20);
+            
+            // Add logo (we'll use text as placeholder for logo)
+            doc.setFontSize(12);
+            doc.setTextColor(52, 152, 219);
+            doc.text('SapphireIMS', 240, 20);
+            
+            // Add generation info
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Generated: ${now.toLocaleString()}`, 15, 35);
+            doc.text(`Filters: ${Object.values(currentFilters).filter(v => v).join(', ') || 'None'}`, 15, 42);
+            
+            // Add summary metrics
+            doc.setFontSize(14);
+            doc.setTextColor(44, 62, 80);
+            doc.text('Summary Metrics', 15, 55);
+            
+            doc.setFontSize(11);
+            const totalCases = filteredData.length;
+            const totalSR = filteredData.filter(d => d.service === 'Service Request').length;
+            const totalINC = filteredData.filter(d => d.service === 'Incident Management').length;
+            const slaViolated = filteredData.filter(d => d.slaViolationStatus === 'Violated').length;
+            
+            doc.text(`Total Open Cases: ${totalCases}`, 15, 65);
+            doc.text(`Service Requests: ${totalSR}`, 15, 72);
+            doc.text(`Incidents: ${totalINC}`, 15, 79);
+            doc.text(`SLA Violations: ${slaViolated}`, 15, 86);
+            
+            // Add aging distribution
+            doc.setFontSize(14);
+            doc.text('Aging Distribution', 150, 55);
+            
+            const agingGroups = {
+                '0-5 days': filteredData.filter(d => d.agingDays <= 5).length,
+                '6-10 days': filteredData.filter(d => d.agingDays > 5 && d.agingDays <= 10).length,
+                '11-15 days': filteredData.filter(d => d.agingDays > 10 && d.agingDays <= 15).length,
+                '16+ days': filteredData.filter(d => d.agingDays > 15).length
             };
             
-            const reportContent = JSON.stringify(reportData, null, 2);
-            const blob = new Blob([reportContent], { type: 'application/json' });
+            let yPos = 65;
+            Object.entries(agingGroups).forEach(([group, count]) => {
+                doc.setFontSize(11);
+                doc.text(`${group}: ${count} cases`, 150, yPos);
+                yPos += 7;
+            });
+            
+            // Add top cases table
+            doc.addPage();
+            doc.setFontSize(16);
+            doc.setTextColor(44, 62, 80);
+            doc.text('Top Cases Requiring Attention', 15, 20);
+            
+            // Prepare table data
+            const topCases = filteredData
+                .filter(d => d.slaViolationStatus === 'Violated' || d.agingDays > 15)
+                .slice(0, 15);
+            
+            if (topCases.length > 0) {
+                const tableData = topCases.map((d, i) => [
+                    i + 1,
+                    d.incidentId,
+                    d.title.substring(0, 40) + (d.title.length > 40 ? '...' : ''),
+                    d.owner || 'Unassigned',
+                    d.agingDays + ' days',
+                    d.slaViolationStatus
+                ]);
+                
+                // Simple table
+                let tableY = 30;
+                doc.setFontSize(10);
+                
+                // Table headers
+                doc.setTextColor(255, 255, 255);
+                doc.setFillColor(44, 62, 80);
+                doc.rect(15, tableY, 260, 8, 'F');
+                doc.text('#', 18, tableY + 6);
+                doc.text('Incident ID', 30, tableY + 6);
+                doc.text('Title', 70, tableY + 6);
+                doc.text('Owner', 150, tableY + 6);
+                doc.text('Aging', 190, tableY + 6);
+                doc.text('SLA Status', 220, tableY + 6);
+                
+                tableY += 8;
+                
+                // Table rows
+                doc.setTextColor(0, 0, 0);
+                tableData.forEach((row, index) => {
+                    if (tableY > 190) {
+                        doc.addPage();
+                        tableY = 20;
+                    }
+                    
+                    // Alternate row colors
+                    if (index % 2 === 0) {
+                        doc.setFillColor(240, 240, 240);
+                        doc.rect(15, tableY, 260, 8, 'F');
+                    }
+                    
+                    doc.text(row[0], 18, tableY + 6);
+                    doc.text(row[1], 30, tableY + 6);
+                    doc.text(row[2], 70, tableY + 6);
+                    doc.text(row[3], 150, tableY + 6);
+                    doc.text(row[4], 190, tableY + 6);
+                    
+                    // Color code SLA status
+                    if (row[5] === 'Violated') {
+                        doc.setTextColor(231, 76, 60);
+                    } else {
+                        doc.setTextColor(39, 174, 96);
+                    }
+                    doc.text(row[5], 220, tableY + 6);
+                    doc.setTextColor(0, 0, 0);
+                    
+                    tableY += 8;
+                });
+            }
+            
+            // Add footer on each page
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.setTextColor(150, 150, 150);
+                doc.text(`Page ${i} of ${pageCount}`, 140, 205);
+                doc.text('Confidential - MSP Internal Use Only', 15, 205);
+                doc.text(`MSPReview_${timestamp}`, 240, 205);
+            }
+            
+            // Save PDF
+            doc.save(fileName);
+            
+            alert(`PDF report "${fileName}" downloaded successfully!`);
+        }
+
+        function exportActionPlanToPDF() {
+            if (recommendations.length === 0) {
+                alert('No action plan data to export');
+                return;
+            }
+            
+            const now = new Date();
+            const timestamp = now.toISOString().slice(0, 19).replace(/[:T]/g, '-');
+            const fileName = `MSP_ActionPlan_${timestamp}.pdf`;
+            
+            // Create PDF document
+            const doc = new jsPDF();
+            
+            // Add header
+            doc.setFontSize(20);
+            doc.setTextColor(44, 62, 80);
+            doc.text('MSP Support - Action Plan', 15, 20);
+            
+            doc.setFontSize(12);
+            doc.setTextColor(52, 152, 219);
+            doc.text('SapphireIMS', 170, 20);
+            
+            // Add generation info
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Generated: ${now.toLocaleString()}`, 15, 35);
+            
+            // Add summary
+            doc.setFontSize(14);
+            doc.setTextColor(44, 62, 80);
+            doc.text('Executive Summary', 15, 50);
+            
+            doc.setFontSize(11);
+            const criticalItems = recommendations.reduce((count, rec) => 
+                count + rec.recommendations.filter(r => r.type === 'critical').length, 0);
+            const highItems = recommendations.reduce((count, rec) => 
+                count + rec.recommendations.filter(r => r.type === 'high').length, 0);
+            
+            doc.text(`Total Cases with Recommendations: ${recommendations.length}`, 15, 60);
+            doc.text(`Critical Action Items: ${criticalItems}`, 15, 67);
+            doc.text(`High Priority Items: ${highItems}`, 15, 74);
+            
+            // Add detailed recommendations
+            let yPos = 90;
+            recommendations.forEach((rec, index) => {
+                if (yPos > 250) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+                
+                doc.setFontSize(12);
+                doc.setTextColor(44, 62, 80);
+                doc.text(`${index + 1}. ${rec.incidentId} - ${rec.title.substring(0, 50)}...`, 15, yPos);
+                
+                yPos += 8;
+                
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Owner: ${rec.owner || 'Unassigned'} | Submitted By: ${rec.submittedBy || 'Unknown'}`, 15, yPos);
+                
+                yPos += 8;
+                
+                // Add recommendations
+                rec.recommendations.forEach((r, rIndex) => {
+                    if (yPos > 250) {
+                        doc.addPage();
+                        yPos = 20;
+                    }
+                    
+                    // Set color based on priority
+                    switch(r.type) {
+                        case 'critical':
+                            doc.setTextColor(231, 76, 60);
+                            break;
+                        case 'high':
+                            doc.setTextColor(230, 126, 34);
+                            break;
+                        case 'medium':
+                            doc.setTextColor(52, 152, 219);
+                            break;
+                        default:
+                            doc.setTextColor(149, 165, 166);
+                    }
+                    
+                    doc.text(`   • ${r.text}`, 15, yPos);
+                    yPos += 7;
+                    
+                    doc.setTextColor(100, 100, 100);
+                    doc.text(`     Action: ${r.action}`, 20, yPos);
+                    yPos += 7;
+                });
+                
+                yPos += 5;
+            });
+            
+            // Add footer
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.setTextColor(150, 150, 150);
+                doc.text(`MSP Action Plan - ${timestamp}`, 15, 290);
+                doc.text(`Page ${i} of ${pageCount}`, 100, 290);
+                doc.text('Confidential', 180, 290);
+            }
+            
+            // Save PDF
+            doc.save(fileName);
+            
+            alert(`Action Plan PDF "${fileName}" downloaded successfully!`);
+        }
+
+        function saveAsHTML() {
+            if (filteredData.length === 0) {
+                alert('No data to save');
+                return;
+            }
+            
+            const now = new Date();
+            const timestamp = now.toISOString().slice(0, 19).replace(/[:T]/g, '-');
+            const fileName = `MSP_Support_Daily_Review_${timestamp}.html`;
+            
+            // Create HTML content
+            const htmlContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSP Support Daily Review - ${now.toLocaleDateString()}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f5f7fa;
+        }
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .logo {
+            height: 40px;
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+        .summary-cards {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 200px;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .metric-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        .critical {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .high {
+            color: #e67e22;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>
+            MSP Support Engineers - Daily Review Dashboard
+        </h1>
+        <p>Report Generated: ${now.toLocaleString()}</p>
+        <p>Filters Applied: ${Object.values(currentFilters).filter(v => v).join(', ') || 'None'}</p>
+    </div>
+    
+    <div class="summary-cards">
+        <div class="card">
+            <div class="metric-value">${filteredData.length}</div>
+            <div class="metric-label">Total Open Cases</div>
+        </div>
+        <div class="card">
+            <div class="metric-value">${filteredData.filter(d => d.service === 'Service Request').length}</div>
+            <div class="metric-label">Service Requests</div>
+        </div>
+        <div class="card">
+            <div class="metric-value">${filteredData.filter(d => d.service === 'Incident Management').length}</div>
+            <div class="metric-label">Incidents</div>
+        </div>
+        <div class="card">
+            <div class="metric-value" style="color: #e74c3c;">${filteredData.filter(d => d.slaViolationStatus === 'Violated').length}</div>
+            <div class="metric-label">SLA Violations</div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>Aging Analysis</h2>
+        <table>
+            <tr>
+                <th>Aging Range</th>
+                <th>Number of Cases</th>
+                <th>Percentage</th>
+            </tr>
+            ${(() => {
+                const agingRanges = [
+                    { range: '0-5 days', count: filteredData.filter(d => d.agingDays <= 5).length },
+                    { range: '6-10 days', count: filteredData.filter(d => d.agingDays > 5 && d.agingDays <= 10).length },
+                    { range: '11-15 days', count: filteredData.filter(d => d.agingDays > 10 && d.agingDays <= 15).length },
+                    { range: '16+ days', count: filteredData.filter(d => d.agingDays > 15).length }
+                ];
+                return agingRanges.map(r => `
+                    <tr>
+                        <td>${r.range}</td>
+                        <td>${r.count}</td>
+                        <td>${((r.count / filteredData.length) * 100).toFixed(1)}%</td>
+                    </tr>
+                `).join('');
+            })()}
+        </table>
+    </div>
+    
+    <div class="section">
+        <h2>Top Cases Requiring Attention</h2>
+        <table>
+            <tr>
+                <th>Incident ID</th>
+                <th>Title</th>
+                <th>Owner</th>
+                <th>Aging</th>
+                <th>SLA Status</th>
+                <th>Priority</th>
+            </tr>
+            ${filteredData
+                .filter(d => d.slaViolationStatus === 'Violated' || d.agingDays > 10)
+                .slice(0, 10)
+                .map(d => `
+                    <tr>
+                        <td>${d.incidentId}</td>
+                        <td>${d.title.substring(0, 50)}${d.title.length > 50 ? '...' : ''}</td>
+                        <td>${d.owner || 'Unassigned'}</td>
+                        <td>${d.agingDays} days</td>
+                        <td class="${d.slaViolationStatus === 'Violated' ? 'critical' : ''}">
+                            ${d.slaViolationStatus}
+                        </td>
+                        <td class="${getPriority(d)}">
+                            ${getPriority(d).toUpperCase()}
+                        </td>
+                    </tr>
+                `).join('')}
+        </table>
+    </div>
+    
+    <div class="section">
+        <h2>Owner Analysis</h2>
+        <table>
+            <tr>
+                <th>Owner</th>
+                <th>Total Cases</th>
+                <th>SLA Violations</th>
+                <th>Aging >15 days</th>
+                <th>SR/INC</th>
+            </tr>
+            ${(() => {
+                const ownerStats = {};
+                filteredData.forEach(d => {
+                    const owner = d.owner || 'Unassigned';
+                    if (!ownerStats[owner]) {
+                        ownerStats[owner] = { total: 0, violations: 0, aging: 0, sr: 0, inc: 0 };
+                    }
+                    ownerStats[owner].total++;
+                    if (d.slaViolationStatus === 'Violated') ownerStats[owner].violations++;
+                    if (d.agingDays > 15) ownerStats[owner].aging++;
+                    if (d.service === 'Service Request') ownerStats[owner].sr++;
+                    if (d.service === 'Incident Management') ownerStats[owner].inc++;
+                });
+                
+                return Object.entries(ownerStats)
+                    .sort((a, b) => b[1].total - a[1].total)
+                    .slice(0, 10)
+                    .map(([owner, stats]) => `
+                        <tr>
+                            <td>${owner}</td>
+                            <td>${stats.total}</td>
+                            <td class="${stats.violations > 0 ? 'critical' : ''}">${stats.violations}</td>
+                            <td class="${stats.aging > 0 ? 'high' : ''}">${stats.aging}</td>
+                            <td>${stats.sr}/${stats.inc}</td>
+                        </tr>
+                    `).join('');
+            })()}
+        </table>
+    </div>
+    
+    <div class="footer">
+        <p>MSP Support Daily Review - ${now.toLocaleDateString()}</p>
+        <p>This is a self-contained HTML report that can be opened in any browser.</p>
+        <p>Confidential - For Internal Use Only</p>
+    </div>
+</body>
+</html>`;
+            
+            // Create and download the file
+            const blob = new Blob([htmlContent], { type: 'text/html' });
             const url = URL.createObjectURL(blob);
             
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'msp_report.json';
+            link.download = fileName;
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
             
             URL.revokeObjectURL(url);
+            
+            alert(`HTML report "${fileName}" saved successfully!`);
         }
+		
+		
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+    </script>
     </script>
 </body>
 </html>
