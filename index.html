@@ -10,7 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <style>
         :root {
-            /* Existing colors */
             --primary-color: #2c3e50;
             --secondary-color: #3498db;
             --light-gray: #f8f9fa;
@@ -18,7 +17,6 @@
         
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f7fa; }
         
-        /* --- General Layout --- */
         .card { border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); margin-bottom: 10px; transition: transform 0.2s; }
         .card:hover { transform: translateY(-2px); }
         .global-filters { background-color: #fff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--primary-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -26,10 +24,8 @@
         .main-view-tabs .nav-link.active { background-color: var(--primary-color); color: white; border-bottom: none; }
         .view-content { border: 1px solid #dee2e6; border-top: none; background: white; padding: 25px; border-radius: 0 0 10px 10px; min-height: 600px; }
 
-        /* --- KPI Cards (Standard/Neutral Look) --- */
         .kpi-section-title { font-size: 0.8rem; font-weight: 600; color: var(--primary-color); border-bottom: 2px solid var(--light-gray); padding-bottom: 5px; margin-bottom: 10px; margin-top: 15px; }
         
-        /* Standard card style - uses primary color for border/accents */
         .kpi-card { 
             background: white; 
             border-radius: 8px; 
@@ -42,7 +38,7 @@
         }
         .kpi-card:hover { background-color: #f8faff; transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
         .kpi-title { font-size: 0.7rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; margin-bottom: 3px; opacity: 0.8; line-height: 1.2; }
-        .kpi-value { font-size: 1.8rem; font-weight: 700; color: #000; } /* Neutral value color */
+        .kpi-value { font-size: 1.8rem; font-weight: 700; color: #000; }
         
         .kpi-status-tag { 
             font-size: 0.65rem; 
@@ -62,13 +58,11 @@
             line-height: 1.3;
         }
 
-        /* Recommendation Tag Colors (Used instead of card colors) */
         .bg-urgent { background-color: #c0392b; color: white; }
         .bg-action-needed, .bg-monitor { background-color: #f39c12; color: white; }
         .bg-good { background-color: #27ae60; color: white; }
         .bg-info-tag { background-color: #3498db; color: white; }
 
-        /* Accordion Customization */
         .accordion-item { margin-bottom: 15px; border-radius: 8px; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .accordion-header { border-radius: 8px 8px 0 0; }
         .accordion-button { font-size: 1rem; font-weight: 600; color: var(--primary-color); background-color: var(--light-gray); border-bottom: 1px solid #ddd; }
@@ -76,13 +70,20 @@
         .accordion-button:focus { box-shadow: none; }
         .accordion-body { padding: 15px; }
 
-        /* --- Owner Scorecard (Dashboard) - RAG colors remain here for table clarity */
         .scorecard-table th { background-color: var(--primary-color); color: white; border: none; font-size: 0.7rem; vertical-align: middle; padding: 6px; }
         .scorecard-table td { font-size: 0.75rem; padding: 6px; }
         .critical-cell { background-color: rgba(192, 57, 43, 0.15); color: #c0392b; font-weight: 700; }
         .high-cell { background-color: rgba(243, 156, 18, 0.15); color: #f39c12; }
         .success-cell { background-color: rgba(39, 174, 96, 0.15); color: #27ae60; }
         .compliance-gauge { height: 10px; border-radius: 5px; }
+        
+        .metric-card { border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .metric-card .card-body { text-align: center; }
+        .metric-value { font-size: 2.5rem; font-weight: 700; color: #2c3e50; }
+        .metric-label { font-size: 0.9rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .detailed-case-table th { background-color: #f8f9fa; font-weight: 600; }
+        .owner-tag { background-color: #e3f2fd; padding: 2px 8px; border-radius: 12px; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -506,77 +507,75 @@
     <div class="modal fade" id="caseDetailModal" tabindex="-1">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white"><h5 class="modal-title text-white">Case Details & Action Plan</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body"><div id="case-detail-content"></div></div>
-                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="caseDetailTitle">Case Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="case-detail-content">
+                    </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        let rawData = [], processedData = [], filteredData = [], drillDownData = [];
+        let rawData = [];
+        let processedData = [];
+        let filteredData = [];
+        let drillDownData = [];
+        let drillDownTitleForExport = '';
+        let globalFilters = { owner: '', submittedby: '', service: '', status: '', sla: '' };
+        let charts = {};
         let scorecardData = [];
-        let drillDownTitleForExport = "";
-        let charts = { statusChart: null, agingChart: null, ownerChart: null };
-        let currentFilters = { service: '', owner: '', status: '', sla: '', submittedby: '' };
-        
-        const isPast = (dateStr) => {
-            if (!dateStr || dateStr === '--') return true;
-            try {
-                const date = new Date(dateStr);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                return date < today;
-            } catch {
-                return true; // Treat invalid date strings as past/missed
-            }
-        };
 
-        const isDateValid = (dateStr) => {
-             if (!dateStr || dateStr === '--') return false;
-             try {
-                const date = new Date(dateStr);
-                return !isNaN(date.getTime());
-             } catch {
-                return false;
-             }
-        }
+        document.addEventListener('DOMContentLoaded', init);
 
-        document.addEventListener('DOMContentLoaded', () => {
-            setupEventListeners();
-        });
-
-        function setupEventListeners() {
-            const fileInput = document.getElementById('file-input');
+        function init() {
             const dropArea = document.getElementById('drop-area');
-            
-            dropArea.onclick = () => fileInput.click();
-            dropArea.ondragover = (e) => { e.preventDefault(); dropArea.style.borderColor = '#3498db'; dropArea.style.backgroundColor = 'rgba(52, 152, 219, 0.1)'; };
-            dropArea.ondragleave = () => { dropArea.style.borderColor = '#ccc'; dropArea.style.backgroundColor = 'white'; };
-            dropArea.ondrop = (e) => { e.preventDefault(); dropArea.style.borderColor = '#ccc'; if(e.dataTransfer.files[0]) { fileInput.files = e.dataTransfer.files; handleFileUpload(e.dataTransfer.files[0]); }};
-            fileInput.onchange = (e) => { if(e.target.files[0]) handleFileUpload(e.target.files[0]); };
-            
+            const fileInput = document.getElementById('file-input');
+
+            dropArea.addEventListener('click', () => fileInput.click());
+            dropArea.addEventListener('dragover', (e) => { e.preventDefault(); dropArea.style.borderColor = '#3498db'; });
+            dropArea.addEventListener('dragleave', () => { dropArea.style.borderColor = '#ccc'; });
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.style.borderColor = '#ccc';
+                if (e.dataTransfer.files.length) {
+                    handleFileUpload(e.dataTransfer.files[0]);
+                }
+            });
+            fileInput.onchange = (e) => { handleFileUpload(e.target.files[0]); };
+
             document.getElementById('process-data-btn').onclick = processData;
             document.getElementById('clear-filters-btn').onclick = clearAllFilters;
 
-            ['global-filter-service', 'global-filter-owner', 'global-filter-status', 'global-filter-sla', 'global-filter-submittedby'].forEach(id => {
-                document.getElementById(id).addEventListener('change', updateGlobalFilters);
-            });
+            // Set up filter event listeners PROPERLY
+            document.getElementById('global-filter-service').addEventListener('change', updateGlobalFilters);
+            document.getElementById('global-filter-owner').addEventListener('change', updateGlobalFilters);
+            document.getElementById('global-filter-status').addEventListener('change', updateGlobalFilters);
+            document.getElementById('global-filter-sla').addEventListener('change', updateGlobalFilters);
+            document.getElementById('global-filter-submittedby').addEventListener('change', updateGlobalFilters);
             
             setupTabFilterListeners();
         }
 
         function setupTabFilterListeners() {
-            ['filter-service', 'filter-owner', 'filter-status'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).addEventListener('change', () => filterCases()); });
-            ['sla-filter-owner'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).addEventListener('change', () => filterSLAViolations()); });
-            ['aging-filter-owner'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).addEventListener('change', () => filterAgingCases()); });
+            ['filter-service', 'filter-owner', 'filter-status'].forEach(id => {
+                if(document.getElementById(id)) document.getElementById(id).addEventListener('change', () => filterCases());
+            });
+            ['sla-filter-owner'].forEach(id => {
+                if(document.getElementById(id)) document.getElementById(id).addEventListener('change', () => filterSLAViolations());
+            });
+            ['aging-filter-owner'].forEach(id => {
+                if(document.getElementById(id)) document.getElementById(id).addEventListener('change', () => filterAgingCases());
+            });
         }
 
         function handleFileUpload(file) {
             const fileName = file.name;
             document.getElementById('file-name').textContent = fileName;
             document.getElementById('file-info').style.display = 'block';
+
             const reader = new FileReader();
             reader.onload = (e) => fileName.endsWith('.csv') ? parseCSV(e.target.result) : parseExcel(e.target.result);
             fileName.endsWith('.csv') ? reader.readAsText(file) : reader.readAsBinaryString(file);
@@ -584,293 +583,423 @@
 
         function parseExcel(data) {
             const wb = XLSX.read(data, { type: 'binary' });
-            const ws = wb.Sheets[wb.SheetNames.find(n => n.toLowerCase().includes('open') || n.toLowerCase().includes('case') || n.toLowerCase().includes('review')) || wb.SheetNames[0]];
+            const ws = wb.Sheets[wb.SheetNames[0]];
             processExcelData(XLSX.utils.sheet_to_json(ws, { header: 1 }));
         }
 
         function parseCSV(data) {
-            // FIX: Added missing closing parenthesis to the processExcelData function call.
             processExcelData(data.split('\n').map(r => r.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim())));
         }
 
-        function processExcelData(data) {
-            if (!data || data.length < 2) return alert('No data found.');
-            const headers = data[0].map(h => h.trim());
-            rawData = [];
-            for (let i = 1; i < data.length; i++) {
-                if (data[i].length) {
-                    const row = {};
-                    headers.forEach((h, idx) => row[h] = data[i][idx] || '');
-                    if (row['Incident ID'] || row['IncidentID']) rawData.push(row);
-                }
+        function findColumn(headers, possibleNames) {
+            for (const name of possibleNames) {
+                const found = headers.find(h => h && h.toString().toLowerCase().includes(name.toLowerCase()));
+                if (found) return found;
             }
-            document.getElementById('row-count').textContent = `${rawData.length} cases found`;
+            return possibleNames[0];
         }
-        
-        function processData() {
-            if (!rawData.length) return alert('Please upload a file first');
+
+        function processExcelData(data) {
+            if (!data || data.length < 2) {
+                alert("No data found or file format is incorrect.");
+                return;
+            }
+
+            const headers = data[0].map(h => h ? h.trim() : '');
+            rawData = data.slice(1).map(row => {
+                const rowObj = {};
+                headers.forEach((header, index) => {
+                    rowObj[header] = row[index];
+                });
+                return rowObj;
+            }).filter(row => Object.values(row).some(v => v));
+
+            document.getElementById('row-count').textContent = `${rawData.length} rows loaded`;
             
+            const parseNum = (val) => {
+                if (val === null || val === undefined || val === '' || val === '--' || val === 'NULL') return 0;
+                if (typeof val === 'string' && val.includes('Day(s)')) {
+                    const dayMatch = val.match(/(\d+)\s*Day\(s\)/);
+                    const hourMatch = val.match(/(\d+)\s*Hour\(s\)/);
+                    const minMatch = val.match(/(\d+)\s*Min\(s\)/);
+                    const days = dayMatch ? parseInt(dayMatch[1]) : 0;
+                    const hours = hourMatch ? parseInt(hourMatch[1]) : 0;
+                    const mins = minMatch ? parseInt(minMatch[1]) : 0;
+                    return days + (hours / 24) + (mins / 1440);
+                }
+                const num = parseFloat(String(val).replace(/[^0-9.-]/g, ''));
+                return isNaN(num) ? 0 : num;
+            };
+            
+            const parseAgingDays = (val) => {
+                const num = parseNum(val);
+                return Math.round(num);
+            };
+            
+            const isDateValid = (dStr) => {
+                if (!dStr || dStr === '--' || dStr === 'NULL' || dStr === '0002-11-30 00:00' || dStr === 'Na' || dStr === 'NA') return false;
+                const date = new Date(dStr);
+                return !isNaN(date.getTime());
+            };
+            
+            const isPast = (dStr) => isDateValid(dStr) && new Date(dStr) <= new Date();
+            
+            const findCol = (possibleNames) => {
+                for (const name of possibleNames) {
+                    const found = headers.find(h => h && h.toString().toLowerCase().includes(name.toLowerCase()));
+                    if (found) return found;
+                }
+                return possibleNames[0];
+            };
+
+            const colMap = {
+                incidentId: findCol(['Incident ID', 'Ticket ID', 'Case ID']),
+                title: findCol(['Title', 'Subject', 'Description']),
+                submittedBy: findCol(['SubmittedBy', 'Submitted By', 'Reporter']),
+                currentStatus: findCol(['CurrentStatus', 'Status', 'State']),
+                service: findCol(['Service', 'Service Type', 'Type']),
+                owner: findCol(['Owner', 'Assigned To', 'Engineer']),
+                aging15Status: findCol(['Aging >15 days Status', 'Aging Status', 'Aging >15']),
+                expectedResponseTime: findCol(['Expected Response Time', 'Response Time']),
+                expectedResolutionTime: findCol(['Expected Resolution Time', 'Resolution Time']),
+                expectedSLAClosureTime: findCol(['Expected SLA Closure Time', 'SLA Closure']),
+                srEDOC: findCol(['SR EDOC', 'EDOC', 'Expected Date of Closure']),
+                slaStatus: findCol(['SLA Status', 'SLA']),
+                slaViolationStatus: findCol(['SLA Violation Status', 'Violation Status']),
+                agingRoundoff: findCol(['Aging(Roundoff)', 'Aging', 'Age (Days)']),
+                nextFollowUpDate: findCol(['Next Follow-up Date', 'Follow-up Date', 'Next Followup']),
+                emailResponseCompliance: findCol(['Email Response Compliance', 'Email Compliance']),
+                updatePendingSupportCounter: findCol(['Update Pending From Support Counter', 'Pending Counter']),
+                ageingLastModified: findCol(['Ageing from Last modified time', 'Last Modified Aging']),
+                steps: findCol(['Steps to be followed', 'Steps', 'Resolution Steps'])
+            };
+
             processedData = rawData.map(row => {
-                const parseNum = (v) => { const n = parseFloat(v); return isNaN(n) ? 0 : Math.round(n); };
-                const parseNumRaw = (v) => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
-                const slaStatus = row['SLA Violation Status'] || row['SLAViolationStatus'] || 'Non-Violated';
+                const service = row[colMap.service] || '';
+                const slaViolationStatus = row[colMap.slaViolationStatus] || 'Non-Violated';
+                const agingRoundoff = row[colMap.agingRoundoff] || '0';
+                const aging15Status = row[colMap.aging15Status] || 'Non-Violated';
+                const emailCompliance = row[colMap.emailResponseCompliance] || '';
+                const srEDOC = row[colMap.srEDOC] || '';
+                const nextFollowUp = row[colMap.nextFollowUpDate] || '';
+                const expectedResponseTime = row[colMap.expectedResponseTime] || '';
                 
-                // Get Date strings from various possible column names
-                const nextFollowUpDateStr = row['Next Follow-up Date'] || row['NextFollowupDate'] || row['Next Follow-up'] || ''; // Column R:R
-                const subsequentResponseDateStr = row['Subsequent Response Date'] || row['SubsequentResponseDate'] || row['Subsequent Date H'] || ''; // Column H:H
-                const expectedResolutionStr = row['Expected Resolution Time'] || row['ExpectedResolutionTime'] || ''; // Column K:K
-                
+                const agingDays = parseAgingDays(agingRoundoff);
+                const subsequentSLACount = parseNum(row[colMap.updatePendingSupportCounter] || '0');
+                const agingFromLastModified = parseNum(row[colMap.ageingLastModified] || '0');
+
+                const isSR = service === 'Service Request';
+                const isINC = service === 'Incident Management';
+                const isSlaViolated = slaViolationStatus === 'Violated';
+                const isAging15Violated = aging15Status === 'Violated';
+                const isFollowUpMissed = (!isDateValid(nextFollowUp) || isPast(nextFollowUp));
+                const isSubsequentResponseMissed = (!isDateValid(expectedResponseTime) || isPast(expectedResponseTime));
+                const isSubsequentSLABreach = subsequentSLACount > 0;
+                const isEdocBreached = (isSR && isPast(srEDOC));
+                const isOldest25 = agingDays > 25;
+                const isIdle1 = agingFromLastModified > 0;
+                const isIdle3 = agingFromLastModified > 1;
+
                 return {
-                    incidentId: row['Incident ID'] || row['IncidentID'] || '',
-                    title: row['Title'] || '',
-                    submittedBy: row['SubmittedBy'] || row['Submitted By'] || '',
-                    currentStatus: row['CurrentStatus'] || row['Current Status'] || 'Assign',
-                    service: row['Service'] || '',
-                    owner: row['Owner'] || 'Unassigned',
-                    agingDays: parseNum(row['Aging(Roundoff)'] || row['Aging']), // Assuming this is P:P for >25 days
-                    agingFromLastModified: parseNumRaw(row['Ageing from Last modified time']), // Assuming this is AB:AB for idle
-                    slaViolationStatus: slaStatus, // Assuming this is O:O
-                    nextFollowUp: nextFollowUpDateStr,
-                    emailCompliance: row['Email Response Compliance'] || row['EmailCompliance'] || '', // Column S:S
-                    expectedResolution: expectedResolutionStr,
-                    lastModified: row['Last Modified Time'] || '',
-                    steps: row['Steps to be followed to resolve this SR/INC'] || '',
+                    incidentId: row[colMap.incidentId] || 'N/A',
+                    owner: row[colMap.owner] || 'Unassigned',
+                    title: row[colMap.title] || 'No Title',
+                    currentStatus: row[colMap.currentStatus] || 'Unknown',
+                    service: service,
+                    submittedBy: row[colMap.submittedBy] || 'Unknown',
+                    agingDays: agingDays,
+                    agingFromLastModified: agingFromLastModified,
+                    slaViolationStatus: slaViolationStatus,
+                    nextFollowUp: nextFollowUp,
+                    subsequentResponse: expectedResponseTime,
+                    emailCompliance: emailCompliance,
+                    expectedResolution: srEDOC,
+                    subsequentSLABreachCount: subsequentSLACount,
                     
-                    // Fields for KPI Calculations based on user's formulas
-                    subsequentSLABreachCount: parseNum(row['Subsequent SLA Miss Count'] || row['SubsequentSLABreachCount'] || row['Subsequent SLA Miss'] || '0'), // Column Y:Y
-                    
-                    isSR: row['Service'] === 'Service Request',
-                    isINC: row['Service'] === 'Incident Management',
-                    isSlaViolated: slaStatus === 'Violated',
-                    
-                    // Calculated flags based on user's formulas
-                    isFollowUpMissed: !isDateValid(nextFollowUpDateStr) || isPast(nextFollowUpDateStr), // =COUNTIFS(R:R,"<="&TODAY()) + COUNTIF(R:R,"--")
-                    isSubsequentResponseMissed: !isDateValid(subsequentResponseDateStr) || isPast(subsequentResponseDateStr), // =COUNTIFS(H:H,"<="&TODAY()) + COUNTIF(H:H,"--")
-                    isSubsequentSLABreach: parseNum(row['Subsequent SLA Miss Count'] || row['SubsequentSLABreachCount'] || row['Subsequent SLA Miss'] || '0') > 0, // =COUNTIF(Y:Y,">0")
-                    isEdocBreached: row['Service'] === 'Service Request' && isPast(expectedResolutionStr), // =COUNTIFS(E:E,"Service Request", K:K,"<="&TODAY())
+                    isSR,
+                    isINC,
+                    isSlaViolated,
+                    isAging15Violated,
+                    isFollowUpMissed,
+                    isSubsequentResponseMissed,
+                    isSubsequentSLABreach,
+                    isEdocBreached,
+                    isOldest25,
+                    isIdle1,
+                    isIdle3,
                     
                     _raw: row
                 };
             });
-            
+
             filteredData = [...processedData];
             updateDashboard();
-            document.getElementById('dashboard-section').style.display = 'block';
             document.getElementById('upload-section').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+            document.getElementById('total-cases').textContent = `${processedData.length} Cases Loaded`;
+            document.getElementById('last-updated').textContent = `Last Updated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`;
+
+            populateFilterDropdowns();
+            renderDetailedDashboard();
         }
 
-        function updateDashboard() {
-            updateAllFilters();
+        function populateFilterDropdowns() {
+            const getUniqueValues = (key) => [...new Set(processedData.map(d => d[key]).filter(Boolean).sort())];
+
+            const dropdowns = {
+                'global-filter-owner': getUniqueValues('owner'),
+                'global-filter-submittedby': getUniqueValues('submittedBy'),
+                'global-filter-service': getUniqueValues('service'),
+                'global-filter-status': getUniqueValues('currentStatus'),
+                'filter-owner': getUniqueValues('owner'),
+                'filter-service': getUniqueValues('service'),
+                'filter-status': getUniqueValues('currentStatus'),
+                'sla-filter-owner': getUniqueValues('owner'),
+                'aging-filter-owner': getUniqueValues('owner')
+            };
+
+            for (const id in dropdowns) {
+                const select = document.getElementById(id);
+                if (select) {
+                    const originalValue = select.value;
+                    select.innerHTML = `<option value="">All ${id.split('-').pop().replace('global', 'Owners').replace('service', 'Service Types').replace('status', 'Statuses')}</option>`;
+                    dropdowns[id].forEach(value => {
+                        select.innerHTML += `<option value="${value}">${value}</option>`;
+                    });
+                    if (originalValue && dropdowns[id].includes(originalValue)) {
+                        select.value = originalValue;
+                    }
+                }
+            }
+        }
+
+        function updateGlobalFilters() {
+            console.log("Filters updating...");
+            
+            globalFilters.owner = document.getElementById('global-filter-owner').value;
+            globalFilters.submittedby = document.getElementById('global-filter-submittedby').value;
+            globalFilters.service = document.getElementById('global-filter-service').value;
+            globalFilters.status = document.getElementById('global-filter-status').value;
+            globalFilters.sla = document.getElementById('global-filter-sla').value;
+
+            filteredData = processedData.filter(d => {
+                if (globalFilters.owner && d.owner !== globalFilters.owner) return false;
+                if (globalFilters.submittedby && d.submittedBy !== globalFilters.submittedby) return false;
+                if (globalFilters.service && d.service !== globalFilters.service) return false;
+                if (globalFilters.status && d.currentStatus !== globalFilters.status) return false;
+                if (globalFilters.sla === 'Violated' && !d.isSlaViolated) return false;
+                if (globalFilters.sla === 'Non-Violated' && d.isSlaViolated) return false;
+                return true;
+            });
+
+            console.log(`Filtered data: ${filteredData.length} cases`);
+            
+            // CRITICAL: Update both views
             renderKPIDashboard();
             renderDetailedDashboard();
             
-            document.getElementById('last-updated').textContent = `Last Updated: ${new Date().toLocaleTimeString()}`;
-            document.getElementById('total-cases').textContent = `${filteredData.length} Open Cases`;
-            document.getElementById('active-filters-count').textContent = `${Object.values(currentFilters).filter(v=>v).length} filters active`;
+            const activeCount = Object.values(globalFilters).filter(v => v).length;
+            document.getElementById('active-filters-count').textContent = `${activeCount} filter${activeCount === 1 ? '' : 's'} active`;
         }
 
-        // ================= KPI DASHBOARD LOGIC (Recommendations Focus) =================
-        
-        function renderKPIDashboard() {
-            const totalCases = filteredData.length;
-            const slaViolated = filteredData.filter(d => d.isSlaViolated);
-            const totalSR = filteredData.filter(d => d.isSR).length;
-            const totalINC = filteredData.filter(d => d.isINC).length;
+        function clearAllFilters() {
+            console.log("Clearing all filters");
             
-            // SLA Compliance calculation is kept for the Scorecard and Detailed View metrics
-            const slaCompliance = totalCases > 0 ? ((totalCases - slaViolated.length) / totalCases * 100) : 100;
+            document.getElementById('global-filter-owner').value = '';
+            document.getElementById('global-filter-submittedby').value = '';
+            document.getElementById('global-filter-service').value = '';
+            document.getElementById('global-filter-status').value = '';
+            document.getElementById('global-filter-sla').value = '';
+            
+            globalFilters.owner = '';
+            globalFilters.submittedby = '';
+            globalFilters.service = '';
+            globalFilters.status = '';
+            globalFilters.sla = '';
+            
+            filteredData = [...processedData];
+            
+            console.log(`Reset to ${filteredData.length} cases`);
+            
+            renderKPIDashboard();
+            renderDetailedDashboard();
+            
+            document.getElementById('active-filters-count').textContent = '0 filters active';
+        }
 
+        function updateOwnerFilter(owner) {
+            document.getElementById('global-filter-owner').value = owner;
+            updateGlobalFilters();
+        }
+
+        function updateCard(kpiId, value, recommendation, drillDownFunction) {
+            document.getElementById(kpiId).textContent = value;
+            document.getElementById(`${kpiId}-tag`).textContent = recommendation.status;
+            document.getElementById(`${kpiId}-tag`).className = `kpi-status-tag ${recommendation.tag}`;
+            document.getElementById(`${kpiId}-rec`).textContent = recommendation.rec;
+            document.getElementById(`${kpiId}-card`).onclick = drillDownFunction;
+        }
+
+        function renderKPIDashboard() {
             const m = {
-                // Section 1 (Overall Case Volume)
-                totalOpen: totalCases,
-                totalSR: totalSR,
-                totalINC: totalINC,
-                // Section 2 (SLA Compliance)
+                totalOpen: filteredData.length,
+                totalSR: filteredData.filter(d => d.isSR).length,
+                totalINC: filteredData.filter(d => d.isINC).length,
                 slaSR: filteredData.filter(d => d.isSR && d.isSlaViolated).length,
                 slaINC: filteredData.filter(d => d.isINC && d.isSlaViolated).length,
-                // Section 3 (Aging & Old Cases)
-                aging15: filteredData.filter(d => d.agingDays > 15).length,
-                oldest25: filteredData.filter(d => d.agingDays > 25).length,
-                // Section 4 (Follow-up & Response Misses)
+                aging15: filteredData.filter(d => d.isAging15Violated).length,
+                oldest25: filteredData.filter(d => d.isOldest25).length,
                 followUp: filteredData.filter(d => d.isFollowUpMissed).length,
                 emailMiss: filteredData.filter(d => d.emailCompliance === 'No Followup').length,
                 respMiss: filteredData.filter(d => d.emailCompliance === 'Email Response Missed').length,
-                // Section 5 (Subsequent SLA & Response Tracking)
                 subRespMiss: filteredData.filter(d => d.isSubsequentResponseMissed).length,
                 subSLAMiss: filteredData.filter(d => d.isSubsequentSLABreach).length,
-                // Section 6 (Idle Case Monitoring & EDOC)
-                idle1: filteredData.filter(d => d.agingFromLastModified > 1).length,
-                idle3: filteredData.filter(d => d.agingFromLastModified > 3).length,
-                // Section 7 (SR-Specific Compliance)
+                idle1: filteredData.filter(d => d.isIdle1).length,
+                idle3: filteredData.filter(d => d.isIdle3).length,
                 edoc: filteredData.filter(d => d.isEdocBreached).length,
             };
 
-            // --- Recommendation Messages ---
-            
-            // 1. Info Cards (No action needed)
             const infoRec = { status: 'INFO', tag: 'bg-info-tag', rec: 'Statistical count of active cases.' };
             const srRec = { status: 'INFO', tag: 'bg-info-tag', rec: 'Breakdown of active Service Requests.' };
             const incRec = { status: 'INFO', tag: 'bg-info-tag', rec: 'Breakdown of active Incident Management cases.' };
 
-            // 2. SLA Compliance (Violated)
             let slaSRRec = { status: 'GOOD', tag: 'bg-good', rec: 'No SR cases currently in violation.' };
             if (m.slaSR > 0) slaSRRec = { status: 'URGENT', tag: 'bg-urgent', rec: `Immediate action required to resolve ${m.slaSR} violated SR cases.` };
 
             let slaINCRec = { status: 'GOOD', tag: 'bg-good', rec: 'No INC cases currently in violation.' };
             if (m.slaINC > 0) slaINCRec = { status: 'URGENT', tag: 'bg-urgent', rec: `Immediate action required to resolve ${m.slaINC} violated INC cases.` };
 
-            // 3. Aging & Old Cases
             let aging15Rec = { status: 'GOOD', tag: 'bg-good', rec: 'No cases have crossed the 15-day warning threshold.' };
-            if (m.oldest25 > 0) aging15Rec = { status: 'URGENT', tag: 'bg-urgent', rec: `Contains ${m.oldest25} case(s) > 25 days. URGENT action needed.` };
-            else if (m.aging15 > 0) aging15Rec = { status: 'MONITOR', tag: 'bg-monitor', rec: `Monitor the ${m.aging15} cases over 15 days to prevent critical aging.` };
-            
-            let oldest25Rec = { status: 'GOOD', tag: 'bg-good', rec: 'No critical old cases requiring urgent action.' };
-            if (m.oldest25 > 0) oldest25Rec = { status: 'URGENT', tag: 'bg-urgent', rec: `URGENT: ${m.oldest25} cases are older than 25 days. Prioritize these.` };
+            if (m.aging15 > 0) aging15Rec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${m.aging15} cases are aging > 15 days. Prioritize these for closure.` };
+            if (m.oldest25 > 0) aging15Rec = { status: 'URGENT', tag: 'bg-urgent', rec: `Contains ${m.oldest25} critical cases aged > 25 days. URGENT action.` };
 
-            // 4. Follow-up & Response Misses
+            let oldest25Rec = { status: 'GOOD', tag: 'bg-good', rec: 'No critical old cases requiring urgent action.' };
+            if (m.oldest25 > 0) oldest25Rec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.oldest25} cases are critically old (> 25 days). URGENT action.` };
+
             let fuRec = { status: 'GOOD', tag: 'bg-good', rec: 'All cases have a valid, upcoming follow-up date.' };
-            if (m.followUp > 5) fuRec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.followUp} missed follow-ups. Clear these immediately.` };
-            else if (m.followUp > 0) fuRec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `Address ${m.followUp} missed follow-ups today.` };
-            
+            if (m.followUp > 0) fuRec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.followUp} follow-up dates missed. Update immediately.` };
+
             let emailFURec = { status: 'GOOD', tag: 'bg-good', rec: 'All email follow-ups are compliant.' };
-            if (m.emailMiss > 0) emailFURec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${m.emailMiss} cases missed email follow-up. Review compliance.` };
-            
+            if (m.emailMiss > 0) emailFURec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${m.emailMiss} email follow-ups missed. Check last email action.` };
+
             let respMissRec = { status: 'GOOD', tag: 'bg-good', rec: 'No missed client responses reported.' };
             if (m.respMiss > 0) respMissRec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.respMiss} email responses missed. High risk of SLA breach.` };
 
-            // 5. Subsequent SLA & Response Tracking
             let subRespRec = { status: 'GOOD', tag: 'bg-good', rec: 'All subsequent response dates are met or tracked.' };
             if (m.subRespMiss > 0) subRespRec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${m.subRespMiss} subsequent responses missed. Update case.` };
-            
+
             let subSLARec = { status: 'GOOD', tag: 'bg-good', rec: 'No cases have breached the subsequent SLA threshold.' };
             if (m.subSLAMiss > 0) subSLARec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.subSLAMiss} subsequent SLA breaches. Root cause analysis needed.` };
 
-            // 6. Idle Case Monitoring & EDOC
             let idle1Rec = { status: 'INFO', tag: 'bg-info-tag', rec: 'Monitor these cases for potential stagnation.' };
-            if (m.idle3 > 0) idle1Rec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `Contains ${m.idle3} cases idle > 3 days. Focus on these.` };
+            if (m.idle1 > 0) {
+                idle1Rec = { status: 'MONITOR', tag: 'bg-monitor', rec: `${m.idle1} cases idle > 1 day. Check last action and assign follow-up.` };
+            }
+            if (m.idle3 > 0) {
+                idle1Rec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `Contains ${m.idle3} critical cases idle > 3 days. Focus on these.` };
+            }
             
             let idle3Rec = { status: 'GOOD', tag: 'bg-good', rec: 'No critical cases idle for more than 3 days.' };
-            if (m.idle3 > 0) idle3Rec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.idle3} cases are critically idle (> 3 days). URGENT follow-up.` };
-            
+            if (m.idle3 > 0) { 
+                idle3Rec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.idle3} cases are critically idle (> 3 days). URGENT follow-up.` }; 
+            }
+
             let edocRec = { status: 'GOOD', tag: 'bg-good', rec: 'No SR cases have breached their Expected Date of Closure.' };
-            if (m.edoc > 0) edocRec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.edoc} SR EDOC breaches. Re-engage clients or escalate.` };
+            if (m.edoc > 0) edocRec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.edoc} SR EDOC breaches. These must be resolved or re-scheduled immediately.` };
 
-            
-            // --- Helper to update card DOM (Simplified) ---
-            const updateCard = (id, value, statusObj, clickFn) => {
-                const card = document.getElementById(`${id}-card`);
-                const valueEl = document.getElementById(id);
-                const tagEl = document.getElementById(`${id}-tag`);
-                const recEl = document.getElementById(`${id}-rec`);
-
-                if (!card || !valueEl || !tagEl || !recEl) { return; }
-
-                card.className = `kpi-card`; 
-                card.onclick = clickFn;
-                valueEl.textContent = value;
-                
-                tagEl.textContent = statusObj.status;
-                tagEl.className = `kpi-status-tag ${statusObj.tag}`;
-                recEl.textContent = statusObj.rec;
-            };
-
-
-            // --- Render KPI Cards ---
-            
-            // 1. Overall Case Volume (INFO)
             updateCard('kpi-total', m.totalOpen, infoRec, () => openDrillDown('totalOpen', 'Total Open Cases'));
             updateCard('kpi-sr', m.totalSR, srRec, () => openDrillDown('totalSR', 'Total Service Requests (SR)'));
             updateCard('kpi-inc', m.totalINC, incRec, () => openDrillDown('totalINC', 'Total Incidents (INC)'));
 
-            // 2. SLA Compliance
             updateCard('kpi-sla-sr', m.slaSR, slaSRRec, () => openDrillDown('slaSR', 'SLA Violated - SR'));
             updateCard('kpi-sla-inc', m.slaINC, slaINCRec, () => openDrillDown('slaINC', 'SLA Violated - INC'));
 
-            // 3. Aging & Old Cases
             updateCard('kpi-aging-15', m.aging15, aging15Rec, () => openDrillDown('aging15', 'Aging > 15 Days'));
             updateCard('kpi-aging-25', m.oldest25, oldest25Rec, () => openDrillDown('oldest25', 'Oldest Cases (> 25 Days)'));
 
-            // 4. Follow-up & Response Misses
             updateCard('kpi-followup', m.followUp, fuRec, () => openDrillDown('followUpMissed', 'Follow-up Date Missed'));
             updateCard('kpi-email-followup', m.emailMiss, emailFURec, () => openDrillDown('emailNoFollowup', 'Email Follow-up Missed'));
             updateCard('kpi-email-resp', m.respMiss, respMissRec, () => openDrillDown('emailResponseMissed', 'Email Response Missed'));
 
-            // 5. Subsequent SLA & Response Tracking
             updateCard('kpi-sub-resp', m.subRespMiss, subRespRec, () => openDrillDown('subsequentResponseMissed', 'Subsequent Response Missed'));
             updateCard('kpi-sub-sla', m.subSLAMiss, subSLARec, () => openDrillDown('subsequentSLAMiss', 'Subsequent SLA Miss'));
 
-            // 6. Idle Case Monitoring & EDOC
             updateCard('kpi-idle-1', m.idle1, idle1Rec, () => openDrillDown('idle1', 'Idle > 1 Day'));
             updateCard('kpi-idle-3', m.idle3, idle3Rec, () => openDrillDown('idle3', 'Idle > 3 Days'));
             updateCard('kpi-edoc', m.edoc, edocRec, () => openDrillDown('edocBreach', 'SR EDOC Breach'));
             
-            renderOwnerScorecard(slaCompliance); // Pass compliance for table only
+            const slaViolatedCount = filteredData.filter(d => d.isSlaViolated).length;
+            const overallSLACompliance = filteredData.length > 0 ? (((filteredData.length - slaViolatedCount) / filteredData.length) * 100).toFixed(1) : 100.0;
+            renderOwnerScorecard(overallSLACompliance);
         }
-        
+
         function renderOwnerScorecard(overallSLACompliance) {
             const counts = {};
             filteredData.forEach(d => {
                 if(!counts[d.owner]) counts[d.owner] = { 
-                    total: 0, sr: 0, inc: 0, slaSR: 0, slaINC: 0, aging15: 0, oldest25: 0, 
-                    followUpMissed: 0, emailFollowupMissed: 0, emailResponseMissed: 0, 
-                    subsequentResponseMissed: 0, subsequentSLABreach: 0, idle1: 0, idle3: 0, violations: 0, edocBreach: 0 
+                    total: 0, 
+                    violations: 0, 
+                    sr: 0, 
+                    inc: 0, 
+                    slaSR: 0, 
+                    slaINC: 0,
+                    aging15: 0, 
+                    oldest25: 0, 
+                    followUpMissed: 0, 
+                    emailFollowupMissed: 0,
+                    emailResponseMissed: 0,
+                    subsequentResponseMissed: 0,
+                    subsequentSLABreach: 0,
+                    idle1: 0,
+                    idle3: 0,
+                    edocBreach: 0,
                 };
-                const c = counts[d.owner];
-                c.total++;
-                if(d.isSR) c.sr++;
-                if(d.isINC) c.inc++;
-                
-                if(d.isSlaViolated) {
-                    c.violations++;
-                    if(d.isSR) c.slaSR++;
-                    if(d.isINC) c.slaINC++;
-                }
-
-                if(d.agingDays > 15) c.aging15++;
-                if(d.agingDays > 25) c.oldest25++;
-                
-                if(d.isFollowUpMissed) c.followUpMissed++;
-                if(d.emailCompliance === 'No Followup') c.emailFollowupMissed++;
-                if(d.emailCompliance === 'Email Response Missed') c.emailResponseMissed++;
-
-                if(d.isSubsequentResponseMissed) c.subsequentResponseMissed++;
-                if(d.isSubsequentSLABreach) c.subsequentSLABreach++;
-                
-                if(d.agingFromLastModified > 1) c.idle1++;
-                if(d.agingFromLastModified > 3) c.idle3++;
-                
-                if(d.isEdocBreached) c.edocBreach++;
+                counts[d.owner].total++;
+                if(d.isSlaViolated) counts[d.owner].violations++;
+                if(d.isSR) counts[d.owner].sr++;
+                if(d.isINC) counts[d.owner].inc++;
+                if(d.isSR && d.isSlaViolated) counts[d.owner].slaSR++;
+                if(d.isINC && d.isSlaViolated) counts[d.owner].slaINC++;
+                if(d.isAging15Violated) counts[d.owner].aging15++;
+                if(d.isOldest25) counts[d.owner].oldest25++;
+                if(d.isFollowUpMissed) counts[d.owner].followUpMissed++;
+                if(d.emailCompliance === 'No Followup') counts[d.owner].emailFollowupMissed++;
+                if(d.emailCompliance === 'Email Response Missed') counts[d.owner].emailResponseMissed++;
+                if(d.isSubsequentResponseMissed) counts[d.owner].subsequentResponseMissed++;
+                if(d.isSubsequentSLABreach) counts[d.owner].subsequentSLABreach++;
+                if(d.isIdle1) counts[d.owner].idle1++;
+                if(d.isIdle3) counts[d.owner].idle3++;
+                if(d.isEdocBreached) counts[d.owner].edocBreach++;
             });
 
-            const owners = Object.keys(counts).sort((a,b) => counts[b].total - counts[a].total);
-            const tbody = document.getElementById('owner-scorecard-body');
             scorecardData = [];
-            
-            tbody.innerHTML = owners.map(o => {
+            const scorecardHtml = Object.keys(counts).sort().map(o => {
                 const stats = counts[o];
-                const complianceRate = stats.total > 0 ? ((stats.total - stats.violations) / stats.total * 100).toFixed(1) : 100;
-                let complianceColor = complianceRate >= 95 ? 'bg-success' : complianceRate >= 80 ? 'bg-warning' : 'bg-danger';
-                
+                const complianceRate = stats.total > 0 ? (((stats.total - stats.violations) / stats.total) * 100).toFixed(1) : 100.0;
+                let complianceColor = 'bg-success';
+                if (complianceRate < 80) complianceColor = 'bg-danger';
+                else if (complianceRate < 95) complianceColor = 'bg-warning';
+
                 scorecardData.push({
                     'Owner': o,
-                    'Overall SLA Compliance': `${complianceRate}%`,
+                    'Overall SLA %': complianceRate,
                     'Total Open Cases': stats.total,
                     'Total SR': stats.sr,
                     'Total INC': stats.inc,
-                    'SLA Violated – SR': stats.slaSR,
-                    'SLA Violated – INC': stats.slaINC,
+                    'SLA Viol. – SR': stats.slaSR,
+                    'SLA Viol. – INC': stats.slaINC,
                     'Aging >15 Days': stats.aging15,
                     'Oldest >25 Days': stats.oldest25,
-                    'Follow-up Missed': stats.followUpMissed,
-                    'Email Follow-up Missed': stats.emailFollowupMissed,
-                    'Email Response Missed': stats.emailResponseMissed,
-                    'Subsequent Response Missed': stats.subsequentResponseMissed,
-                    'Subsequent SLA Miss': stats.subsequentSLABreach,
+                    'F/Up Missed': stats.followUpMissed,
+                    'Email F/Up Missed': stats.emailFollowupMissed,
+                    'Email Resp Missed': stats.emailResponseMissed,
+                    'Sub. Resp Missed': stats.subsequentResponseMissed,
+                    'Sub. SLA Miss': stats.subsequentSLABreach,
                     'Idle >1 Day': stats.idle1,
                     'Idle >3 Days': stats.idle3,
                     'SR EDOC Breach': stats.edocBreach,
                 });
-                
+
                 return `
                     <tr class="align-middle" onclick="updateOwnerFilter('${o}')" style="cursor: pointer;">
                         <td>${o}</td>
@@ -898,49 +1027,70 @@
                     </tr>
                 `;
             }).join('');
+
+            document.getElementById('owner-scorecard-body').innerHTML = scorecardHtml || '<tr><td colspan="18" class="text-center text-muted">No data found for selected filters.</td></tr>';
         }
 
-        function exportScorecardToExcel() {
-            if(!scorecardData.length) return alert("Scorecard data not ready or filtered to zero results.");
-            const ws = XLSX.utils.json_to_sheet(scorecardData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Team Scorecard");
-            XLSX.writeFile(wb, `MSP_Team_Scorecard_Export_${new Date().toISOString().slice(0, 10)}.xlsx`);
-        }
-
-        function openDrillDown(type, title) {
+        function openDrillDown(kpi, title) {
             drillDownTitleForExport = title;
-            let subset = [];
-            
-            switch(type) {
-                case 'compliance': subset = filteredData.filter(d => !d.isSlaViolated); break;
-                case 'totalOpen': subset = filteredData; break;
-                case 'totalSR': subset = filteredData.filter(d => d.isSR); break;
-                case 'totalINC': subset = filteredData.filter(d => d.isINC); break;
-                case 'slaSR': subset = filteredData.filter(d => d.isSR && d.isSlaViolated); break;
-                case 'slaINC': subset = filteredData.filter(d => d.isINC && d.isSlaViolated); break;
-                case 'aging15': subset = filteredData.filter(d => d.agingDays > 15); break;
-                case 'oldest25': subset = filteredData.filter(d => d.agingDays > 25); break;
-                case 'followUpMissed': subset = filteredData.filter(d => d.isFollowUpMissed); break;
-                case 'emailNoFollowup': subset = filteredData.filter(d => d.emailCompliance === 'No Followup'); break;
-                case 'emailResponseMissed': subset = filteredData.filter(d => d.emailCompliance === 'Email Response Missed'); break;
-                case 'subsequentResponseMissed': subset = filteredData.filter(d => d.isSubsequentResponseMissed); break;
-                case 'subsequentSLAMiss': subset = filteredData.filter(d => d.isSubsequentSLABreach); break;
-                case 'idle1': subset = filteredData.filter(d => d.agingFromLastModified > 1); break;
-                case 'idle3': subset = filteredData.filter(d => d.agingFromLastModified > 3); break;
-                case 'edocBreach': subset = filteredData.filter(d => d.isEdocBreached); break;
-                default: subset = [];
+            document.getElementById('drillDownTitle').textContent = title;
+
+            switch(kpi) {
+                case 'totalOpen':
+                    drillDownData = filteredData;
+                    break;
+                case 'totalSR':
+                    drillDownData = filteredData.filter(d => d.isSR);
+                    break;
+                case 'totalINC':
+                    drillDownData = filteredData.filter(d => d.isINC);
+                    break;
+                case 'slaSR':
+                    drillDownData = filteredData.filter(d => d.isSR && d.isSlaViolated);
+                    break;
+                case 'slaINC':
+                    drillDownData = filteredData.filter(d => d.isINC && d.isSlaViolated);
+                    break;
+                case 'aging15':
+                    drillDownData = filteredData.filter(d => d.isAging15Violated);
+                    break;
+                case 'oldest25':
+                    drillDownData = filteredData.filter(d => d.isOldest25);
+                    break;
+                case 'followUpMissed':
+                    drillDownData = filteredData.filter(d => d.isFollowUpMissed);
+                    break;
+                case 'emailNoFollowup':
+                    drillDownData = filteredData.filter(d => d.emailCompliance === 'No Followup');
+                    break;
+                case 'emailResponseMissed':
+                    drillDownData = filteredData.filter(d => d.emailCompliance === 'Email Response Missed');
+                    break;
+                case 'subsequentResponseMissed':
+                    drillDownData = filteredData.filter(d => d.isSubsequentResponseMissed);
+                    break;
+                case 'subsequentSLAMiss':
+                    drillDownData = filteredData.filter(d => d.isSubsequentSLABreach);
+                    break;
+                case 'idle1':
+                    drillDownData = filteredData.filter(d => d.isIdle1);
+                    break;
+                case 'idle3':
+                    drillDownData = filteredData.filter(d => d.isIdle3);
+                    break;
+                case 'edocBreach':
+                    drillDownData = filteredData.filter(d => d.isEdocBreached);
+                    break;
+                default:
+                    drillDownData = [];
             }
             
-            drillDownData = subset;
-            document.getElementById('drillDownTitle').textContent = title;
-            document.getElementById('drillDownCount').textContent = `${subset.length} Cases`;
-            
-            const tbody = document.getElementById('drillDownBody');
-            tbody.innerHTML = subset.map(d => `
-                <tr>
+            document.getElementById('drillDownCount').textContent = `${drillDownData.length} Cases`;
+
+            const drillDownHtml = drillDownData.map((d, index) => `
+                <tr onclick="viewCaseDetail(${processedData.findIndex(p => p.incidentId === d.incidentId)})" style="cursor: pointer;">
                     <td>${d.incidentId}</td>
-                    <td><div style="max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${d.title}">${d.title}</div></td>
+                    <td><div style="max-width:350px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${d.title}">${d.title}</div></td>
                     <td>${d.owner}</td>
                     <td>${d.currentStatus}</td>
                     <td>${d.agingDays}</td>
@@ -948,11 +1098,12 @@
                     <td>${d.nextFollowUp || '--'}</td>
                 </tr>
             `).join('');
-            
+
+            document.getElementById('drillDownBody').innerHTML = drillDownHtml || '<tr><td colspan="7" class="text-center text-muted">No cases found.</td></tr>';
+
             new bootstrap.Modal(document.getElementById('drillDownModal')).show();
         }
 
-        // ================= DETAILED DASHBOARD LOGIC (Updated to include Compliance Rate) =================
         function renderDetailedDashboard() {
             const totalCases = filteredData.length;
             const slaViolatedCount = filteredData.filter(d => d.isSlaViolated).length;
@@ -962,11 +1113,8 @@
             document.getElementById('total-sr-detail').textContent = filteredData.filter(d => d.isSR).length;
             document.getElementById('total-inc-detail').textContent = filteredData.filter(d => d.isINC).length;
             document.getElementById('sla-compliance-rate').textContent = `${slaComplianceRate}%`;
-            
-            // The old SLA Violation count is implicitly visible in the charts and SLA tab.
 
             renderOriginalCharts();
-
             renderTodayActions();
             renderAllCases();
             renderSLAViolations();
@@ -974,69 +1122,240 @@
             renderRecommendations();
             renderOwnerAnalysis();
         }
-        
+
+        function renderOriginalCharts() {
+            Object.values(charts).forEach(chart => chart && chart.destroy());
+
+            const statusCounts = {};
+            filteredData.forEach(d => {
+                statusCounts[d.currentStatus] = (statusCounts[d.currentStatus] || 0) + 1;
+            });
+            charts.statusChart = new Chart(document.getElementById('statusChart'), {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(statusCounts),
+                    datasets: [{
+                        data: Object.values(statusCounts),
+                        backgroundColor: ['#2c3e50', '#3498db', '#95a5a6', '#e74c3c', '#27ae60', '#f39c12']
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                }
+            });
+
+            const aCounts = { '0-5':0, '6-10':0, '11-15':0, '16+':0 };
+            filteredData.forEach(d => {
+                if(d.agingDays<=5) aCounts['0-5']++;
+                else if(d.agingDays<=10) aCounts['6-10']++;
+                else if(d.agingDays<=15) aCounts['11-15']++;
+                else aCounts['16+']++;
+            });
+            charts.agingChart = new Chart(document.getElementById('agingChart'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(aCounts),
+                    datasets: [{
+                        label: 'Cases',
+                        data: Object.values(aCounts),
+                        backgroundColor: ['#27ae60', '#f39c12', '#e67e22', '#c0392b']
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            const ownerCounts = {};
+            filteredData.forEach(d => {
+                if(!ownerCounts[d.owner]) ownerCounts[d.owner] = { total: 0, violations: 0, aging15: 0 };
+                ownerCounts[d.owner].total++;
+                if(d.isSlaViolated) ownerCounts[d.owner].violations++;
+                if(d.isAging15Violated) ownerCounts[d.owner].aging15++;
+            });
+
+            const owners = Object.keys(ownerCounts).sort();
+            const violationRates = owners.map(o => (ownerCounts[o].violations / ownerCounts[o].total * 100).toFixed(1));
+            const aging15Counts = owners.map(o => ownerCounts[o].aging15);
+            
+            charts.ownerChart = new Chart(document.getElementById('ownerChart'), {
+                type: 'bar',
+                data: {
+                    labels: owners,
+                    datasets: [
+                        {
+                            label: 'SLA Violation Rate (%)',
+                            data: violationRates,
+                            backgroundColor: 'rgba(192, 57, 43, 0.7)',
+                            yAxisID: 'y1',
+                        },
+                        {
+                            label: 'Aging > 15 Days Count',
+                            data: aging15Counts,
+                            backgroundColor: 'rgba(243, 156, 18, 0.7)',
+                            yAxisID: 'y2',
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        x: { stacked: false },
+                        y1: { 
+                            type: 'linear', 
+                            display: true, 
+                            position: 'left',
+                            title: { display: true, text: 'Violation Rate (%)' },
+                            beginAtZero: true,
+                            max: 100
+                        },
+                        y2: { 
+                            type: 'linear', 
+                            display: true, 
+                            position: 'right',
+                            title: { display: true, text: 'Aging Count' },
+                            grid: { drawOnChartArea: false },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
         function renderTodayActions() {
             const actionCases = filteredData.filter(d => 
                 d.isSlaViolated || 
-                d.agingDays > 25 || 
-                d.isEdocBreached ||
-                d.isFollowUpMissed ||
+                d.isOldest25 || 
+                d.isEdocBreached || 
+                d.isFollowUpMissed || 
                 d.isSubsequentResponseMissed || 
-                d.agingFromLastModified > 3 // Idle > 3 Days
+                d.isIdle3
             );
-            renderFilteredCases(actionCases, 'actions-container');
+            renderFilteredCases(actionCases, 'actions-container', true);
         }
 
-        function renderAllCases() { renderFilteredCases(filteredData, 'cases-container'); }
-        function renderSLAViolations() { renderFilteredCases(filteredData.filter(d => d.isSlaViolated), 'sla-violations-container'); }
-        function renderAgingCases() { renderFilteredCases(filteredData.filter(d => d.agingDays > 15), 'aging-cases-container'); }
+        function renderAllCases() {
+            filterCases();
+        }
+
+        function renderSLAViolations() {
+            filterSLAViolations();
+        }
+
+        function renderAgingCases() {
+            filterAgingCases();
+        }
+
+        function filterCases() {
+            const svc = document.getElementById('filter-service').value;
+            const own = document.getElementById('filter-owner').value;
+            const stat = document.getElementById('filter-status').value;
+
+            let sub = filteredData.filter(d => 
+                (!svc || d.service===svc) && 
+                (!own || d.owner===own) && 
+                (!stat || d.currentStatus===stat)
+            );
+            renderFilteredCases(sub, 'cases-container', false);
+        }
+
+        function filterSLAViolations() {
+            const own = document.getElementById('sla-filter-owner').value;
+            let sub = filteredData.filter(d => d.isSlaViolated && (!own || d.owner===own));
+            renderFilteredCases(sub, 'sla-violations-container', false);
+        }
         
-        function renderFilteredCases(cases, containerId) {
+        function filterAgingCases() {
+            const own = document.getElementById('aging-filter-owner').value;
+            let sub = filteredData.filter(d => d.isAging15Violated && (!own || d.owner===own));
+            renderFilteredCases(sub, 'aging-cases-container', false);
+        }
+
+        function clearTabFilters(tabId) {
+            if (tabId === 'cases') {
+                document.getElementById('filter-service').value = '';
+                document.getElementById('filter-owner').value = '';
+                document.getElementById('filter-status').value = '';
+                filterCases();
+            } else if (tabId === 'sla') {
+                document.getElementById('sla-filter-owner').value = '';
+                filterSLAViolations();
+            } else if (tabId === 'aging') {
+                document.getElementById('aging-filter-owner').value = '';
+                filterAgingCases();
+            }
+        }
+
+        function renderFilteredCases(cases, containerId, isActionList = false) {
             const container = document.getElementById(containerId);
-            if(!cases.length) { container.innerHTML = `<div class="alert alert-info mt-3">No cases match the criteria.</div>`; return; }
-            
-            container.innerHTML = cases.map((d) => {
-                const globalIndex = processedData.findIndex(x => x.incidentId === d.incidentId);
-                let borderClass = d.isSlaViolated || d.agingDays > 15 || d.agingFromLastModified > 3 ? 'warning-card' : 'case-card';
-                
-                let agingClass = 'text-success';
-                if(d.agingDays > 25) agingClass = 'text-danger';
-                else if(d.agingDays > 15) agingClass = 'text-warning';
-                
-                return `
-                    <div class="card ${borderClass} mb-2">
-                        <div class="card-body py-2">
-                            <div class="row align-items-center">
-                                <div class="col-md-9">
-                                    <div class="d-flex align-items-center">
-                                        <span class="badge rounded-pill me-2 ${d.isSlaViolated ? 'bg-danger' : 'bg-success'}">${d.isSlaViolated ? 'VIOLATED' : 'GOOD'}</span>
-                                        <h6 class="mb-0 text-truncate" style="max-width: 500px;">${d.title}</h6>
-                                    </div>
-                                    <div class="mt-1 small">
-                                        <span class="badge bg-secondary me-2">${d.incidentId}</span>
-                                        <span class="owner-tag"><i class="bi bi-person"></i> ${d.owner}</span>
-                                        <span class="text-muted ms-3">Last Mod: ${d.lastModified}</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 text-end">
-                                    <div class="fw-bold ${agingClass}">${d.agingDays} Days Old</div>
-                                    <div class="small text-muted mb-1">${d.currentStatus} / F/Up: ${d.nextFollowUp || '--'}</div>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${globalIndex})">Action Plan</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-            }).join('');
+            if(!cases.length) {
+                container.innerHTML = `<div class="alert alert-info mt-3">No cases matching the criteria found.</div>`;
+                return;
+            }
+
+            const tableHtml = `
+                <table class="table table-sm table-striped table-hover mt-3 detailed-case-table">
+                    <thead>
+                        <tr>
+                            <th>Incident ID</th>
+                            <th>Title</th>
+                            <th>Owner</th>
+                            <th>Status</th>
+                            <th>Aging</th>
+                            <th>SLA Status</th>
+                            <th>Next Follow-up</th>
+                            ${isActionList ? '<th>Action Reason</th>' : ''}
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${cases.map(d => {
+                            const globalIndex = processedData.findIndex(p => p.incidentId === d.incidentId);
+                            let actionReason = '';
+                            if (isActionList) {
+                                const reasons = [];
+                                if (d.isSlaViolated) reasons.push('SLA Violated');
+                                if (d.isOldest25) reasons.push('Aged > 25 Days');
+                                if (d.isEdocBreached) reasons.push('EDOC Breached');
+                                if (d.isFollowUpMissed) reasons.push('F/Up Missed');
+                                if (d.isSubsequentResponseMissed) reasons.push('Sub. Resp Missed');
+                                if (d.isIdle3) reasons.push('Idle > 3 Days');
+                                actionReason = `<td class="text-danger fw-bold small">${reasons.join(', ')}</td>`;
+                            }
+                            return `
+                                <tr class="align-middle" style="cursor: pointer;">
+                                    <td>${d.incidentId}</td>
+                                    <td><div style="max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${d.title}">${d.title}</div></td>
+                                    <td>${d.owner}</td>
+                                    <td>${d.currentStatus}</td>
+                                    <td>${d.agingDays}</td>
+                                    <td class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">${d.slaViolationStatus}</td>
+                                    <td>${d.nextFollowUp || '--'}</td>
+                                    ${actionReason}
+                                    <td><button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${globalIndex})">View</button></td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+            container.innerHTML = tableHtml;
         }
 
         function renderRecommendations() {
             const recommendations = [];
             filteredData.forEach(d => {
                 const recs = [];
-                if(d.isSlaViolated) recs.push({text: 'SLA Violated: Immediate Escalation Required.', color: 'text-danger'});
-                if(d.agingDays > 25) recs.push({text: `Critical Aging (${d.agingDays} days): Define action plan.`, color: 'text-danger'});
-                if(d.isSubsequentSLABreach) recs.push({text: `Subsequent SLA Miss: High risk of repeated failure.`, color: 'text-danger'});
-                if(d.agingFromLastModified > 3) recs.push({text: `Idle > 3 Days: Needs immediate follow-up to client or internal team.`, color: 'text-danger'});
+                if (d.isOldest25) recs.push({text: `Aged > 25 Days: Needs immediate action plan.`, color: 'text-danger'});
+                if (d.isEdocBreached) recs.push({text: `SR EDOC Breach: Requires urgent resolution or EDOC change.`, color: 'text-danger'});
+                if (d.isSlaViolated) recs.push({text: `SLA Violated: Check root cause and plan fix.`, color: 'text-danger'});
+                if (d.isFollowUpMissed) recs.push({text: `Follow-up Date Missed: Update next follow-up date now.`, color: 'text-danger'});
+                if (d.isSubsequentResponseMissed) recs.push({text: `Subsequent Response Missed: Update case action plan.`, color: 'text-danger'});
+                if (d.isIdle3) recs.push({text: `Idle > 3 Days: Needs immediate follow-up to client or internal team.`, color: 'text-danger'});
                 
                 if(recs.length) recommendations.push({incidentId: d.incidentId, title: d.title, owner: d.owner, recs: recs});
             });
@@ -1058,7 +1377,8 @@
                             </ul>
                             <button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${globalIndex})">View Action Plan</button>
                         </div>
-                    </div>`;
+                    </div>
+                `;
             }).join('');
         }
 
@@ -1068,7 +1388,7 @@
                 if(!counts[d.owner]) counts[d.owner] = { total: 0, violations: 0, aging15: 0, sr: 0, inc: 0 };
                 counts[d.owner].total++;
                 if(d.isSlaViolated) counts[d.owner].violations++;
-                if(d.agingDays > 15) counts[d.owner].aging15++;
+                if(d.isAging15Violated) counts[d.owner].aging15++;
                 if(d.isSR) counts[d.owner].sr++;
                 if(d.isINC) counts[d.owner].inc++;
             });
@@ -1077,7 +1397,6 @@
             const breakdownHtml = owners.map(o => {
                 const stats = counts[o];
                 const complianceRate = stats.total > 0 ? ((stats.total - stats.violations) / stats.total * 100).toFixed(1) : 100;
-                
                 return `
                     <div class="col-md-3 mb-3">
                         <div class="card text-center h-100">
@@ -1085,55 +1404,22 @@
                                 <h5 class="mb-2">${o}</h5>
                                 <div class="row small fw-bold">
                                     <div class="col-4">${stats.total}<br><span class="text-muted">Total</span></div>
-                                    <div class="col-4 text-danger">${stats.violations}<br><span class="text-muted">SLA Fail</span></div>
-                                    <div class="col-4 text-warning">${stats.aging15}<br><span class="text-muted">Aging>15</span></div>
+                                    <div class="col-4 text-danger">${stats.violations}<br><span class="text-muted">Violations</span></div>
+                                    <div class="col-4 text-warning">${stats.aging15}<br><span class="text-muted">Aging >15</span></div>
                                 </div>
-                                <hr class="my-2">
-                                <div class="small">SLA Compliance: <span class="fw-bold text-${complianceRate >= 95 ? 'success' : 'danger'}">${complianceRate}%</span></div>
-                                <div class="small text-muted">SR/INC: ${stats.sr}/${stats.inc}</div>
+                                <h4 class="mt-3 ${complianceRate < 80 ? 'text-danger' : complianceRate < 95 ? 'text-warning' : 'text-success'}">${complianceRate}%</h4>
+                                <p class="small text-muted mb-0">SLA Compliance Rate</p>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
-            document.getElementById('owner-breakdown').innerHTML = `<div class="row">${breakdownHtml}</div>`;
-
-            // Chart Rendering
-            if (charts.ownerChart) charts.ownerChart.destroy();
-            charts.ownerChart = new Chart(document.getElementById('ownerChart'), {
-                type: 'bar',
-                data: {
-                    labels: owners,
-                    datasets: [
-                        { label: 'SLA Violations', data: owners.map(o => counts[o].violations), backgroundColor: 'rgba(192, 57, 43, 0.8)' },
-                        { label: 'Aging > 15 Days', data: owners.map(o => counts[o].aging15), backgroundColor: 'rgba(243, 156, 18, 0.8)' }
-                    ]
-                },
-                options: { maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } }
-            });
+            document.getElementById('owner-breakdown').innerHTML = breakdownHtml;
         }
-        
-        function renderOriginalCharts() {
-            // Status Chart
-            if (charts.statusChart) charts.statusChart.destroy();
-            const sCounts = {}; filteredData.forEach(d => sCounts[d.currentStatus] = (sCounts[d.currentStatus]||0)+1);
-            charts.statusChart = new Chart(document.getElementById('statusChart'), {
-                type: 'doughnut', data: { labels: Object.keys(sCounts), datasets: [{ data: Object.values(sCounts), backgroundColor: ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6'] }] },
-                options: { maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
-            });
 
-            // Aging Chart
-            if (charts.agingChart) charts.agingChart.destroy();
-            const aCounts = { '0-5':0, '6-10':0, '11-15':0, '16+':0 };
-            filteredData.forEach(d => { if(d.agingDays<=5) aCounts['0-5']++; else if(d.agingDays<=10) aCounts['6-10']++; else if(d.agingDays<=15) aCounts['11-15']++; else aCounts['16+']++; });
-            charts.agingChart = new Chart(document.getElementById('agingChart'), {
-                type: 'bar', data: { labels: Object.keys(aCounts), datasets: [{ label: 'Cases', data: Object.values(aCounts), backgroundColor: ['#27ae60', '#f39c12', '#e67e22', '#c0392b'] }] },
-                options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
-            });
-        }
-        
         function viewCaseDetail(idx) {
             const d = processedData[idx];
+            document.getElementById('caseDetailTitle').textContent = `${d.incidentId}: ${d.title}`;
             document.getElementById('case-detail-content').innerHTML = `
                 <h5>${d.incidentId}: ${d.title}</h5>
                 <hr>
@@ -1143,104 +1429,35 @@
                         <p><strong>Status:</strong> ${d.currentStatus}</p>
                         <p><strong>Service:</strong> ${d.service}</p>
                         <p><strong>SLA:</strong> <span class="fw-bold text-${d.isSlaViolated ? 'danger' : 'success'}">${d.slaViolationStatus}</span></p>
+                        <p><strong>Submitted By:</strong> ${d.submittedBy}</p>
                     </div>
                     <div class="col-md-6">
                         <p><strong>Aging:</strong> ${d.agingDays} days</p>
-                        <p><strong>Next Follow-up:</strong> <span class="fw-bold">${d.nextFollowUp || 'N/A'}</span></p>
-                        <p><strong>Expected Resolution (EDOC):</strong> ${d.expectedResolution || 'N/A'}</p>
-                        <p><strong>Email Compliance:</strong> ${d.emailCompliance}</p>
+                        <p><strong>Idle Since Last Modified:</strong> ${d.agingFromLastModified} days</p>
+                        <p><strong>Next Follow-up (R:R):</strong> <span class="fw-bold text-${d.isFollowUpMissed ? 'danger' : 'success'}">${d.nextFollowUp || '--'}</span></p>
+                        <p><strong>Subsequent Response (H:H):</strong> <span class="fw-bold text-${d.isSubsequentResponseMissed ? 'danger' : 'success'}">${d.subsequentResponse || '--'}</span></p>
+                        <p><strong>Expected Resolution (K:K):</strong> <span class="fw-bold text-${d.isEdocBreached ? 'danger' : 'success'}">${d.expectedResolution || '--'}</span></p>
                     </div>
                 </div>
-                <div class="mt-4 alert alert-info">
-                    <h6>Action Plan/Steps:</h6>
-                    <p>${d.steps || 'No detailed steps provided in the source file.'}</p>
-                </div>
+                <hr>
+                <h6>Compliance and Missed Actions (S:S)</h6>
+                <p><strong>Email Compliance:</strong> <span class="fw-bold text-${d.emailCompliance.includes('Missed') || d.emailCompliance.includes('No Followup') ? 'danger' : 'success'}">${d.emailCompliance || 'Compliant'}</span></p>
+                <p><strong>Subsequent SLA Miss Count (Y:Y):</strong> <span class="fw-bold text-${d.isSubsequentSLABreach ? 'danger' : 'success'}">${d.subsequentSLABreachCount}</span></p>
+                <hr>
+                <h6>Raw Data for Reference (Steps)</h6>
+                <div class="alert alert-secondary small">${d._raw[Object.keys(d._raw).find(k => k && k.toString().toLowerCase().includes('steps'))] || 'N/A'}</div>
             `;
             new bootstrap.Modal(document.getElementById('caseDetailModal')).show();
         }
 
-        // --- Filter Helpers ---
-
-        function updateGlobalFilters() {
-            currentFilters = {
-                service: document.getElementById('global-filter-service').value,
-                owner: document.getElementById('global-filter-owner').value,
-                status: document.getElementById('global-filter-status').value,
-                sla: document.getElementById('global-filter-sla').value,
-                submittedby: document.getElementById('global-filter-submittedby').value
-            };
-            
-            filteredData = processedData.filter(d => {
-                if(currentFilters.service && d.service !== currentFilters.service) return false;
-                if(currentFilters.owner && d.owner !== currentFilters.owner) return false;
-                if(currentFilters.status && d.currentStatus !== currentFilters.status) return false;
-                if(currentFilters.submittedby && d.submittedBy !== currentFilters.submittedby) return false;
-                if(currentFilters.sla === 'Violated' && d.slaViolationStatus !== 'Violated') return false;
-                if(currentFilters.sla === 'Non-Violated' && d.slaViolationStatus !== 'Non-Violated') return false;
-                return true;
-            });
-            
-            updateDashboard();
-        }
-        
-        function updateOwnerFilter(owner) {
-            document.getElementById('global-filter-owner').value = owner;
-            updateGlobalFilters();
-            new bootstrap.Tab(document.getElementById('view-detailed-tab')).show();
-            new bootstrap.Tab(document.getElementById('owners-tab')).show();
-        }
-        
-        function updateAllFilters() {
-            const dataToUse = processedData; 
-            const services = [...new Set(dataToUse.map(d=>d.service).filter(Boolean))].sort();
-            const owners = [...new Set(dataToUse.map(d=>d.owner).filter(Boolean))].sort();
-            const statuses = [...new Set(dataToUse.map(d=>d.currentStatus).filter(Boolean))].sort();
-            const submitters = [...new Set(dataToUse.map(d=>d.submittedBy).filter(Boolean))].sort();
-            
-            updateSelect('global-filter-service', services, currentFilters.service);
-            updateSelect('global-filter-owner', owners, currentFilters.owner);
-            updateSelect('global-filter-status', statuses, currentFilters.status);
-            updateSelect('global-filter-submittedby', submitters, currentFilters.submittedby);
-            
-            updateSelect('filter-service', services); updateSelect('filter-owner', owners); updateSelect('filter-status', statuses);
-            updateSelect('sla-filter-owner', owners); updateSelect('aging-filter-owner', owners);
+        function exportScorecardToExcel() {
+            if(!scorecardData.length) return alert("Scorecard data not ready or filtered to zero results.");
+            const ws = XLSX.utils.json_to_sheet(scorecardData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Scorecard_Export");
+            XLSX.writeFile(wb, `MSP_Scorecard_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
         }
 
-        function updateSelect(id, options, current) {
-            const sel = document.getElementById(id); if(!sel) return;
-            const val = current || sel.value;
-            sel.innerHTML = sel.options[0].outerHTML;
-            options.forEach(o => sel.add(new Option(o, o, false, o === val)));
-        }
-
-        function clearAllFilters() {
-            ['global-filter-service','global-filter-owner','global-filter-status','global-filter-sla','global-filter-submittedby'].forEach(id => document.getElementById(id).value = '');
-            updateGlobalFilters();
-        }
-
-        function clearTabFilters(tab) {
-            if(tab === 'cases') { document.getElementById('filter-service').value=''; document.getElementById('filter-owner').value=''; document.getElementById('filter-status').value=''; filterCases(); }
-            if(tab === 'sla') { document.getElementById('sla-filter-owner').value=''; filterSLAViolations(); }
-            if(tab === 'aging') { document.getElementById('aging-filter-owner').value=''; filterAgingCases(); }
-        }
-
-        function filterCases() {
-            const svc = document.getElementById('filter-service').value, own = document.getElementById('filter-owner').value, stat = document.getElementById('filter-status').value;
-            let sub = filteredData.filter(d => (!svc || d.service===svc) && (!own || d.owner===own) && (!stat || d.currentStatus===stat));
-            renderFilteredCases(sub, 'cases-container');
-        }
-        function filterSLAViolations() {
-            const own = document.getElementById('sla-filter-owner').value;
-            let sub = filteredData.filter(d => d.isSlaViolated && (!own || d.owner===own));
-            renderFilteredCases(sub, 'sla-violations-container');
-        }
-        function filterAgingCases() {
-            const own = document.getElementById('aging-filter-owner').value;
-            let sub = filteredData.filter(d => d.agingDays > 15 && (!own || d.owner===own));
-            renderFilteredCases(sub, 'aging-cases-container');
-        }
-
-        // Export Functions
         function exportDrillDownToExcel() {
             if(!drillDownData.length) return alert("No data to export.");
             const ws = XLSX.utils.json_to_sheet(drillDownData.map(d => d._raw));
@@ -1256,9 +1473,10 @@
             XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
             XLSX.writeFile(wb, `MSP_Filtered_Data_Export.xlsx`);
         }
-		document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
+
+        function updateDashboard() {
+            renderKPIDashboard();
+        }
     </script>
 </body>
 </html>
