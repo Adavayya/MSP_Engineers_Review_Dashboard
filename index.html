@@ -24,45 +24,46 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background: linear-gradient(135deg, #F8FAFF 0%, #F0F4FF 100%);
             min-height: 100vh;
+            font-size: 0.9rem;
         }
         
         .navbar-brand {
             font-weight: 700;
-            font-size: 1.2rem;
-            letter-spacing: -0.5px;
+            font-size: 1.1rem;
+            letter-spacing: -0.3px;
         }
         
         .card { 
             border: none; 
-            border-radius: 16px; 
-            box-shadow: 0 8px 24px rgba(95, 37, 159, 0.1); 
-            margin-bottom: 15px; 
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-radius: 12px; 
+            box-shadow: 0 6px 16px rgba(95, 37, 159, 0.08); 
+            margin-bottom: 12px; 
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
             overflow: hidden;
         }
         
         .card:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 16px 32px rgba(95, 37, 159, 0.15);
+            transform: translateY(-4px); 
+            box-shadow: 0 12px 24px rgba(95, 37, 159, 0.12);
         }
         
         .global-filters { 
             background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%); 
-            padding: 20px; 
-            border-radius: 16px; 
-            margin-bottom: 25px; 
-            border-left: 6px solid var(--primary-color); 
-            box-shadow: 0 4px 16px rgba(95, 37, 159, 0.08);
-            border-top: 1px solid rgba(0,0,0,0.05);
+            padding: 16px; 
+            border-radius: 12px; 
+            margin-bottom: 20px; 
+            border-left: 5px solid var(--primary-color); 
+            box-shadow: 0 4px 12px rgba(95, 37, 159, 0.06);
+            border-top: 1px solid rgba(0,0,0,0.03);
         }
         
         .main-view-tabs .nav-link { 
-            font-size: 1rem; 
+            font-size: 0.95rem; 
             font-weight: 600;
             color: #6B7280; 
-            margin-right: 8px; 
-            border-radius: 12px 12px 0 0; 
-            padding: 12px 20px;
+            margin-right: 6px; 
+            border-radius: 10px 10px 0 0; 
+            padding: 10px 16px;
             background-color: #f1f3f5;
             transition: all 0.2s;
             border: 1px solid transparent;
@@ -77,40 +78,40 @@
             background: linear-gradient(135deg, var(--primary-color) 0%, #7B3FD9 100%);
             color: white; 
             border-bottom: none;
-            box-shadow: 0 4px 12px rgba(95, 37, 159, 0.2);
+            box-shadow: 0 4px 8px rgba(95, 37, 159, 0.15);
         }
         
         .view-content { 
             border: 1px solid #e0e6ed; 
             border-top: none; 
             background: white; 
-            padding: 30px; 
-            border-radius: 0 0 16px 16px; 
-            min-height: 650px;
-            box-shadow: 0 4px 20px rgba(95, 37, 159, 0.05);
+            padding: 20px; 
+            border-radius: 0 0 12px 12px; 
+            min-height: 600px;
+            box-shadow: 0 4px 12px rgba(95, 37, 159, 0.04);
         }
         
         .kpi-section-title { 
-            font-size: 0.75rem; 
+            font-size: 0.7rem; 
             font-weight: 700; 
             color: var(--primary-color); 
             border-bottom: 2px solid var(--light-gray); 
-            padding-bottom: 8px; 
-            margin-bottom: 12px; 
-            margin-top: 15px; 
+            padding-bottom: 6px; 
+            margin-bottom: 10px; 
+            margin-top: 12px; 
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
         }
         
         .kpi-card { 
             background: white; 
-            border-radius: 12px; 
-            box-shadow: 0 6px 16px rgba(95, 37, 159, 0.08); 
-            padding: 20px; 
-            border-left: 6px solid var(--primary-color); 
+            border-radius: 10px; 
+            box-shadow: 0 5px 12px rgba(95, 37, 159, 0.06); 
+            padding: 16px; 
+            border-left: 5px solid var(--primary-color); 
             cursor: pointer; 
             height: 100%; 
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             position: relative;
             overflow: hidden;
         }
@@ -121,10 +122,10 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
+            height: 3px;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             transform: scaleX(0);
-            transition: transform 0.3s ease;
+            transition: transform 0.25s ease;
         }
         
         .kpi-card:hover::before {
@@ -133,50 +134,50 @@
         
         .kpi-card:hover { 
             background-color: #F8FAFF; 
-            transform: translateY(-8px); 
-            box-shadow: 0 16px 32px rgba(95, 37, 159, 0.15); 
+            transform: translateY(-6px); 
+            box-shadow: 0 12px 24px rgba(95, 37, 159, 0.12); 
         }
         
         .kpi-title { 
-            font-size: 0.7rem; 
+            font-size: 0.65rem; 
             color: var(--dark-gray); 
             font-weight: 700; 
             text-transform: uppercase; 
-            margin-bottom: 5px; 
+            margin-bottom: 4px; 
             opacity: 0.9; 
             line-height: 1.2;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
         }
         
         .kpi-value { 
-            font-size: 2.2rem; 
+            font-size: 1.8rem; 
             font-weight: 800; 
             color: var(--primary-color); 
-            margin: 8px 0;
+            margin: 6px 0;
             line-height: 1;
         }
         
         .kpi-status-tag { 
-            font-size: 0.65rem; 
+            font-size: 0.6rem; 
             font-weight: 700; 
             text-transform: uppercase; 
-            padding: 4px 10px; 
-            border-radius: 20px; 
-            margin-bottom: 8px;
+            padding: 3px 8px; 
+            border-radius: 16px; 
+            margin-bottom: 6px;
             display: inline-block;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            letter-spacing: 0.4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
         }
         
         .kpi-recommendation {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 500;
-            margin-top: 10px;
-            opacity: 0.9;
-            line-height: 1.4;
+            margin-top: 8px;
+            opacity: 0.85;
+            line-height: 1.3;
             color: var(--dark-gray);
-            border-top: 1px solid #f0f0f0;
-            padding-top: 10px;
+            border-top: 1px solid #f5f5f5;
+            padding-top: 8px;
         }
         
         .bg-urgent { background: linear-gradient(135deg, #FF3B5C, #FF6B8B); color: white; }
@@ -185,22 +186,22 @@
         .bg-info-tag { background: linear-gradient(135deg, var(--secondary-color), #5D9CFF); color: white; }
         
         .accordion-item { 
-            margin-bottom: 15px; 
-            border-radius: 12px; 
+            margin-bottom: 12px; 
+            border-radius: 10px; 
             border: none; 
-            box-shadow: 0 4px 12px rgba(95, 37, 159, 0.06); 
+            box-shadow: 0 3px 8px rgba(95, 37, 159, 0.04); 
             overflow: hidden;
         }
         
-        .accordion-header { border-radius: 12px 12px 0 0; }
+        .accordion-header { border-radius: 10px 10px 0 0; }
         
         .accordion-button { 
-            font-size: 1.05rem; 
+            font-size: 0.95rem; 
             font-weight: 600; 
             color: var(--primary-color); 
             background-color: #F8FAFF; 
             border-bottom: 1px solid #e9ecef; 
-            padding: 16px 20px;
+            padding: 14px 16px;
         }
         
         .accordion-button:not(.collapsed) { 
@@ -214,62 +215,67 @@
             border-color: var(--primary-color);
         }
         
-        .accordion-body { padding: 20px; }
+        .accordion-body { padding: 16px; }
         
         .scorecard-table th { 
             background: linear-gradient(135deg, var(--primary-color), #7B3FD9); 
             color: white; 
             border: none; 
-            font-size: 0.75rem; 
+            font-size: 0.7rem; 
             vertical-align: middle; 
-            padding: 12px 8px; 
+            padding: 10px 6px; 
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
             position: sticky;
             top: 0;
             z-index: 10;
+            white-space: nowrap;
         }
         
         .scorecard-table td { 
-            font-size: 0.8rem; 
-            padding: 12px 8px; 
+            font-size: 0.75rem; 
+            padding: 10px 6px; 
             vertical-align: middle;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f5f5f5;
+            white-space: nowrap;
         }
         
         .critical-cell { 
-            background-color: rgba(255, 59, 92, 0.12); 
+            background-color: rgba(255, 59, 92, 0.1); 
             color: #FF3B5C; 
             font-weight: 700;
             border-left: 3px solid #FF3B5C;
+            font-size: 0.72rem;
         }
         
         .high-cell { 
-            background-color: rgba(255, 159, 0, 0.12); 
+            background-color: rgba(255, 159, 0, 0.1); 
             color: #FF9F00; 
             border-left: 3px solid #FF9F00;
+            font-size: 0.72rem;
         }
         
         .success-cell { 
-            background-color: rgba(0, 212, 170, 0.12); 
+            background-color: rgba(0, 212, 170, 0.1); 
             color: var(--accent-color); 
             border-left: 3px solid var(--accent-color);
+            font-size: 0.72rem;
         }
         
         .compliance-gauge { 
-            height: 10px; 
-            border-radius: 5px; 
-            background-color: #f0f0f0;
+            height: 8px; 
+            border-radius: 4px; 
+            background-color: #f5f5f5;
             overflow: hidden;
         }
         
         .metric-card { 
             border: none; 
-            border-radius: 16px; 
-            box-shadow: 0 8px 24px rgba(95, 37, 159, 0.08); 
+            border-radius: 12px; 
+            box-shadow: 0 6px 16px rgba(95, 37, 159, 0.06); 
             background: white;
-            transition: all 0.3s;
+            transition: all 0.25s;
             position: relative;
             overflow: hidden;
         }
@@ -280,33 +286,33 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
+            height: 3px;
             background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         }
         
         .metric-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 16px 32px rgba(95, 37, 159, 0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(95, 37, 159, 0.1);
         }
         
         .metric-card .card-body { 
             text-align: center; 
-            padding: 30px 15px;
+            padding: 24px 12px;
         }
         
         .metric-value { 
-            font-size: 3rem; 
+            font-size: 2.2rem; 
             font-weight: 800; 
             color: var(--primary-color); 
             line-height: 1;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         
         .metric-label { 
-            font-size: 0.9rem; 
+            font-size: 0.8rem; 
             color: var(--dark-gray); 
             text-transform: uppercase; 
-            letter-spacing: 1px; 
+            letter-spacing: 0.8px; 
             font-weight: 600;
         }
         
@@ -315,35 +321,43 @@
             font-weight: 600;
             color: var(--primary-color);
             text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+        }
+        
+        .detailed-case-table td {
             font-size: 0.8rem;
-            letter-spacing: 0.5px;
+            padding: 10px 8px;
+            vertical-align: middle;
         }
         
         .owner-tag { 
             background: linear-gradient(135deg, #E8E6FF, #D6D1FF); 
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.85rem; 
+            padding: 3px 10px; 
+            border-radius: 16px; 
+            font-size: 0.8rem; 
             font-weight: 600;
             color: var(--primary-color);
             display: inline-block;
+            white-space: nowrap;
         }
         
         .upload-area {
             text-align: center; 
             border: 2px dashed #D1D5FF; 
-            padding: 40px; 
+            padding: 30px; 
             cursor: pointer;
-            border-radius: 16px;
+            border-radius: 12px;
             background: linear-gradient(135deg, #F8FAFF 0%, #F0F4FF 100%);
-            transition: all 0.3s;
+            transition: all 0.25s;
         }
         
         .upload-area:hover {
             border-color: var(--secondary-color);
             background: linear-gradient(135deg, #F0F7FF 0%, #E8F1FF 100%);
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(61, 127, 255, 0.15);
+            box-shadow: 0 6px 16px rgba(61, 127, 255, 0.12);
         }
         
         .upload-area.dragover {
@@ -355,14 +369,15 @@
             background: linear-gradient(135deg, var(--primary-color), #7B3FD9);
             border: none;
             font-weight: 600;
-            padding: 10px 24px;
-            border-radius: 10px;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
         }
         
         .btn-primary:hover {
             background: linear-gradient(135deg, #7B3FD9, var(--primary-color));
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(95, 37, 159, 0.2);
+            box-shadow: 0 6px 16px rgba(95, 37, 159, 0.15);
         }
         
         .btn-success {
@@ -373,21 +388,21 @@
         .filter-badge {
             background: linear-gradient(135deg, var(--secondary-color), #5D9CFF);
             color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+            padding: 3px 10px;
+            border-radius: 16px;
+            font-size: 0.7rem;
             font-weight: 600;
-            margin-right: 5px;
+            margin-right: 4px;
             display: inline-flex;
             align-items: center;
         }
         
         .tab-content {
             background: white;
-            border-radius: 0 0 16px 16px;
+            border-radius: 0 0 12px 12px;
             border: 1px solid #e0e6ed;
             border-top: none;
-            padding: 25px;
+            padding: 20px;
         }
         
         .nav-tabs {
@@ -396,11 +411,12 @@
         
         .nav-tabs .nav-link {
             border: none;
-            border-radius: 10px 10px 0 0;
-            margin-right: 5px;
+            border-radius: 8px 8px 0 0;
+            margin-right: 4px;
             font-weight: 500;
             color: var(--dark-gray);
-            padding: 10px 20px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
             transition: all 0.2s;
         }
         
@@ -419,12 +435,12 @@
         .modal-header {
             background: linear-gradient(135deg, var(--primary-color), #7B3FD9);
             color: white;
-            border-radius: 16px 16px 0 0;
-            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            padding: 16px;
         }
         
         .progress-bar {
-            border-radius: 5px;
+            border-radius: 4px;
         }
         
         .table-hover tbody tr:hover {
@@ -434,26 +450,29 @@
         
         .badge {
             font-weight: 600;
-            padding: 6px 12px;
-            border-radius: 10px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
         }
         
         .form-select, .form-control {
-            border-radius: 10px;
+            border-radius: 8px;
             border: 1px solid #D1D5FF;
-            padding: 10px 12px;
+            padding: 8px 10px;
+            font-size: 0.85rem;
             transition: all 0.2s;
         }
         
         .form-select:focus, .form-control:focus {
             border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.25rem rgba(95, 37, 159, 0.15);
+            box-shadow: 0 0 0 0.2rem rgba(95, 37, 159, 0.12);
         }
         
         .alert {
-            border-radius: 12px;
+            border-radius: 10px;
             border: none;
-            box-shadow: 0 4px 12px rgba(95, 37, 159, 0.05);
+            box-shadow: 0 4px 8px rgba(95, 37, 159, 0.04);
+            font-size: 0.85rem;
         }
         
         .loading-spinner {
@@ -475,39 +494,40 @@
         }
         
         .spinner-border {
-            width: 3rem;
-            height: 3rem;
+            width: 2.5rem;
+            height: 2.5rem;
             color: var(--primary-color);
         }
         
         .filter-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-            padding: 12px;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 10px;
             background-color: #F8FAFF;
-            border-radius: 10px;
+            border-radius: 8px;
         }
         
         .filter-tag {
             background: linear-gradient(135deg, var(--secondary-color), #5D9CFF);
             color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: 0 2px 6px rgba(61, 127, 255, 0.2);
+            gap: 5px;
+            box-shadow: 0 2px 4px rgba(61, 127, 255, 0.15);
         }
         
         .filter-tag .close {
             color: white;
             opacity: 0.8;
             cursor: pointer;
-            margin-left: 8px;
+            margin-left: 6px;
             font-weight: bold;
+            font-size: 1rem;
         }
         
         .filter-tag .close:hover {
@@ -517,6 +537,212 @@
         .drilldown-table th {
             background: linear-gradient(135deg, var(--primary-color), #7B3FD9);
             color: white;
+            font-size: 0.75rem;
+            padding: 10px 8px;
+            white-space: nowrap;
+        }
+        
+        .drilldown-table td {
+            font-size: 0.8rem;
+            padding: 10px 8px;
+            vertical-align: middle;
+        }
+        
+        .drilldown-table {
+            font-size: 0.85rem;
+        }
+        
+        .compact-view {
+            font-size: 0.8rem;
+        }
+        
+        .compact-view .table th,
+        .compact-view .table td {
+            padding: 8px 6px;
+        }
+        
+        .compact-view .btn-sm {
+            padding: 3px 8px;
+            font-size: 0.75rem;
+        }
+        
+        /* Grid View Styles */
+        .grid-view-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .case-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(95, 37, 159, 0.06);
+            padding: 16px;
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.2s;
+            height: 100%;
+        }
+        
+        .case-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(95, 37, 159, 0.12);
+        }
+        
+        .case-card.critical {
+            border-left-color: var(--danger-color);
+        }
+        
+        .case-card.warning {
+            border-left-color: var(--warning-color);
+        }
+        
+        .case-card.success {
+            border-left-color: var(--success-color);
+        }
+        
+        .case-id {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+        
+        .case-title {
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+            margin-bottom: 10px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .case-meta {
+            font-size: 0.75rem;
+            color: #6B7280;
+            margin-bottom: 8px;
+        }
+        
+        .case-meta-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .case-meta-item i {
+            margin-right: 6px;
+            width: 14px;
+            color: var(--primary-color);
+        }
+        
+        .case-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .case-tag {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        
+        .case-tag.urgent {
+            background-color: rgba(255, 59, 92, 0.12);
+            color: #FF3B5C;
+        }
+        
+        .case-tag.warning {
+            background-color: rgba(255, 159, 0, 0.12);
+            color: #FF9F00;
+        }
+        
+        .case-tag.info {
+            background-color: rgba(61, 127, 255, 0.12);
+            color: var(--secondary-color);
+        }
+        
+        .case-tag.success {
+            background-color: rgba(0, 212, 170, 0.12);
+            color: var(--accent-color);
+        }
+        
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+        }
+        
+        .view-toggle-btn {
+            background: #f1f3f5;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            color: #6B7280;
+            transition: all 0.2s;
+        }
+        
+        .view-toggle-btn:hover, .view-toggle-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .truncate-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+        
+        @media (max-width: 1400px) {
+            .scorecard-table th,
+            .scorecard-table td {
+                font-size: 0.68rem;
+                padding: 8px 4px;
+            }
+            
+            .kpi-value {
+                font-size: 1.6rem;
+            }
+            
+            .metric-value {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .grid-view-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .scorecard-table th,
+            .scorecard-table td {
+                font-size: 0.65rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .grid-view-container {
+                grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+            }
+            
+            .global-filters .col-md-2 {
+                margin-bottom: 10px;
+            }
+            
+            .view-content {
+                padding: 15px;
+            }
+            
+            .accordion-body {
+                padding: 12px;
+            }
         }
     </style>
 </head>
@@ -524,7 +750,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark shadow" style="background: linear-gradient(135deg, var(--primary-color), #7B3FD9);">
         <div class="container-fluid">
             <div class="logo-container d-flex align-items-center">
-                <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="Logo" style="height: 35px;" class="me-3">
+                <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="Logo" style="height: 30px;" class="me-3">
                 <a class="navbar-brand" href="#">
                     MSP Support Engineers - Daily Review Dashboard
                 </a>
@@ -536,16 +762,16 @@
         </div>
     </nav>
 
-    <div class="container-fluid mt-4">
+    <div class="container-fluid mt-3">
         
-        <div class="row mb-4" id="upload-section">
+        <div class="row mb-3" id="upload-section">
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="upload-area" id="drop-area" style="text-align:center;">
-                            <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="Logo" style="height: 50px; margin-bottom: 15px; opacity: 0.8;">
-                            <h4 class="mb-3">Upload MSP Review Record</h4>
-                            <p class="text-muted mb-4">Drag & Drop Excel/CSV or Click to Browse</p>
+                            <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="Logo" style="height: 40px; margin-bottom: 12px; opacity: 0.8;">
+                            <h5 class="mb-2">Upload MSP Review Record</h5>
+                            <p class="text-muted mb-3">Drag & Drop Excel/CSV or Click to Browse</p>
                             <button class="btn btn-lg btn-primary">
                                 <i class="bi bi-cloud-upload me-2"></i>Select File
                             </button>
@@ -570,41 +796,41 @@
 
         <div id="dashboard-section" style="display: none;">
             
-            <div class="row mb-4">
+            <div class="row mb-3">
                 <div class="col-12">
                     <div class="global-filters">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
                             <h6 class="mb-0"><i class="bi bi-funnel-fill me-2" style="color: var(--primary-color);"></i>Global Filters</h6>
                             <button class="btn btn-sm btn-outline-danger" id="clear-filters-btn">
                                 <i class="bi bi-x-circle me-1"></i>Clear All
                             </button>
                         </div>
-                        <div class="row g-3">
-                            <div class="col-md-2">
+                        <div class="row g-2">
+                            <div class="col-md-2 col-6">
                                 <label class="form-label small fw-bold mb-1">Owner</label>
                                 <select class="form-select form-select-sm" id="global-filter-owner">
                                     <option value="">All Owners</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-2 col-6">
                                 <label class="form-label small fw-bold mb-1">Submitted By</label>
                                 <select class="form-select form-select-sm" id="global-filter-submittedby">
                                     <option value="">All Submitted By</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-2 col-6">
                                 <label class="form-label small fw-bold mb-1">Service Type</label>
                                 <select class="form-select form-select-sm" id="global-filter-service">
                                     <option value="">All Service Types</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-2 col-6">
                                 <label class="form-label small fw-bold mb-1">Status</label>
                                 <select class="form-select form-select-sm" id="global-filter-status">
                                     <option value="">All Statuses</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-2 col-6">
                                 <label class="form-label small fw-bold mb-1">SLA Status</label>
                                 <select class="form-select form-select-sm" id="global-filter-sla">
                                     <option value="">All SLA Status</option>
@@ -612,9 +838,9 @@
                                     <option value="Non-Violated">SLA Non-Violated</option>
                                 </select>
                             </div>
-                            <div class="col-md-2 d-flex align-items-end">
+                            <div class="col-md-2 col-6 d-flex align-items-end">
                                 <button class="btn btn-sm btn-primary w-100" onclick="exportFullData()">
-                                    <i class="bi bi-download me-1"></i> Export Filtered
+                                    <i class="bi bi-download me-1"></i> Export
                                 </button>
                             </div>
                         </div>
@@ -623,7 +849,7 @@
                             <!-- Active filter tags will appear here -->
                         </div>
                         
-                        <div class="mt-3 small text-muted">
+                        <div class="mt-2 small text-muted">
                             <i class="bi bi-info-circle me-1"></i>
                             <span id="active-filters-count">0 filters active</span> | 
                             <span id="filtered-cases-count">Showing 0 of 0 cases</span>
@@ -659,7 +885,7 @@
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                                 <div class="accordion-body">
-                                    <div class="row g-3">
+                                    <div class="row g-2">
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-total-card">
                                                 <span class="kpi-status-tag bg-info-tag" id="kpi-total-tag">INFO</span>
@@ -697,7 +923,7 @@
                             </h2>
                             <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                                 <div class="accordion-body">
-                                    <div class="row g-3">
+                                    <div class="row g-2">
                                         <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-sla-sr-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-sla-sr-tag">GOOD</span>
@@ -727,7 +953,7 @@
                             </h2>
                             <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
                                 <div class="accordion-body">
-                                    <div class="row g-3">
+                                    <div class="row g-2">
                                         <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-aging-15-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-aging-15-tag">GOOD</span>
@@ -757,11 +983,11 @@
                             </h2>
                             <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour">
                                 <div class="accordion-body">
-                                    <div class="row g-3">
+                                    <div class="row g-2">
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-followup-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-followup-tag">GOOD</span>
-                                                <div class="kpi-title">Follow-up Missed</div>
+                                                <div class="kpi-title">Follow-up Date Missed</div>
                                                 <div class="kpi-value" id="kpi-followup">0</div>
                                                 <div class="kpi-recommendation" id="kpi-followup-rec">All cases have a valid, upcoming follow-up date.</div>
                                             </div>
@@ -795,7 +1021,7 @@
                             </h2>
                             <div id="collapseFive" class="accordion-collapse collapse show" aria-labelledby="headingFive">
                                 <div class="accordion-body">
-                                    <div class="row g-3">
+                                    <div class="row g-2">
                                         <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-sub-resp-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-sub-resp-tag">GOOD</span>
@@ -825,7 +1051,7 @@
                             </h2>
                             <div id="collapseSix" class="accordion-collapse collapse show" aria-labelledby="headingSix">
                                 <div class="accordion-body">
-                                    <div class="row g-3">
+                                    <div class="row g-2">
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-idle-1-card">
                                                 <span class="kpi-status-tag bg-info-tag" id="kpi-idle-1-tag">INFO</span>
@@ -857,10 +1083,10 @@
 
                     </div>
                     
-                    <h5 class="mt-5 mb-3" style="color: var(--primary-color);">
+                    <h6 class="mt-4 mb-2" style="color: var(--primary-color);">
                         <i class="bi bi-person-lines-fill me-2"></i>Team Performance Scorecard
-                    </h5>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+                    </h6>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
                         <div class="small text-muted">
                             Click on any row to filter by that owner
                         </div>
@@ -868,8 +1094,8 @@
                             <i class="bi bi-download me-1"></i> Export Scorecard
                         </button>
                     </div>
-                    <div class="card p-3 overflow-auto">
-                        <table class="table table-sm table-striped table-hover scorecard-table" id="owner-scorecard-table" style="min-width: 1400px;">
+                    <div class="card p-2 overflow-auto">
+                        <table class="table table-sm table-striped table-hover scorecard-table compact-view" id="owner-scorecard-table" style="min-width: 1400px;">
                             <thead>
                                 <tr>
                                     <th>Owner</th>
@@ -881,7 +1107,7 @@
                                     <th>SLA Viol. – INC</th>
                                     <th>Aging >15 Days</th>
                                     <th>Oldest >25 Days</th>
-                                    <th>F/Up Missed</th>
+                                    <th>F/Up Date Missed</th>
                                     <th>Email F/Up Missed</th>
                                     <th>Email Resp Missed</th>
                                     <th>Sub. Resp Missed</th>
@@ -893,7 +1119,7 @@
                                 </tr>
                             </thead>
                             <tbody id="owner-scorecard-body">
-                                <tr><td colspan="18" class="text-center text-muted py-4">Processing data...</td></tr>
+                                <tr><td colspan="18" class="text-center text-muted py-3">Processing data...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -901,7 +1127,7 @@
 
                 <div class="tab-pane fade" id="view-detailed" role="tabpanel">
                     
-                    <div class="row mb-4">
+                    <div class="row mb-3">
                         <div class="col-md-3">
                             <div class="card metric-card">
                                 <div class="card-body">
@@ -936,24 +1162,24 @@
                         </div>
                     </div>
 
-                    <div class="row mb-4">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="mb-0"><i class="bi bi-pie-chart-fill me-2" style="color: var(--primary-color);"></i>Cases by Status</h5>
+                                    <h6 class="mb-0"><i class="bi bi-pie-chart-fill me-2" style="color: var(--primary-color);"></i>Cases by Status</h6>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="statusChart" height="250"></canvas>
+                                    <canvas id="statusChart" height="200"></canvas>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="mb-0"><i class="bi bi-bar-chart-fill me-2" style="color: var(--primary-color);"></i>Aging Analysis</h5>
+                                    <h6 class="mb-0"><i class="bi bi-bar-chart-fill me-2" style="color: var(--primary-color);"></i>Aging Analysis</h6>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="agingChart" height="250"></canvas>
+                                    <canvas id="agingChart" height="200"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -995,80 +1221,92 @@
                     <div class="tab-content" id="dashboardTabsContent">
                         
                         <div class="tab-pane fade show active" id="actions">
-                            <div class="alert alert-danger shadow-sm">
+                            <div class="alert alert-danger shadow-sm mb-2">
                                 <i class="bi bi-exclamation-circle-fill me-2"></i>
-                                This list shows all cases requiring immediate owner action today (Follow-up Missed, EDOC Breached, Critical Aging).
+                                This list shows all cases requiring immediate owner action today.
                             </div>
                             <div id="actions-container"></div>
                         </div>
                         
                         <div class="tab-pane fade" id="cases">
-                            <div class="filter-section p-3 bg-light rounded mb-3 shadow-sm">
-                                <div class="row g-3">
-                                    <div class="col-md-3">
-                                        <label class="form-label small fw-bold mb-1">Service Type</label>
-                                        <select class="form-select" id="filter-service">
-                                            <option value="">All Service Types</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label small fw-bold mb-1">Owner</label>
-                                        <select class="form-select" id="filter-owner">
-                                            <option value="">All Owners</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label small fw-bold mb-1">Status</label>
-                                        <select class="form-select" id="filter-status">
-                                            <option value="">All Statuses</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3 d-flex align-items-end">
-                                        <button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('cases')">
-                                            <i class="bi bi-x-circle me-1"></i> Clear Filters
-                                        </button>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="filter-section p-3 bg-light rounded shadow-sm flex-grow-1 me-3">
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <label class="form-label small fw-bold mb-1">Service Type</label>
+                                            <select class="form-select form-select-sm" id="filter-service">
+                                                <option value="">All Service Types</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label small fw-bold mb-1">Owner</label>
+                                            <select class="form-select form-select-sm" id="filter-owner">
+                                                <option value="">All Owners</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label small fw-bold mb-1">Status</label>
+                                            <select class="form-select form-select-sm" id="filter-status">
+                                                <option value="">All Statuses</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="view-toggle">
+                                    <button class="view-toggle-btn active" id="list-view-btn">
+                                        <i class="bi bi-list"></i> List
+                                    </button>
+                                    <button class="view-toggle-btn" id="grid-view-btn">
+                                        <i class="bi bi-grid"></i> Grid
+                                    </button>
+                                </div>
                             </div>
-                            <div id="cases-container"></div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <button class="btn btn-sm btn-outline-secondary" onclick="clearTabFilters('cases')">
+                                    <i class="bi bi-x-circle me-1"></i> Clear Filters
+                                </button>
+                                <div id="cases-count" class="small text-muted">0 cases</div>
+                            </div>
+                            <div id="cases-list-container" class="compact-view"></div>
+                            <div id="cases-grid-container" style="display: none;"></div>
                         </div>
 
                         <div class="tab-pane fade" id="sla">
                              <div class="filter-section p-3 bg-light rounded mb-3 shadow-sm">
-                                <div class="row g-3">
+                                <div class="row g-2">
                                     <div class="col-md-4">
                                         <label class="form-label small fw-bold mb-1">Filter by Owner</label>
-                                        <select class="form-select" id="sla-filter-owner">
+                                        <select class="form-select form-select-sm" id="sla-filter-owner">
                                             <option value="">All Owners</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4 d-flex align-items-end">
-                                        <button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('sla')">
+                                    <div class="col-md-8 d-flex align-items-end justify-content-end">
+                                        <button class="btn btn-sm btn-outline-secondary" onclick="clearTabFilters('sla')">
                                             <i class="bi bi-x-circle me-1"></i> Clear Filters
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <div id="sla-violations-container"></div>
+                            <div id="sla-violations-container" class="compact-view"></div>
                         </div>
 
                         <div class="tab-pane fade" id="aging">
                             <div class="filter-section p-3 bg-light rounded mb-3 shadow-sm">
-                                <div class="row g-3">
+                                <div class="row g-2">
                                     <div class="col-md-4">
                                         <label class="form-label small fw-bold mb-1">Filter by Owner</label>
-                                        <select class="form-select" id="aging-filter-owner">
+                                        <select class="form-select form-select-sm" id="aging-filter-owner">
                                             <option value="">All Owners</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4 d-flex align-items-end">
-                                        <button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('aging')">
+                                    <div class="col-md-8 d-flex align-items-end justify-content-end">
+                                        <button class="btn btn-sm btn-outline-secondary" onclick="clearTabFilters('aging')">
                                             <i class="bi bi-x-circle me-1"></i> Clear Filters
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <div id="aging-cases-container"></div>
+                            <div id="aging-cases-container" class="compact-view"></div>
                         </div>
 
                         <div class="tab-pane fade" id="recommendations">
@@ -1077,12 +1315,12 @@
 
                         <div class="tab-pane fade" id="owners">
                             <div class="row" id="owner-breakdown"></div>
-                            <div class="card mt-4 shadow-sm">
+                            <div class="card mt-3 shadow-sm">
                                 <div class="card-header">
-                                    <h5 class="mb-0"><i class="bi bi-graph-up me-2" style="color: var(--primary-color);"></i>SLA & Aging Breakdown by Owner</h5>
+                                    <h6 class="mb-0"><i class="bi bi-graph-up me-2" style="color: var(--primary-color);"></i>SLA & Aging Breakdown by Owner</h6>
                                 </div>
                                 <div class="card-body">
-                                    <canvas id="ownerChart" height="300"></canvas>
+                                    <canvas id="ownerChart" height="250"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -1094,7 +1332,7 @@
 
     <div class="loading-spinner" id="loadingSpinner">
         <div class="spinner-border"></div>
-        <div class="mt-3 fw-bold" style="color: var(--primary-color);">Processing data...</div>
+        <div class="mt-2 fw-bold" style="color: var(--primary-color);">Processing data...</div>
     </div>
 
     <div class="modal fade" id="drillDownModal" tabindex="-1">
@@ -1106,22 +1344,16 @@
                 </div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="badge" style="background: linear-gradient(135deg, var(--primary-color), #7B3FD9); font-size: 1rem;" id="drillDownCount">0 Cases</span>
-                        <button class="btn btn-success" onclick="exportDrillDownToExcel()">
+                        <span class="badge" style="background: linear-gradient(135deg, var(--primary-color), #7B3FD9); font-size: 0.9rem;" id="drillDownCount">0 Cases</span>
+                        <button class="btn btn-sm btn-success" onclick="exportDrillDownToExcel()">
                             <i class="bi bi-download me-1"></i> Export List
                         </button>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-sm table-hover table-bordered drilldown-table">
+                        <table class="table table-sm table-hover table-bordered drilldown-table compact-view">
                             <thead>
-                                <tr>
-                                    <th>Incident ID</th>
-                                    <th>Title</th>
-                                    <th>Owner</th>
-                                    <th>Status</th>
-                                    <th>Aging</th>
-                                    <th>SLA Status</th>
-                                    <th>Next Follow-up</th>
+                                <tr id="drillDownHeader">
+                                    <!-- Headers will be dynamically populated -->
                                 </tr>
                             </thead>
                             <tbody id="drillDownBody"></tbody>
@@ -1152,9 +1384,169 @@
         let filteredData = [];
         let drillDownData = [];
         let drillDownTitleForExport = '';
+        let drillDownExportData = [];
         let globalFilters = { owner: '', submittedby: '', service: '', status: '', sla: '' };
         let charts = {};
         let scorecardData = [];
+        let currentView = 'list'; // 'list' or 'grid'
+
+        // Column mapping for drill-downs
+        const drillDownColumns = {
+            'aging15': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'aging15Status', label: 'Aging >15 days Status' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'oldest25': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'aging15Status', label: 'Aging >15 days Status' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'followUpMissed': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'emailNoFollowup': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'emailCompliance', label: 'Email Response Compliance' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'emailResponseMissed': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'emailCompliance', label: 'Email Response Compliance' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'subsequentResponseMissed': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'expectedResponseTime', label: 'Expected Response Time' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'edocBreach': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'expectedResolution', label: 'SR EDOC' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'subsequentSLAMiss': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'updatePendingSupportCounter', label: 'Update Pending From Support Counter' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'idle1': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'ageingLastModified', label: 'Ageing from Last modified time' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'idle3': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'ageingLastModified', label: 'Ageing from Last modified time' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'totalOpen': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'agingDays', label: 'Aging' },
+                { key: 'slaViolationStatus', label: 'SLA Status' },
+                { key: 'nextFollowUp', label: 'Next Follow-up' }
+            ],
+            'totalSR': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'agingDays', label: 'Aging' },
+                { key: 'slaViolationStatus', label: 'SLA Status' },
+                { key: 'nextFollowUp', label: 'Next Follow-up' }
+            ],
+            'totalINC': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'agingDays', label: 'Aging' },
+                { key: 'slaViolationStatus', label: 'SLA Status' },
+                { key: 'nextFollowUp', label: 'Next Follow-up' }
+            ],
+            'slaSR': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'agingDays', label: 'Aging' },
+                { key: 'slaViolationStatus', label: 'SLA Status' },
+                { key: 'nextFollowUp', label: 'Next Follow-up' }
+            ],
+            'slaINC': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'agingDays', label: 'Aging' },
+                { key: 'slaViolationStatus', label: 'SLA Status' },
+                { key: 'nextFollowUp', label: 'Next Follow-up' }
+            ]
+        };
 
         document.addEventListener('DOMContentLoaded', init);
 
@@ -1194,6 +1586,15 @@
 
             document.getElementById('process-data-btn').onclick = processData;
             document.getElementById('clear-filters-btn').onclick = clearAllFilters;
+            
+            // View toggle buttons
+            document.getElementById('list-view-btn').addEventListener('click', () => {
+                setViewMode('list');
+            });
+            
+            document.getElementById('grid-view-btn').addEventListener('click', () => {
+                setViewMode('grid');
+            });
 
             // Set up filter event listeners
             document.getElementById('global-filter-service').addEventListener('change', updateGlobalFilters);
@@ -1203,6 +1604,23 @@
             document.getElementById('global-filter-submittedby').addEventListener('change', updateGlobalFilters);
             
             setupTabFilterListeners();
+        }
+        
+        function setViewMode(mode) {
+            currentView = mode;
+            
+            // Update button states
+            document.getElementById('list-view-btn').classList.toggle('active', mode === 'list');
+            document.getElementById('grid-view-btn').classList.toggle('active', mode === 'grid');
+            
+            // Show/hide containers
+            document.getElementById('cases-list-container').style.display = mode === 'list' ? 'block' : 'none';
+            document.getElementById('cases-grid-container').style.display = mode === 'grid' ? 'block' : 'none';
+            
+            // Re-render if we have data
+            if (filteredData.length > 0) {
+                filterCases();
+            }
         }
 
         function setupTabFilterListeners() {
@@ -1312,7 +1730,14 @@
                 return !isNaN(date.getTime());
             };
             
-            const isPast = (dStr) => isDateValid(dStr) && new Date(dStr) <= new Date();
+            const isPastOrToday = (dStr) => {
+                if (!isDateValid(dStr)) return false;
+                const date = new Date(dStr);
+                const today = new Date();
+                date.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
+                return date <= today;
+            };
             
             const findCol = (possibleNames) => {
                 for (const name of possibleNames) {
@@ -1362,10 +1787,14 @@
                 const isINC = service === 'Incident Management';
                 const isSlaViolated = slaViolationStatus === 'Violated';
                 const isAging15Violated = aging15Status === 'Violated';
-                const isFollowUpMissed = (!isDateValid(nextFollowUp) || isPast(nextFollowUp));
-                const isSubsequentResponseMissed = (!isDateValid(expectedResponseTime) || isPast(expectedResponseTime));
+                const isFollowUpMissed = (!isDateValid(nextFollowUp) || isPastOrToday(nextFollowUp));
+                
+                const isSubsequentResponseMissed = isDateValid(expectedResponseTime) && 
+                                                   isPastOrToday(expectedResponseTime) && 
+                                                   isINC;
+                
                 const isSubsequentSLABreach = subsequentSLACount > 0;
-                const isEdocBreached = (isSR && isPast(srEDOC));
+                const isEdocBreached = (isSR && isPastOrToday(srEDOC));
                 const isOldest25 = agingDays > 25;
                 const isIdle1 = agingFromLastModified > 0;
                 const isIdle3 = agingFromLastModified > 1;
@@ -1385,6 +1814,14 @@
                     emailCompliance: emailCompliance,
                     expectedResolution: srEDOC,
                     subsequentSLABreachCount: subsequentSLACount,
+                    
+                    // For drill-down exports
+                    aging15Status: aging15Status,
+                    agingRoundoff: agingRoundoff,
+                    slaStatus: row[colMap.slaStatus] || 'N/A',
+                    expectedResponseTime: expectedResponseTime,
+                    updatePendingSupportCounter: row[colMap.updatePendingSupportCounter] || '0',
+                    ageingLastModified: row[colMap.ageingLastModified] || '0',
                     
                     isSR,
                     isINC,
@@ -1541,7 +1978,6 @@
             
             const card = document.getElementById(`${kpiId}-card`);
             card.onclick = function() {
-                // Fixed: Use the correct KPI mapping
                 let drillDownKey;
                 switch(kpiId) {
                     case 'kpi-total': drillDownKey = 'totalOpen'; break;
@@ -1572,7 +2008,7 @@
 
         function renderKPIDashboard() {
             if (!filteredData.length) {
-                document.getElementById('owner-scorecard-body').innerHTML = '<tr><td colspan="18" class="text-center text-muted py-4">No data found for selected filters.</td></tr>';
+                document.getElementById('owner-scorecard-body').innerHTML = '<tr><td colspan="18" class="text-center text-muted py-3">No data found for selected filters.</td></tr>';
                 return;
             }
 
@@ -1621,7 +2057,7 @@
             if (m.respMiss > 0) respMissRec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.respMiss} email responses missed. High risk of SLA breach.` };
 
             let subRespRec = { status: 'GOOD', tag: 'bg-good', rec: 'All subsequent response dates are met or tracked.' };
-            if (m.subRespMiss > 0) subRespRec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${m.subRespMiss} subsequent responses missed. Update case.` };
+            if (m.subRespMiss > 0) subRespRec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${m.subRespMiss} Incident Management cases have missed subsequent response dates (including today).` };
 
             let subSLARec = { status: 'GOOD', tag: 'bg-good', rec: 'No cases have breached the subsequent SLA threshold.' };
             if (m.subSLAMiss > 0) subSLARec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.subSLAMiss} subsequent SLA breaches. Root cause analysis needed.` };
@@ -1709,9 +2145,6 @@
             const scorecardHtml = Object.keys(counts).sort().map(o => {
                 const stats = counts[o];
                 const complianceRate = stats.total > 0 ? (((stats.total - stats.violations) / stats.total) * 100).toFixed(1) : 100.0;
-                let complianceColor = 'bg-success';
-                if (complianceRate < 80) complianceColor = 'bg-danger';
-                else if (complianceRate < 95) complianceColor = 'bg-warning';
 
                 scorecardData.push({
                     'Owner': o,
@@ -1723,7 +2156,7 @@
                     'SLA Viol. – INC': stats.slaINC,
                     'Aging >15 Days': stats.aging15,
                     'Oldest >25 Days': stats.oldest25,
-                    'F/Up Missed': stats.followUpMissed,
+                    'F/Up Date Missed': stats.followUpMissed,
                     'Email F/Up Missed': stats.emailFollowupMissed,
                     'Email Resp Missed': stats.emailResponseMissed,
                     'Sub. Resp Missed': stats.subsequentResponseMissed,
@@ -1754,14 +2187,14 @@
                         <td class="${stats.edocBreach > 0 ? 'critical-cell' : ''}">${stats.edocBreach}</td>
                         <td>
                             <div class="progress compliance-gauge">
-                                <div class="progress-bar ${complianceColor}" role="progressbar" style="width: ${complianceRate}%"></div>
+                                <div class="progress-bar ${complianceRate < 80 ? 'bg-danger' : complianceRate < 95 ? 'bg-warning' : 'bg-success'}" role="progressbar" style="width: ${complianceRate}%"></div>
                             </div>
                         </td>
                     </tr>
                 `;
             }).join('');
 
-            document.getElementById('owner-scorecard-body').innerHTML = scorecardHtml || '<tr><td colspan="18" class="text-center text-muted py-4">No data found for selected filters.</td></tr>';
+            document.getElementById('owner-scorecard-body').innerHTML = scorecardHtml || '<tr><td colspan="18" class="text-center text-muted py-3">No data found for selected filters.</td></tr>';
         }
 
         function openDrillDown(kpi, title) {
@@ -1819,20 +2252,84 @@
             }
             
             document.getElementById('drillDownCount').textContent = `${drillDownData.length} Cases`;
-
+            
+            // Prepare export data
+            drillDownExportData = drillDownData.map(d => {
+                const exportRow = {};
+                if (drillDownColumns[kpi]) {
+                    drillDownColumns[kpi].forEach(col => {
+                        exportRow[col.label] = d[col.key] || '';
+                    });
+                } else {
+                    // Default columns for other KPIs
+                    exportRow['Incident ID'] = d.incidentId;
+                    exportRow['Title'] = d.title;
+                    exportRow['Owner'] = d.owner;
+                    exportRow['Status'] = d.currentStatus;
+                    exportRow['Aging'] = d.agingDays;
+                    exportRow['SLA Status'] = d.slaViolationStatus;
+                    exportRow['Next Follow-up'] = d.nextFollowUp || '--';
+                }
+                return exportRow;
+            });
+            
+            // Update table headers
+            const header = document.getElementById('drillDownHeader');
+            if (drillDownColumns[kpi]) {
+                header.innerHTML = drillDownColumns[kpi].map(col => 
+                    `<th>${col.label}</th>`
+                ).join('');
+            } else {
+                header.innerHTML = `
+                    <th>Incident ID</th>
+                    <th>Title</th>
+                    <th>Owner</th>
+                    <th>Status</th>
+                    <th>Aging</th>
+                    <th>SLA Status</th>
+                    <th>Next Follow-up</th>
+                `;
+            }
+            
+            // Update table body
             const drillDownHtml = drillDownData.map((d, index) => {
                 const globalIndex = processedData.findIndex(p => p.incidentId === d.incidentId);
-                return `
-                    <tr onclick="viewCaseDetail(${globalIndex})" style="cursor: pointer;">
-                        <td class="fw-bold">${d.incidentId}</td>
-                        <td><div style="max-width:350px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${d.title}">${d.title}</div></td>
-                        <td><span class="owner-tag">${d.owner}</span></td>
-                        <td>${d.currentStatus}</td>
-                        <td class="${d.agingDays > 25 ? 'text-danger fw-bold' : d.agingDays > 15 ? 'text-warning' : ''}">${d.agingDays}</td>
-                        <td class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">${d.slaViolationStatus}</td>
-                        <td class="${d.isFollowUpMissed ? 'text-danger fw-bold' : ''}">${d.nextFollowUp || '--'}</td>
-                    </tr>
-                `;
+                
+                if (drillDownColumns[kpi]) {
+                    const cells = drillDownColumns[kpi].map(col => {
+                        const value = d[col.key] || '';
+                        let cellClass = '';
+                        
+                        // Add styling based on value
+                        if (col.key === 'agingDays' || col.key === 'agingRoundoff') {
+                            const agingValue = parseInt(value) || 0;
+                            if (agingValue > 25) cellClass = 'text-danger fw-bold';
+                            else if (agingValue > 15) cellClass = 'text-warning';
+                        } else if (col.key === 'slaStatus' || col.key === 'slaViolationStatus') {
+                            if (value === 'Violated') cellClass = 'text-danger fw-bold';
+                            else cellClass = 'text-success';
+                        } else if (col.key === 'emailCompliance') {
+                            if (value.includes('Missed') || value.includes('No Followup')) cellClass = 'text-danger';
+                        }
+                        
+                        return `<td class="${cellClass}" title="${value}">${value.length > 30 ? value.substring(0, 30) + '...' : value}</td>`;
+                    }).join('');
+                    
+                    return `<tr onclick="viewCaseDetail(${globalIndex})" style="cursor: pointer;">${cells}</tr>`;
+                } else {
+                    // Default view
+                    return `
+                        <tr onclick="viewCaseDetail(${globalIndex})" style="cursor: pointer;">
+                            <td class="fw-bold" title="${d.incidentId}">${d.incidentId.length > 15 ? d.incidentId.substring(0, 15) + '...' : d.incidentId}</td>
+                            <td title="${d.title}">${d.title.length > 40 ? d.title.substring(0, 40) + '...' : d.title}</td>
+                            <td><span class="owner-tag">${d.owner}</span></td>
+                            <td>${d.currentStatus}</td>
+                            <td class="${d.agingDays > 25 ? 'text-danger fw-bold' : d.agingDays > 15 ? 'text-warning' : ''}">${d.agingDays}</td>
+                            <td class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">${d.slaViolationStatus}</td>
+                            <td class="${d.isFollowUpMissed ? 'text-danger fw-bold' : ''}" title="${d.nextFollowUp || '--'}">${d.nextFollowUp ? (d.nextFollowUp.length > 20 ? d.nextFollowUp.substring(0, 20) + '...' : d.nextFollowUp) : '--'}</td>
+                        </tr>
+                    `;
+                }
             }).join('');
 
             document.getElementById('drillDownBody').innerHTML = drillDownHtml || '<tr><td colspan="7" class="text-center text-muted py-3">No cases found.</td></tr>';
@@ -1917,6 +2414,11 @@
                     plugins: {
                         legend: {
                             position: 'right',
+                            labels: {
+                                font: {
+                                    size: 10
+                                }
+                            }
                         }
                     }
                 }
@@ -2002,7 +2504,10 @@
                         x: { 
                             stacked: false,
                             ticks: {
-                                maxRotation: 45
+                                maxRotation: 45,
+                                font: {
+                                    size: 10
+                                }
                             }
                         },
                         y1: { 
@@ -2013,7 +2518,8 @@
                                 display: true, 
                                 text: 'Violation Rate (%)',
                                 font: {
-                                    weight: 'bold'
+                                    weight: 'bold',
+                                    size: 11
                                 }
                             },
                             beginAtZero: true,
@@ -2021,6 +2527,9 @@
                             ticks: {
                                 callback: function(value) {
                                     return value + '%';
+                                },
+                                font: {
+                                    size: 9
                                 }
                             }
                         },
@@ -2032,11 +2541,26 @@
                                 display: true, 
                                 text: 'Aging Count',
                                 font: {
-                                    weight: 'bold'
+                                    weight: 'bold',
+                                    size: 11
                                 }
                             },
                             grid: { drawOnChartArea: false },
-                            beginAtZero: true
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    size: 9
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 10
+                                }
+                            }
                         }
                     }
                 }
@@ -2077,7 +2601,14 @@
                 (!own || d.owner===own) && 
                 (!stat || d.currentStatus===stat)
             );
-            renderFilteredCases(sub, 'cases-container', false);
+            
+            document.getElementById('cases-count').textContent = `${sub.length} cases`;
+            
+            if (currentView === 'list') {
+                renderFilteredCasesList(sub, 'cases-list-container');
+            } else {
+                renderFilteredCasesGrid(sub, 'cases-grid-container');
+            }
         }
 
         function filterSLAViolations() {
@@ -2116,7 +2647,7 @@
 
             const tableHtml = `
                 <div class="table-responsive mt-3">
-                    <table class="table table-sm table-striped table-hover detailed-case-table">
+                    <table class="table table-sm table-striped table-hover detailed-case-table compact-view">
                         <thead>
                             <tr>
                                 <th>Incident ID</th>
@@ -2139,20 +2670,20 @@
                                     if (d.isSlaViolated) reasons.push('SLA Violated');
                                     if (d.isOldest25) reasons.push('Aged > 25 Days');
                                     if (d.isEdocBreached) reasons.push('EDOC Breached');
-                                    if (d.isFollowUpMissed) reasons.push('F/Up Missed');
+                                    if (d.isFollowUpMissed) reasons.push('F/Up Date Missed');
                                     if (d.isSubsequentResponseMissed) reasons.push('Sub. Resp Missed');
                                     if (d.isIdle3) reasons.push('Idle > 3 Days');
                                     actionReason = `<td><span class="badge bg-danger">${reasons.join(', ')}</span></td>`;
                                 }
                                 return `
                                     <tr class="align-middle" style="cursor: pointer;">
-                                        <td class="fw-bold">${d.incidentId}</td>
-                                        <td><div style="max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${d.title}">${d.title}</div></td>
+                                        <td class="fw-bold truncate-text" title="${d.incidentId}">${d.incidentId}</td>
+                                        <td class="truncate-text" title="${d.title}">${d.title}</td>
                                         <td><span class="owner-tag">${d.owner}</span></td>
                                         <td>${d.currentStatus}</td>
                                         <td class="${d.agingDays > 25 ? 'text-danger fw-bold' : d.agingDays > 15 ? 'text-warning' : ''}">${d.agingDays}</td>
                                         <td class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">${d.slaViolationStatus}</td>
-                                        <td class="${d.isFollowUpMissed ? 'text-danger fw-bold' : ''}">${d.nextFollowUp || '--'}</td>
+                                        <td class="${d.isFollowUpMissed ? 'text-danger fw-bold' : ''} truncate-text" title="${d.nextFollowUp || '--'}">${d.nextFollowUp || '--'}</td>
                                         ${actionReason}
                                         <td><button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${globalIndex}); event.stopPropagation();">View</button></td>
                                     </tr>
@@ -2167,6 +2698,133 @@
             `;
             container.innerHTML = tableHtml;
         }
+        
+        function renderFilteredCasesList(cases, containerId) {
+            const container = document.getElementById(containerId);
+            if(!cases.length) {
+                container.innerHTML = `<div class="alert alert-info mt-3 shadow-sm">No cases matching the criteria found.</div>`;
+                return;
+            }
+
+            const tableHtml = `
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped table-hover detailed-case-table">
+                        <thead>
+                            <tr>
+                                <th>Incident ID</th>
+                                <th>Title</th>
+                                <th>Owner</th>
+                                <th>Status</th>
+                                <th>Aging</th>
+                                <th>SLA Status</th>
+                                <th>Next Follow-up</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${cases.map(d => {
+                                const globalIndex = processedData.findIndex(p => p.incidentId === d.incidentId);
+                                return `
+                                    <tr class="align-middle" style="cursor: pointer;" onclick="viewCaseDetail(${globalIndex})">
+                                        <td class="fw-bold truncate-text" title="${d.incidentId}">${d.incidentId}</td>
+                                        <td class="truncate-text" title="${d.title}">${d.title}</td>
+                                        <td><span class="owner-tag">${d.owner}</span></td>
+                                        <td>${d.currentStatus}</td>
+                                        <td class="${d.agingDays > 25 ? 'text-danger fw-bold' : d.agingDays > 15 ? 'text-warning' : ''}">${d.agingDays}</td>
+                                        <td class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">${d.slaViolationStatus}</td>
+                                        <td class="${d.isFollowUpMissed ? 'text-danger fw-bold' : ''} truncate-text" title="${d.nextFollowUp || '--'}">${d.nextFollowUp || '--'}</td>
+                                        <td><button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${globalIndex}); event.stopPropagation();">View</button></td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            container.innerHTML = tableHtml;
+        }
+        
+        function renderFilteredCasesGrid(cases, containerId) {
+            const container = document.getElementById(containerId);
+            if(!cases.length) {
+                container.innerHTML = `<div class="alert alert-info mt-3 shadow-sm">No cases matching the criteria found.</div>`;
+                return;
+            }
+
+            const gridHtml = `
+                <div class="grid-view-container">
+                    ${cases.map(d => {
+                        const globalIndex = processedData.findIndex(p => p.incidentId === d.incidentId);
+                        
+                        // Determine card type based on severity
+                        let cardType = '';
+                        if (d.isSlaViolated || d.isOldest25 || d.isEdocBreached) {
+                            cardType = 'critical';
+                        } else if (d.isAging15Violated || d.isFollowUpMissed) {
+                            cardType = 'warning';
+                        } else {
+                            cardType = 'success';
+                        }
+                        
+                        // Get tags for this case
+                        const tags = [];
+                        if (d.isSlaViolated) tags.push({text: 'SLA Violated', type: 'urgent'});
+                        if (d.isOldest25) tags.push({text: 'Aged > 25 Days', type: 'urgent'});
+                        if (d.isAging15Violated) tags.push({text: 'Aged > 15 Days', type: 'warning'});
+                        if (d.isFollowUpMissed) tags.push({text: 'F/Up Missed', type: 'warning'});
+                        if (d.isEdocBreached) tags.push({text: 'EDOC Breach', type: 'urgent'});
+                        if (d.isSubsequentResponseMissed) tags.push({text: 'Sub. Resp Missed', type: 'warning'});
+                        if (d.isSubsequentSLABreach) tags.push({text: 'Sub. SLA Miss', type: 'urgent'});
+                        if (d.isIdle3) tags.push({text: 'Idle > 3 Days', type: 'warning'});
+                        
+                        return `
+                            <div class="case-card ${cardType}" onclick="viewCaseDetail(${globalIndex})" style="cursor: pointer;">
+                                <div class="case-id">${d.incidentId}</div>
+                                <div class="case-title" title="${d.title}">${d.title}</div>
+                                <div class="case-meta">
+                                    <div class="case-meta-item">
+                                        <i class="bi bi-person"></i>
+                                        <span>${d.owner}</span>
+                                    </div>
+                                    <div class="case-meta-item">
+                                        <i class="bi bi-tag"></i>
+                                        <span>${d.service}</span>
+                                    </div>
+                                    <div class="case-meta-item">
+                                        <i class="bi bi-clock"></i>
+                                        <span class="${d.agingDays > 25 ? 'text-danger fw-bold' : d.agingDays > 15 ? 'text-warning' : ''}">
+                                            ${d.agingDays} days
+                                        </span>
+                                    </div>
+                                    <div class="case-meta-item">
+                                        <i class="bi ${d.isSlaViolated ? 'bi-exclamation-triangle text-danger' : 'bi-check-circle text-success'}"></i>
+                                        <span class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">
+                                            ${d.slaViolationStatus}
+                                        </span>
+                                    </div>
+                                </div>
+                                ${tags.length ? `
+                                    <div class="case-tags">
+                                        ${tags.map(tag => `
+                                            <span class="case-tag ${tag.type}">${tag.text}</span>
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
+                                <div class="text-end mt-3">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${globalIndex}); event.stopPropagation();">
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+                <div class="text-center mt-3 small text-muted">
+                    Showing ${cases.length} case${cases.length !== 1 ? 's' : ''}
+                </div>
+            `;
+            container.innerHTML = gridHtml;
+        }
 
         function renderRecommendations() {
             const recommendations = [];
@@ -2176,7 +2834,7 @@
                 if (d.isEdocBreached) recs.push({text: `SR EDOC Breach: Requires urgent resolution or EDOC change.`, color: 'text-danger'});
                 if (d.isSlaViolated) recs.push({text: `SLA Violated: Check root cause and plan fix.`, color: 'text-danger'});
                 if (d.isFollowUpMissed) recs.push({text: `Follow-up Date Missed: Update next follow-up date now.`, color: 'text-danger'});
-                if (d.isSubsequentResponseMissed) recs.push({text: `Subsequent Response Missed: Update case action plan.`, color: 'text-danger'});
+                if (d.isSubsequentResponseMissed) recs.push({text: `Subsequent Response Missed (including today): Update case action plan.`, color: 'text-danger'});
                 if (d.isIdle3) recs.push({text: `Idle > 3 Days: Needs immediate follow-up to client or internal team.`, color: 'text-danger'});
                 
                 if(recs.length) recommendations.push({incidentId: d.incidentId, title: d.title, owner: d.owner, recs: recs});
@@ -2225,23 +2883,23 @@
                     <div class="col-md-3 mb-3">
                         <div class="card text-center h-100 shadow-sm">
                             <div class="card-body py-4">
-                                <h5 class="mb-3 fw-bold">${o}</h5>
+                                <h6 class="mb-3 fw-bold">${o}</h6>
                                 <div class="row small fw-bold mb-3">
                                     <div class="col-4">
-                                        <div class="fs-5">${stats.total}</div>
+                                        <div class="fs-6">${stats.total}</div>
                                         <div class="text-muted small">Total</div>
                                     </div>
                                     <div class="col-4 text-danger">
-                                        <div class="fs-5">${stats.violations}</div>
+                                        <div class="fs-6">${stats.violations}</div>
                                         <div class="text-muted small">Violations</div>
                                     </div>
                                     <div class="col-4 text-warning">
-                                        <div class="fs-5">${stats.aging15}</div>
+                                        <div class="fs-6">${stats.aging15}</div>
                                         <div class="text-muted small">Aging >15</div>
                                     </div>
                                 </div>
                                 <div class="mt-3">
-                                    <h3 class="${complianceRate < 80 ? 'text-danger' : complianceRate < 95 ? 'text-warning' : 'text-success'} fw-bold">${complianceRate}%</h3>
+                                    <h4 class="${complianceRate < 80 ? 'text-danger' : complianceRate < 95 ? 'text-warning' : 'text-success'} fw-bold">${complianceRate}%</h4>
                                     <p class="small text-muted mb-0">SLA Compliance Rate</p>
                                 </div>
                             </div>
@@ -2258,11 +2916,11 @@
             document.getElementById('case-detail-content').innerHTML = `
                 <div class="row">
                     <div class="col-md-8">
-                        <h5>${d.incidentId}: ${d.title}</h5>
+                        <h6>${d.incidentId}: ${d.title}</h6>
                         <p class="text-muted">${d.service} | Submitted by: ${d.submittedBy}</p>
                     </div>
                     <div class="col-md-4 text-end">
-                        <span class="owner-tag fs-6">${d.owner}</span>
+                        <span class="owner-tag">${d.owner}</span>
                         <span class="badge ${d.isSlaViolated ? 'bg-danger' : 'bg-success'} ms-2">${d.slaViolationStatus}</span>
                     </div>
                 </div>
@@ -2324,7 +2982,7 @@
                     </div>
                     <div class="col-md-6">
                         <ul class="list-unstyled">
-                            ${d.isSubsequentResponseMissed ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Subsequent Response Missed</li>' : ''}
+                            ${d.isSubsequentResponseMissed ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Subsequent Response Missed (including today)</li>' : ''}
                             ${d.isSubsequentSLABreach ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Subsequent SLA Breach</li>' : ''}
                             ${d.isIdle3 ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Idle > 3 Days</li>' : ''}
                             ${d.isAging15Violated ? '<li class="text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i>Aging > 15 Days</li>' : ''}
@@ -2347,14 +3005,14 @@
         }
 
         function exportDrillDownToExcel() {
-            if(!drillDownData.length) {
+            if(!drillDownExportData.length) {
                 alert("No data to export.");
                 return;
             }
-            const ws = XLSX.utils.json_to_sheet(drillDownData.map(d => d._raw));
+            const ws = XLSX.utils.json_to_sheet(drillDownExportData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "DrillDownExport");
-            XLSX.writeFile(wb, `${drillDownTitleForExport.replace(/[^a-zA-Z0-9]/g,'_')}_Export.xlsx`);
+            XLSX.writeFile(wb, `${drillDownTitleForExport.replace(/[^a-zA-Z0-9]/g,'_')}_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
         }
         
         function exportFullData() {
