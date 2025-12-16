@@ -10,94 +10,528 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --light-gray: #f8f9fa;
+            --primary-color: #5F259F; /* PhonePe Purple */
+            --secondary-color: #3D7FFF; /* PhonePe Blue */
+            --accent-color: #00D4AA; /* PhonePe Teal */
+            --warning-color: #FF9F00;
+            --danger-color: #FF3B5C;
+            --light-gray: #F5F7FF;
+            --dark-gray: #6B7280;
+            --success-color: #00B894;
         }
         
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f7fa; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #F8FAFF 0%, #F0F4FF 100%);
+            min-height: 100vh;
+        }
         
-        .card { border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); margin-bottom: 10px; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-2px); }
-        .global-filters { background-color: #fff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--primary-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .main-view-tabs .nav-link { font-size: 1.1rem; color: #555; margin-right: 5px; border-radius: 10px 10px 0 0; }
-        .main-view-tabs .nav-link.active { background-color: var(--primary-color); color: white; border-bottom: none; }
-        .view-content { border: 1px solid #dee2e6; border-top: none; background: white; padding: 25px; border-radius: 0 0 10px 10px; min-height: 600px; }
-
-        .kpi-section-title { font-size: 0.8rem; font-weight: 600; color: var(--primary-color); border-bottom: 2px solid var(--light-gray); padding-bottom: 5px; margin-bottom: 10px; margin-top: 15px; }
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .card { 
+            border: none; 
+            border-radius: 16px; 
+            box-shadow: 0 8px 24px rgba(95, 37, 159, 0.1); 
+            margin-bottom: 15px; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+        }
+        
+        .card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 16px 32px rgba(95, 37, 159, 0.15);
+        }
+        
+        .global-filters { 
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%); 
+            padding: 20px; 
+            border-radius: 16px; 
+            margin-bottom: 25px; 
+            border-left: 6px solid var(--primary-color); 
+            box-shadow: 0 4px 16px rgba(95, 37, 159, 0.08);
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .main-view-tabs .nav-link { 
+            font-size: 1rem; 
+            font-weight: 600;
+            color: #6B7280; 
+            margin-right: 8px; 
+            border-radius: 12px 12px 0 0; 
+            padding: 12px 20px;
+            background-color: #f1f3f5;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .main-view-tabs .nav-link:hover {
+            background-color: #e9ecef;
+            color: var(--primary-color);
+        }
+        
+        .main-view-tabs .nav-link.active { 
+            background: linear-gradient(135deg, var(--primary-color) 0%, #7B3FD9 100%);
+            color: white; 
+            border-bottom: none;
+            box-shadow: 0 4px 12px rgba(95, 37, 159, 0.2);
+        }
+        
+        .view-content { 
+            border: 1px solid #e0e6ed; 
+            border-top: none; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 0 0 16px 16px; 
+            min-height: 650px;
+            box-shadow: 0 4px 20px rgba(95, 37, 159, 0.05);
+        }
+        
+        .kpi-section-title { 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            color: var(--primary-color); 
+            border-bottom: 2px solid var(--light-gray); 
+            padding-bottom: 8px; 
+            margin-bottom: 12px; 
+            margin-top: 15px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
         
         .kpi-card { 
             background: white; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
-            padding: 15px; 
-            border-left: 8px solid var(--primary-color); 
+            border-radius: 12px; 
+            box-shadow: 0 6px 16px rgba(95, 37, 159, 0.08); 
+            padding: 20px; 
+            border-left: 6px solid var(--primary-color); 
             cursor: pointer; 
             height: 100%; 
-            transition: all 0.2s; 
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        .kpi-card:hover { background-color: #f8faff; transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
-        .kpi-title { font-size: 0.7rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; margin-bottom: 3px; opacity: 0.8; line-height: 1.2; }
-        .kpi-value { font-size: 1.8rem; font-weight: 700; color: #000; }
+        
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .kpi-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .kpi-card:hover { 
+            background-color: #F8FAFF; 
+            transform: translateY(-8px); 
+            box-shadow: 0 16px 32px rgba(95, 37, 159, 0.15); 
+        }
+        
+        .kpi-title { 
+            font-size: 0.7rem; 
+            color: var(--dark-gray); 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            margin-bottom: 5px; 
+            opacity: 0.9; 
+            line-height: 1.2;
+            letter-spacing: 0.5px;
+        }
+        
+        .kpi-value { 
+            font-size: 2.2rem; 
+            font-weight: 800; 
+            color: var(--primary-color); 
+            margin: 8px 0;
+            line-height: 1;
+        }
         
         .kpi-status-tag { 
             font-size: 0.65rem; 
             font-weight: 700; 
             text-transform: uppercase; 
-            padding: 2px 5px; 
-            border-radius: 4px; 
-            margin-bottom: 5px;
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            margin-bottom: 8px;
+            display: inline-block;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        
+        .kpi-recommendation {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 10px;
+            opacity: 0.9;
+            line-height: 1.4;
+            color: var(--dark-gray);
+            border-top: 1px solid #f0f0f0;
+            padding-top: 10px;
+        }
+        
+        .bg-urgent { background: linear-gradient(135deg, #FF3B5C, #FF6B8B); color: white; }
+        .bg-action-needed, .bg-monitor { background: linear-gradient(135deg, #FF9F00, #FFB74D); color: white; }
+        .bg-good { background: linear-gradient(135deg, var(--accent-color), #00E6B8); color: white; }
+        .bg-info-tag { background: linear-gradient(135deg, var(--secondary-color), #5D9CFF); color: white; }
+        
+        .accordion-item { 
+            margin-bottom: 15px; 
+            border-radius: 12px; 
+            border: none; 
+            box-shadow: 0 4px 12px rgba(95, 37, 159, 0.06); 
+            overflow: hidden;
+        }
+        
+        .accordion-header { border-radius: 12px 12px 0 0; }
+        
+        .accordion-button { 
+            font-size: 1.05rem; 
+            font-weight: 600; 
+            color: var(--primary-color); 
+            background-color: #F8FAFF; 
+            border-bottom: 1px solid #e9ecef; 
+            padding: 16px 20px;
+        }
+        
+        .accordion-button:not(.collapsed) { 
+            background: linear-gradient(135deg, var(--primary-color), #7B3FD9); 
+            color: white; 
+            box-shadow: inset 0 -1px 0 rgba(0,0,0,.125); 
+        }
+        
+        .accordion-button:focus { 
+            box-shadow: none; 
+            border-color: var(--primary-color);
+        }
+        
+        .accordion-body { padding: 20px; }
+        
+        .scorecard-table th { 
+            background: linear-gradient(135deg, var(--primary-color), #7B3FD9); 
+            color: white; 
+            border: none; 
+            font-size: 0.75rem; 
+            vertical-align: middle; 
+            padding: 12px 8px; 
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .scorecard-table td { 
+            font-size: 0.8rem; 
+            padding: 12px 8px; 
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .critical-cell { 
+            background-color: rgba(255, 59, 92, 0.12); 
+            color: #FF3B5C; 
+            font-weight: 700;
+            border-left: 3px solid #FF3B5C;
+        }
+        
+        .high-cell { 
+            background-color: rgba(255, 159, 0, 0.12); 
+            color: #FF9F00; 
+            border-left: 3px solid #FF9F00;
+        }
+        
+        .success-cell { 
+            background-color: rgba(0, 212, 170, 0.12); 
+            color: var(--accent-color); 
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .compliance-gauge { 
+            height: 10px; 
+            border-radius: 5px; 
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+        
+        .metric-card { 
+            border: none; 
+            border-radius: 16px; 
+            box-shadow: 0 8px 24px rgba(95, 37, 159, 0.08); 
+            background: white;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 32px rgba(95, 37, 159, 0.12);
+        }
+        
+        .metric-card .card-body { 
+            text-align: center; 
+            padding: 30px 15px;
+        }
+        
+        .metric-value { 
+            font-size: 3rem; 
+            font-weight: 800; 
+            color: var(--primary-color); 
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+        
+        .metric-label { 
+            font-size: 0.9rem; 
+            color: var(--dark-gray); 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            font-weight: 600;
+        }
+        
+        .detailed-case-table th { 
+            background-color: #F8FAFF; 
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .owner-tag { 
+            background: linear-gradient(135deg, #E8E6FF, #D6D1FF); 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.85rem; 
+            font-weight: 600;
+            color: var(--primary-color);
             display: inline-block;
         }
-
-        .kpi-recommendation {
-            font-size: 0.75rem;
-            font-weight: 500;
-            margin-top: 5px;
-            opacity: 0.8;
-            line-height: 1.3;
+        
+        .upload-area {
+            text-align: center; 
+            border: 2px dashed #D1D5FF; 
+            padding: 40px; 
+            cursor: pointer;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #F8FAFF 0%, #F0F4FF 100%);
+            transition: all 0.3s;
         }
-
-        .bg-urgent { background-color: #c0392b; color: white; }
-        .bg-action-needed, .bg-monitor { background-color: #f39c12; color: white; }
-        .bg-good { background-color: #27ae60; color: white; }
-        .bg-info-tag { background-color: #3498db; color: white; }
-
-        .accordion-item { margin-bottom: 15px; border-radius: 8px; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .accordion-header { border-radius: 8px 8px 0 0; }
-        .accordion-button { font-size: 1rem; font-weight: 600; color: var(--primary-color); background-color: var(--light-gray); border-bottom: 1px solid #ddd; }
-        .accordion-button:not(.collapsed) { background-color: var(--primary-color); color: white; box-shadow: inset 0 -1px 0 rgba(0,0,0,.125); }
-        .accordion-button:focus { box-shadow: none; }
-        .accordion-body { padding: 15px; }
-
-        .scorecard-table th { background-color: var(--primary-color); color: white; border: none; font-size: 0.7rem; vertical-align: middle; padding: 6px; }
-        .scorecard-table td { font-size: 0.75rem; padding: 6px; }
-        .critical-cell { background-color: rgba(192, 57, 43, 0.15); color: #c0392b; font-weight: 700; }
-        .high-cell { background-color: rgba(243, 156, 18, 0.15); color: #f39c12; }
-        .success-cell { background-color: rgba(39, 174, 96, 0.15); color: #27ae60; }
-        .compliance-gauge { height: 10px; border-radius: 5px; }
         
-        .metric-card { border: none; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .metric-card .card-body { text-align: center; }
-        .metric-value { font-size: 2.5rem; font-weight: 700; color: #2c3e50; }
-        .metric-label { font-size: 0.9rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 1px; }
+        .upload-area:hover {
+            border-color: var(--secondary-color);
+            background: linear-gradient(135deg, #F0F7FF 0%, #E8F1FF 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(61, 127, 255, 0.15);
+        }
         
-        .detailed-case-table th { background-color: #f8f9fa; font-weight: 600; }
-        .owner-tag { background-color: #e3f2fd; padding: 2px 8px; border-radius: 12px; font-size: 0.85rem; }
+        .upload-area.dragover {
+            border-color: var(--accent-color);
+            background: linear-gradient(135deg, #E8F7F0 0%, #D4F0E4 100%);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #7B3FD9);
+            border: none;
+            font-weight: 600;
+            padding: 10px 24px;
+            border-radius: 10px;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #7B3FD9, var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(95, 37, 159, 0.2);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-color), #00E6B8);
+            border: none;
+        }
+        
+        .filter-badge {
+            background: linear-gradient(135deg, var(--secondary-color), #5D9CFF);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 5px;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .tab-content {
+            background: white;
+            border-radius: 0 0 16px 16px;
+            border: 1px solid #e0e6ed;
+            border-top: none;
+            padding: 25px;
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid #e0e6ed;
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 10px 10px 0 0;
+            margin-right: 5px;
+            font-weight: 500;
+            color: var(--dark-gray);
+            padding: 10px 20px;
+            transition: all 0.2s;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            color: var(--primary-color);
+            background-color: #F8FAFF;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background-color: white;
+            border-bottom: 3px solid var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), #7B3FD9);
+            color: white;
+            border-radius: 16px 16px 0 0;
+            padding: 20px;
+        }
+        
+        .progress-bar {
+            border-radius: 5px;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: #F8FAFF;
+            cursor: pointer;
+        }
+        
+        .badge {
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 10px;
+        }
+        
+        .form-select, .form-control {
+            border-radius: 10px;
+            border: 1px solid #D1D5FF;
+            padding: 10px 12px;
+            transition: all 0.2s;
+        }
+        
+        .form-select:focus, .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(95, 37, 159, 0.15);
+        }
+        
+        .alert {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 4px 12px rgba(95, 37, 159, 0.05);
+        }
+        
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .loading-spinner.active {
+            display: flex;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: var(--primary-color);
+        }
+        
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 12px;
+            background-color: #F8FAFF;
+            border-radius: 10px;
+        }
+        
+        .filter-tag {
+            background: linear-gradient(135deg, var(--secondary-color), #5D9CFF);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(61, 127, 255, 0.2);
+        }
+        
+        .filter-tag .close {
+            color: white;
+            opacity: 0.8;
+            cursor: pointer;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+        
+        .filter-tag .close:hover {
+            opacity: 1;
+        }
+        
+        .drilldown-table th {
+            background: linear-gradient(135deg, var(--primary-color), #7B3FD9);
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--primary-color);">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow" style="background: linear-gradient(135deg, var(--primary-color), #7B3FD9);">
         <div class="container-fluid">
             <div class="logo-container d-flex align-items-center">
-                <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="Logo" style="height: 30px;" class="me-3">
+                <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="Logo" style="height: 35px;" class="me-3">
                 <a class="navbar-brand" href="#">
                     MSP Support Engineers - Daily Review Dashboard
                 </a>
             </div>
             <div class="d-flex align-items-center text-white">
                 <span id="last-updated" class="me-3 small"></span>
-                <span id="total-cases" class="badge bg-light text-dark">0 Cases Loaded</span>
+                <span id="total-cases" class="badge bg-light text-dark shadow-sm">0 Cases Loaded</span>
             </div>
         </div>
     </nav>
@@ -108,16 +542,25 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="upload-area" id="drop-area" style="text-align:center; border: 2px dashed #ccc; padding: 30px; cursor:pointer;">
-                            <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="Logo" style="height: 40px; margin-bottom: 10px;">
-                            <h4>Upload MSP Review Record</h4>
-                            <p class="text-muted">Drag & Drop Excel/CSV or Click to Browse</p>
+                        <div class="upload-area" id="drop-area" style="text-align:center;">
+                            <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="Logo" style="height: 50px; margin-bottom: 15px; opacity: 0.8;">
+                            <h4 class="mb-3">Upload MSP Review Record</h4>
+                            <p class="text-muted mb-4">Drag & Drop Excel/CSV or Click to Browse</p>
+                            <button class="btn btn-lg btn-primary">
+                                <i class="bi bi-cloud-upload me-2"></i>Select File
+                            </button>
                             <input type="file" id="file-input" accept=".xlsx,.xls,.csv" style="display: none;">
                         </div>
                         <div id="file-info" class="mt-3" style="display: none;">
-                            <div class="alert alert-success d-flex justify-content-between align-items-center">
-                                <div><i class="bi bi-file-earmark-spreadsheet me-2"></i><span id="file-name"></span> <span id="row-count" class="badge bg-secondary ms-2"></span></div>
-                                <button class="btn btn-sm btn-outline-success" id="process-data-btn"><i class="bi bi-play-circle me-1"></i> Process Data</button>
+                            <div class="alert alert-success d-flex justify-content-between align-items-center shadow-sm">
+                                <div>
+                                    <i class="bi bi-file-earmark-spreadsheet me-2"></i>
+                                    <span id="file-name" class="fw-bold"></span> 
+                                    <span id="row-count" class="badge bg-secondary ms-2"></span>
+                                </div>
+                                <button class="btn btn-sm btn-success" id="process-data-btn">
+                                    <i class="bi bi-play-circle me-1"></i> Process Data
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -130,19 +573,61 @@
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="global-filters">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="mb-0"><i class="bi bi-funnel me-2"></i>Global Filters</h6>
-                            <button class="btn btn-sm btn-outline-secondary" id="clear-filters-btn">Clear All</button>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0"><i class="bi bi-funnel-fill me-2" style="color: var(--primary-color);"></i>Global Filters</h6>
+                            <button class="btn btn-sm btn-outline-danger" id="clear-filters-btn">
+                                <i class="bi bi-x-circle me-1"></i>Clear All
+                            </button>
                         </div>
                         <div class="row g-3">
-                            <div class="col-md-2"><select class="form-select form-select-sm" id="global-filter-owner"><option value="">All Owners</option></select></div>
-                            <div class="col-md-2"><select class="form-select form-select-sm" id="global-filter-submittedby"><option value="">All Submitted By</option></select></div>
-                            <div class="col-md-2"><select class="form-select form-select-sm" id="global-filter-service"><option value="">All Service Types</option></select></div>
-                            <div class="col-md-2"><select class="form-select form-select-sm" id="global-filter-status"><option value="">All Statuses</option></select></div>
-                            <div class="col-md-2"><select class="form-select form-select-sm" id="global-filter-sla"><option value="">All SLA Status</option><option value="Violated">SLA Violated</option><option value="Non-Violated">SLA Non-Violated</option></select></div>
-                            <div class="col-md-2"><button class="btn btn-sm btn-outline-primary w-100" onclick="exportFullData()">Export Filtered Data</button></div>
+                            <div class="col-md-2">
+                                <label class="form-label small fw-bold mb-1">Owner</label>
+                                <select class="form-select form-select-sm" id="global-filter-owner">
+                                    <option value="">All Owners</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label small fw-bold mb-1">Submitted By</label>
+                                <select class="form-select form-select-sm" id="global-filter-submittedby">
+                                    <option value="">All Submitted By</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label small fw-bold mb-1">Service Type</label>
+                                <select class="form-select form-select-sm" id="global-filter-service">
+                                    <option value="">All Service Types</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label small fw-bold mb-1">Status</label>
+                                <select class="form-select form-select-sm" id="global-filter-status">
+                                    <option value="">All Statuses</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label small fw-bold mb-1">SLA Status</label>
+                                <select class="form-select form-select-sm" id="global-filter-sla">
+                                    <option value="">All SLA Status</option>
+                                    <option value="Violated">SLA Violated</option>
+                                    <option value="Non-Violated">SLA Non-Violated</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button class="btn btn-sm btn-primary w-100" onclick="exportFullData()">
+                                    <i class="bi bi-download me-1"></i> Export Filtered
+                                </button>
+                            </div>
                         </div>
-                        <div class="mt-2 small text-muted"><span id="active-filters-count">0 filters active</span></div>
+                        
+                        <div class="filter-tags" id="active-filters-tags" style="display: none;">
+                            <!-- Active filter tags will appear here -->
+                        </div>
+                        
+                        <div class="mt-3 small text-muted">
+                            <i class="bi bi-info-circle me-1"></i>
+                            <span id="active-filters-count">0 filters active</span> | 
+                            <span id="filtered-cases-count">Showing 0 of 0 cases</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -174,9 +659,9 @@
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                                 <div class="accordion-body">
-                                    <div class="row g-2">
+                                    <div class="row g-3">
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-total-card" onclick="openDrillDown('totalOpen', 'Total Open Cases')">
+                                            <div class="kpi-card" id="kpi-total-card">
                                                 <span class="kpi-status-tag bg-info-tag" id="kpi-total-tag">INFO</span>
                                                 <div class="kpi-title">Total Open Cases</div>
                                                 <div class="kpi-value" id="kpi-total">0</div>
@@ -184,7 +669,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-sr-card" onclick="openDrillDown('totalSR', 'Total Service Requests (SR)')">
+                                            <div class="kpi-card" id="kpi-sr-card">
                                                 <span class="kpi-status-tag bg-info-tag" id="kpi-sr-tag">INFO</span>
                                                 <div class="kpi-title">Total SR</div>
                                                 <div class="kpi-value" id="kpi-sr">0</div>
@@ -192,7 +677,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-inc-card" onclick="openDrillDown('totalINC', 'Total Incidents (INC)')">
+                                            <div class="kpi-card" id="kpi-inc-card">
                                                 <span class="kpi-status-tag bg-info-tag" id="kpi-inc-tag">INFO</span>
                                                 <div class="kpi-title">Total INC</div>
                                                 <div class="kpi-value" id="kpi-inc">0</div>
@@ -212,9 +697,9 @@
                             </h2>
                             <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
                                 <div class="accordion-body">
-                                    <div class="row g-2">
+                                    <div class="row g-3">
                                         <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-sla-sr-card" onclick="openDrillDown('slaSR', 'SLA Violated - SR')">
+                                            <div class="kpi-card" id="kpi-sla-sr-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-sla-sr-tag">GOOD</span>
                                                 <div class="kpi-title">SLA Violated – SR</div>
                                                 <div class="kpi-value" id="kpi-sla-sr">0</div>
@@ -222,7 +707,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-sla-inc-card" onclick="openDrillDown('slaINC', 'SLA Violated - INC')">
+                                            <div class="kpi-card" id="kpi-sla-inc-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-sla-inc-tag">GOOD</span>
                                                 <div class="kpi-title">SLA Violated – INC</div>
                                                 <div class="kpi-value" id="kpi-sla-inc">0</div>
@@ -242,9 +727,9 @@
                             </h2>
                             <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
                                 <div class="accordion-body">
-                                    <div class="row g-2">
+                                    <div class="row g-3">
                                         <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-aging-15-card" onclick="openDrillDown('aging15', 'Aging > 15 Days')">
+                                            <div class="kpi-card" id="kpi-aging-15-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-aging-15-tag">GOOD</span>
                                                 <div class="kpi-title">Aging > 15 Days</div>
                                                 <div class="kpi-value" id="kpi-aging-15">0</div>
@@ -252,7 +737,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-aging-25-card" onclick="openDrillDown('oldest25', 'Oldest Cases (> 25 Days)')">
+                                            <div class="kpi-card" id="kpi-aging-25-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-aging-25-tag">GOOD</span>
                                                 <div class="kpi-title">Oldest Cases (> 25 Days)</div>
                                                 <div class="kpi-value" id="kpi-aging-25">0</div>
@@ -272,9 +757,9 @@
                             </h2>
                             <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour">
                                 <div class="accordion-body">
-                                    <div class="row g-2">
+                                    <div class="row g-3">
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-followup-card" onclick="openDrillDown('followUpMissed', 'Follow-up Date Missed')">
+                                            <div class="kpi-card" id="kpi-followup-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-followup-tag">GOOD</span>
                                                 <div class="kpi-title">Follow-up Missed</div>
                                                 <div class="kpi-value" id="kpi-followup">0</div>
@@ -282,7 +767,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-email-followup-card" onclick="openDrillDown('emailNoFollowup', 'Email Follow-up Missed')">
+                                            <div class="kpi-card" id="kpi-email-followup-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-email-followup-tag">GOOD</span>
                                                 <div class="kpi-title">Email F/Up Missed</div>
                                                 <div class="kpi-value" id="kpi-email-followup">0</div>
@@ -290,7 +775,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-email-resp-card" onclick="openDrillDown('emailResponseMissed', 'Email Response Missed')">
+                                            <div class="kpi-card" id="kpi-email-resp-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-email-resp-tag">GOOD</span>
                                                 <div class="kpi-title">Email Resp Missed</div>
                                                 <div class="kpi-value" id="kpi-email-resp">0</div>
@@ -310,9 +795,9 @@
                             </h2>
                             <div id="collapseFive" class="accordion-collapse collapse show" aria-labelledby="headingFive">
                                 <div class="accordion-body">
-                                    <div class="row g-2">
+                                    <div class="row g-3">
                                         <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-sub-resp-card" onclick="openDrillDown('subsequentResponseMissed', 'Subsequent Response Missed')">
+                                            <div class="kpi-card" id="kpi-sub-resp-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-sub-resp-tag">GOOD</span>
                                                 <div class="kpi-title">Subsequent Resp Missed</div>
                                                 <div class="kpi-value" id="kpi-sub-resp">0</div>
@@ -320,7 +805,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-sub-sla-card" onclick="openDrillDown('subsequentSLAMiss', 'Subsequent SLA Miss')">
+                                            <div class="kpi-card" id="kpi-sub-sla-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-sub-sla-tag">GOOD</span>
                                                 <div class="kpi-title">Subsequent SLA Miss</div>
                                                 <div class="kpi-value" id="kpi-sub-sla">0</div>
@@ -340,9 +825,9 @@
                             </h2>
                             <div id="collapseSix" class="accordion-collapse collapse show" aria-labelledby="headingSix">
                                 <div class="accordion-body">
-                                    <div class="row g-2">
+                                    <div class="row g-3">
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-idle-1-card" onclick="openDrillDown('idle1', 'Idle > 1 Day')">
+                                            <div class="kpi-card" id="kpi-idle-1-card">
                                                 <span class="kpi-status-tag bg-info-tag" id="kpi-idle-1-tag">INFO</span>
                                                 <div class="kpi-title">Idle > 1 Day</div>
                                                 <div class="kpi-value" id="kpi-idle-1">0</div>
@@ -350,7 +835,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-idle-3-card" onclick="openDrillDown('idle3', 'Idle > 3 Days')">
+                                            <div class="kpi-card" id="kpi-idle-3-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-idle-3-tag">GOOD</span>
                                                 <div class="kpi-title">Idle > 3 Days</div>
                                                 <div class="kpi-value" id="kpi-idle-3">0</div>
@@ -358,7 +843,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-edoc-card" onclick="openDrillDown('edocBreach', 'SR EDOC Breach')">
+                                            <div class="kpi-card" id="kpi-edoc-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-edoc-tag">GOOD</span>
                                                 <div class="kpi-title">SR EDOC Breach</div>
                                                 <div class="kpi-value" id="kpi-edoc">0</div>
@@ -372,12 +857,19 @@
 
                     </div>
                     
-                    <h5 class="mt-4 mb-2 text-primary"><i class="bi bi-person-lines-fill me-2"></i>Team Performance Scorecard</h5>
-                    <div class="d-flex justify-content-end mb-2">
-                        <button class="btn btn-sm btn-success" onclick="exportScorecardToExcel()"><i class="bi bi-download me-1"></i> Export Scorecard</button>
+                    <h5 class="mt-5 mb-3" style="color: var(--primary-color);">
+                        <i class="bi bi-person-lines-fill me-2"></i>Team Performance Scorecard
+                    </h5>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="small text-muted">
+                            Click on any row to filter by that owner
+                        </div>
+                        <button class="btn btn-sm btn-success" onclick="exportScorecardToExcel()">
+                            <i class="bi bi-download me-1"></i> Export Scorecard
+                        </button>
                     </div>
                     <div class="card p-3 overflow-auto">
-                        <table class="table table-sm table-striped scorecard-table" id="owner-scorecard-table" style="min-width: 1400px;">
+                        <table class="table table-sm table-striped table-hover scorecard-table" id="owner-scorecard-table" style="min-width: 1400px;">
                             <thead>
                                 <tr>
                                     <th>Owner</th>
@@ -401,7 +893,7 @@
                                 </tr>
                             </thead>
                             <tbody id="owner-scorecard-body">
-                                <tr><td colspan="18" class="text-center text-muted">Processing data...</td></tr>
+                                <tr><td colspan="18" class="text-center text-muted py-4">Processing data...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -410,60 +902,170 @@
                 <div class="tab-pane fade" id="view-detailed" role="tabpanel">
                     
                     <div class="row mb-4">
-                        <div class="col-md-3"><div class="card metric-card"><div class="card-body"><div class="metric-value" id="total-open-cases">0</div><div class="metric-label">Total Open Cases</div></div></div></div>
-                        <div class="col-md-3"><div class="card metric-card"><div class="card-body"><div class="metric-value" id="total-sr-detail">0</div><div class="metric-label">Service Requests</div></div></div></div>
-                        <div class="col-md-3"><div class="card metric-card"><div class="card-body"><div class="metric-value" id="total-inc-detail">0</div><div class="metric-label">Incidents</div></div></div></div>
-                        <div class="col-md-3"><div class="card metric-card" style="background: linear-gradient(135deg, #27ae60, #3498db);"><div class="card-body"><div class="metric-value" id="sla-compliance-rate">0%</div><div class="metric-label">Overall SLA Compliance</div></div></div></div>
+                        <div class="col-md-3">
+                            <div class="card metric-card">
+                                <div class="card-body">
+                                    <div class="metric-value" id="total-open-cases">0</div>
+                                    <div class="metric-label">Total Open Cases</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card metric-card">
+                                <div class="card-body">
+                                    <div class="metric-value" id="total-sr-detail">0</div>
+                                    <div class="metric-label">Service Requests</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card metric-card">
+                                <div class="card-body">
+                                    <div class="metric-value" id="total-inc-detail">0</div>
+                                    <div class="metric-label">Incidents</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card metric-card" style="background: linear-gradient(135deg, var(--accent-color), #00E6B8);">
+                                <div class="card-body text-white">
+                                    <div class="metric-value" id="sla-compliance-rate">0%</div>
+                                    <div class="metric-label">Overall SLA Compliance</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row mb-4">
-                        <div class="col-md-6"><div class="card"><div class="card-header"><h5 class="mb-0">Cases by Status</h5></div><div class="card-body"><canvas id="statusChart" height="250"></canvas></div></div></div>
-                        <div class="col-md-6"><div class="card"><div class="card-header"><h5 class="mb-0">Aging Analysis</h5></div><div class="card-body"><canvas id="agingChart" height="250"></canvas></div></div></div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="bi bi-pie-chart-fill me-2" style="color: var(--primary-color);"></i>Cases by Status</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="statusChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="bi bi-bar-chart-fill me-2" style="color: var(--primary-color);"></i>Aging Analysis</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="agingChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
-                        <li class="nav-item"><button class="nav-link active" id="actions-tab" data-bs-toggle="tab" data-bs-target="#actions" type="button"><i class="bi bi-lightning-fill text-danger me-1"></i>Today's Actions</button></li>
-                        <li class="nav-item"><button class="nav-link" id="cases-tab" data-bs-toggle="tab" data-bs-target="#cases" type="button">All Cases</button></li>
-                        <li class="nav-item"><button class="nav-link" id="sla-tab" data-bs-toggle="tab" data-bs-target="#sla" type="button">SLA Violations</button></li>
-                        <li class="nav-item"><button class="nav-link" id="aging-tab" data-bs-toggle="tab" data-bs-target="#aging" type="button">Aging >15 Days</button></li>
-                        <li class="nav-item"><button class="nav-link" id="recommendations-tab" data-bs-toggle="tab" data-bs-target="#recommendations" type="button">Recommendations</button></li>
-                        <li class="nav-item"><button class="nav-link" id="owners-tab" data-bs-toggle="tab" data-bs-target="#owners" type="button">Owner Analysis</button></li>
+                        <li class="nav-item">
+                            <button class="nav-link active" id="actions-tab" data-bs-toggle="tab" data-bs-target="#actions" type="button">
+                                <i class="bi bi-lightning-fill text-danger me-1"></i>Today's Actions
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="cases-tab" data-bs-toggle="tab" data-bs-target="#cases" type="button">
+                                All Cases
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="sla-tab" data-bs-toggle="tab" data-bs-target="#sla" type="button">
+                                SLA Violations
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="aging-tab" data-bs-toggle="tab" data-bs-target="#aging" type="button">
+                                Aging >15 Days
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="recommendations-tab" data-bs-toggle="tab" data-bs-target="#recommendations" type="button">
+                                Recommendations
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="owners-tab" data-bs-toggle="tab" data-bs-target="#owners" type="button">
+                                Owner Analysis
+                            </button>
+                        </li>
                     </ul>
 
                     <div class="tab-content" id="dashboardTabsContent">
                         
                         <div class="tab-pane fade show active" id="actions">
-                            <div class="alert alert-danger"><i class="bi bi-exclamation-circle-fill me-2"></i>This list shows all cases requiring immediate owner action today (Follow-up Missed, EDOC Breached, Critical Aging).</div>
+                            <div class="alert alert-danger shadow-sm">
+                                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                This list shows all cases requiring immediate owner action today (Follow-up Missed, EDOC Breached, Critical Aging).
+                            </div>
                             <div id="actions-container"></div>
                         </div>
                         
                         <div class="tab-pane fade" id="cases">
-                            <div class="filter-section p-3 bg-light rounded mb-3">
+                            <div class="filter-section p-3 bg-light rounded mb-3 shadow-sm">
                                 <div class="row g-3">
-                                    <div class="col-md-3"><select class="form-select" id="filter-service"><option value="">All Service Types</option></select></div>
-                                    <div class="col-md-3"><select class="form-select" id="filter-owner"><option value="">All Owners</option></select></div>
-                                    <div class="col-md-3"><select class="form-select" id="filter-status"><option value="">All Statuses</option></select></div>
-                                    <div class="col-md-3"><button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('cases')">Clear Tab Filters</button></div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small fw-bold mb-1">Service Type</label>
+                                        <select class="form-select" id="filter-service">
+                                            <option value="">All Service Types</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small fw-bold mb-1">Owner</label>
+                                        <select class="form-select" id="filter-owner">
+                                            <option value="">All Owners</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small fw-bold mb-1">Status</label>
+                                        <select class="form-select" id="filter-status">
+                                            <option value="">All Statuses</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 d-flex align-items-end">
+                                        <button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('cases')">
+                                            <i class="bi bi-x-circle me-1"></i> Clear Filters
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div id="cases-container"></div>
                         </div>
 
                         <div class="tab-pane fade" id="sla">
-                             <div class="filter-section p-3 bg-light rounded mb-3">
+                             <div class="filter-section p-3 bg-light rounded mb-3 shadow-sm">
                                 <div class="row g-3">
-                                    <div class="col-md-4"><select class="form-select" id="sla-filter-owner"><option value="">All Owners</option></select></div>
-                                    <div class="col-md-4"><button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('sla')">Clear Tab Filters</button></div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-bold mb-1">Filter by Owner</label>
+                                        <select class="form-select" id="sla-filter-owner">
+                                            <option value="">All Owners</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-end">
+                                        <button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('sla')">
+                                            <i class="bi bi-x-circle me-1"></i> Clear Filters
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div id="sla-violations-container"></div>
                         </div>
 
                         <div class="tab-pane fade" id="aging">
-                            <div class="filter-section p-3 bg-light rounded mb-3">
+                            <div class="filter-section p-3 bg-light rounded mb-3 shadow-sm">
                                 <div class="row g-3">
-                                    <div class="col-md-4"><select class="form-select" id="aging-filter-owner"><option value="">All Owners</option></select></div>
-                                    <div class="col-md-4"><button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('aging')">Clear Tab Filters</button></div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-bold mb-1">Filter by Owner</label>
+                                        <select class="form-select" id="aging-filter-owner">
+                                            <option value="">All Owners</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 d-flex align-items-end">
+                                        <button class="btn btn-outline-secondary w-100" onclick="clearTabFilters('aging')">
+                                            <i class="bi bi-x-circle me-1"></i> Clear Filters
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div id="aging-cases-container"></div>
@@ -475,12 +1077,24 @@
 
                         <div class="tab-pane fade" id="owners">
                             <div class="row" id="owner-breakdown"></div>
-                            <div class="card mt-4"><div class="card-header">SLA & Aging Breakdown by Owner</div><div class="card-body"><canvas id="ownerChart" height="300"></canvas></div></div>
+                            <div class="card mt-4 shadow-sm">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="bi bi-graph-up me-2" style="color: var(--primary-color);"></i>SLA & Aging Breakdown by Owner</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="ownerChart" height="300"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner-border"></div>
+        <div class="mt-3 fw-bold" style="color: var(--primary-color);">Processing data...</div>
     </div>
 
     <div class="modal fade" id="drillDownModal" tabindex="-1">
@@ -491,14 +1105,28 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="d-flex justify-content-between mb-3">
-                        <span class="badge bg-secondary" id="drillDownCount">0 Cases</span>
-                        <button class="btn btn-sm btn-success" onclick="exportDrillDownToExcel()"><i class="bi bi-download me-1"></i> Export List</button>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge" style="background: linear-gradient(135deg, var(--primary-color), #7B3FD9); font-size: 1rem;" id="drillDownCount">0 Cases</span>
+                        <button class="btn btn-success" onclick="exportDrillDownToExcel()">
+                            <i class="bi bi-download me-1"></i> Export List
+                        </button>
                     </div>
-                    <table class="table table-sm table-hover table-bordered drilldown-table">
-                        <thead><tr><th>Incident ID</th><th>Title</th><th>Owner</th><th>Status</th><th>Aging</th><th>SLA Status</th><th>Next Follow-up</th></tr></thead>
-                        <tbody id="drillDownBody"></tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover table-bordered drilldown-table">
+                            <thead>
+                                <tr>
+                                    <th>Incident ID</th>
+                                    <th>Title</th>
+                                    <th>Owner</th>
+                                    <th>Status</th>
+                                    <th>Aging</th>
+                                    <th>SLA Status</th>
+                                    <th>Next Follow-up</th>
+                                </tr>
+                            </thead>
+                            <tbody id="drillDownBody"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -507,12 +1135,12 @@
     <div class="modal fade" id="caseDetailModal" tabindex="-1">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header">
                     <h5 class="modal-title" id="caseDetailTitle">Case Details</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="case-detail-content">
-                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -533,23 +1161,41 @@
         function init() {
             const dropArea = document.getElementById('drop-area');
             const fileInput = document.getElementById('file-input');
+            const uploadButton = dropArea.querySelector('button');
 
+            uploadButton.addEventListener('click', () => fileInput.click());
             dropArea.addEventListener('click', () => fileInput.click());
-            dropArea.addEventListener('dragover', (e) => { e.preventDefault(); dropArea.style.borderColor = '#3498db'; });
-            dropArea.addEventListener('dragleave', () => { dropArea.style.borderColor = '#ccc'; });
+            
+            dropArea.addEventListener('dragover', (e) => { 
+                e.preventDefault(); 
+                dropArea.classList.add('dragover');
+                dropArea.style.borderColor = 'var(--accent-color)';
+            });
+            
+            dropArea.addEventListener('dragleave', () => { 
+                dropArea.classList.remove('dragover');
+                dropArea.style.borderColor = '#D1D5FF'; 
+            });
+            
             dropArea.addEventListener('drop', (e) => {
                 e.preventDefault();
-                dropArea.style.borderColor = '#ccc';
+                dropArea.classList.remove('dragover');
+                dropArea.style.borderColor = '#D1D5FF';
                 if (e.dataTransfer.files.length) {
                     handleFileUpload(e.dataTransfer.files[0]);
                 }
             });
-            fileInput.onchange = (e) => { handleFileUpload(e.target.files[0]); };
+            
+            fileInput.onchange = (e) => { 
+                if (e.target.files[0]) {
+                    handleFileUpload(e.target.files[0]);
+                }
+            };
 
             document.getElementById('process-data-btn').onclick = processData;
             document.getElementById('clear-filters-btn').onclick = clearAllFilters;
 
-            // Set up filter event listeners PROPERLY
+            // Set up filter event listeners
             document.getElementById('global-filter-service').addEventListener('change', updateGlobalFilters);
             document.getElementById('global-filter-owner').addEventListener('change', updateGlobalFilters);
             document.getElementById('global-filter-status').addEventListener('change', updateGlobalFilters);
@@ -561,14 +1207,22 @@
 
         function setupTabFilterListeners() {
             ['filter-service', 'filter-owner', 'filter-status'].forEach(id => {
-                if(document.getElementById(id)) document.getElementById(id).addEventListener('change', () => filterCases());
+                if(document.getElementById(id)) {
+                    document.getElementById(id).addEventListener('change', () => {
+                        if(id === 'filter-service' || id === 'filter-owner' || id === 'filter-status') {
+                            filterCases();
+                        }
+                    });
+                }
             });
-            ['sla-filter-owner'].forEach(id => {
-                if(document.getElementById(id)) document.getElementById(id).addEventListener('change', () => filterSLAViolations());
-            });
-            ['aging-filter-owner'].forEach(id => {
-                if(document.getElementById(id)) document.getElementById(id).addEventListener('change', () => filterAgingCases());
-            });
+            
+            if(document.getElementById('sla-filter-owner')) {
+                document.getElementById('sla-filter-owner').addEventListener('change', () => filterSLAViolations());
+            }
+            
+            if(document.getElementById('aging-filter-owner')) {
+                document.getElementById('aging-filter-owner').addEventListener('change', () => filterAgingCases());
+            }
         }
 
         function handleFileUpload(file) {
@@ -576,43 +1230,59 @@
             document.getElementById('file-name').textContent = fileName;
             document.getElementById('file-info').style.display = 'block';
 
+            showLoading(true);
+            
             const reader = new FileReader();
-            reader.onload = (e) => fileName.endsWith('.csv') ? parseCSV(e.target.result) : parseExcel(e.target.result);
-            fileName.endsWith('.csv') ? reader.readAsText(file) : reader.readAsBinaryString(file);
+            reader.onload = (e) => {
+                if(fileName.endsWith('.csv')) {
+                    parseCSV(e.target.result);
+                } else {
+                    parseExcel(e.target.result);
+                }
+            };
+            
+            if(fileName.endsWith('.csv')) {
+                reader.readAsText(file);
+            } else {
+                reader.readAsBinaryString(file);
+            }
         }
 
         function parseExcel(data) {
-            const wb = XLSX.read(data, { type: 'binary' });
-            const ws = wb.Sheets[wb.SheetNames[0]];
-            processExcelData(XLSX.utils.sheet_to_json(ws, { header: 1 }));
+            try {
+                const wb = XLSX.read(data, { type: 'binary' });
+                const ws = wb.Sheets[wb.SheetNames[0]];
+                processExcelData(XLSX.utils.sheet_to_json(ws, { header: 1 }));
+            } catch (error) {
+                showLoading(false);
+                alert("Error parsing Excel file: " + error.message);
+            }
         }
 
         function parseCSV(data) {
-            processExcelData(data.split('\n').map(r => r.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim())));
-        }
-
-        function findColumn(headers, possibleNames) {
-            for (const name of possibleNames) {
-                const found = headers.find(h => h && h.toString().toLowerCase().includes(name.toLowerCase()));
-                if (found) return found;
+            try {
+                processExcelData(data.split('\n').map(r => r.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim())));
+            } catch (error) {
+                showLoading(false);
+                alert("Error parsing CSV file: " + error.message);
             }
-            return possibleNames[0];
         }
 
         function processExcelData(data) {
             if (!data || data.length < 2) {
+                showLoading(false);
                 alert("No data found or file format is incorrect.");
                 return;
             }
 
-            const headers = data[0].map(h => h ? h.trim() : '');
+            const headers = data[0].map(h => h ? h.toString().trim() : '');
             rawData = data.slice(1).map(row => {
                 const rowObj = {};
                 headers.forEach((header, index) => {
                     rowObj[header] = row[index];
                 });
                 return rowObj;
-            }).filter(row => Object.values(row).some(v => v));
+            }).filter(row => Object.values(row).some(v => v && v.toString().trim() !== ''));
 
             document.getElementById('row-count').textContent = `${rawData.length} rows loaded`;
             
@@ -733,14 +1403,14 @@
             });
 
             filteredData = [...processedData];
-            updateDashboard();
+            showLoading(false);
             document.getElementById('upload-section').style.display = 'none';
             document.getElementById('dashboard-section').style.display = 'block';
             document.getElementById('total-cases').textContent = `${processedData.length} Cases Loaded`;
             document.getElementById('last-updated').textContent = `Last Updated: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`;
 
             populateFilterDropdowns();
-            renderDetailedDashboard();
+            updateDashboard();
         }
 
         function populateFilterDropdowns() {
@@ -762,7 +1432,14 @@
                 const select = document.getElementById(id);
                 if (select) {
                     const originalValue = select.value;
-                    select.innerHTML = `<option value="">All ${id.split('-').pop().replace('global', 'Owners').replace('service', 'Service Types').replace('status', 'Statuses')}</option>`;
+                    const label = id.split('-').pop();
+                    const labelText = label === 'owner' ? 'Owners' : 
+                                   label === 'service' ? 'Service Types' : 
+                                   label === 'status' ? 'Statuses' : 
+                                   label === 'submittedby' ? 'Submitted By' :
+                                   'Options';
+                    
+                    select.innerHTML = `<option value="">All ${labelText}</option>`;
                     dropdowns[id].forEach(value => {
                         select.innerHTML += `<option value="${value}">${value}</option>`;
                     });
@@ -774,7 +1451,7 @@
         }
 
         function updateGlobalFilters() {
-            console.log("Filters updating...");
+            showLoading(true);
             
             globalFilters.owner = document.getElementById('global-filter-owner').value;
             globalFilters.submittedby = document.getElementById('global-filter-submittedby').value;
@@ -792,19 +1469,47 @@
                 return true;
             });
 
-            console.log(`Filtered data: ${filteredData.length} cases`);
+            updateActiveFiltersDisplay();
             
-            // CRITICAL: Update both views
-            renderKPIDashboard();
-            renderDetailedDashboard();
-            
-            const activeCount = Object.values(globalFilters).filter(v => v).length;
-            document.getElementById('active-filters-count').textContent = `${activeCount} filter${activeCount === 1 ? '' : 's'} active`;
+            updateDashboard();
+            showLoading(false);
+        }
+
+        function updateActiveFiltersDisplay() {
+            const activeFilters = [];
+            if (globalFilters.owner) activeFilters.push({key: 'owner', label: 'Owner', value: globalFilters.owner});
+            if (globalFilters.submittedby) activeFilters.push({key: 'submittedby', label: 'Submitted By', value: globalFilters.submittedby});
+            if (globalFilters.service) activeFilters.push({key: 'service', label: 'Service Type', value: globalFilters.service});
+            if (globalFilters.status) activeFilters.push({key: 'status', label: 'Status', value: globalFilters.status});
+            if (globalFilters.sla) activeFilters.push({key: 'sla', label: 'SLA Status', value: globalFilters.sla});
+
+            const activeFiltersTags = document.getElementById('active-filters-tags');
+            const activeFiltersCount = document.getElementById('active-filters-count');
+            const filteredCasesCount = document.getElementById('filtered-cases-count');
+
+            if (activeFilters.length > 0) {
+                activeFiltersTags.innerHTML = activeFilters.map(filter => `
+                    <div class="filter-tag">
+                        <i class="bi bi-funnel"></i>
+                        ${filter.label}: ${filter.value}
+                        <span class="close" onclick="removeFilter('${filter.key}')">&times;</span>
+                    </div>
+                `).join('');
+                activeFiltersTags.style.display = 'flex';
+            } else {
+                activeFiltersTags.style.display = 'none';
+            }
+
+            activeFiltersCount.textContent = `${activeFilters.length} filter${activeFilters.length !== 1 ? 's' : ''} active`;
+            filteredCasesCount.textContent = `Showing ${filteredData.length} of ${processedData.length} cases`;
+        }
+
+        function removeFilter(filterKey) {
+            document.getElementById(`global-filter-${filterKey}`).value = '';
+            updateGlobalFilters();
         }
 
         function clearAllFilters() {
-            console.log("Clearing all filters");
-            
             document.getElementById('global-filter-owner').value = '';
             document.getElementById('global-filter-submittedby').value = '';
             document.getElementById('global-filter-service').value = '';
@@ -819,12 +1524,8 @@
             
             filteredData = [...processedData];
             
-            console.log(`Reset to ${filteredData.length} cases`);
-            
-            renderKPIDashboard();
-            renderDetailedDashboard();
-            
-            document.getElementById('active-filters-count').textContent = '0 filters active';
+            updateActiveFiltersDisplay();
+            updateDashboard();
         }
 
         function updateOwnerFilter(owner) {
@@ -832,15 +1533,49 @@
             updateGlobalFilters();
         }
 
-        function updateCard(kpiId, value, recommendation, drillDownFunction) {
+        function updateCard(kpiId, value, recommendation) {
             document.getElementById(kpiId).textContent = value;
             document.getElementById(`${kpiId}-tag`).textContent = recommendation.status;
             document.getElementById(`${kpiId}-tag`).className = `kpi-status-tag ${recommendation.tag}`;
             document.getElementById(`${kpiId}-rec`).textContent = recommendation.rec;
-            document.getElementById(`${kpiId}-card`).onclick = drillDownFunction;
+            
+            const card = document.getElementById(`${kpiId}-card`);
+            card.onclick = function() {
+                // Fixed: Use the correct KPI mapping
+                let drillDownKey;
+                switch(kpiId) {
+                    case 'kpi-total': drillDownKey = 'totalOpen'; break;
+                    case 'kpi-sr': drillDownKey = 'totalSR'; break;
+                    case 'kpi-inc': drillDownKey = 'totalINC'; break;
+                    case 'kpi-sla-sr': drillDownKey = 'slaSR'; break;
+                    case 'kpi-sla-inc': drillDownKey = 'slaINC'; break;
+                    case 'kpi-aging-15': drillDownKey = 'aging15'; break;
+                    case 'kpi-aging-25': drillDownKey = 'oldest25'; break;
+                    case 'kpi-followup': drillDownKey = 'followUpMissed'; break;
+                    case 'kpi-email-followup': drillDownKey = 'emailNoFollowup'; break;
+                    case 'kpi-email-resp': drillDownKey = 'emailResponseMissed'; break;
+                    case 'kpi-sub-resp': drillDownKey = 'subsequentResponseMissed'; break;
+                    case 'kpi-sub-sla': drillDownKey = 'subsequentSLAMiss'; break;
+                    case 'kpi-idle-1': drillDownKey = 'idle1'; break;
+                    case 'kpi-idle-3': drillDownKey = 'idle3'; break;
+                    case 'kpi-edoc': drillDownKey = 'edocBreach'; break;
+                    default: drillDownKey = 'totalOpen';
+                }
+                openDrillDown(drillDownKey, recommendation.status);
+            };
+        }
+
+        function updateDashboard() {
+            renderKPIDashboard();
+            renderDetailedDashboard();
         }
 
         function renderKPIDashboard() {
+            if (!filteredData.length) {
+                document.getElementById('owner-scorecard-body').innerHTML = '<tr><td colspan="18" class="text-center text-muted py-4">No data found for selected filters.</td></tr>';
+                return;
+            }
+
             const m = {
                 totalOpen: filteredData.length,
                 totalSR: filteredData.filter(d => d.isSR).length,
@@ -907,33 +1642,31 @@
             let edocRec = { status: 'GOOD', tag: 'bg-good', rec: 'No SR cases have breached their Expected Date of Closure.' };
             if (m.edoc > 0) edocRec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.edoc} SR EDOC breaches. These must be resolved or re-scheduled immediately.` };
 
-            updateCard('kpi-total', m.totalOpen, infoRec, () => openDrillDown('totalOpen', 'Total Open Cases'));
-            updateCard('kpi-sr', m.totalSR, srRec, () => openDrillDown('totalSR', 'Total Service Requests (SR)'));
-            updateCard('kpi-inc', m.totalINC, incRec, () => openDrillDown('totalINC', 'Total Incidents (INC)'));
+            updateCard('kpi-total', m.totalOpen, infoRec);
+            updateCard('kpi-sr', m.totalSR, srRec);
+            updateCard('kpi-inc', m.totalINC, incRec);
 
-            updateCard('kpi-sla-sr', m.slaSR, slaSRRec, () => openDrillDown('slaSR', 'SLA Violated - SR'));
-            updateCard('kpi-sla-inc', m.slaINC, slaINCRec, () => openDrillDown('slaINC', 'SLA Violated - INC'));
+            updateCard('kpi-sla-sr', m.slaSR, slaSRRec);
+            updateCard('kpi-sla-inc', m.slaINC, slaINCRec);
 
-            updateCard('kpi-aging-15', m.aging15, aging15Rec, () => openDrillDown('aging15', 'Aging > 15 Days'));
-            updateCard('kpi-aging-25', m.oldest25, oldest25Rec, () => openDrillDown('oldest25', 'Oldest Cases (> 25 Days)'));
+            updateCard('kpi-aging-15', m.aging15, aging15Rec);
+            updateCard('kpi-aging-25', m.oldest25, oldest25Rec);
 
-            updateCard('kpi-followup', m.followUp, fuRec, () => openDrillDown('followUpMissed', 'Follow-up Date Missed'));
-            updateCard('kpi-email-followup', m.emailMiss, emailFURec, () => openDrillDown('emailNoFollowup', 'Email Follow-up Missed'));
-            updateCard('kpi-email-resp', m.respMiss, respMissRec, () => openDrillDown('emailResponseMissed', 'Email Response Missed'));
+            updateCard('kpi-followup', m.followUp, fuRec);
+            updateCard('kpi-email-followup', m.emailMiss, emailFURec);
+            updateCard('kpi-email-resp', m.respMiss, respMissRec);
 
-            updateCard('kpi-sub-resp', m.subRespMiss, subRespRec, () => openDrillDown('subsequentResponseMissed', 'Subsequent Response Missed'));
-            updateCard('kpi-sub-sla', m.subSLAMiss, subSLARec, () => openDrillDown('subsequentSLAMiss', 'Subsequent SLA Miss'));
+            updateCard('kpi-sub-resp', m.subRespMiss, subRespRec);
+            updateCard('kpi-sub-sla', m.subSLAMiss, subSLARec);
 
-            updateCard('kpi-idle-1', m.idle1, idle1Rec, () => openDrillDown('idle1', 'Idle > 1 Day'));
-            updateCard('kpi-idle-3', m.idle3, idle3Rec, () => openDrillDown('idle3', 'Idle > 3 Days'));
-            updateCard('kpi-edoc', m.edoc, edocRec, () => openDrillDown('edocBreach', 'SR EDOC Breach'));
+            updateCard('kpi-idle-1', m.idle1, idle1Rec);
+            updateCard('kpi-idle-3', m.idle3, idle3Rec);
+            updateCard('kpi-edoc', m.edoc, edocRec);
             
-            const slaViolatedCount = filteredData.filter(d => d.isSlaViolated).length;
-            const overallSLACompliance = filteredData.length > 0 ? (((filteredData.length - slaViolatedCount) / filteredData.length) * 100).toFixed(1) : 100.0;
-            renderOwnerScorecard(overallSLACompliance);
+            renderOwnerScorecard();
         }
 
-        function renderOwnerScorecard(overallSLACompliance) {
+        function renderOwnerScorecard() {
             const counts = {};
             filteredData.forEach(d => {
                 if(!counts[d.owner]) counts[d.owner] = { 
@@ -1002,8 +1735,8 @@
 
                 return `
                     <tr class="align-middle" onclick="updateOwnerFilter('${o}')" style="cursor: pointer;">
-                        <td>${o}</td>
-                        <td class="${complianceRate < 80 ? 'critical-cell' : complianceRate < 95 ? 'high-cell' : 'success-cell'}">${complianceRate}%</td>
+                        <td class="fw-bold">${o}</td>
+                        <td class="${complianceRate < 80 ? 'critical-cell' : complianceRate < 95 ? 'high-cell' : 'success-cell'} fw-bold">${complianceRate}%</td>
                         <td>${stats.total}</td>
                         <td>${stats.sr}</td>
                         <td>${stats.inc}</td>
@@ -1028,7 +1761,7 @@
                 `;
             }).join('');
 
-            document.getElementById('owner-scorecard-body').innerHTML = scorecardHtml || '<tr><td colspan="18" class="text-center text-muted">No data found for selected filters.</td></tr>';
+            document.getElementById('owner-scorecard-body').innerHTML = scorecardHtml || '<tr><td colspan="18" class="text-center text-muted py-4">No data found for selected filters.</td></tr>';
         }
 
         function openDrillDown(kpi, title) {
@@ -1087,19 +1820,22 @@
             
             document.getElementById('drillDownCount').textContent = `${drillDownData.length} Cases`;
 
-            const drillDownHtml = drillDownData.map((d, index) => `
-                <tr onclick="viewCaseDetail(${processedData.findIndex(p => p.incidentId === d.incidentId)})" style="cursor: pointer;">
-                    <td>${d.incidentId}</td>
-                    <td><div style="max-width:350px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${d.title}">${d.title}</div></td>
-                    <td>${d.owner}</td>
-                    <td>${d.currentStatus}</td>
-                    <td>${d.agingDays}</td>
-                    <td class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">${d.slaViolationStatus}</td>
-                    <td>${d.nextFollowUp || '--'}</td>
-                </tr>
-            `).join('');
+            const drillDownHtml = drillDownData.map((d, index) => {
+                const globalIndex = processedData.findIndex(p => p.incidentId === d.incidentId);
+                return `
+                    <tr onclick="viewCaseDetail(${globalIndex})" style="cursor: pointer;">
+                        <td class="fw-bold">${d.incidentId}</td>
+                        <td><div style="max-width:350px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${d.title}">${d.title}</div></td>
+                        <td><span class="owner-tag">${d.owner}</span></td>
+                        <td>${d.currentStatus}</td>
+                        <td class="${d.agingDays > 25 ? 'text-danger fw-bold' : d.agingDays > 15 ? 'text-warning' : ''}">${d.agingDays}</td>
+                        <td class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">${d.slaViolationStatus}</td>
+                        <td class="${d.isFollowUpMissed ? 'text-danger fw-bold' : ''}">${d.nextFollowUp || '--'}</td>
+                    </tr>
+                `;
+            }).join('');
 
-            document.getElementById('drillDownBody').innerHTML = drillDownHtml || '<tr><td colspan="7" class="text-center text-muted">No cases found.</td></tr>';
+            document.getElementById('drillDownBody').innerHTML = drillDownHtml || '<tr><td colspan="7" class="text-center text-muted py-3">No cases found.</td></tr>';
 
             new bootstrap.Modal(document.getElementById('drillDownModal')).show();
         }
@@ -1114,6 +1850,7 @@
             document.getElementById('total-inc-detail').textContent = filteredData.filter(d => d.isINC).length;
             document.getElementById('sla-compliance-rate').textContent = `${slaComplianceRate}%`;
 
+            updateDetailedViewFilters();
             renderOriginalCharts();
             renderTodayActions();
             renderAllCases();
@@ -1123,6 +1860,38 @@
             renderOwnerAnalysis();
         }
 
+        function updateDetailedViewFilters() {
+            const getUniqueValues = (key) => [...new Set(filteredData.map(d => d[key]).filter(Boolean).sort())];
+            
+            const detailedDropdowns = {
+                'filter-owner': getUniqueValues('owner'),
+                'filter-service': getUniqueValues('service'),
+                'filter-status': getUniqueValues('currentStatus'),
+                'sla-filter-owner': getUniqueValues('owner'),
+                'aging-filter-owner': getUniqueValues('owner')
+            };
+
+            for (const id in detailedDropdowns) {
+                const select = document.getElementById(id);
+                if (select) {
+                    const originalValue = select.value;
+                    const label = id.split('-').pop();
+                    const labelText = label === 'owner' ? 'Owners' : 
+                                   label === 'service' ? 'Service Types' : 
+                                   label === 'status' ? 'Statuses' : 
+                                   'Options';
+                    
+                    select.innerHTML = `<option value="">All ${labelText}</option>`;
+                    detailedDropdowns[id].forEach(value => {
+                        select.innerHTML += `<option value="${value}">${value}</option>`;
+                    });
+                    if (originalValue && detailedDropdowns[id].includes(originalValue)) {
+                        select.value = originalValue;
+                    }
+                }
+            }
+        }
+
         function renderOriginalCharts() {
             Object.values(charts).forEach(chart => chart && chart.destroy());
 
@@ -1130,17 +1899,26 @@
             filteredData.forEach(d => {
                 statusCounts[d.currentStatus] = (statusCounts[d.currentStatus] || 0) + 1;
             });
+            
+            const statusColors = ['#5F259F', '#3D7FFF', '#00D4AA', '#FF9F00', '#FF3B5C', '#9B46C9', '#2CD5C4'];
             charts.statusChart = new Chart(document.getElementById('statusChart'), {
-                type: 'pie',
+                type: 'doughnut',
                 data: {
                     labels: Object.keys(statusCounts),
                     datasets: [{
                         data: Object.values(statusCounts),
-                        backgroundColor: ['#2c3e50', '#3498db', '#95a5a6', '#e74c3c', '#27ae60', '#f39c12']
+                        backgroundColor: statusColors.slice(0, Object.keys(statusCounts).length),
+                        borderWidth: 1,
+                        borderColor: '#fff'
                     }]
                 },
                 options: {
                     maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        }
+                    }
                 }
             });
 
@@ -1151,20 +1929,33 @@
                 else if(d.agingDays<=15) aCounts['11-15']++;
                 else aCounts['16+']++;
             });
+            
             charts.agingChart = new Chart(document.getElementById('agingChart'), {
                 type: 'bar',
                 data: {
                     labels: Object.keys(aCounts),
                     datasets: [{
-                        label: 'Cases',
+                        label: 'Number of Cases',
                         data: Object.values(aCounts),
-                        backgroundColor: ['#27ae60', '#f39c12', '#e67e22', '#c0392b']
+                        backgroundColor: ['#00D4AA', '#3D7FFF', '#FF9F00', '#FF3B5C'],
+                        borderColor: ['#00D4AA', '#3D7FFF', '#FF9F00', '#FF3B5C'],
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     maintainAspectRatio: false,
                     scales: {
-                        y: { beginAtZero: true }
+                        y: { 
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
                     }
                 }
             });
@@ -1189,13 +1980,17 @@
                         {
                             label: 'SLA Violation Rate (%)',
                             data: violationRates,
-                            backgroundColor: 'rgba(192, 57, 43, 0.7)',
+                            backgroundColor: 'rgba(255, 59, 92, 0.7)',
+                            borderColor: 'rgba(255, 59, 92, 1)',
+                            borderWidth: 1,
                             yAxisID: 'y1',
                         },
                         {
                             label: 'Aging > 15 Days Count',
                             data: aging15Counts,
-                            backgroundColor: 'rgba(243, 156, 18, 0.7)',
+                            backgroundColor: 'rgba(255, 159, 0, 0.7)',
+                            borderColor: 'rgba(255, 159, 0, 1)',
+                            borderWidth: 1,
                             yAxisID: 'y2',
                         }
                     ]
@@ -1204,20 +1999,42 @@
                     maintainAspectRatio: false,
                     responsive: true,
                     scales: {
-                        x: { stacked: false },
+                        x: { 
+                            stacked: false,
+                            ticks: {
+                                maxRotation: 45
+                            }
+                        },
                         y1: { 
                             type: 'linear', 
                             display: true, 
                             position: 'left',
-                            title: { display: true, text: 'Violation Rate (%)' },
+                            title: { 
+                                display: true, 
+                                text: 'Violation Rate (%)',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
                             beginAtZero: true,
-                            max: 100
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
                         },
                         y2: { 
                             type: 'linear', 
                             display: true, 
                             position: 'right',
-                            title: { display: true, text: 'Aging Count' },
+                            title: { 
+                                display: true, 
+                                text: 'Aging Count',
+                                font: {
+                                    weight: 'bold'
+                                }
+                            },
                             grid: { drawOnChartArea: false },
                             beginAtZero: true
                         }
@@ -1293,55 +2110,60 @@
         function renderFilteredCases(cases, containerId, isActionList = false) {
             const container = document.getElementById(containerId);
             if(!cases.length) {
-                container.innerHTML = `<div class="alert alert-info mt-3">No cases matching the criteria found.</div>`;
+                container.innerHTML = `<div class="alert alert-info mt-3 shadow-sm">No cases matching the criteria found.</div>`;
                 return;
             }
 
             const tableHtml = `
-                <table class="table table-sm table-striped table-hover mt-3 detailed-case-table">
-                    <thead>
-                        <tr>
-                            <th>Incident ID</th>
-                            <th>Title</th>
-                            <th>Owner</th>
-                            <th>Status</th>
-                            <th>Aging</th>
-                            <th>SLA Status</th>
-                            <th>Next Follow-up</th>
-                            ${isActionList ? '<th>Action Reason</th>' : ''}
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${cases.map(d => {
-                            const globalIndex = processedData.findIndex(p => p.incidentId === d.incidentId);
-                            let actionReason = '';
-                            if (isActionList) {
-                                const reasons = [];
-                                if (d.isSlaViolated) reasons.push('SLA Violated');
-                                if (d.isOldest25) reasons.push('Aged > 25 Days');
-                                if (d.isEdocBreached) reasons.push('EDOC Breached');
-                                if (d.isFollowUpMissed) reasons.push('F/Up Missed');
-                                if (d.isSubsequentResponseMissed) reasons.push('Sub. Resp Missed');
-                                if (d.isIdle3) reasons.push('Idle > 3 Days');
-                                actionReason = `<td class="text-danger fw-bold small">${reasons.join(', ')}</td>`;
-                            }
-                            return `
-                                <tr class="align-middle" style="cursor: pointer;">
-                                    <td>${d.incidentId}</td>
-                                    <td><div style="max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${d.title}">${d.title}</div></td>
-                                    <td>${d.owner}</td>
-                                    <td>${d.currentStatus}</td>
-                                    <td>${d.agingDays}</td>
-                                    <td class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">${d.slaViolationStatus}</td>
-                                    <td>${d.nextFollowUp || '--'}</td>
-                                    ${actionReason}
-                                    <td><button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${globalIndex})">View</button></td>
-                                </tr>
-                            `;
-                        }).join('')}
-                    </tbody>
-                </table>
+                <div class="table-responsive mt-3">
+                    <table class="table table-sm table-striped table-hover detailed-case-table">
+                        <thead>
+                            <tr>
+                                <th>Incident ID</th>
+                                <th>Title</th>
+                                <th>Owner</th>
+                                <th>Status</th>
+                                <th>Aging</th>
+                                <th>SLA Status</th>
+                                <th>Next Follow-up</th>
+                                ${isActionList ? '<th>Action Reason</th>' : ''}
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${cases.map(d => {
+                                const globalIndex = processedData.findIndex(p => p.incidentId === d.incidentId);
+                                let actionReason = '';
+                                if (isActionList) {
+                                    const reasons = [];
+                                    if (d.isSlaViolated) reasons.push('SLA Violated');
+                                    if (d.isOldest25) reasons.push('Aged > 25 Days');
+                                    if (d.isEdocBreached) reasons.push('EDOC Breached');
+                                    if (d.isFollowUpMissed) reasons.push('F/Up Missed');
+                                    if (d.isSubsequentResponseMissed) reasons.push('Sub. Resp Missed');
+                                    if (d.isIdle3) reasons.push('Idle > 3 Days');
+                                    actionReason = `<td><span class="badge bg-danger">${reasons.join(', ')}</span></td>`;
+                                }
+                                return `
+                                    <tr class="align-middle" style="cursor: pointer;">
+                                        <td class="fw-bold">${d.incidentId}</td>
+                                        <td><div style="max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${d.title}">${d.title}</div></td>
+                                        <td><span class="owner-tag">${d.owner}</span></td>
+                                        <td>${d.currentStatus}</td>
+                                        <td class="${d.agingDays > 25 ? 'text-danger fw-bold' : d.agingDays > 15 ? 'text-warning' : ''}">${d.agingDays}</td>
+                                        <td class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">${d.slaViolationStatus}</td>
+                                        <td class="${d.isFollowUpMissed ? 'text-danger fw-bold' : ''}">${d.nextFollowUp || '--'}</td>
+                                        ${actionReason}
+                                        <td><button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${globalIndex}); event.stopPropagation();">View</button></td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-end mt-2 small text-muted">
+                    Showing ${cases.length} case${cases.length !== 1 ? 's' : ''}
+                </div>
             `;
             container.innerHTML = tableHtml;
         }
@@ -1361,25 +2183,27 @@
             });
 
             const container = document.getElementById('recommendations-container');
-            container.innerHTML = recommendations.length ? '' : '<div class="alert alert-success mt-3">No critical recommendations found. Good job!</div>';
+            container.innerHTML = recommendations.length ? '' : '<div class="alert alert-success mt-3 shadow-sm">No critical recommendations found. Good job!</div>';
             
-            container.innerHTML += recommendations.map(rec => {
-                const globalIndex = processedData.findIndex(d => d.incidentId === rec.incidentId);
-                return `
-                    <div class="card mb-3 border-start border-4 border-danger">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0">${rec.incidentId} - ${rec.owner}</h6>
+            if (recommendations.length) {
+                container.innerHTML = recommendations.map(rec => {
+                    const globalIndex = processedData.findIndex(d => d.incidentId === rec.incidentId);
+                    return `
+                        <div class="card mb-3 border-start border-4 border-danger shadow-sm">
+                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 fw-bold">${rec.incidentId} - ${rec.owner}</h6>
+                                <button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${globalIndex}); event.stopPropagation();">View Details</button>
+                            </div>
+                            <div class="card-body">
+                                <p class="small text-muted mb-3">${rec.title}</p>
+                                <ul class="mb-0">
+                                    ${rec.recs.map(r => `<li class="${r.color} fw-bold mb-2"><i class="bi bi-exclamation-triangle me-2"></i>${r.text}</li>`).join('')}
+                                </ul>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <p class="small text-muted">${rec.title}</p>
-                            <ul>
-                                ${rec.recs.map(r => `<li class="${r.color} fw-bold">${r.text}</li>`).join('')}
-                            </ul>
-                            <button class="btn btn-sm btn-outline-primary" onclick="viewCaseDetail(${globalIndex})">View Action Plan</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            }
         }
 
         function renderOwnerAnalysis() {
@@ -1399,16 +2223,27 @@
                 const complianceRate = stats.total > 0 ? ((stats.total - stats.violations) / stats.total * 100).toFixed(1) : 100;
                 return `
                     <div class="col-md-3 mb-3">
-                        <div class="card text-center h-100">
-                            <div class="card-body py-3">
-                                <h5 class="mb-2">${o}</h5>
-                                <div class="row small fw-bold">
-                                    <div class="col-4">${stats.total}<br><span class="text-muted">Total</span></div>
-                                    <div class="col-4 text-danger">${stats.violations}<br><span class="text-muted">Violations</span></div>
-                                    <div class="col-4 text-warning">${stats.aging15}<br><span class="text-muted">Aging >15</span></div>
+                        <div class="card text-center h-100 shadow-sm">
+                            <div class="card-body py-4">
+                                <h5 class="mb-3 fw-bold">${o}</h5>
+                                <div class="row small fw-bold mb-3">
+                                    <div class="col-4">
+                                        <div class="fs-5">${stats.total}</div>
+                                        <div class="text-muted small">Total</div>
+                                    </div>
+                                    <div class="col-4 text-danger">
+                                        <div class="fs-5">${stats.violations}</div>
+                                        <div class="text-muted small">Violations</div>
+                                    </div>
+                                    <div class="col-4 text-warning">
+                                        <div class="fs-5">${stats.aging15}</div>
+                                        <div class="text-muted small">Aging >15</div>
+                                    </div>
                                 </div>
-                                <h4 class="mt-3 ${complianceRate < 80 ? 'text-danger' : complianceRate < 95 ? 'text-warning' : 'text-success'}">${complianceRate}%</h4>
-                                <p class="small text-muted mb-0">SLA Compliance Rate</p>
+                                <div class="mt-3">
+                                    <h3 class="${complianceRate < 80 ? 'text-danger' : complianceRate < 95 ? 'text-warning' : 'text-success'} fw-bold">${complianceRate}%</h3>
+                                    <p class="small text-muted mb-0">SLA Compliance Rate</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1421,37 +2256,90 @@
             const d = processedData[idx];
             document.getElementById('caseDetailTitle').textContent = `${d.incidentId}: ${d.title}`;
             document.getElementById('case-detail-content').innerHTML = `
-                <h5>${d.incidentId}: ${d.title}</h5>
-                <hr>
                 <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Owner:</strong> <span class="owner-tag">${d.owner}</span></p>
-                        <p><strong>Status:</strong> ${d.currentStatus}</p>
-                        <p><strong>Service:</strong> ${d.service}</p>
-                        <p><strong>SLA:</strong> <span class="fw-bold text-${d.isSlaViolated ? 'danger' : 'success'}">${d.slaViolationStatus}</span></p>
-                        <p><strong>Submitted By:</strong> ${d.submittedBy}</p>
+                    <div class="col-md-8">
+                        <h5>${d.incidentId}: ${d.title}</h5>
+                        <p class="text-muted">${d.service} | Submitted by: ${d.submittedBy}</p>
                     </div>
-                    <div class="col-md-6">
-                        <p><strong>Aging:</strong> ${d.agingDays} days</p>
-                        <p><strong>Idle Since Last Modified:</strong> ${d.agingFromLastModified} days</p>
-                        <p><strong>Next Follow-up (R:R):</strong> <span class="fw-bold text-${d.isFollowUpMissed ? 'danger' : 'success'}">${d.nextFollowUp || '--'}</span></p>
-                        <p><strong>Subsequent Response (H:H):</strong> <span class="fw-bold text-${d.isSubsequentResponseMissed ? 'danger' : 'success'}">${d.subsequentResponse || '--'}</span></p>
-                        <p><strong>Expected Resolution (K:K):</strong> <span class="fw-bold text-${d.isEdocBreached ? 'danger' : 'success'}">${d.expectedResolution || '--'}</span></p>
+                    <div class="col-md-4 text-end">
+                        <span class="owner-tag fs-6">${d.owner}</span>
+                        <span class="badge ${d.isSlaViolated ? 'bg-danger' : 'bg-success'} ms-2">${d.slaViolationStatus}</span>
                     </div>
                 </div>
                 <hr>
-                <h6>Compliance and Missed Actions (S:S)</h6>
-                <p><strong>Email Compliance:</strong> <span class="fw-bold text-${d.emailCompliance.includes('Missed') || d.emailCompliance.includes('No Followup') ? 'danger' : 'success'}">${d.emailCompliance || 'Compliant'}</span></p>
-                <p><strong>Subsequent SLA Miss Count (Y:Y):</strong> <span class="fw-bold text-${d.isSubsequentSLABreach ? 'danger' : 'success'}">${d.subsequentSLABreachCount}</span></p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-info-circle me-2" style="color: var(--primary-color);"></i>Basic Information</h6>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Status:</strong></div>
+                            <div class="col-6">${d.currentStatus}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Service Type:</strong></div>
+                            <div class="col-6">${d.service}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Submitted By:</strong></div>
+                            <div class="col-6">${d.submittedBy}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Email Compliance:</strong></div>
+                            <div class="col-6"><span class="fw-bold ${d.emailCompliance.includes('Missed') || d.emailCompliance.includes('No Followup') ? 'text-danger' : 'text-success'}">${d.emailCompliance || 'Compliant'}</span></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="bi bi-clock-history me-2" style="color: var(--primary-color);"></i>Timeline & Compliance</h6>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Aging (Days):</strong></div>
+                            <div class="col-6 ${d.agingDays > 25 ? 'text-danger fw-bold' : d.agingDays > 15 ? 'text-warning' : ''}">${d.agingDays}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Idle Since Modified:</strong></div>
+                            <div class="col-6 ${d.agingFromLastModified > 1 ? 'text-danger fw-bold' : ''}">${d.agingFromLastModified} days</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Next Follow-up:</strong></div>
+                            <div class="col-6 ${d.isFollowUpMissed ? 'text-danger fw-bold' : 'text-success'}">${d.nextFollowUp || '--'}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Expected Resolution:</strong></div>
+                            <div class="col-6 ${d.isEdocBreached ? 'text-danger fw-bold' : 'text-success'}">${d.expectedResolution || '--'}</div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6"><strong>Sub. SLA Miss Count:</strong></div>
+                            <div class="col-6 ${d.isSubsequentSLABreach ? 'text-danger fw-bold' : 'text-success'}">${d.subsequentSLABreachCount}</div>
+                        </div>
+                    </div>
+                </div>
                 <hr>
-                <h6>Raw Data for Reference (Steps)</h6>
-                <div class="alert alert-secondary small">${d._raw[Object.keys(d._raw).find(k => k && k.toString().toLowerCase().includes('steps'))] || 'N/A'}</div>
+                <h6><i class="bi bi-card-checklist me-2" style="color: var(--primary-color);"></i>Risk Indicators</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            ${d.isOldest25 ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Aged > 25 Days</li>' : ''}
+                            ${d.isEdocBreached ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>EDOC Breached</li>' : ''}
+                            ${d.isSlaViolated ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>SLA Violated</li>' : ''}
+                            ${d.isFollowUpMissed ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Follow-up Date Missed</li>' : ''}
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            ${d.isSubsequentResponseMissed ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Subsequent Response Missed</li>' : ''}
+                            ${d.isSubsequentSLABreach ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Subsequent SLA Breach</li>' : ''}
+                            ${d.isIdle3 ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Idle > 3 Days</li>' : ''}
+                            ${d.isAging15Violated ? '<li class="text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i>Aging > 15 Days</li>' : ''}
+                        </ul>
+                    </div>
+                </div>
             `;
             new bootstrap.Modal(document.getElementById('caseDetailModal')).show();
         }
 
         function exportScorecardToExcel() {
-            if(!scorecardData.length) return alert("Scorecard data not ready or filtered to zero results.");
+            if(!scorecardData.length) {
+                alert("Scorecard data not ready or filtered to zero results.");
+                return;
+            }
             const ws = XLSX.utils.json_to_sheet(scorecardData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Scorecard_Export");
@@ -1459,23 +2347,51 @@
         }
 
         function exportDrillDownToExcel() {
-            if(!drillDownData.length) return alert("No data to export.");
+            if(!drillDownData.length) {
+                alert("No data to export.");
+                return;
+            }
             const ws = XLSX.utils.json_to_sheet(drillDownData.map(d => d._raw));
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "DrillDownExport");
-            XLSX.writeFile(wb, `${drillDownTitleForExport.replace(/ /g,'_')}_Export.xlsx`);
+            XLSX.writeFile(wb, `${drillDownTitleForExport.replace(/[^a-zA-Z0-9]/g,'_')}_Export.xlsx`);
         }
         
         function exportFullData() {
-            if(!filteredData.length) return alert("No data to export.");
+            if(!filteredData.length) {
+                alert("No data to export.");
+                return;
+            }
             const ws = XLSX.utils.json_to_sheet(filteredData.map(d => d._raw));
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
-            XLSX.writeFile(wb, `MSP_Filtered_Data_Export.xlsx`);
+            XLSX.writeFile(wb, `MSP_Filtered_Data_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
         }
 
-        function updateDashboard() {
-            renderKPIDashboard();
+        function showLoading(show) {
+            const spinner = document.getElementById('loadingSpinner');
+            if (show) {
+                spinner.classList.add('active');
+            } else {
+                spinner.classList.remove('active');
+            }
+        }
+
+        function processData() {
+            if (rawData.length === 0) {
+                alert("No data loaded. Please upload a file first.");
+                return;
+            }
+            showLoading(true);
+            setTimeout(() => {
+                processedData = processedData || [];
+                filteredData = [...processedData];
+                document.getElementById('upload-section').style.display = 'none';
+                document.getElementById('dashboard-section').style.display = 'block';
+                document.getElementById('total-cases').textContent = `${processedData.length} Cases Loaded`;
+                updateDashboard();
+                showLoading(false);
+            }, 500);
         }
     </script>
 </body>
