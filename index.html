@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <!-- Add jsPDF and html2canvas libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --primary-color: #5F259F; /* PhonePe Purple */
@@ -75,7 +78,7 @@
         }
         
         .main-view-tabs .nav-link.active { 
-            background: linear-gradient(135deg, var(--primary-color) 0%, #7B3FD9 100%);
+            background: linear-gradient(135deg, var(--primary-color), #7B3FD9); 
             color: white; 
             border-bottom: none;
             box-shadow: 0 4px 8px rgba(95, 37, 159, 0.15);
@@ -191,6 +194,27 @@
             border: none; 
             box-shadow: 0 3px 8px rgba(95, 37, 159, 0.04); 
             overflow: hidden;
+        }
+        
+        /* RAG colors for accordion headers based on status */
+        .accordion-item.good .accordion-button {
+            background-color: rgba(0, 212, 170, 0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .accordion-item.warning .accordion-button {
+            background-color: rgba(255, 159, 0, 0.1);
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .accordion-item.danger .accordion-button {
+            background-color: rgba(255, 59, 92, 0.1);
+            border-left: 4px solid var(--danger-color);
+        }
+        
+        .accordion-item.info .accordion-button {
+            background-color: rgba(61, 127, 255, 0.1);
+            border-left: 4px solid var(--secondary-color);
         }
         
         .accordion-header { border-radius: 10px 10px 0 0; }
@@ -700,6 +724,48 @@
             max-width: 200px;
         }
         
+        /* PDF Download Button */
+        .pdf-download-btn {
+            background: linear-gradient(135deg, #DC3545, #C82333);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 10px;
+        }
+        
+        .pdf-download-btn:hover {
+            background: linear-gradient(135deg, #C82333, #DC3545);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(220, 53, 69, 0.15);
+            color: white;
+        }
+        
+        /* Tab export buttons */
+        .tab-export-btn {
+            background: linear-gradient(135deg, var(--accent-color), #00E6B8);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 10px;
+        }
+        
+        .tab-export-btn:hover {
+            background: linear-gradient(135deg, #00E6B8, var(--accent-color));
+            color: white;
+        }
+        
         @media (max-width: 1400px) {
             .scorecard-table th,
             .scorecard-table td {
@@ -801,9 +867,14 @@
                     <div class="global-filters">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h6 class="mb-0"><i class="bi bi-funnel-fill me-2" style="color: var(--primary-color);"></i>Global Filters</h6>
-                            <button class="btn btn-sm btn-outline-danger" id="clear-filters-btn">
-                                <i class="bi bi-x-circle me-1"></i>Clear All
-                            </button>
+                            <div>
+                                <button class="btn btn-sm btn-outline-danger" id="clear-filters-btn">
+                                    <i class="bi bi-x-circle me-1"></i>Clear All
+                                </button>
+                                <button class="btn pdf-download-btn btn-sm" id="download-pdf-btn">
+                                    <i class="bi bi-file-pdf me-1"></i> Download PDF
+                                </button>
+                            </div>
                         </div>
                         <div class="row g-2">
                             <div class="col-md-2 col-6">
@@ -877,13 +948,13 @@
                     
                     <div class="accordion" id="kpiAccordion">
                     
-                        <div class="accordion-item">
+                        <div class="accordion-item" id="accordion-section-1">
                             <h2 class="accordion-header" id="headingOne">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                                     <i class="bi bi-list-task me-2"></i>1. Overall Case Volume
                                 </button>
                             </h2>
-                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
                                 <div class="accordion-body">
                                     <div class="row g-2">
                                         <div class="col-md-4">
@@ -915,13 +986,13 @@
                             </div>
                         </div>
 
-                        <div class="accordion-item">
+                        <div class="accordion-item" id="accordion-section-2">
                             <h2 class="accordion-header" id="headingTwo">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                     <i class="bi bi-alarm-fill me-2"></i>2. SLA Compliance
                                 </button>
                             </h2>
-                            <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
                                 <div class="accordion-body">
                                     <div class="row g-2">
                                         <div class="col-md-6">
@@ -945,13 +1016,13 @@
                             </div>
                         </div>
 
-                        <div class="accordion-item">
+                        <div class="accordion-item" id="accordion-section-3">
                             <h2 class="accordion-header" id="headingThree">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                     <i class="bi bi-hourglass-split me-2"></i>3. Aging & Old Cases
                                 </button>
                             </h2>
-                            <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree">
                                 <div class="accordion-body">
                                     <div class="row g-2">
                                         <div class="col-md-6">
@@ -975,13 +1046,13 @@
                             </div>
                         </div>
 
-                        <div class="accordion-item">
+                        <div class="accordion-item" id="accordion-section-4">
                             <h2 class="accordion-header" id="headingFour">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
                                     <i class="bi bi-calendar-event me-2"></i>4. Follow-up & Response Misses
                                 </button>
                             </h2>
-                            <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour">
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour">
                                 <div class="accordion-body">
                                     <div class="row g-2">
                                         <div class="col-md-4">
@@ -1013,13 +1084,13 @@
                             </div>
                         </div>
 
-                        <div class="accordion-item">
+                        <div class="accordion-item" id="accordion-section-5">
                             <h2 class="accordion-header" id="headingFive">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
                                     <i class="bi bi-arrow-repeat me-2"></i>5. Subsequent SLA & Response Tracking
                                 </button>
                             </h2>
-                            <div id="collapseFive" class="accordion-collapse collapse show" aria-labelledby="headingFive">
+                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive">
                                 <div class="accordion-body">
                                     <div class="row g-2">
                                         <div class="col-md-6">
@@ -1043,16 +1114,15 @@
                             </div>
                         </div>
 
-                        <div class="accordion-item">
+                        <div class="accordion-item" id="accordion-section-6">
                             <h2 class="accordion-header" id="headingSix">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
                                     <i class="bi bi-pause-circle me-2"></i>6. Idle Case Monitoring & SR-Specific Compliance (EDOC)
                                 </button>
                             </h2>
-                            <div id="collapseSix" class="accordion-collapse collapse show" aria-labelledby="headingSix">
+                            <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix">
                                 <div class="accordion-body">
                                     <div class="row g-2">
-                                        <!-- #1 CHANGE: Removed Idle > 1 Day card from this section -->
                                         <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-idle-3-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-idle-3-tag">GOOD</span>
@@ -1182,21 +1252,33 @@
                         <li class="nav-item">
                             <button class="nav-link active" id="actions-tab" data-bs-toggle="tab" data-bs-target="#actions" type="button">
                                 <i class="bi bi-lightning-fill text-danger me-1"></i>Today's Actions
+                                <button class="btn tab-export-btn btn-sm" onclick="exportTabToExcel('actions')">
+                                    <i class="bi bi-download"></i>
+                                </button>
                             </button>
                         </li>
                         <li class="nav-item">
                             <button class="nav-link" id="cases-tab" data-bs-toggle="tab" data-bs-target="#cases" type="button">
                                 All Cases
+                                <button class="btn tab-export-btn btn-sm" onclick="exportTabToExcel('cases')">
+                                    <i class="bi bi-download"></i>
+                                </button>
                             </button>
                         </li>
                         <li class="nav-item">
                             <button class="nav-link" id="sla-tab" data-bs-toggle="tab" data-bs-target="#sla" type="button">
                                 SLA Violations
+                                <button class="btn tab-export-btn btn-sm" onclick="exportTabToExcel('sla')">
+                                    <i class="bi bi-download"></i>
+                                </button>
                             </button>
                         </li>
                         <li class="nav-item">
                             <button class="nav-link" id="aging-tab" data-bs-toggle="tab" data-bs-target="#aging" type="button">
                                 Aging >15 Days
+                                <button class="btn tab-export-btn btn-sm" onclick="exportTabToExcel('aging')">
+                                    <i class="bi bi-download"></i>
+                                </button>
                             </button>
                         </li>
                         <li class="nav-item">
@@ -1382,6 +1464,12 @@
         let charts = {};
         let scorecardData = [];
         let currentView = 'list'; // 'list' or 'grid'
+        let tabDataCache = {
+            'actions': [],
+            'cases': [],
+            'sla': [],
+            'aging': []
+        };
 
         // Column mapping for drill-downs
         const drillDownColumns = {
@@ -1498,6 +1586,7 @@
                 { key: 'incidentId', label: 'Incident ID' },
                 { key: 'title', label: 'Title' },
                 { key: 'owner', label: 'Owner' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'agingDays', label: 'Aging' },
                 { key: 'slaViolationStatus', label: 'SLA Status' },
@@ -1507,6 +1596,7 @@
                 { key: 'incidentId', label: 'Incident ID' },
                 { key: 'title', label: 'Title' },
                 { key: 'owner', label: 'Owner' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'agingDays', label: 'Aging' },
                 { key: 'slaViolationStatus', label: 'SLA Status' },
@@ -1516,6 +1606,7 @@
                 { key: 'incidentId', label: 'Incident ID' },
                 { key: 'title', label: 'Title' },
                 { key: 'owner', label: 'Owner' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'agingDays', label: 'Aging' },
                 { key: 'slaViolationStatus', label: 'SLA Status' },
@@ -1525,6 +1616,7 @@
                 { key: 'incidentId', label: 'Incident ID' },
                 { key: 'title', label: 'Title' },
                 { key: 'owner', label: 'Owner' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'agingDays', label: 'Aging' },
                 { key: 'slaViolationStatus', label: 'SLA Status' },
@@ -1534,6 +1626,7 @@
                 { key: 'incidentId', label: 'Incident ID' },
                 { key: 'title', label: 'Title' },
                 { key: 'owner', label: 'Owner' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'agingDays', label: 'Aging' },
                 { key: 'slaViolationStatus', label: 'SLA Status' },
@@ -1579,6 +1672,7 @@
 
             document.getElementById('process-data-btn').onclick = processData;
             document.getElementById('clear-filters-btn').onclick = clearAllFilters;
+            document.getElementById('download-pdf-btn').onclick = downloadDashboardPDF;
             
             // View toggle buttons
             document.getElementById('list-view-btn').addEventListener('click', () => {
@@ -2063,11 +2157,13 @@
                 idle1Rec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `Contains ${m.idle3} critical cases idle > 3 days. Focus on these.` };
             }
             
+            // #1 FIX: Correct idle3 logic - using the original logic
             let idle3Rec = { status: 'GOOD', tag: 'bg-good', rec: 'No critical cases idle for more than 3 days.' };
             if (m.idle3 > 0) { 
                 idle3Rec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.idle3} cases are critically idle (> 3 days). URGENT follow-up.` }; 
             }
 
+            // #1 FIX: Correct edoc logic - using the original logic
             let edocRec = { status: 'GOOD', tag: 'bg-good', rec: 'No SR cases have breached their Expected Date of Closure.' };
             if (m.edoc > 0) edocRec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.edoc} SR EDOC breaches. These must be resolved or re-scheduled immediately.` };
 
@@ -2088,11 +2184,45 @@
             updateCard('kpi-sub-resp', m.subRespMiss, subRespRec);
             updateCard('kpi-sub-sla', m.subSLAMiss, subSLARec);
 
-            // #1 CHANGE: Only showing idle3 and edoc cards in section 6
+            // #1 FIX: Updated to use corrected idle3 and edoc recommendations
             updateCard('kpi-idle-3', m.idle3, idle3Rec);
             updateCard('kpi-edoc', m.edoc, edocRec);
             
+            // #1 FIX: Update section RAG status with corrected logic
+            updateSectionRAGStatus(1, [infoRec, srRec, incRec]);
+            updateSectionRAGStatus(2, [slaSRRec, slaINCRec]);
+            updateSectionRAGStatus(3, [aging15Rec, oldest25Rec]);
+            updateSectionRAGStatus(4, [fuRec, emailFURec, respMissRec]);
+            updateSectionRAGStatus(5, [subRespRec, subSLARec]);
+            updateSectionRAGStatus(6, [idle3Rec, edocRec]);
+            
             renderOwnerScorecard();
+        }
+
+        function updateSectionRAGStatus(sectionNumber, cardRecommendations) {
+            const sectionElement = document.getElementById(`accordion-section-${sectionNumber}`);
+            if (!sectionElement) return;
+            
+            // Determine overall status based on card recommendations
+            let overallStatus = 'good'; // Default to good
+            
+            for (const rec of cardRecommendations) {
+                if (rec.status === 'URGENT') {
+                    overallStatus = 'danger';
+                    break; // Urgent takes highest priority
+                } else if (rec.status === 'ACTION NEEDED' && overallStatus !== 'danger') {
+                    overallStatus = 'warning';
+                } else if (rec.status === 'MONITOR' && overallStatus === 'good') {
+                    overallStatus = 'warning';
+                } else if (rec.status === 'INFO' && overallStatus === 'good') {
+                    overallStatus = 'info';
+                }
+            }
+            
+            // Remove all RAG classes
+            sectionElement.classList.remove('good', 'warning', 'danger', 'info');
+            // Add the determined class
+            sectionElement.classList.add(overallStatus);
         }
 
         function renderOwnerScorecard() {
@@ -2258,6 +2388,7 @@
                     exportRow['Incident ID'] = d.incidentId;
                     exportRow['Title'] = d.title;
                     exportRow['Owner'] = d.owner;
+                    exportRow['SubmittedBy'] = d.submittedBy;
                     exportRow['Status'] = d.currentStatus;
                     exportRow['Aging'] = d.agingDays;
                     exportRow['SLA Status'] = d.slaViolationStatus;
@@ -2277,6 +2408,7 @@
                     <th>Incident ID</th>
                     <th>Title</th>
                     <th>Owner</th>
+                    <th>Submitted By</th>
                     <th>Status</th>
                     <th>Aging</th>
                     <th>SLA Status</th>
@@ -2310,12 +2442,13 @@
                     
                     return `<tr onclick="viewCaseDetail(${globalIndex})" style="cursor: pointer;">${cells}</tr>`;
                 } else {
-                    // Default view
+                    // Default view with Submitted By column
                     return `
                         <tr onclick="viewCaseDetail(${globalIndex})" style="cursor: pointer;">
                             <td class="fw-bold" title="${d.incidentId}">${d.incidentId.length > 15 ? d.incidentId.substring(0, 15) + '...' : d.incidentId}</td>
                             <td title="${d.title}">${d.title.length > 40 ? d.title.substring(0, 40) + '...' : d.title}</td>
                             <td><span class="owner-tag">${d.owner}</span></td>
+                            <td>${d.submittedBy}</td>
                             <td>${d.currentStatus}</td>
                             <td class="${d.agingDays > 25 ? 'text-danger fw-bold' : d.agingDays > 15 ? 'text-warning' : ''}">${d.agingDays}</td>
                             <td class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">${d.slaViolationStatus}</td>
@@ -2325,7 +2458,7 @@
                 }
             }).join('');
 
-            document.getElementById('drillDownBody').innerHTML = drillDownHtml || '<tr><td colspan="7" class="text-center text-muted py-3">No cases found.</td></tr>';
+            document.getElementById('drillDownBody').innerHTML = drillDownHtml || '<tr><td colspan="8" class="text-center text-muted py-3">No cases found.</td></tr>';
 
             new bootstrap.Modal(document.getElementById('drillDownModal')).show();
         }
@@ -2561,16 +2694,18 @@
         }
 
         function renderTodayActions() {
-            // #2 CHANGE: Removed d.isFollowUpMissed condition from Today's Actions filter
             const actionCases = filteredData.filter(d => 
                 d.isSlaViolated || 
                 d.isOldest25 || 
                 d.isEdocBreached || 
-                // Removed: d.isFollowUpMissed || 
                 d.isSubsequentResponseMissed || 
                 d.isIdle3
             );
-            renderFilteredCases(actionCases, 'actions-container', true);
+            
+            // Cache data for export
+            tabDataCache['actions'] = actionCases;
+            
+            renderFilteredCasesWithSubmittedBy(actionCases, 'actions-container', true);
         }
 
         function renderAllCases() {
@@ -2596,10 +2731,13 @@
                 (!stat || d.currentStatus===stat)
             );
             
+            // Cache data for export
+            tabDataCache['cases'] = sub;
+            
             document.getElementById('cases-count').textContent = `${sub.length} cases`;
             
             if (currentView === 'list') {
-                renderFilteredCasesList(sub, 'cases-list-container');
+                renderFilteredCasesListWithSubmittedBy(sub, 'cases-list-container');
             } else {
                 renderFilteredCasesGrid(sub, 'cases-grid-container');
             }
@@ -2608,13 +2746,21 @@
         function filterSLAViolations() {
             const own = document.getElementById('sla-filter-owner').value;
             let sub = filteredData.filter(d => d.isSlaViolated && (!own || d.owner===own));
-            renderFilteredCases(sub, 'sla-violations-container', false);
+            
+            // Cache data for export
+            tabDataCache['sla'] = sub;
+            
+            renderFilteredCasesWithSubmittedBy(sub, 'sla-violations-container', false);
         }
         
         function filterAgingCases() {
             const own = document.getElementById('aging-filter-owner').value;
             let sub = filteredData.filter(d => d.isAging15Violated && (!own || d.owner===own));
-            renderFilteredCases(sub, 'aging-cases-container', false);
+            
+            // Cache data for export
+            tabDataCache['aging'] = sub;
+            
+            renderFilteredCasesWithSubmittedBy(sub, 'aging-cases-container', false);
         }
 
         function clearTabFilters(tabId) {
@@ -2632,14 +2778,14 @@
             }
         }
 
-        function renderFilteredCases(cases, containerId, isActionList = false) {
+        function renderFilteredCasesWithSubmittedBy(cases, containerId, isActionList = false) {
             const container = document.getElementById(containerId);
             if(!cases.length) {
                 container.innerHTML = `<div class="alert alert-info mt-3 shadow-sm">No cases matching the criteria found.</div>`;
                 return;
             }
 
-            // #3 CHANGE: Added "Submitted By" column to Today's Actions table
+            // #3 CHANGE: Added "Submitted By" column to all tabs
             const tableHtml = `
                 <div class="table-responsive mt-3">
                     <table class="table table-sm table-striped table-hover detailed-case-table compact-view">
@@ -2648,8 +2794,8 @@
                                 <th>Incident ID</th>
                                 <th>Title</th>
                                 <th>Owner</th>
+                                <th>Submitted By</th>
                                 <th>Status</th>
-                                ${isActionList ? '<th>Submitted By</th>' : ''}
                                 <th>Aging</th>
                                 <th>SLA Status</th>
                                 <th>Next Follow-up</th>
@@ -2666,7 +2812,6 @@
                                     if (d.isSlaViolated) reasons.push('SLA Violated');
                                     if (d.isOldest25) reasons.push('Aged > 25 Days');
                                     if (d.isEdocBreached) reasons.push('EDOC Breached');
-                                    // Removed: if (d.isFollowUpMissed) reasons.push('F/Up Date Missed');
                                     if (d.isSubsequentResponseMissed) reasons.push('Sub. Resp Missed');
                                     if (d.isIdle3) reasons.push('Idle > 3 Days');
                                     actionReason = `<td><span class="badge bg-danger">${reasons.join(', ')}</span></td>`;
@@ -2676,8 +2821,8 @@
                                         <td class="fw-bold truncate-text" title="${d.incidentId}">${d.incidentId}</td>
                                         <td class="truncate-text" title="${d.title}">${d.title}</td>
                                         <td><span class="owner-tag">${d.owner}</span></td>
+                                        <td class="truncate-text" title="${d.submittedBy}">${d.submittedBy}</td>
                                         <td>${d.currentStatus}</td>
-                                        ${isActionList ? `<td>${d.submittedBy}</td>` : ''}
                                         <td class="${d.agingDays > 25 ? 'text-danger fw-bold' : d.agingDays > 15 ? 'text-warning' : ''}">${d.agingDays}</td>
                                         <td class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">${d.slaViolationStatus}</td>
                                         <td class="${d.isFollowUpMissed ? 'text-danger fw-bold' : ''} truncate-text" title="${d.nextFollowUp || '--'}">${d.nextFollowUp || '--'}</td>
@@ -2696,7 +2841,7 @@
             container.innerHTML = tableHtml;
         }
         
-        function renderFilteredCasesList(cases, containerId) {
+        function renderFilteredCasesListWithSubmittedBy(cases, containerId) {
             const container = document.getElementById(containerId);
             if(!cases.length) {
                 container.innerHTML = `<div class="alert alert-info mt-3 shadow-sm">No cases matching the criteria found.</div>`;
@@ -2711,6 +2856,7 @@
                                 <th>Incident ID</th>
                                 <th>Title</th>
                                 <th>Owner</th>
+                                <th>Submitted By</th>
                                 <th>Status</th>
                                 <th>Aging</th>
                                 <th>SLA Status</th>
@@ -2726,6 +2872,7 @@
                                         <td class="fw-bold truncate-text" title="${d.incidentId}">${d.incidentId}</td>
                                         <td class="truncate-text" title="${d.title}">${d.title}</td>
                                         <td><span class="owner-tag">${d.owner}</span></td>
+                                        <td class="truncate-text" title="${d.submittedBy}">${d.submittedBy}</td>
                                         <td>${d.currentStatus}</td>
                                         <td class="${d.agingDays > 25 ? 'text-danger fw-bold' : d.agingDays > 15 ? 'text-warning' : ''}">${d.agingDays}</td>
                                         <td class="${d.isSlaViolated ? 'text-danger fw-bold' : 'text-success'}">${d.slaViolationStatus}</td>
@@ -2782,6 +2929,10 @@
                                     <div class="case-meta-item">
                                         <i class="bi bi-person"></i>
                                         <span>${d.owner}</span>
+                                    </div>
+                                    <div class="case-meta-item">
+                                        <i class="bi bi-person-plus"></i>
+                                        <span>${d.submittedBy}</span>
                                     </div>
                                     <div class="case-meta-item">
                                         <i class="bi bi-tag"></i>
@@ -3021,6 +3172,235 @@
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
             XLSX.writeFile(wb, `MSP_Filtered_Data_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+        }
+
+        // #3 CHANGE: Function to export tab data to Excel
+        function exportTabToExcel(tabId) {
+            const tabData = tabDataCache[tabId];
+            if(!tabData || tabData.length === 0) {
+                alert(`No data to export from ${tabId} tab.`);
+                return;
+            }
+            
+            const exportData = tabData.map(d => {
+                return {
+                    'Incident ID': d.incidentId,
+                    'Title': d.title,
+                    'Owner': d.owner,
+                    'Submitted By': d.submittedBy,
+                    'Status': d.currentStatus,
+                    'Service Type': d.service,
+                    'Aging (Days)': d.agingDays,
+                    'SLA Status': d.slaViolationStatus,
+                    'Next Follow-up': d.nextFollowUp || '--',
+                    'Email Compliance': d.emailCompliance || 'Compliant',
+                    'Expected Resolution': d.expectedResolution || '--',
+                    'Subsequent SLA Miss Count': d.subsequentSLABreachCount
+                };
+            });
+            
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, `${tabId}_Export`);
+            XLSX.writeFile(wb, `MSP_${tabId}_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+        }
+
+        // #4 FIX: Enhanced PDF download function that expands all sections before capture
+        function downloadDashboardPDF() {
+            showLoading(true);
+            
+            // Determine which view is active
+            const isDashboardView = document.getElementById('view-dashboard').classList.contains('show');
+            const elementId = isDashboardView ? 'view-dashboard' : 'view-detailed';
+            
+            // Store original collapse states
+            const originalStates = {};
+            if (isDashboardView) {
+                // For dashboard view, expand all accordion sections
+                const accordionButtons = document.querySelectorAll(`#${elementId} .accordion-button`);
+                accordionButtons.forEach((btn, index) => {
+                    const targetId = btn.getAttribute('data-bs-target');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        originalStates[targetId] = targetElement.classList.contains('show');
+                        if (!originalStates[targetId]) {
+                            // Expand if collapsed
+                            btn.click();
+                        }
+                    }
+                });
+            } else {
+                // For detailed view, make sure all tabs content is visible for PDF
+                // We'll handle this differently - we'll create a special PDF view
+            }
+            
+            // Wait a bit for animations to complete
+            setTimeout(() => {
+                // Create a clone of the element for PDF generation
+                const element = document.getElementById(elementId);
+                const clone = element.cloneNode(true);
+                
+                // Remove interactive elements from clone
+                clone.querySelectorAll('button, .btn, .nav-tabs, .accordion-button, .view-toggle').forEach(el => {
+                    el.style.display = 'none';
+                });
+                
+                // Make all tables fully visible
+                clone.querySelectorAll('.table-responsive').forEach(el => {
+                    el.style.overflow = 'visible';
+                });
+                
+                // Show all collapsed content in clone
+                clone.querySelectorAll('.collapse').forEach(el => {
+                    el.classList.add('show');
+                });
+                
+                // Show all tab content
+                clone.querySelectorAll('.tab-pane').forEach(el => {
+                    el.classList.add('show', 'active');
+                });
+                
+                // For detailed view, show all tab content
+                if (!isDashboardView) {
+                    // Create a consolidated view of all tabs
+                    const tabContents = clone.querySelectorAll('.tab-pane');
+                    let consolidatedHTML = '';
+                    
+                    tabContents.forEach(tab => {
+                        const tabTitle = tab.id.replace('-', ' ');
+                        consolidatedHTML += `<h4 style="color: var(--primary-color); margin-top: 20px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid var(--light-gray);">${tabTitle.toUpperCase()}</h4>`;
+                        consolidatedHTML += tab.innerHTML;
+                        consolidatedHTML += '<div style="page-break-after: always;"></div>';
+                    });
+                    
+                    // Replace clone content with consolidated view
+                    clone.innerHTML = consolidatedHTML;
+                }
+                
+                // Add clone to document temporarily
+                clone.style.position = 'absolute';
+                clone.style.left = '-9999px';
+                clone.style.top = '0';
+                clone.style.width = element.offsetWidth + 'px';
+                clone.style.backgroundColor = 'white';
+                clone.style.padding = '20px';
+                clone.style.boxSizing = 'border-box';
+                document.body.appendChild(clone);
+                
+                const options = {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#ffffff',
+                    width: clone.offsetWidth,
+                    height: clone.scrollHeight,
+                    windowWidth: clone.scrollWidth
+                };
+                
+                html2canvas(clone, options).then(canvas => {
+                    // Remove clone from document
+                    document.body.removeChild(clone);
+                    
+                    // Restore original collapse states
+                    if (isDashboardView) {
+                        const accordionButtons = document.querySelectorAll(`#${elementId} .accordion-button`);
+                        accordionButtons.forEach((btn, index) => {
+                            const targetId = btn.getAttribute('data-bs-target');
+                            if (originalStates[targetId] === false) {
+                                // Collapse if originally collapsed
+                                btn.click();
+                            }
+                        });
+                    }
+                    
+                    const imgData = canvas.toDataURL('image/png');
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('landscape', 'mm', 'a4');
+                    
+                    const imgWidth = 280; // A4 width in mm
+                    const imgHeight = canvas.height * imgWidth / canvas.width;
+                    
+                    // Calculate number of pages needed
+                    const pageHeight = pdf.internal.pageSize.height - 40; // 40mm for header/footer
+                    let heightLeft = imgHeight;
+                    let position = 0;
+                    
+                    // Add title and header to first page
+                    pdf.setFontSize(16);
+                    pdf.setTextColor(95, 37, 159);
+                    pdf.text('MSP Support Engineers - Daily Review Dashboard', 15, 15);
+                    
+                    // Add timestamp
+                    pdf.setFontSize(10);
+                    pdf.setTextColor(100, 100, 100);
+                    pdf.text(`Generated on: ${new Date().toLocaleString()}`, 15, 22);
+                    
+                    // Add filter info
+                    const activeFilters = [];
+                    if (globalFilters.owner) activeFilters.push(`Owner: ${globalFilters.owner}`);
+                    if (globalFilters.service) activeFilters.push(`Service: ${globalFilters.service}`);
+                    if (globalFilters.status) activeFilters.push(`Status: ${globalFilters.status}`);
+                    if (globalFilters.sla) activeFilters.push(`SLA: ${globalFilters.sla}`);
+                    
+                    if (activeFilters.length > 0) {
+                        pdf.text(`Active Filters: ${activeFilters.join(', ')}`, 15, 28);
+                    }
+                    
+                    pdf.text(`Showing ${filteredData.length} of ${processedData.length} cases`, 15, 34);
+                    
+                    // First page starts at 40mm from top
+                    position = 40;
+                    
+                    // Add the dashboard image in chunks
+                    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                    
+                    heightLeft -= pageHeight;
+                    
+                    // Add additional pages if needed
+                    while (heightLeft >= 0) {
+                        position = heightLeft - imgHeight;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+                    }
+                    
+                    // Add footer to all pages
+                    const totalPages = pdf.internal.getNumberOfPages();
+                    for (let i = 1; i <= totalPages; i++) {
+                        pdf.setPage(i);
+                        pdf.setFontSize(8);
+                        pdf.setTextColor(150, 150, 150);
+                        pdf.text(`Page ${i} of ${totalPages} - Generated by MSP Support Engineers Dashboard`, 
+                                pdf.internal.pageSize.width / 2, pdf.internal.pageSize.height - 10, 
+                                { align: 'center' });
+                    }
+                    
+                    // Save the PDF
+                    pdf.save(`MSP_Dashboard_${isDashboardView ? 'Overview' : 'Detailed'}_${new Date().toLocaleDateString().replace(/\//g,'-')}.pdf`);
+                    
+                    showLoading(false);
+                }).catch(error => {
+                    console.error('Error generating PDF:', error);
+                    alert('Error generating PDF. Please try again.');
+                    showLoading(false);
+                    
+                    // Clean up clone if it exists
+                    if (clone.parentNode) {
+                        document.body.removeChild(clone);
+                    }
+                    
+                    // Restore original collapse states
+                    if (isDashboardView) {
+                        const accordionButtons = document.querySelectorAll(`#${elementId} .accordion-button`);
+                        accordionButtons.forEach((btn, index) => {
+                            const targetId = btn.getAttribute('data-bs-target');
+                            if (originalStates[targetId] === false) {
+                                btn.click();
+                            }
+                        });
+                    }
+                });
+            }, 500); // Wait for accordion animations
         }
 
         function showLoading(show) {
