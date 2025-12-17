@@ -1126,7 +1126,7 @@
                                         <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-idle-3-card">
                                                 <span class="kpi-status-tag bg-good" id="kpi-idle-3-tag">GOOD</span>
-                                                <div class="kpi-title">Idle > 3 Days</div>
+                                                <div class="kpi-title">Idle > 2 Days</div>
                                                 <div class="kpi-value" id="kpi-idle-3">0</div>
                                                 <div class="kpi-recommendation" id="kpi-idle-3-rec">No critical cases idle for more than 3 days.</div>
                                             </div>
@@ -2154,7 +2154,7 @@
                 idle1Rec = { status: 'MONITOR', tag: 'bg-monitor', rec: `${m.idle1} cases idle > 1 day. Check last action and assign follow-up.` };
             }
             if (m.idle3 > 0) {
-                idle1Rec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `Contains ${m.idle3} critical cases idle > 3 days. Focus on these.` };
+                idle1Rec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `Contains ${m.idle3} critical cases idle > 2 days. Focus on these.` };
             }
             
             // #1 FIX: Correct idle3 logic - using the original logic
@@ -2813,7 +2813,7 @@
                                     if (d.isOldest25) reasons.push('Aged > 25 Days');
                                     if (d.isEdocBreached) reasons.push('EDOC Breached');
                                     if (d.isSubsequentResponseMissed) reasons.push('Sub. Resp Missed');
-                                    if (d.isIdle3) reasons.push('Idle > 3 Days');
+                                    if (d.isIdle3) reasons.push('Idle > 2 Days');
                                     actionReason = `<td><span class="badge bg-danger">${reasons.join(', ')}</span></td>`;
                                 }
                                 return `
@@ -2919,7 +2919,7 @@
                         if (d.isEdocBreached) tags.push({text: 'EDOC Breach', type: 'urgent'});
                         if (d.isSubsequentResponseMissed) tags.push({text: 'Sub. Resp Missed', type: 'warning'});
                         if (d.isSubsequentSLABreach) tags.push({text: 'Sub. SLA Miss', type: 'urgent'});
-                        if (d.isIdle3) tags.push({text: 'Idle > 3 Days', type: 'warning'});
+                        if (d.isIdle3) tags.push({text: 'Idle > 2 Days', type: 'warning'});
                         
                         return `
                             <div class="case-card ${cardType}" onclick="viewCaseDetail(${globalIndex})" style="cursor: pointer;">
@@ -2983,7 +2983,7 @@
                 if (d.isSlaViolated) recs.push({text: `SLA Violated: Check root cause and plan fix.`, color: 'text-danger'});
                 if (d.isFollowUpMissed) recs.push({text: `Follow-up Date Missed: Update next follow-up date now.`, color: 'text-danger'});
                 if (d.isSubsequentResponseMissed) recs.push({text: `Subsequent Response Missed (including today): Update case action plan.`, color: 'text-danger'});
-                if (d.isIdle3) recs.push({text: `Idle > 3 Days: Needs immediate follow-up to client or internal team.`, color: 'text-danger'});
+                if (d.isIdle3) recs.push({text: `Idle > 2 Days: Needs immediate follow-up to client or internal team.`, color: 'text-danger'});
                 
                 if(recs.length) recommendations.push({incidentId: d.incidentId, title: d.title, owner: d.owner, recs: recs});
             });
@@ -3132,7 +3132,7 @@
                         <ul class="list-unstyled">
                             ${d.isSubsequentResponseMissed ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Subsequent Response Missed (including today)</li>' : ''}
                             ${d.isSubsequentSLABreach ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Subsequent SLA Breach</li>' : ''}
-                            ${d.isIdle3 ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Idle > 3 Days</li>' : ''}
+                            ${d.isIdle3 ? '<li class="text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Idle > 2 Days</li>' : ''}
                             ${d.isAging15Violated ? '<li class="text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i>Aging > 15 Days</li>' : ''}
                         </ul>
                     </div>
