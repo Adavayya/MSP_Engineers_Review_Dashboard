@@ -54,7 +54,7 @@
                 radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.04) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.04) 0px, transparent 50%);
             min-height: 100vh;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: var(--text-color);
             line-height: 1.5;
         }
@@ -238,7 +238,7 @@
         }
         
         .kpi-value { 
-            font-size: 1.9rem; 
+            font-size: 1.4rem; 
             font-weight: 800; 
             color: var(--primary-color); 
             margin: 8px 0;
@@ -274,6 +274,10 @@
         .bg-action-needed, .bg-monitor { background-color: var(--warning-color); color: var(--text-color); }
         .bg-good { background-color: var(--success-color); color: white; }
         .bg-info-tag { background-color: var(--secondary-color); color: white; }
+        .bg-below-target { background-color: var(--danger-color); color: white; }
+        .bg-needs-attention { background-color: var(--warning-color); color: var(--text-color); }
+        .bg-on-track { background-color: var(--success-color); color: white; }
+        .bg-metric { background-color: var(--secondary-color); color: white; }
         
         .accordion-item { 
             margin-bottom: 12px; 
@@ -421,7 +425,7 @@
         }
         
         .metric-label { 
-            font-size: 0.8rem; 
+            font-size: 0.7rem; 
             color: var(--text-muted); 
             text-transform: uppercase; 
             letter-spacing: 0.8px; 
@@ -439,7 +443,7 @@
         }
         
         .detailed-case-table td {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             padding: 10px 8px;
             vertical-align: middle;
         }
@@ -448,7 +452,7 @@
             background: var(--sky-blue-light); 
             padding: 3px 10px; 
             border-radius: 12px; 
-            font-size: 0.8rem; 
+            font-size: 0.7rem; 
             font-weight: 600;
             color: var(--primary-color);
             display: inline-block;
@@ -603,7 +607,7 @@
             font-weight: 600;
             padding: 5px 10px;
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
         
         .form-select, .form-control {
@@ -670,7 +674,7 @@
             color: white;
             padding: 4px 12px;
             border-radius: 12px;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             display: inline-flex;
             align-items: center;
             gap: 5px;
@@ -683,7 +687,7 @@
             cursor: pointer;
             margin-left: 6px;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.85rem;
         }
         
         .filter-tag .close:hover {
@@ -699,7 +703,7 @@
         }
         
         .drilldown-table td {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             padding: 10px 8px;
             vertical-align: middle;
         }
@@ -709,7 +713,7 @@
         }
         
         .compact-view {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
         
         .compact-view .table th,
@@ -758,7 +762,7 @@
         }
         
         .case-id {
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: var(--primary-color);
             margin-bottom: 4px;
@@ -839,7 +843,7 @@
             border: 1px solid var(--border-color);
             border-radius: 4px;
             padding: 5px 10px;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             transition: all 0.2s;
         }
@@ -917,7 +921,7 @@
         }
         
         .period-label {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             text-transform: uppercase;
             font-weight: 600;
@@ -931,7 +935,7 @@
         }
         
         .trend-indicator {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
@@ -1052,7 +1056,7 @@
         }
         
         .compliance-trend-title {
-            font-size: 1rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--primary-color);
             margin-bottom: 0;
@@ -1087,7 +1091,7 @@
         }
         
         .stats-title {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 600;
             color: var(--text-muted);
             margin-bottom: 8px;
@@ -1149,7 +1153,7 @@
         }
         
         .drilldown-item-title {
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             font-weight: 700;
             color: var(--primary-color);
             margin-bottom: 5px;
@@ -1389,6 +1393,16 @@
                         <i class="bi bi-graph-up me-2"></i>Monthly Performance
                     </button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="view-monthly-comparison-tab" data-bs-toggle="tab" data-bs-target="#view-monthly-comparison" type="button" role="tab">
+                        <i class="bi bi-bar-chart-line me-2"></i>Monthly Performance Comparison
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="view-category-analysis-tab" data-bs-toggle="tab" data-bs-target="#view-category-analysis" type="button" role="tab">
+                        <i class="bi bi-tags-fill me-2"></i>Category Analysis
+                    </button>
+                </li>
             </ul>
 
             <div class="tab-content view-content" id="mainViewTabsContent">
@@ -1408,7 +1422,7 @@
                                     <div class="row g-2">
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-total-closed-card">
-                                                <span class="kpi-status-tag bg-info-tag" id="kpi-total-closed-tag">INFO</span>
+                                                <span class="kpi-status-tag bg-metric" id="kpi-total-closed-tag">METRIC</span>
                                                 <div class="kpi-title">Total Closed Cases</div>
                                                 <div class="kpi-value" id="kpi-total-closed">0</div>
                                                 <div class="kpi-recommendation" id="kpi-total-closed-rec">Total closed cases (SR + INC).</div>
@@ -1416,7 +1430,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-closed-sr-card">
-                                                <span class="kpi-status-tag bg-info-tag" id="kpi-closed-sr-tag">INFO</span>
+                                                <span class="kpi-status-tag bg-metric" id="kpi-closed-sr-tag">METRIC</span>
                                                 <div class="kpi-title">Total Closed SR</div>
                                                 <div class="kpi-value" id="kpi-closed-sr">0</div>
                                                 <div class="kpi-recommendation" id="kpi-closed-sr-rec">Closed Service Requests.</div>
@@ -1424,7 +1438,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-closed-inc-card">
-                                                <span class="kpi-status-tag bg-info-tag" id="kpi-closed-inc-tag">INFO</span>
+                                                <span class="kpi-status-tag bg-metric" id="kpi-closed-inc-tag">METRIC</span>
                                                 <div class="kpi-title">Total Closed INC</div>
                                                 <div class="kpi-value" id="kpi-closed-inc">0</div>
                                                 <div class="kpi-recommendation" id="kpi-closed-inc-rec">Closed Incident Management cases.</div>
@@ -1434,7 +1448,7 @@
                                     <div class="row g-2 mt-3">
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-open-total-card">
-                                                <span class="kpi-status-tag bg-info-tag" id="kpi-open-total-tag">INFO</span>
+                                                <span class="kpi-status-tag bg-metric" id="kpi-open-total-tag">METRIC</span>
                                                 <div class="kpi-title">Total Open Cases</div>
                                                 <div class="kpi-value" id="kpi-open-total">0</div>
                                                 <div class="kpi-recommendation" id="kpi-open-total-rec">Total cases currently open.</div>
@@ -1442,7 +1456,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-open-sr-card">
-                                                <span class="kpi-status-tag bg-info-tag" id="kpi-open-sr-tag">INFO</span>
+                                                <span class="kpi-status-tag bg-metric" id="kpi-open-sr-tag">METRIC</span>
                                                 <div class="kpi-title">Total Open SR</div>
                                                 <div class="kpi-value" id="kpi-open-sr">0</div>
                                                 <div class="kpi-recommendation" id="kpi-open-sr-rec">Open Service Requests.</div>
@@ -1450,7 +1464,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-open-inc-card">
-                                                <span class="kpi-status-tag bg-info-tag" id="kpi-open-inc-tag">INFO</span>
+                                                <span class="kpi-status-tag bg-metric" id="kpi-open-inc-tag">METRIC</span>
                                                 <div class="kpi-title">Total Open INC</div>
                                                 <div class="kpi-value" id="kpi-open-inc">0</div>
                                                 <div class="kpi-recommendation" id="kpi-open-inc-rec">Open Incident Management cases.</div>
@@ -1472,15 +1486,33 @@
                                     <div class="row g-2">
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-overall-sla-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-overall-sla-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-overall-sla-tag">ON TRACK</span>
                                                 <div class="kpi-title">Overall SLA Compliance</div>
                                                 <div class="kpi-value" id="kpi-overall-sla">0%</div>
                                                 <div class="kpi-recommendation" id="kpi-overall-sla-rec">[(Total Cases - SLA Violated) ÷ Total Cases] × 100</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
+                                            <div class="kpi-card" id="kpi-sr-sla-compliance-card">
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-sr-sla-compliance-tag">ON TRACK</span>
+                                                <div class="kpi-title">SR SLA Compliance</div>
+                                                <div class="kpi-value" id="kpi-sr-sla-compliance">0%</div>
+                                                <div class="kpi-recommendation" id="kpi-sr-sla-compliance-rec">Service Request SLA compliance rate.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="kpi-card" id="kpi-inc-sla-compliance-card">
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-inc-sla-compliance-tag">ON TRACK</span>
+                                                <div class="kpi-title">INC SLA Compliance</div>
+                                                <div class="kpi-value" id="kpi-inc-sla-compliance">0%</div>
+                                                <div class="kpi-recommendation" id="kpi-inc-sla-compliance-rec">Incident Management SLA compliance rate.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 mt-3">
+                                        <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-sla-sr-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-sla-sr-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-sla-sr-tag">ON TRACK</span>
                                                 <div class="kpi-title">SLA Violated – SR</div>
                                                 <div class="kpi-value" id="kpi-sla-sr">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sla-sr-rec">Service Requests with SLA violations.</div>
@@ -1488,17 +1520,25 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-sla-inc-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-sla-inc-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-sla-inc-tag">ON TRACK</span>
                                                 <div class="kpi-title">SLA Violated – INC</div>
                                                 <div class="kpi-value" id="kpi-sla-inc">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sla-inc-rec">Incident Management cases with SLA violations.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="kpi-card" id="kpi-edoc-card">
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-edoc-tag">ON TRACK</span>
+                                                <div class="kpi-title">SR EDOC Breach</div>
+                                                <div class="kpi-value" id="kpi-edoc">0</div>
+                                                <div class="kpi-recommendation" id="kpi-edoc-rec">SR cases that breached Expected Date of Closure.</div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row g-2 mt-3">
                                         <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-subsequent-sla-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-subsequent-sla-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-subsequent-sla-tag">ON TRACK</span>
                                                 <div class="kpi-title">Subsequent SLA Miss</div>
                                                 <div class="kpi-value" id="kpi-subsequent-sla">0</div>
                                                 <div class="kpi-recommendation" id="kpi-subsequent-sla-rec">Closed cases with subsequent SLA misses.</div>
@@ -1506,7 +1546,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-cpe-calls-card">
-                                                <span class="kpi-status-tag bg-info-tag" id="kpi-cpe-calls-tag">INFO</span>
+                                                <span class="kpi-status-tag bg-metric" id="kpi-cpe-calls-tag">METRIC</span>
                                                 <div class="kpi-title">Number of CPE Calls</div>
                                                 <div class="kpi-value" id="kpi-cpe-calls">0</div>
                                                 <div class="kpi-recommendation" id="kpi-cpe-calls-rec">Cases with corresponding internal tickets.</div>
@@ -1528,7 +1568,7 @@
                                     <div class="row g-2">
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-fcr-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-fcr-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-fcr-tag">ON TRACK</span>
                                                 <div class="kpi-title">First Contact Resolution</div>
                                                 <div class="kpi-value" id="kpi-fcr">0</div>
                                                 <div class="kpi-recommendation" id="kpi-fcr-rec">Cases resolved within 2 days.</div>
@@ -1536,7 +1576,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-inc-less15-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-inc-less15-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-inc-less15-tag">ON TRACK</span>
                                                 <div class="kpi-title">Aging <15 Days Closed INC</div>
                                                 <div class="kpi-value" id="kpi-inc-less15">0</div>
                                                 <div class="kpi-recommendation" id="kpi-inc-less15-rec">Closed INC cases aged less than 15 days.</div>
@@ -1544,7 +1584,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="kpi-card" id="kpi-inc-more15-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-inc-more15-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-inc-more15-tag">ON TRACK</span>
                                                 <div class="kpi-title">Aging >15 Days Closed INC</div>
                                                 <div class="kpi-value" id="kpi-inc-more15">0</div>
                                                 <div class="kpi-recommendation" id="kpi-inc-more15-rec">Closed INC cases aged more than 15 days.</div>
@@ -1554,7 +1594,7 @@
                                     <div class="row g-2 mt-3">
                                         <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-sr-less15-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-sr-less15-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-sr-less15-tag">ON TRACK</span>
                                                 <div class="kpi-title">Aging <15 Days Closed SR</div>
                                                 <div class="kpi-value" id="kpi-sr-less15">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sr-less15-rec">Closed SR cases aged less than 15 days.</div>
@@ -1562,7 +1602,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-sr-more15-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-sr-more15-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-sr-more15-tag">ON TRACK</span>
                                                 <div class="kpi-title">Aging >15 Days Closed SR</div>
                                                 <div class="kpi-value" id="kpi-sr-more15">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sr-more15-rec">Closed SR cases aged more than 15 days.</div>
@@ -1573,35 +1613,27 @@
                             </div>
                         </div>
 
-                        <!-- Existing sections 4-6 remain the same -->
+                        <!-- Section 4: Email Follow-up & Response Misses -->
                         <div class="accordion-item" id="accordion-section-4">
                             <h2 class="accordion-header" id="headingFour">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                    <i class="bi bi-calendar-event me-2"></i>4. Follow-up & Response Misses
+                                    <i class="bi bi-envelope me-2"></i>4. Email - Follow-up & Response Misses
                                 </button>
                             </h2>
                             <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour">
                                 <div class="accordion-body">
                                     <div class="row g-2">
-                                        <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-followup-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-followup-tag">GOOD</span>
-                                                <div class="kpi-title">Follow-up Date Missed</div>
-                                                <div class="kpi-value" id="kpi-followup">0</div>
-                                                <div class="kpi-recommendation" id="kpi-followup-rec">All cases have a valid, upcoming follow-up date.</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-email-followup-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-email-followup-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-email-followup-tag">ON TRACK</span>
                                                 <div class="kpi-title">Email F/Up Missed</div>
                                                 <div class="kpi-value" id="kpi-email-followup">0</div>
                                                 <div class="kpi-recommendation" id="kpi-email-followup-rec">All email follow-ups are compliant.</div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-email-resp-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-email-resp-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-email-resp-tag">ON TRACK</span>
                                                 <div class="kpi-title">Email Resp Missed</div>
                                                 <div class="kpi-value" id="kpi-email-resp">0</div>
                                                 <div class="kpi-recommendation" id="kpi-email-resp-rec">No missed client responses reported.</div>
@@ -1623,7 +1655,7 @@
                                     <div class="row g-2">
                                         <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-sub-resp-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-sub-resp-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-sub-resp-tag">ON TRACK</span>
                                                 <div class="kpi-title">Subsequent Resp Missed</div>
                                                 <div class="kpi-value" id="kpi-sub-resp">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sub-resp-rec">All subsequent response dates are met or tracked.</div>
@@ -1631,7 +1663,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="kpi-card" id="kpi-sub-sla-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-sub-sla-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-sub-sla-tag">ON TRACK</span>
                                                 <div class="kpi-title">Subsequent SLA Miss</div>
                                                 <div class="kpi-value" id="kpi-sub-sla">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sub-sla-rec">No cases have breached the subsequent SLA threshold.</div>
@@ -1645,26 +1677,18 @@
                         <div class="accordion-item" id="accordion-section-6">
                             <h2 class="accordion-header" id="headingSix">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-                                    <i class="bi bi-pause-circle me-2"></i>6. Idle Case Monitoring & SR-Specific Compliance (EDOC)
+                                    <i class="bi bi-pause-circle me-2"></i>6. Idle Case Monitoring
                                 </button>
                             </h2>
                             <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix">
                                 <div class="accordion-body">
                                     <div class="row g-2">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <div class="kpi-card" id="kpi-idle-3-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-idle-3-tag">GOOD</span>
+                                                <span class="kpi-status-tag bg-on-track" id="kpi-idle-3-tag">ON TRACK</span>
                                                 <div class="kpi-title">Idle > 2 Days</div>
                                                 <div class="kpi-value" id="kpi-idle-3">0</div>
                                                 <div class="kpi-recommendation" id="kpi-idle-3-rec">No critical cases idle for more than 3 days.</div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-edoc-card">
-                                                <span class="kpi-status-tag bg-good" id="kpi-edoc-tag">GOOD</span>
-                                                <div class="kpi-title">SR EDOC Breach</div>
-                                                <div class="kpi-value" id="kpi-edoc">0</div>
-                                                <div class="kpi-recommendation" id="kpi-edoc-rec">No SR cases have breached their Expected Date of Closure.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -1997,6 +2021,266 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Monthly Performance Comparison Tab Content - NEW SECTION -->
+                <div class="tab-pane fade" id="view-monthly-comparison" role="tabpanel">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 style="color: var(--primary-color);">
+                                    <i class="bi bi-bar-chart-line me-2"></i>Monthly Performance Comparison - Trend Analysis
+                                </h5>
+                                <div>
+                                    <button class="btn btn-sm btn-success" onclick="exportMonthlyComparison()">
+                                        <i class="bi bi-download me-1"></i> Export Comparison
+                                    </button>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">
+                                Compare compliance metrics across all available months to identify trends and patterns
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Trend Charts Row 1 -->
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-graph-up-arrow me-2"></i>#1 - Overall Logged vs Closed
+                                    </h6>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="overallLoggedClosedChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-shield-check me-2"></i>#2 - SLA Compliance
+                                    </h6>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="slaComplianceTrendChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trend Charts Row 2 -->
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-clipboard-check me-2"></i>#3 - SR Logged vs Closed
+                                    </h6>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="srLoggedClosedChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>#4 - INC Logged vs Closed
+                                    </h6>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="incLoggedClosedChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trend Charts Row 3 -->
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-hourglass-split me-2"></i>#5 - Average Resolution Trend
+                                    </h6>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="avgResolutionTrendChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-speedometer me-2"></i>#6 - Overall Performance Trend
+                                    </h6>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="overallPerformanceTrendChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Comparison Summary Table -->
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-table me-2"></i>Monthly Comparison Summary Table
+                                    </h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="monthlyComparisonTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Month</th>
+                                                    <th>Logged Cases</th>
+                                                    <th>Closed Cases</th>
+                                                    <th>SLA Compliance %</th>
+                                                    <th>Avg Resolution (Days)</th>
+                                                    <th>Performance Score</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="monthlyComparisonTableBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Analysis Tab Content - NEW SECTION -->
+                <div class="tab-pane fade" id="view-category-analysis" role="tabpanel">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 style="color: var(--primary-color);">
+                                    <i class="bi bi-tags-fill me-2"></i>Category & Feature Analysis
+                                </h5>
+                                <div>
+                                    <button class="btn btn-sm btn-success" onclick="exportCategoryAnalysis()">
+                                        <i class="bi bi-download me-1"></i> Export Analysis
+                                    </button>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-muted); font-size: 0.75rem;">
+                                Analyze performance by Support Category, Feature, and Sub Feature
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Support Category Analysis -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-folder-fill me-2"></i>Support Category Distribution
+                                    </h6>
+                                    <div class="chart-container" style="height: 350px;">
+                                        <canvas id="supportCategoryChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature Analysis -->
+                    <div class="row mb-4">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-star-fill me-2"></i>Top 10 Features by Volume
+                                    </h6>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="topFeaturesChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-exclamation-triangle-fill me-2"></i>Top 10 Features by SLA Violations
+                                    </h6>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="topFeaturesSLAChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Performance Table -->
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-table me-2"></i>Category Performance Summary
+                                    </h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="categoryPerformanceTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Support Category</th>
+                                                    <th>Total Cases</th>
+                                                    <th>Closed Cases</th>
+                                                    <th>SLA Violations</th>
+                                                    <th>SLA Compliance %</th>
+                                                    <th>Avg Resolution (Days)</th>
+                                                    <th>Top Feature</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="categoryPerformanceTableBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature Performance Table -->
+                    <div class="row">
+                        <div class="col-12 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-list-ul me-2"></i>Feature Performance Summary
+                                    </h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="featurePerformanceTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Feature</th>
+                                                    <th>Total Cases</th>
+                                                    <th>Closed Cases</th>
+                                                    <th>SLA Violations</th>
+                                                    <th>SLA Compliance %</th>
+                                                    <th>Avg Resolution (Days)</th>
+                                                    <th>Top Sub Feature</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="featurePerformanceTableBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -2015,7 +2299,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="badge" style="background: var(--primary-color); font-size: 0.9rem;" id="drillDownCount">0 Cases</span>
+                        <span class="badge" style="background: var(--primary-color); font-size: 0.75rem;" id="drillDownCount">0 Cases</span>
                         <button class="btn btn-sm btn-success" onclick="exportDrillDownToExcel()">
                             <i class="bi bi-download me-1"></i> Export List
                         </button>
@@ -2344,6 +2628,8 @@
             
             // Initialize monthly performance display
             updateMonthlyPerformance();
+            updateMonthlyComparison();
+            updateCategoryAnalysis();
         }
 
         function setupTabFilterListeners() {
@@ -2466,31 +2752,32 @@
             };
 
             const colMap = {
-                // Issue #1: Column B should be 'Incident ID'
-                incidentId: findCol(['Incident ID', 'Ticket ID', 'Case ID', 'B']),
+                // Column B is 'Request ID'
+                incidentId: findCol(['Request ID', 'RequestID', 'Incident ID', 'Ticket ID', 'Case ID']),
                 title: findCol(['Title', 'Subject', 'Description']),
-                submittedBy: findCol(['SubmittedBy', 'Submitted By', 'Reporter']),
-                currentStatus: findCol(['CurrentStatus', 'Status', 'State']),
+                submittedBy: findCol(['Submitted By', 'SubmittedBy', 'Reporter']),
+                currentStatus: findCol(['Current Status', 'CurrentStatus', 'Status', 'State']),
                 service: findCol(['Service', 'Service Type', 'Type']),
-                owner: findCol(['Owner', 'Assigned To', 'Engineer']),
+                owner: findCol(['Request Owner', 'Owner', 'Assigned To', 'Engineer']),
                 aging15Status: findCol(['Aging >15 days Status', 'Aging Status', 'Aging >15']),
                 expectedResponseTime: findCol(['Expected Response Time', 'Response Time']),
                 expectedResolutionTime: findCol(['Expected Resolution Time', 'Resolution Time']),
                 expectedSLAClosureTime: findCol(['Expected SLA Closure Time', 'SLA Closure']),
                 srEDOC: findCol(['SR EDOC', 'EDOC', 'Expected Date of Closure']),
-                // Issue #2: Column O should be 'SLA Status'
-                slaStatus: findCol(['SLA Status', 'SLA', 'O']),
+                slaStatus: findCol(['SLA Violation Status', 'SLA Status', 'SLA']),
                 slaViolationStatus: findCol(['SLA Violation Status', 'Violation Status']),
-                agingRoundoff: findCol(['Aging(Roundoff)', 'Aging', 'Age (Days)']),
+                agingRoundoff: findCol(['Aging (Roundoff)', 'Aging(Roundoff)', 'Aging', 'Age (Days)']),
                 nextFollowUpDate: findCol(['Next Follow-up Date', 'Follow-up Date', 'Next Followup']),
                 emailResponseCompliance: findCol(['Email Response Compliance', 'Email Compliance']),
                 updatePendingSupportCounter: findCol(['Update Pending From Support Counter', 'Pending Counter']),
                 ageingLastModified: findCol(['Ageing from Last modified time', 'Last Modified Aging']),
                 steps: findCol(['Steps to be followed', 'Steps', 'Resolution Steps']),
-                // Issue #3: Column S is 'Submission time', Column T is 'Resolve Time'
-                submissionTime: findCol(['Submission time', 'Created Date', 'Created Time', 'S']),
-                resolveTime: findCol(['Resolve Time', 'Resolution Date', 'Closed Date', 'T']),
-                correspondingInternalTicket: findCol(['Corresponding Internal Ticket', 'Internal Ticket', 'CPE Ticket'])
+                submissionTime: findCol(['Submission Time', 'Submission time', 'Created Date', 'Created Time']),
+                resolveTime: findCol(['Resolve Time', 'Resolution Date', 'Closed Date']),
+                correspondingInternalTicket: findCol(['Corresponding Internal Ticket', 'Internal Ticket', 'CPE Ticket']),
+                supportCategory: findCol(['Support Category', 'SupportCategory', 'Category']),
+                feature: findCol(['Feature', 'Product Feature']),
+                subFeature: findCol(['Sub Feature', 'SubFeature', 'Sub-Feature'])
             };
 
             processedData = rawData.map(row => {
@@ -2538,8 +2825,8 @@
                 const monthYear = `${submissionDate.getMonth()+1}-${submissionDate.getFullYear()}`;
 
                 return {
-                    incidentId: incidentId, // Updated for issue #1
-                    slaStatus: slaStatus, // Updated for issue #2
+                    incidentId: incidentId,
+                    slaStatus: slaStatus,
                     owner: row[colMap.owner] || 'Unassigned',
                     title: row[colMap.title] || 'No Title',
                     currentStatus: row[colMap.currentStatus] || 'Unknown',
@@ -2558,6 +2845,9 @@
                     isClosed: isClosed,
                     resolveTime: resolveTime,
                     correspondingInternalTicket: correspondingInternalTicket,
+                    supportCategory: row[colMap.supportCategory] || 'Uncategorized',
+                    feature: row[colMap.feature] || 'N/A',
+                    subFeature: row[colMap.subFeature] || 'N/A',
                     
                     // For drill-down exports
                     aging15Status: aging15Status,
@@ -2594,6 +2884,8 @@
             
             // Initialize monthly performance
             updateMonthlyPerformance();
+            updateMonthlyComparison();
+            updateCategoryAnalysis();
         }
 
         function populateFilterDropdowns() {
@@ -2657,6 +2949,8 @@
             
             // Update monthly performance with current filters
             updateMonthlyPerformance();
+            updateMonthlyComparison();
+            updateCategoryAnalysis();
             
             showLoading(false);
         }
@@ -2715,6 +3009,8 @@
             
             // Update monthly performance
             updateMonthlyPerformance();
+            updateMonthlyComparison();
+            updateCategoryAnalysis();
         }
 
         function updateOwnerFilter(owner) {
@@ -2777,8 +3073,8 @@
                 // Update KPI cards to show 0
                 document.querySelectorAll('.kpi-value').forEach(el => el.textContent = '0');
                 document.querySelectorAll('.kpi-status-tag').forEach(el => {
-                    el.textContent = 'INFO';
-                    el.className = 'kpi-status-tag bg-info-tag';
+                    el.textContent = 'METRIC';
+                    el.className = 'kpi-status-tag bg-metric';
                 });
                 document.querySelectorAll('.kpi-recommendation').forEach(el => {
                     el.textContent = 'No data available for selected filters.';
@@ -2819,6 +3115,12 @@
             const totalSlaViolated = slaViolatedSR + slaViolatedINC;
             const overallSLA = totalCases > 0 ? (((totalCases - totalSlaViolated) / totalCases) * 100).toFixed(1) : 100;
             
+            // Calculate SR and INC SLA Compliance percentages
+            const totalSR = filteredData.filter(d => d.isSR).length;
+            const totalINC = filteredData.filter(d => d.isINC).length;
+            const srSLACompliance = totalSR > 0 ? (((totalSR - slaViolatedSR) / totalSR) * 100).toFixed(1) : 100;
+            const incSLACompliance = totalINC > 0 ? (((totalINC - slaViolatedINC) / totalINC) * 100).toFixed(1) : 100;
+            
             // Fix for subsequent SLA miss - check if closed and subsequentSLABreachCount > 0
             const subsequentSLAMiss = filteredData.filter(d => d.isClosed && d.subsequentSLABreachCount > 0).length;
             
@@ -2827,6 +3129,9 @@
                 const ticket = d.correspondingInternalTicket;
                 return ticket && ticket.toString().trim() !== '' && ticket.toString().trim() !== '0';
             }).length;
+            
+            // SR EDOC Breach count
+            const edocBreach = filteredData.filter(d => d.isSR && d.isEdocBreached).length;
 
             // Section 3: Closure Aging - UPDATED for issue #5
             const fcr = filteredData.filter(d => d.isClosed && d.agingDays < 2).length;
@@ -2836,12 +3141,12 @@
             const srMore15 = filteredData.filter(d => d.isClosed && d.isSR && d.agingDays >= 15).length;
 
             // Update Section 1 cards
-            const totalClosedRec = { status: 'INFO', tag: 'bg-info-tag', rec: `Total closed cases: ${totalClosed} (SR: ${closedSR}, INC: ${closedINC})` };
-            const closedSRRec = { status: 'INFO', tag: 'bg-info-tag', rec: `Closed Service Requests: ${closedSR}` };
-            const closedINCRec = { status: 'INFO', tag: 'bg-info-tag', rec: `Closed Incident Management cases: ${closedINC}` };
-            const openTotalRec = { status: 'INFO', tag: 'bg-info-tag', rec: `Total open cases: ${totalOpen} (SR: ${openSR}, INC: ${openINC})` };
-            const openSRRec = { status: 'INFO', tag: 'bg-info-tag', rec: `Open Service Requests: ${openSR}` };
-            const openINCRec = { status: 'INFO', tag: 'bg-info-tag', rec: `Open Incident Management cases: ${openINC}` };
+            const totalClosedRec = { status: 'METRIC', tag: 'bg-metric', rec: `Total closed cases: ${totalClosed} (SR: ${closedSR}, INC: ${closedINC})` };
+            const closedSRRec = { status: 'METRIC', tag: 'bg-metric', rec: `Closed Service Requests: ${closedSR}` };
+            const closedINCRec = { status: 'METRIC', tag: 'bg-metric', rec: `Closed Incident Management cases: ${closedINC}` };
+            const openTotalRec = { status: 'METRIC', tag: 'bg-metric', rec: `Total open cases: ${totalOpen} (SR: ${openSR}, INC: ${openINC})` };
+            const openSRRec = { status: 'METRIC', tag: 'bg-metric', rec: `Open Service Requests: ${openSR}` };
+            const openINCRec = { status: 'METRIC', tag: 'bg-metric', rec: `Open Incident Management cases: ${openINC}` };
 
             updateCard('kpi-total-closed', totalClosed, totalClosedRec);
             updateCard('kpi-closed-sr', closedSR, closedSRRec);
@@ -2851,41 +3156,58 @@
             updateCard('kpi-open-inc', openINC, openINCRec);
 
             // Section 2 recommendations
-            let overallSLARec = { status: 'GOOD', tag: 'bg-good', rec: `Overall SLA Compliance: ${overallSLA}%` };
-            if (parseFloat(overallSLA) < 95) overallSLARec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `SLA compliance below 95% (${overallSLA}%). Review violations.` };
-            if (parseFloat(overallSLA) < 80) overallSLARec = { status: 'URGENT', tag: 'bg-urgent', rec: `CRITICAL: SLA compliance below 80% (${overallSLA}%). Immediate action required.` };
+            let overallSLARec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `Overall SLA Compliance: ${overallSLA}%` };
+            if (parseFloat(overallSLA) < 95) overallSLARec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `SLA compliance below 95% (${overallSLA}%). Review violations.` };
+            if (parseFloat(overallSLA) < 80) overallSLARec = { status: 'BELOW TARGET', tag: 'bg-below-target', rec: `CRITICAL: SLA compliance below 80% (${overallSLA}%). Immediate action required.` };
 
-            let slaSRRec = { status: 'GOOD', tag: 'bg-good', rec: `SLA Violated SR: ${slaViolatedSR}` };
-            if (slaViolatedSR > 0) slaSRRec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${slaViolatedSR} SR cases with SLA violations.` };
-            if (slaViolatedSR > 5) slaSRRec = { status: 'URGENT', tag: 'bg-urgent', rec: `CRITICAL: ${slaViolatedSR} SR cases with SLA violations. Immediate action required.` };
+            let slaSRRec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `SLA Violated SR: ${slaViolatedSR}` };
+            if (slaViolatedSR > 0) slaSRRec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `${slaViolatedSR} SR cases with SLA violations.` };
+            if (slaViolatedSR > 5) slaSRRec = { status: 'BELOW TARGET', tag: 'bg-below-target', rec: `CRITICAL: ${slaViolatedSR} SR cases with SLA violations. Immediate action required.` };
 
-            let slaINCRec = { status: 'GOOD', tag: 'bg-good', rec: `SLA Violated INC: ${slaViolatedINC}` };
-            if (slaViolatedINC > 0) slaINCRec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${slaViolatedINC} INC cases with SLA violations.` };
-            if (slaViolatedINC > 5) slaINCRec = { status: 'URGENT', tag: 'bg-urgent', rec: `CRITICAL: ${slaViolatedINC} INC cases with SLA violations. Immediate action required.` };
+            let slaINCRec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `SLA Violated INC: ${slaViolatedINC}` };
+            if (slaViolatedINC > 0) slaINCRec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `${slaViolatedINC} INC cases with SLA violations.` };
+            if (slaViolatedINC > 5) slaINCRec = { status: 'BELOW TARGET', tag: 'bg-below-target', rec: `CRITICAL: ${slaViolatedINC} INC cases with SLA violations. Immediate action required.` };
 
-            let subsequentSLARec = { status: 'GOOD', tag: 'bg-good', rec: `Subsequent SLA Miss: ${subsequentSLAMiss}` };
-            if (subsequentSLAMiss > 0) subsequentSLARec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${subsequentSLAMiss} closed cases with subsequent SLA misses.` };
+            let subsequentSLARec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `Subsequent SLA Miss: ${subsequentSLAMiss}` };
+            if (subsequentSLAMiss > 0) subsequentSLARec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `${subsequentSLAMiss} closed cases with subsequent SLA misses.` };
 
-            let cpeCallsRec = { status: 'INFO', tag: 'bg-info-tag', rec: `Number of CPE Calls: ${cpeCalls}` };
+            let cpeCallsRec = { status: 'METRIC', tag: 'bg-metric', rec: `Number of CPE Calls: ${cpeCalls}` };
+            
+            // New SR and INC SLA Compliance recommendations
+            let srSLAComplianceRec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `SR SLA Compliance: ${srSLACompliance}%` };
+            if (parseFloat(srSLACompliance) < 95) srSLAComplianceRec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `SR SLA compliance below 95% (${srSLACompliance}%). Review violations.` };
+            if (parseFloat(srSLACompliance) < 80) srSLAComplianceRec = { status: 'BELOW TARGET', tag: 'bg-below-target', rec: `SR SLA compliance below 80% (${srSLACompliance}%).` };
+            
+            let incSLAComplianceRec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `INC SLA Compliance: ${incSLACompliance}%` };
+            if (parseFloat(incSLACompliance) < 95) incSLAComplianceRec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `INC SLA compliance below 95% (${incSLACompliance}%). Review violations.` };
+            if (parseFloat(incSLACompliance) < 80) incSLAComplianceRec = { status: 'BELOW TARGET', tag: 'bg-below-target', rec: `INC SLA compliance below 80% (${incSLACompliance}%).` };
+            
+            // EDOC Breach recommendation
+            let edocRec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `SR EDOC Breach: ${edocBreach} cases` };
+            if (edocBreach > 0) edocRec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `${edocBreach} SR cases breached Expected Date of Closure.` };
+            if (edocBreach > 5) edocRec = { status: 'BELOW TARGET', tag: 'bg-below-target', rec: `CRITICAL: ${edocBreach} SR cases breached EDOC.` };
 
             // Update Section 2 cards
             updateCard('kpi-overall-sla', overallSLA + '%', overallSLARec);
+            updateCard('kpi-sr-sla-compliance', srSLACompliance + '%', srSLAComplianceRec);
+            updateCard('kpi-inc-sla-compliance', incSLACompliance + '%', incSLAComplianceRec);
             updateCard('kpi-sla-sr', slaViolatedSR, slaSRRec);
             updateCard('kpi-sla-inc', slaViolatedINC, slaINCRec);
+            updateCard('kpi-edoc', edocBreach, edocRec);
             updateCard('kpi-subsequent-sla', subsequentSLAMiss, subsequentSLARec);
             updateCard('kpi-cpe-calls', cpeCalls, cpeCallsRec);
 
             // Section 3 recommendations - UPDATED for issue #5
-            let fcrRec = { status: 'GOOD', tag: 'bg-good', rec: `First Contact Resolution: ${fcr} cases resolved within 2 days.` };
-            if (fcr === 0 && totalClosed > 0) fcrRec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: 'No cases resolved within 2 days. Review resolution process.' };
+            let fcrRec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `First Contact Resolution: ${fcr} cases resolved within 2 days.` };
+            if (fcr === 0 && totalClosed > 0) fcrRec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: 'No cases resolved within 2 days. Review resolution process.' };
 
-            let incLess15Rec = { status: 'INFO', tag: 'bg-info-tag', rec: `Closed INC cases aged <15 days: ${incLess15}` };
-            let incMore15Rec = { status: 'INFO', tag: 'bg-info-tag', rec: `Closed INC cases aged >15 days: ${incMore15}` };
-            if (incMore15 > 0) incMore15Rec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${incMore15} INC cases took more than 15 days to close.` };
+            let incLess15Rec = { status: 'METRIC', tag: 'bg-metric', rec: `Closed INC cases aged <15 days: ${incLess15}` };
+            let incMore15Rec = { status: 'METRIC', tag: 'bg-metric', rec: `Closed INC cases aged >15 days: ${incMore15}` };
+            if (incMore15 > 0) incMore15Rec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `${incMore15} INC cases took more than 15 days to close.` };
 
-            let srLess15Rec = { status: 'INFO', tag: 'bg-info-tag', rec: `Closed SR cases aged <15 days: ${srLess15}` };
-            let srMore15Rec = { status: 'INFO', tag: 'bg-info-tag', rec: `Closed SR cases aged >15 days: ${srMore15}` };
-            if (srMore15 > 0) srMore15Rec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${srMore15} SR cases took more than 15 days to close.` };
+            let srLess15Rec = { status: 'METRIC', tag: 'bg-metric', rec: `Closed SR cases aged <15 days: ${srLess15}` };
+            let srMore15Rec = { status: 'METRIC', tag: 'bg-metric', rec: `Closed SR cases aged >15 days: ${srMore15}` };
+            if (srMore15 > 0) srMore15Rec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `${srMore15} SR cases took more than 15 days to close.` };
 
             // Update Section 3 cards
             updateCard('kpi-fcr', fcr, fcrRec);
@@ -2894,9 +3216,58 @@
             updateCard('kpi-sr-less15', srLess15, srLess15Rec);
             updateCard('kpi-sr-more15', srMore15, srMore15Rec);
             
+            // Section 4: Email Follow-up & Response Misses
+            const emailFollowupMissed = filteredData.filter(d => {
+                const emailComp = d.emailCompliance;
+                return emailComp && (emailComp.includes('No Followup') || emailComp.includes('Follow up Date Missed'));
+            }).length;
+            
+            const emailRespMissed = filteredData.filter(d => {
+                const emailComp = d.emailCompliance;
+                return emailComp && emailComp.includes('Client response Missed');
+            }).length;
+            
+            let emailFollowupRec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `Email Follow-ups Compliant: ${filteredData.length - emailFollowupMissed} of ${filteredData.length}` };
+            if (emailFollowupMissed > 0) emailFollowupRec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `${emailFollowupMissed} cases missed email follow-up dates.` };
+            if (emailFollowupMissed > 5) emailFollowupRec = { status: 'BELOW TARGET', tag: 'bg-below-target', rec: `CRITICAL: ${emailFollowupMissed} email follow-ups missed.` };
+            
+            let emailRespRec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `Email Responses Compliant: ${filteredData.length - emailRespMissed} of ${filteredData.length}` };
+            if (emailRespMissed > 0) emailRespRec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `${emailRespMissed} cases missed client email responses.` };
+            if (emailRespMissed > 5) emailRespRec = { status: 'BELOW TARGET', tag: 'bg-below-target', rec: `CRITICAL: ${emailRespMissed} email responses missed.` };
+            
+            // Update Section 4 cards
+            updateCard('kpi-email-followup', emailFollowupMissed, emailFollowupRec);
+            updateCard('kpi-email-resp', emailRespMissed, emailRespRec);
+            
+            // Section 5: Subsequent SLA & Response Tracking
+            const subsequentRespMissed = filteredData.filter(d => d.isSubsequentResponseBreach).length;
+            
+            let subsequentRespRec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `Subsequent Response Compliant: ${filteredData.length - subsequentRespMissed} of ${filteredData.length}` };
+            if (subsequentRespMissed > 0) subsequentRespRec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `${subsequentRespMissed} cases missed subsequent response dates.` };
+            if (subsequentRespMissed > 5) subsequentRespRec = { status: 'BELOW TARGET', tag: 'bg-below-target', rec: `CRITICAL: ${subsequentRespMissed} subsequent responses missed.` };
+            
+            // subsequentSLAMiss already calculated above
+            
+            // Update Section 5 cards
+            updateCard('kpi-sub-resp', subsequentRespMissed, subsequentRespRec);
+            updateCard('kpi-sub-sla', subsequentSLAMiss, subsequentSLARec);
+            
+            // Section 6: Idle Case Monitoring
+            const idle3Days = filteredData.filter(d => d.isIdle3).length;
+            
+            let idle3Rec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `Cases idle > 2 days: ${idle3Days}` };
+            if (idle3Days > 0) idle3Rec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `${idle3Days} cases idle for more than 2 days.` };
+            if (idle3Days > 10) idle3Rec = { status: 'BELOW TARGET', tag: 'bg-below-target', rec: `CRITICAL: ${idle3Days} cases idle > 2 days.` };
+            
+            // Update Section 6 cards
+            updateCard('kpi-idle-3', idle3Days, idle3Rec);
+            
             updateSectionRAGStatus(1, [totalClosedRec, closedSRRec, closedINCRec, openTotalRec, openSRRec, openINCRec]);
-            updateSectionRAGStatus(2, [overallSLARec, slaSRRec, slaINCRec, subsequentSLARec, cpeCallsRec]);
+            updateSectionRAGStatus(2, [overallSLARec, srSLAComplianceRec, incSLAComplianceRec, slaSRRec, slaINCRec, edocRec, subsequentSLARec, cpeCallsRec]);
             updateSectionRAGStatus(3, [fcrRec, incLess15Rec, incMore15Rec, srLess15Rec, srMore15Rec]);
+            updateSectionRAGStatus(4, [emailFollowupRec, emailRespRec]);
+            updateSectionRAGStatus(5, [subsequentRespRec, subsequentSLARec]);
+            updateSectionRAGStatus(6, [idle3Rec]);
             
             renderOwnerScorecard();
         }
@@ -2908,13 +3279,13 @@
             let overallStatus = 'good';
             
             for (const rec of cardRecommendations) {
-                if (rec.status === 'URGENT') {
+                if (rec.status === 'BELOW TARGET' || rec.status === 'URGENT') {
                     overallStatus = 'danger';
                     break;
-                } else if (rec.status === 'ACTION NEEDED' && overallStatus !== 'danger') {
+                } else if ((rec.status === 'NEEDS ATTENTION' || rec.status === 'ACTION NEEDED' || rec.status === 'MONITOR') && overallStatus !== 'danger') {
                     overallStatus = 'warning';
-                } else if (rec.status === 'MONITOR' && overallStatus === 'good') {
-                    overallStatus = 'warning';
+                } else if (rec.status === 'METRIC' && overallStatus === 'good') {
+                    overallStatus = 'info';
                 } else if (rec.status === 'INFO' && overallStatus === 'good') {
                     overallStatus = 'info';
                 }
@@ -3156,9 +3527,15 @@
                             value = d[col.key] || '';
                         }
                         
+                        // Convert to string to avoid errors
+                        value = String(value);
+                        
                         let cellClass = '';
                         
-                        if (col.key === 'agingDays' || col.key === 'agingRoundoff') {
+                        // Make Incident ID bold
+                        if (col.key === 'incidentId') {
+                            cellClass = 'fw-bold';
+                        } else if (col.key === 'agingDays' || col.key === 'agingRoundoff') {
                             const agingValue = parseInt(value) || 0;
                             if (agingValue > 25) cellClass = 'text-danger fw-bold';
                             else if (agingValue > 15) cellClass = 'text-warning';
@@ -4484,6 +4861,957 @@
             XLSX.writeFile(wb, `MSP_Monthly_Performance_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
         }
 
+        function updateMonthlyComparison() {
+            if (!filteredData || filteredData.length === 0) return;
+            
+            // Use filteredData instead of processedData to respect global filters
+            // Use the same logic as calculateMonthlyBreakdown to ensure consistency
+            const monthlyDataLogged = {};
+            const monthlyDataClosed = {};
+            const monthlyStats = {};
+            
+            // First pass: Count logged cases by submission month
+            filteredData.forEach(d => {
+                const monthKey = d.monthYear;
+                if (!monthlyDataLogged[monthKey]) {
+                    monthlyDataLogged[monthKey] = { loggedCases: 0 };
+                }
+                monthlyDataLogged[monthKey].loggedCases++;
+            });
+            
+            // Second pass: Count closed cases by resolve month
+            filteredData.forEach(d => {
+                if (d.isClosed && d.resolveTime && d.resolveTime !== '--' && d.resolveTime !== 'NULL') {
+                    const resolveDate = new Date(d.resolveTime);
+                    if (!isNaN(resolveDate.getTime())) {
+                        const monthKey = `${resolveDate.getMonth()+1}-${resolveDate.getFullYear()}`;
+                        if (!monthlyDataClosed[monthKey]) {
+                            monthlyDataClosed[monthKey] = { closedCases: 0 };
+                        }
+                        monthlyDataClosed[monthKey].closedCases++;
+                    }
+                }
+            });
+            
+            // Third pass: Calculate all metrics by submission month
+            filteredData.forEach(d => {
+                const monthKey = d.monthYear;
+                if (!monthlyStats[monthKey]) {
+                    monthlyStats[monthKey] = {
+                        total: 0,
+                        loggedCases: 0,
+                        closedCases: 0,
+                        slaViolated: 0,
+                        totalAgingDays: 0,
+                        incLogged: 0,
+                        incClosed: 0,
+                        srLogged: 0,
+                        srClosed: 0,
+                        closedForPerformance: 0
+                    };
+                }
+                
+                const stats = monthlyStats[monthKey];
+                stats.total++;
+                stats.loggedCases = monthlyDataLogged[monthKey]?.loggedCases || 0;
+                stats.closedCases = monthlyDataClosed[monthKey]?.closedCases || 0;
+                
+                if (d.isSlaViolated) stats.slaViolated++;
+                stats.totalAgingDays += d.agingDays || 0;
+                
+                // Track INC and SR separately
+                if (d.isINC) {
+                    stats.incLogged++;
+                    if (d.isClosed) stats.incClosed++;
+                }
+                if (d.isSR) {
+                    stats.srLogged++;
+                    if (d.isClosed) stats.srClosed++;
+                }
+                
+                // Count closed cases in this submission month for performance calculation
+                if (d.isClosed) {
+                    stats.closedForPerformance++;
+                }
+            });
+            
+            // Sort months chronologically
+            const months = Object.keys(monthlyStats).sort((a, b) => {
+                const [aMonth, aYear] = a.split('-').map(Number);
+                const [bMonth, bYear] = b.split('-').map(Number);
+                if (aYear !== bYear) return aYear - bYear;
+                return aMonth - bMonth;
+            });
+            
+            // Prepare data arrays for charts
+            const monthLabels = months.map(m => {
+                const [month, year] = m.split('-');
+                const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                return `${monthNames[parseInt(month) - 1]} ${year}`;
+            });
+            
+            const overallLoggedData = [];
+            const overallClosedData = [];
+            const slaComplianceData = [];
+            const srLoggedData = [];
+            const srClosedData = [];
+            const incLoggedData = [];
+            const incClosedData = [];
+            const avgResolutionData = [];
+            const performanceScoreData = [];
+            
+            const tableBody = document.getElementById('monthlyComparisonTableBody');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            
+            months.forEach((monthKey, index) => {
+                const stats = monthlyStats[monthKey];
+                
+                // Calculate metrics
+                const slaCompliance = stats.total > 0 ? (((stats.total - stats.slaViolated) / stats.total) * 100).toFixed(1) : 100;
+                const avgResolution = stats.closedForPerformance > 0 ? (stats.totalAgingDays / stats.total).toFixed(1) : 0;
+                
+                // Calculate performance score (simplified)
+                let performanceScore = 0;
+                if (stats.total > 0) {
+                    const closureRate = stats.total > 0 ? ((stats.closedForPerformance / stats.total) * 100) : 0;
+                    performanceScore = (parseFloat(slaCompliance) * 0.6) + (closureRate * 0.4);
+                    performanceScore = Math.max(0, Math.min(100, performanceScore));
+                }
+                
+                // Push data for charts
+                overallLoggedData.push(stats.loggedCases);
+                overallClosedData.push(stats.closedCases);
+                slaComplianceData.push(parseFloat(slaCompliance));
+                srLoggedData.push(stats.srLogged);
+                srClosedData.push(stats.srClosed);
+                incLoggedData.push(stats.incLogged);
+                incClosedData.push(stats.incClosed);
+                avgResolutionData.push(parseFloat(avgResolution));
+                performanceScoreData.push(performanceScore);
+                
+                // Add table row
+                const row = `
+                    <tr>
+                        <td><strong>${monthLabels[index]}</strong></td>
+                        <td>${stats.loggedCases}</td>
+                        <td>${stats.closedCases}</td>
+                        <td><span class="badge ${parseFloat(slaCompliance) >= 90 ? 'bg-success' : parseFloat(slaCompliance) >= 80 ? 'bg-warning' : 'bg-danger'}">${slaCompliance}%</span></td>
+                        <td>${avgResolution} days</td>
+                        <td><strong style="color: ${performanceScore >= 80 ? 'var(--success-color)' : performanceScore >= 65 ? 'var(--warning-color)' : 'var(--danger-color)'}">${performanceScore.toFixed(1)}</strong></td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+            
+            // Destroy existing charts before creating new ones
+            if (window.comparisonCharts) {
+                Object.values(window.comparisonCharts).forEach(chart => {
+                    if (chart) chart.destroy();
+                });
+            }
+            window.comparisonCharts = {};
+            
+            // Chart 1: Overall Logged vs Closed
+            const overallLoggedClosedCtx = document.getElementById('overallLoggedClosedChart');
+            if (overallLoggedClosedCtx) {
+                window.comparisonCharts.overallLoggedClosed = new Chart(overallLoggedClosedCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: monthLabels,
+                        datasets: [
+                            {
+                                label: 'Logged Cases',
+                                data: overallLoggedData,
+                                backgroundColor: 'rgba(0, 102, 204, 0.7)',
+                                borderColor: '#0066cc',
+                                borderWidth: 2,
+                                type: 'bar',
+                                order: 2
+                            },
+                            {
+                                label: 'Closed Cases',
+                                data: overallClosedData,
+                                borderColor: '#00c853',
+                                backgroundColor: 'rgba(0, 200, 83, 0.2)',
+                                tension: 0.4,
+                                fill: false,
+                                borderWidth: 4,
+                                pointRadius: 6,
+                                pointHoverRadius: 8,
+                                type: 'line',
+                                order: 1,
+                                pointBackgroundColor: '#00c853',
+                                pointBorderColor: '#ffffff',
+                                pointBorderWidth: 2
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        plugins: {
+                            legend: { 
+                                display: true, 
+                                position: 'top',
+                                labels: {
+                                    font: { size: 12, weight: '600' },
+                                    usePointStyle: true,
+                                    padding: 15
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                                padding: 12,
+                                displayColors: true
+                            }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Cases',
+                                    font: { size: 13, weight: '600' }
+                                },
+                                grid: {
+                                    color: 'rgba(0,0,0,0.05)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Chart 2: SLA Compliance
+            const slaComplianceCtx = document.getElementById('slaComplianceTrendChart');
+            if (slaComplianceCtx) {
+                const gradient = slaComplianceCtx.getContext('2d').createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, 'rgba(0, 200, 83, 0.4)');
+                gradient.addColorStop(1, 'rgba(0, 200, 83, 0.05)');
+                
+                window.comparisonCharts.slaCompliance = new Chart(slaComplianceCtx, {
+                    type: 'line',
+                    data: {
+                        labels: monthLabels,
+                        datasets: [{
+                            label: 'SLA Compliance %',
+                            data: slaComplianceData,
+                            borderColor: '#00c853',
+                            backgroundColor: gradient,
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 4,
+                            pointRadius: 6,
+                            pointHoverRadius: 9,
+                            pointBackgroundColor: '#00c853',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 3,
+                            pointHoverBorderWidth: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                display: true, 
+                                position: 'top',
+                                labels: {
+                                    font: { size: 12, weight: '600' },
+                                    usePointStyle: true,
+                                    padding: 15
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                                padding: 12
+                            }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: false,
+                                min: 75,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Compliance %',
+                                    font: { size: 13, weight: '600' }
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(0,0,0,0.05)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Chart 3: SR Logged vs Closed
+            const srLoggedClosedCtx = document.getElementById('srLoggedClosedChart');
+            if (srLoggedClosedCtx) {
+                window.comparisonCharts.srLoggedClosed = new Chart(srLoggedClosedCtx, {
+                    type: 'line',
+                    data: {
+                        labels: monthLabels,
+                        datasets: [
+                            {
+                                label: 'SR Logged',
+                                data: srLoggedData,
+                                borderColor: '#ff9100',
+                                backgroundColor: 'rgba(255, 145, 0, 0)',
+                                tension: 0.3,
+                                fill: false,
+                                borderWidth: 3,
+                                pointRadius: 6,
+                                pointHoverRadius: 8,
+                                borderDash: [8, 4],
+                                pointStyle: 'rect',
+                                pointBackgroundColor: '#ff9100',
+                                pointBorderColor: '#ffffff',
+                                pointBorderWidth: 2
+                            },
+                            {
+                                label: 'SR Closed',
+                                data: srClosedData,
+                                borderColor: '#00b8d4',
+                                backgroundColor: 'rgba(0, 184, 212, 0.2)',
+                                tension: 0.3,
+                                fill: true,
+                                borderWidth: 4,
+                                pointRadius: 6,
+                                pointHoverRadius: 8,
+                                pointStyle: 'circle',
+                                pointBackgroundColor: '#00b8d4',
+                                pointBorderColor: '#ffffff',
+                                pointBorderWidth: 2
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        plugins: {
+                            legend: { 
+                                display: true, 
+                                position: 'top',
+                                labels: {
+                                    font: { size: 12, weight: '600' },
+                                    usePointStyle: true,
+                                    padding: 15
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Service Requests',
+                                    font: { size: 13, weight: '600' }
+                                },
+                                grid: {
+                                    color: 'rgba(0,0,0,0.05)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Chart 4: INC Logged vs Closed
+            const incLoggedClosedCtx = document.getElementById('incLoggedClosedChart');
+            if (incLoggedClosedCtx) {
+                window.comparisonCharts.incLoggedClosed = new Chart(incLoggedClosedCtx, {
+                    type: 'line',
+                    data: {
+                        labels: monthLabels,
+                        datasets: [
+                            {
+                                label: 'INC Logged',
+                                data: incLoggedData,
+                                borderColor: '#d32f2f',
+                                backgroundColor: 'rgba(211, 47, 47, 0)',
+                                tension: 0,
+                                fill: false,
+                                borderWidth: 3,
+                                pointRadius: 6,
+                                pointHoverRadius: 8,
+                                stepped: 'before',
+                                pointStyle: 'triangle',
+                                pointBackgroundColor: '#d32f2f',
+                                pointBorderColor: '#ffffff',
+                                pointBorderWidth: 2
+                            },
+                            {
+                                label: 'INC Closed',
+                                data: incClosedData,
+                                borderColor: '#7B1FA2',
+                                backgroundColor: 'rgba(123, 31, 162, 0.25)',
+                                tension: 0.4,
+                                fill: true,
+                                borderWidth: 4,
+                                pointRadius: 6,
+                                pointHoverRadius: 8,
+                                pointStyle: 'circle',
+                                pointBackgroundColor: '#7B1FA2',
+                                pointBorderColor: '#ffffff',
+                                pointBorderWidth: 2
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        plugins: {
+                            legend: { 
+                                display: true, 
+                                position: 'top',
+                                labels: {
+                                    font: { size: 12, weight: '600' },
+                                    usePointStyle: true,
+                                    padding: 15
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Incidents',
+                                    font: { size: 13, weight: '600' }
+                                },
+                                grid: {
+                                    color: 'rgba(0,0,0,0.05)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Chart 5: Average Resolution Time Trend
+            const avgResolutionCtx = document.getElementById('avgResolutionTrendChart');
+            if (avgResolutionCtx) {
+                window.comparisonCharts.avgResolution = new Chart(avgResolutionCtx, {
+                    type: 'line',
+                    data: {
+                        labels: monthLabels,
+                        datasets: [{
+                            label: 'Avg Resolution Time (Days)',
+                            data: avgResolutionData,
+                            borderColor: '#ff9100',
+                            backgroundColor: 'rgba(255, 145, 0, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 3,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                display: true, 
+                                position: 'top',
+                                labels: {
+                                    font: { size: 12, weight: '600' },
+                                    usePointStyle: true
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Days'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + ' days';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Chart 6: Overall Performance Score Trend
+            const perfScoreCtx = document.getElementById('overallPerformanceTrendChart');
+            if (perfScoreCtx) {
+                window.comparisonCharts.performanceScore = new Chart(perfScoreCtx, {
+                    type: 'line',
+                    data: {
+                        labels: monthLabels,
+                        datasets: [{
+                            label: 'Performance Score',
+                            data: performanceScoreData,
+                            borderColor: '#7B1FA2',
+                            backgroundColor: 'rgba(123, 31, 162, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 3,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                display: true, 
+                                position: 'top',
+                                labels: {
+                                    font: { size: 12, weight: '600' },
+                                    usePointStyle: true
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Score'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function exportMonthlyComparison() {
+            const monthlyStats = {};
+            const monthlyDataLogged = {};
+            const monthlyDataClosed = {};
+            
+            // Count logged cases by submission month
+            filteredData.forEach(d => {
+                const monthKey = d.monthYear;
+                if (!monthlyDataLogged[monthKey]) {
+                    monthlyDataLogged[monthKey] = { loggedCases: 0 };
+                }
+                monthlyDataLogged[monthKey].loggedCases++;
+            });
+            
+            // Count closed cases by resolve month
+            filteredData.forEach(d => {
+                if (d.isClosed && d.resolveTime && d.resolveTime !== '--' && d.resolveTime !== 'NULL') {
+                    const resolveDate = new Date(d.resolveTime);
+                    if (!isNaN(resolveDate.getTime())) {
+                        const monthKey = `${resolveDate.getMonth()+1}-${resolveDate.getFullYear()}`;
+                        if (!monthlyDataClosed[monthKey]) {
+                            monthlyDataClosed[monthKey] = { closedCases: 0 };
+                        }
+                        monthlyDataClosed[monthKey].closedCases++;
+                    }
+                }
+            });
+            
+            // Calculate all metrics by submission month
+            filteredData.forEach(d => {
+                const monthKey = d.monthYear;
+                if (!monthlyStats[monthKey]) {
+                    monthlyStats[monthKey] = {
+                        total: 0,
+                        loggedCases: 0,
+                        closedCases: 0,
+                        slaViolated: 0,
+                        totalAgingDays: 0,
+                        incLogged: 0,
+                        incClosed: 0,
+                        srLogged: 0,
+                        srClosed: 0
+                    };
+                }
+                
+                const stats = monthlyStats[monthKey];
+                stats.total++;
+                stats.loggedCases = monthlyDataLogged[monthKey]?.loggedCases || 0;
+                stats.closedCases = monthlyDataClosed[monthKey]?.closedCases || 0;
+                
+                if (d.isSlaViolated) stats.slaViolated++;
+                stats.totalAgingDays += d.agingDays || 0;
+                
+                if (d.isINC) {
+                    stats.incLogged++;
+                    if (d.isClosed) stats.incClosed++;
+                }
+                if (d.isSR) {
+                    stats.srLogged++;
+                    if (d.isClosed) stats.srClosed++;
+                }
+            });
+            
+            // Sort months chronologically
+            const months = Object.keys(monthlyStats).sort((a, b) => {
+                const [aMonth, aYear] = a.split('-').map(Number);
+                const [bMonth, bYear] = b.split('-').map(Number);
+                if (aYear !== bYear) return aYear - bYear;
+                return aMonth - bMonth;
+            });
+            
+            const exportData = months.map(monthKey => {
+                const stats = monthlyStats[monthKey];
+                const [month, year] = monthKey.split('-');
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                                   'July', 'August', 'September', 'October', 'November', 'December'];
+                const monthName = `${monthNames[parseInt(month) - 1]} ${year}`;
+                
+                const slaCompliance = stats.total > 0 ? (((stats.total - stats.slaViolated) / stats.total) * 100).toFixed(1) : 100;
+                const avgResolution = stats.total > 0 ? (stats.totalAgingDays / stats.total).toFixed(1) : 0;
+                
+                let performanceScore = 0;
+                if (stats.total > 0) {
+                    const closureRate = stats.total > 0 ? ((stats.closedCases / stats.loggedCases) * 100) : 0;
+                    performanceScore = (parseFloat(slaCompliance) * 0.6) + (closureRate * 0.4);
+                    performanceScore = Math.max(0, Math.min(100, performanceScore));
+                }
+                
+                return {
+                    'Month': monthName,
+                    'Logged Cases': stats.loggedCases,
+                    'Closed Cases': stats.closedCases,
+                    'SLA Compliance %': slaCompliance,
+                    'Avg Resolution (Days)': avgResolution,
+                    'SR Logged': stats.srLogged,
+                    'SR Closed': stats.srClosed,
+                    'INC Logged': stats.incLogged,
+                    'INC Closed': stats.incClosed,
+                    'Performance Score': performanceScore.toFixed(1)
+                };
+            });
+            
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Monthly_Comparison");
+            XLSX.writeFile(wb, `MSP_Monthly_Comparison_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+        }
+
+        function updateCategoryAnalysis() {
+            if (!filteredData || filteredData.length === 0) return;
+            
+            // Use filteredData instead of processedData to respect global filters
+            // Analyze by Support Category
+            const categoryStats = {};
+            filteredData.forEach(d => {
+                const category = d.supportCategory || 'Uncategorized';
+                if (!categoryStats[category]) {
+                    categoryStats[category] = {
+                        total: 0,
+                        closed: 0,
+                        slaViolated: 0,
+                        totalAgingDays: 0,
+                        features: {}
+                    };
+                }
+                
+                const stats = categoryStats[category];
+                stats.total++;
+                if (d.isClosed) stats.closed++;
+                if (d.isSlaViolated) stats.slaViolated++;
+                stats.totalAgingDays += d.agingDays || 0;
+                
+                // Track features within category
+                const feature = d.feature || 'N/A';
+                stats.features[feature] = (stats.features[feature] || 0) + 1;
+            });
+            
+            // Analyze by Feature
+            const featureStats = {};
+            filteredData.forEach(d => {
+                const feature = d.feature || 'N/A';
+                if (!featureStats[feature]) {
+                    featureStats[feature] = {
+                        total: 0,
+                        closed: 0,
+                        slaViolated: 0,
+                        totalAgingDays: 0,
+                        subFeatures: {}
+                    };
+                }
+                
+                const stats = featureStats[feature];
+                stats.total++;
+                if (d.isClosed) stats.closed++;
+                if (d.isSlaViolated) stats.slaViolated++;
+                stats.totalAgingDays += d.agingDays || 0;
+                
+                // Track sub features
+                const subFeature = d.subFeature || 'N/A';
+                stats.subFeatures[subFeature] = (stats.subFeatures[subFeature] || 0) + 1;
+            });
+            
+            // Destroy existing charts
+            if (window.categoryCharts) {
+                Object.values(window.categoryCharts).forEach(chart => {
+                    if (chart) chart.destroy();
+                });
+            }
+            window.categoryCharts = {};
+            
+            // Support Category Chart
+            const categoryLabels = Object.keys(categoryStats).sort();
+            const categoryCounts = categoryLabels.map(cat => categoryStats[cat].total);
+            
+            const supportCategoryCtx = document.getElementById('supportCategoryChart');
+            if (supportCategoryCtx) {
+                window.categoryCharts.supportCategory = new Chart(supportCategoryCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: categoryLabels,
+                        datasets: [{
+                            label: 'Total Cases',
+                            data: categoryCounts,
+                            backgroundColor: '#0066cc'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: true, position: 'top' }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Cases'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Top 10 Features by Volume
+            const topFeatures = Object.entries(featureStats)
+                .sort((a, b) => b[1].total - a[1].total)
+                .slice(0, 10);
+            
+            const topFeaturesCtx = document.getElementById('topFeaturesChart');
+            if (topFeaturesCtx) {
+                window.categoryCharts.topFeatures = new Chart(topFeaturesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: topFeatures.map(f => f[0]),
+                        datasets: [{
+                            label: 'Total Cases',
+                            data: topFeatures.map(f => f[1].total),
+                            backgroundColor: '#00c853'
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+            
+            // Top 10 Features by SLA Violations
+            const topFeaturesSLA = Object.entries(featureStats)
+                .sort((a, b) => b[1].slaViolated - a[1].slaViolated)
+                .slice(0, 10);
+            
+            const topFeaturesSLACtx = document.getElementById('topFeaturesSLAChart');
+            if (topFeaturesSLACtx) {
+                window.categoryCharts.topFeaturesSLA = new Chart(topFeaturesSLACtx, {
+                    type: 'bar',
+                    data: {
+                        labels: topFeaturesSLA.map(f => f[0]),
+                        datasets: [{
+                            label: 'SLA Violations',
+                            data: topFeaturesSLA.map(f => f[1].slaViolated),
+                            backgroundColor: '#d32f2f'
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+            
+            // Category Performance Table
+            const categoryTableBody = document.getElementById('categoryPerformanceTableBody');
+            if (categoryTableBody) {
+                categoryTableBody.innerHTML = '';
+                
+                Object.keys(categoryStats).sort().forEach(category => {
+                    const stats = categoryStats[category];
+                    const slaCompliance = stats.total > 0 ? (((stats.total - stats.slaViolated) / stats.total) * 100).toFixed(1) : 100;
+                    const avgResolution = stats.total > 0 ? (stats.totalAgingDays / stats.total).toFixed(1) : 0;
+                    const topFeature = Object.entries(stats.features).sort((a, b) => b[1] - a[1])[0];
+                    
+                    const row = `
+                        <tr>
+                            <td><strong>${category}</strong></td>
+                            <td>${stats.total}</td>
+                            <td>${stats.closed}</td>
+                            <td>${stats.slaViolated}</td>
+                            <td><span class="badge ${parseFloat(slaCompliance) >= 90 ? 'bg-success' : parseFloat(slaCompliance) >= 80 ? 'bg-warning' : 'bg-danger'}">${slaCompliance}%</span></td>
+                            <td>${avgResolution} days</td>
+                            <td>${topFeature ? topFeature[0] : 'N/A'}</td>
+                        </tr>
+                    `;
+                    categoryTableBody.innerHTML += row;
+                });
+            }
+            
+            // Feature Performance Table
+            const featureTableBody = document.getElementById('featurePerformanceTableBody');
+            if (featureTableBody) {
+                featureTableBody.innerHTML = '';
+                
+                Object.keys(featureStats).sort().forEach(feature => {
+                    const stats = featureStats[feature];
+                    const slaCompliance = stats.total > 0 ? (((stats.total - stats.slaViolated) / stats.total) * 100).toFixed(1) : 100;
+                    const avgResolution = stats.total > 0 ? (stats.totalAgingDays / stats.total).toFixed(1) : 0;
+                    const topSubFeature = Object.entries(stats.subFeatures).sort((a, b) => b[1] - a[1])[0];
+                    
+                    const row = `
+                        <tr>
+                            <td><strong>${feature}</strong></td>
+                            <td>${stats.total}</td>
+                            <td>${stats.closed}</td>
+                            <td>${stats.slaViolated}</td>
+                            <td><span class="badge ${parseFloat(slaCompliance) >= 90 ? 'bg-success' : parseFloat(slaCompliance) >= 80 ? 'bg-warning' : 'bg-danger'}">${slaCompliance}%</span></td>
+                            <td>${avgResolution} days</td>
+                            <td>${topSubFeature ? topSubFeature[0] : 'N/A'}</td>
+                        </tr>
+                    `;
+                    featureTableBody.innerHTML += row;
+                });
+            }
+        }
+
+        function exportCategoryAnalysis() {
+            const categoryStats = {};
+            const featureStats = {};
+            
+            filteredData.forEach(d => {
+                const category = d.supportCategory || 'Uncategorized';
+                if (!categoryStats[category]) {
+                    categoryStats[category] = { total: 0, closed: 0, slaViolated: 0, totalAgingDays: 0 };
+                }
+                categoryStats[category].total++;
+                if (d.isClosed) categoryStats[category].closed++;
+                if (d.isSlaViolated) categoryStats[category].slaViolated++;
+                categoryStats[category].totalAgingDays += d.agingDays || 0;
+                
+                const feature = d.feature || 'N/A';
+                if (!featureStats[feature]) {
+                    featureStats[feature] = { total: 0, closed: 0, slaViolated: 0, totalAgingDays: 0 };
+                }
+                featureStats[feature].total++;
+                if (d.isClosed) featureStats[feature].closed++;
+                if (d.isSlaViolated) featureStats[feature].slaViolated++;
+                featureStats[feature].totalAgingDays += d.agingDays || 0;
+            });
+            
+            const exportData = [];
+            
+            // Category data
+            Object.keys(categoryStats).sort().forEach(category => {
+                const stats = categoryStats[category];
+                const slaCompliance = stats.total > 0 ? (((stats.total - stats.slaViolated) / stats.total) * 100).toFixed(1) : 100;
+                const avgResolution = stats.total > 0 ? (stats.totalAgingDays / stats.total).toFixed(1) : 0;
+                
+                exportData.push({
+                    'Type': 'Category',
+                    'Name': category,
+                    'Total Cases': stats.total,
+                    'Closed Cases': stats.closed,
+                    'SLA Violations': stats.slaViolated,
+                    'SLA Compliance %': slaCompliance,
+                    'Avg Resolution (Days)': avgResolution
+                });
+            });
+            
+            // Feature data
+            Object.keys(featureStats).sort().forEach(feature => {
+                const stats = featureStats[feature];
+                const slaCompliance = stats.total > 0 ? (((stats.total - stats.slaViolated) / stats.total) * 100).toFixed(1) : 100;
+                const avgResolution = stats.total > 0 ? (stats.totalAgingDays / stats.total).toFixed(1) : 0;
+                
+                exportData.push({
+                    'Type': 'Feature',
+                    'Name': feature,
+                    'Total Cases': stats.total,
+                    'Closed Cases': stats.closed,
+                    'SLA Violations': stats.slaViolated,
+                    'SLA Compliance %': slaCompliance,
+                    'Avg Resolution (Days)': avgResolution
+                });
+            });
+            
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Category_Analysis");
+            XLSX.writeFile(wb, `MSP_Category_Analysis_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+        }
+
         function exportCustomerPerformance() {
             const customerStats = {};
             
@@ -4603,6 +5931,8 @@
             const isDashboardView = document.getElementById('view-dashboard').classList.contains('show');
             const isPerformanceView = document.getElementById('view-performance').classList.contains('show');
             const isMonthlyView = document.getElementById('view-monthly').classList.contains('show');
+            const isMonthlyComparisonView = document.getElementById('view-monthly-comparison').classList.contains('show');
+            const isCategoryAnalysisView = document.getElementById('view-category-analysis').classList.contains('show');
             
             let elementId;
             let pdfName;
@@ -4616,6 +5946,12 @@
             } else if (isMonthlyView) {
                 elementId = 'view-monthly';
                 pdfName = 'Monthly_Performance';
+            } else if (isMonthlyComparisonView) {
+                elementId = 'view-monthly-comparison';
+                pdfName = 'Monthly_Performance_Comparison';
+            } else if (isCategoryAnalysisView) {
+                elementId = 'view-category-analysis';
+                pdfName = 'Category_Analysis';
             } else {
                 elementId = 'view-dashboard';
                 pdfName = 'Dashboard';
