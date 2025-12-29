@@ -1251,6 +1251,99 @@
                 grid-template-columns: 1fr;
             }
         }
+        
+        /* Print Button Styles */
+        .btn-print {
+            background: var(--success-color);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 8px;
+        }
+        
+        .btn-print:hover {
+            background: #00a844;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 200, 83, 0.3);
+        }
+        
+        .btn-print svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        /* Print Styles for A4 */
+        @media print {
+            body {
+                background: white !important;
+                font-size: 10pt;
+            }
+            
+            .navbar, .btn, .global-filters, .nav-tabs,
+            .btn-print, .pdf-download-btn, #clear-filters-btn,
+            button, .accordion-button {
+                display: none !important;
+            }
+            
+            .tab-content {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+            }
+            
+            .card {
+                page-break-inside: avoid;
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                margin-bottom: 10px !important;
+            }
+            
+            .kpi-card {
+                page-break-inside: avoid;
+            }
+            
+            .accordion-collapse {
+                display: block !important;
+                height: auto !important;
+            }
+            
+            .accordion-body {
+                page-break-inside: avoid;
+            }
+            
+            table {
+                page-break-inside: avoid;
+                font-size: 9pt !important;
+            }
+            
+            .kpi-section-title, h1, h2, h3, h4, h5, h6 {
+                page-break-after: avoid;
+            }
+            
+            .accordion-item {
+                page-break-inside: avoid;
+                border: none !important;
+                margin-bottom: 10px !important;
+            }
+            
+            canvas {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+            
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1301,6 +1394,41 @@
                                 </button>
                             </div>
                         </div>
+                        
+                        <!-- OR Divider -->
+                        <div class="d-flex align-items-center my-4">
+                            <hr class="flex-grow-1">
+                            <span class="px-3 text-muted fw-bold" style="font-size: 0.9rem;">OR</span>
+                            <hr class="flex-grow-1">
+                        </div>
+                        
+                        <!-- Repository File Selection -->
+                        <div class="text-center">
+                            <h6 class="mb-3" style="color: var(--primary-color); font-weight: 600;">
+                                <i class="bi bi-folder2-open me-2"></i>Select available data files
+                            </h6>
+                            <p class="text-muted small mb-3">Choose an Excel file from the repository to load</p>
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <select class="form-select form-select-lg mb-3" id="repository-file-select">
+                                        <option value="">-- Select an Excel file --</option>
+                                        <!-- Add your Excel file names from MSPData folder -->
+                                        <option value="MSPData/MSPMonthlyReview_2025.xlsx">MSP Monthly Review 2025</option>
+										<!-- Add more files as needed with MSPData/ prefix 
+                                        <option value="MSPData/MSPMonthlyReview_December2025.xlsx">MSP December 2025</option>
+                                        <option value="MSPData/MSPMonthlyReview_January2026.xlsx">MSP January 2026</option>
+                                        Add more files as needed with MSPData/ prefix -->
+                                    </select>
+                                    <button class="btn btn-lg btn-primary" id="load-repository-file-btn" disabled>
+                                        <i class="bi bi-check-circle me-2"></i>Load Selected File
+                                    </button>
+                                    <p class="text-muted small mt-3" id="repository-note">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        <span id="repo-status">Checking connection...</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1318,6 +1446,10 @@
                             <div>
                                 <button class="btn btn-sm btn-outline-danger" id="clear-filters-btn">
                                     <i class="bi bi-x-circle me-1"></i>Clear All
+                                </button>
+                                <button class="btn-print" onclick="window.print()">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                    Print Report
                                 </button>
                                 <button class="btn pdf-download-btn btn-sm" id="download-pdf-btn">
                                     <i class="bi bi-file-pdf me-1"></i> Download PDF
@@ -1667,28 +1799,6 @@
                                                 <div class="kpi-title">Subsequent SLA Miss</div>
                                                 <div class="kpi-value" id="kpi-sub-sla">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sub-sla-rec">No cases have breached the subsequent SLA threshold.</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item" id="accordion-section-6">
-                            <h2 class="accordion-header" id="headingSix">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-                                    <i class="bi bi-pause-circle me-2"></i>6. Idle Case Monitoring
-                                </button>
-                            </h2>
-                            <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix">
-                                <div class="accordion-body">
-                                    <div class="row g-2">
-                                        <div class="col-md-12">
-                                            <div class="kpi-card" id="kpi-idle-3-card">
-                                                <span class="kpi-status-tag bg-on-track" id="kpi-idle-3-tag">ON TRACK</span>
-                                                <div class="kpi-title">Idle > 2 Days</div>
-                                                <div class="kpi-value" id="kpi-idle-3">0</div>
-                                                <div class="kpi-recommendation" id="kpi-idle-3-rec">No critical cases idle for more than 3 days.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -2611,6 +2721,84 @@
                     handleFileUpload(e.target.files[0]);
                 }
             };
+            
+            // Repository file dropdown handler for GitHub Pages
+            const repositoryFileSelect = document.getElementById('repository-file-select');
+            const loadRepositoryFileBtn = document.getElementById('load-repository-file-btn');
+            const repoStatus = document.getElementById('repo-status');
+            
+            // Check if we're running on a web server (http/https) or locally (file://)
+            const isWebServer = window.location.protocol === 'http:' || window.location.protocol === 'https:';
+            
+            if (isWebServer) {
+                repoStatus.textContent = 'Repository connected - Select a file from dropdown';
+                repoStatus.style.color = 'var(--success-color)';
+            } else {
+                repoStatus.textContent = 'Local mode - Repository dropdown disabled. Use manual upload above.';
+                repoStatus.style.color = 'var(--warning-color)';
+                repositoryFileSelect.disabled = true;
+            }
+            
+            if (repositoryFileSelect && loadRepositoryFileBtn) {
+                // Enable/disable load button based on selection
+                repositoryFileSelect.addEventListener('change', function() {
+                    loadRepositoryFileBtn.disabled = !this.value || !isWebServer;
+                });
+                
+                // Load selected repository file
+                loadRepositoryFileBtn.addEventListener('click', function() {
+                    const filePath = repositoryFileSelect.value;
+                    if (!filePath) {
+                        alert('Please select a file from the dropdown.');
+                        return;
+                    }
+                    
+                    if (!isWebServer) {
+                        alert('Repository loading only works when hosted on a web server (like GitHub Pages).\nPlease use the manual upload option above.');
+                        return;
+                    }
+                    
+                    showLoading(true);
+                    repoStatus.textContent = 'Loading file...';
+                    
+                    // Fetch the file from the repository
+                    fetch(filePath)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`File not found: ${filePath}`);
+                            }
+                            return response.arrayBuffer();
+                        })
+                        .then(data => {
+                            const arr = new Uint8Array(data);
+                            const workbook = XLSX.read(arr, { type: 'array' });
+                            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                            rawData = XLSX.utils.sheet_to_json(firstSheet);
+                            
+                            if (rawData.length === 0) {
+                                throw new Error('The selected file is empty or has no valid data.');
+                            }
+                            
+                            // Show file info
+                            const fileName = filePath.split('/').pop();
+                            document.getElementById('file-name').textContent = fileName;
+                            document.getElementById('row-count').textContent = rawData.length + ' rows';
+                            document.getElementById('file-info').style.display = 'block';
+                            
+                            repoStatus.textContent = `✓ Loaded ${rawData.length} rows successfully`;
+                            repoStatus.style.color = 'var(--success-color)';
+                            
+                            showLoading(false);
+                        })
+                        .catch(error => {
+                            console.error('Error loading repository file:', error);
+                            repoStatus.textContent = '✗ Error loading file';
+                            repoStatus.style.color = 'var(--danger-color)';
+                            alert(`Error loading file: ${error.message}\n\nMake sure the file exists in the MSPData folder.`);
+                            showLoading(false);
+                        });
+                });
+            }
 
             document.getElementById('process-data-btn').onclick = processData;
             document.getElementById('clear-filters-btn').onclick = clearAllFilters;
@@ -3252,22 +3440,11 @@
             updateCard('kpi-sub-resp', subsequentRespMissed, subsequentRespRec);
             updateCard('kpi-sub-sla', subsequentSLAMiss, subsequentSLARec);
             
-            // Section 6: Idle Case Monitoring
-            const idle3Days = filteredData.filter(d => d.isIdle3).length;
-            
-            let idle3Rec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `Cases idle > 2 days: ${idle3Days}` };
-            if (idle3Days > 0) idle3Rec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: `${idle3Days} cases idle for more than 2 days.` };
-            if (idle3Days > 10) idle3Rec = { status: 'BELOW TARGET', tag: 'bg-below-target', rec: `CRITICAL: ${idle3Days} cases idle > 2 days.` };
-            
-            // Update Section 6 cards
-            updateCard('kpi-idle-3', idle3Days, idle3Rec);
-            
             updateSectionRAGStatus(1, [totalClosedRec, closedSRRec, closedINCRec, openTotalRec, openSRRec, openINCRec]);
             updateSectionRAGStatus(2, [overallSLARec, srSLAComplianceRec, incSLAComplianceRec, slaSRRec, slaINCRec, edocRec, subsequentSLARec, cpeCallsRec]);
             updateSectionRAGStatus(3, [fcrRec, incLess15Rec, incMore15Rec, srLess15Rec, srMore15Rec]);
             updateSectionRAGStatus(4, [emailFollowupRec, emailRespRec]);
             updateSectionRAGStatus(5, [subsequentRespRec, subsequentSLARec]);
-            updateSectionRAGStatus(6, [idle3Rec]);
             
             renderOwnerScorecard();
         }
