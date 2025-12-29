@@ -1405,7 +1405,7 @@
                         <!-- Repository File Selection -->
                         <div class="text-center">
                             <h6 class="mb-3" style="color: var(--primary-color); font-weight: 600;">
-                                <i class="bi bi-folder2-open me-2"></i>Select available data files
+                                <i class="bi bi-folder2-open me-2"></i>Select Data File from Repository
                             </h6>
                             <p class="text-muted small mb-3">Choose an Excel file from the repository to load</p>
                             <div class="row justify-content-center">
@@ -2773,22 +2773,24 @@
                             const arr = new Uint8Array(data);
                             const workbook = XLSX.read(arr, { type: 'array' });
                             const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                            rawData = XLSX.utils.sheet_to_json(firstSheet);
+                            const sheetData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
                             
-                            if (rawData.length === 0) {
+                            if (!sheetData || sheetData.length < 2) {
                                 throw new Error('The selected file is empty or has no valid data.');
                             }
                             
-                            // Show file info
+                            // Set file name for display
                             const fileName = filePath.split('/').pop();
                             document.getElementById('file-name').textContent = fileName;
-                            document.getElementById('row-count').textContent = rawData.length + ' rows';
                             document.getElementById('file-info').style.display = 'block';
                             
-                            repoStatus.textContent = `✓ Loaded ${rawData.length} rows successfully`;
-                            repoStatus.style.color = 'var(--success-color)';
+                            // Process data using the same function as manual upload
+                            repoStatus.textContent = `Processing ${sheetData.length - 1} rows...`;
                             
-                            showLoading(false);
+                            // Call processExcelData to transform the data (same as manual upload)
+                            processExcelData(sheetData);
+                            
+                            // The processExcelData function will handle everything and show dashboard automatically
                         })
                         .catch(error => {
                             console.error('Error loading repository file:', error);
