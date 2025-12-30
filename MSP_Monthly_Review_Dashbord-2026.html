@@ -111,6 +111,58 @@
             transform: translateY(-2px);
         }
         
+        /* NEW: Data load period info banner */
+        .data-load-info {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #7dd3fc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .data-load-info .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .data-load-info .info-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #0369a1;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .data-load-info .info-value {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #0c4a6e;
+            background: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .data-load-info .filter-status {
+            font-size: 0.7rem;
+            color: #0369a1;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .data-load-info .filter-status i {
+            font-size: 0.85rem;
+        }
+        
         .global-filters { 
             background: var(--card-background); 
             padding: 24px; 
@@ -120,6 +172,45 @@
             border: 1px solid var(--border-color);
             position: relative;
             overflow: hidden;
+        }
+        
+        .global-filters-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .global-filters-content.show {
+            max-height: 500px;
+            transition: max-height 0.4s ease-in;
+        }
+        
+        .filters-toggle-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filters-toggle-btn:hover {
+            background: #0052a3;
+            transform: translateY(-1px);
+        }
+        
+        .filters-toggle-btn i {
+            transition: transform 0.3s;
+        }
+        
+        .filters-toggle-btn.active i {
+            transform: rotate(180deg);
         }
         
         .global-filters::before {
@@ -1258,15 +1349,18 @@
             border: none;
             color: white;
             font-weight: 600;
-            padding: 8px 16px;
+            padding: 10px;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 1.1rem;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
             margin-left: 8px;
+            width: 38px;
+            height: 38px;
+            position: relative;
         }
         
         .btn-print:hover {
@@ -1280,7 +1374,82 @@
             height: 20px;
         }
         
-        /* Print Styles for A4 */
+        .pdf-download-btn {
+            background: var(--danger-color);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 8px;
+            width: 38px;
+            height: 38px;
+        }
+        
+        .pdf-download-btn:hover {
+            background: #b71c1c;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(211, 47, 47, 0.3);
+        }
+        
+        .btn-export-icon {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 8px;
+            width: 38px;
+            height: 38px;
+        }
+        
+        .btn-export-icon:hover {
+            background: #0052a3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 102, 204, 0.3);
+        }
+        
+        /* Tooltip for icon buttons */
+        .icon-btn-tooltip {
+            position: relative;
+        }
+        
+        .icon-btn-tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 6px 12px;
+            background: var(--dark-gray);
+            color: white;
+            font-size: 0.7rem;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        
+        .icon-btn-tooltip:hover::after {
+            opacity: 1;
+        }
+        
+        .btn-print Styles for A4 */
         @media print {
             body {
                 background: white !important;
@@ -1436,63 +1605,84 @@
 
         <div id="dashboard-section" style="display: none;">
             
+            <!-- NEW: Data Load Period Info Banner -->
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="data-load-info">
+                        <div class="info-item">
+                            <span class="info-label"><i class="bi bi-calendar-range"></i> Data Load Period:</span>
+                            <span class="info-value" id="dataLoadPeriod">Loading...</span>
+                        </div>
+                        <div class="filter-status" id="filterStatus">
+                            <i class="bi bi-funnel"></i>
+                            <span>Reviewing Over All Owners and Accounts/Customers</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- REMOVED: Time Period Selector Section -->
             
             <div class="row mb-3">
                 <div class="col-12">
                     <div class="global-filters">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="mb-0"><i class="bi bi-funnel-fill me-2" style="color: var(--primary-color);"></i>Global Filters</h6>
-                            <div>
+                            <div class="d-flex align-items-center gap-3">
+                                <h6 class="mb-0"><i class="bi bi-funnel-fill me-2" style="color: var(--primary-color);"></i>Global Filters</h6>
+                                <button class="filters-toggle-btn" id="filters-toggle-btn" onclick="toggleFilters()">
+                                    <i class="bi bi-chevron-down"></i>
+                                    <span id="filter-toggle-text">Show Filters</span>
+                                </button>
+                            </div>
+                            <div class="d-flex gap-2">
                                 <button class="btn btn-sm btn-outline-danger" id="clear-filters-btn">
                                     <i class="bi bi-x-circle me-1"></i>Clear All
                                 </button>
-                                <button class="btn-print" onclick="window.print()">
-                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                                    Print Report
+                                <button class="btn-print icon-btn-tooltip" onclick="window.print()" data-tooltip="Print Report">
+                                    <i class="bi bi-printer-fill"></i>
                                 </button>
-                                <button class="btn pdf-download-btn btn-sm" id="download-pdf-btn">
-                                    <i class="bi bi-file-pdf me-1"></i> Download PDF
+                                <button class="pdf-download-btn icon-btn-tooltip" id="download-pdf-btn" data-tooltip="Download PDF">
+                                    <i class="bi bi-file-pdf-fill"></i>
+                                </button>
+                                <button class="btn-export-icon icon-btn-tooltip" onclick="exportFullData()" data-tooltip="Export Data">
+                                    <i class="bi bi-download"></i>
                                 </button>
                             </div>
                         </div>
-                        <div class="row g-2">
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Owner</label>
-                                <select class="form-select form-select-sm" id="global-filter-owner">
-                                    <option value="">All Owners</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Submitted By</label>
-                                <select class="form-select form-select-sm" id="global-filter-submittedby">
-                                    <option value="">All Submitted By</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Service Type</label>
-                                <select class="form-select form-select-sm" id="global-filter-service">
-                                    <option value="">All Service Types</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Status</label>
-                                <select class="form-select form-select-sm" id="global-filter-status">
-                                    <option value="">All Statuses</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">SLA Status</label>
-                                <select class="form-select form-select-sm" id="global-filter-sla">
-                                    <option value="">All SLA Status</option>
-                                    <option value="Violated">SLA Violated</option>
-                                    <option value="Non-Violated">SLA Non-Violated</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-6 d-flex align-items-end">
-                                <button class="btn btn-sm btn-primary w-100" onclick="exportFullData()">
-                                    <i class="bi bi-download me-1"></i> Export
-                                </button>
+                        <div class="global-filters-content" id="global-filters-content">
+                            <div class="row g-2 mt-2">
+                                <div class="col-md-2 col-6">
+                                    <label class="form-label small fw-bold mb-1">Owner</label>
+                                    <select class="form-select form-select-sm" id="global-filter-owner">
+                                        <option value="">All Owners</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 col-6">
+                                    <label class="form-label small fw-bold mb-1">Submitted By</label>
+                                    <select class="form-select form-select-sm" id="global-filter-submittedby">
+                                        <option value="">All Submitted By</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 col-6">
+                                    <label class="form-label small fw-bold mb-1">Service Type</label>
+                                    <select class="form-select form-select-sm" id="global-filter-service">
+                                        <option value="">All Service Types</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 col-6">
+                                    <label class="form-label small fw-bold mb-1">Status</label>
+                                    <select class="form-select form-select-sm" id="global-filter-status">
+                                        <option value="">All Statuses</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 col-6">
+                                    <label class="form-label small fw-bold mb-1">SLA Status</label>
+                                    <select class="form-select form-select-sm" id="global-filter-sla">
+                                        <option value="">All SLA Status</option>
+                                        <option value="Violated">SLA Violated</option>
+                                        <option value="Non-Violated">SLA Non-Violated</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         
@@ -2205,6 +2395,7 @@
                                                     <th>Month</th>
                                                     <th>Logged Cases</th>
                                                     <th>Closed Cases</th>
+                                                    <th>Subsequent SLA Miss</th>
                                                     <th>SLA Compliance %</th>
                                                     <th>Avg Resolution (Days)</th>
                                                     <th>Performance Score</th>
@@ -3096,6 +3287,18 @@
             updateMonthlyComparison();
             updateCategoryAnalysis();
             
+            // Auto-hide filters after applying
+            const content = document.getElementById('global-filters-content');
+            const button = document.getElementById('filters-toggle-btn');
+            const buttonText = document.getElementById('filter-toggle-text');
+            if (content && content.classList.contains('show')) {
+                setTimeout(() => {
+                    content.classList.remove('show');
+                    button.classList.remove('active');
+                    buttonText.textContent = 'Show Filters';
+                }, 300);
+            }
+            
             showLoading(false);
         }
 
@@ -3237,6 +3440,85 @@
             
             renderKPIDashboard();
             renderPerformanceView();
+            updateDataLoadPeriod();
+            updateFilterStatus();
+        }
+
+        function updateDataLoadPeriod() {
+            const dates = rawData
+                .map(row => {
+                    // Get submission time from column - check various possible column names
+                    const submissionTime = row['Submission Time'] || row['Submission time'] || 
+                                         row['Created Date'] || row['Created Time'] || 
+                                         row['SubmissionTime'] || row['CreatedDate'];
+                    if (submissionTime && submissionTime !== '--' && submissionTime !== 'NULL') {
+                        const date = new Date(submissionTime);
+                        if (!isNaN(date.getTime())) {
+                            return date;
+                        }
+                    }
+                    return null;
+                })
+                .filter(d => d !== null)
+                .sort((a, b) => a - b);
+            
+            if (dates.length > 0) {
+                const minDate = dates[0];
+                const maxDate = dates[dates.length - 1];
+                
+                const formatDate = (date) => {
+                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    return `${monthNames[date.getMonth()]}-${date.getFullYear()}`;
+                };
+                
+                const periodText = `${formatDate(minDate)} to ${formatDate(maxDate)}`;
+                document.getElementById('dataLoadPeriod').textContent = periodText;
+            } else {
+                document.getElementById('dataLoadPeriod').textContent = 'No Date Range Available';
+            }
+        }
+
+        function updateFilterStatus() {
+            const ownerFilter = globalFilters.owner;
+            const submittedByFilter = globalFilters.submittedby;
+            const filterStatusElement = document.getElementById('filterStatus');
+            
+            let statusText = '';
+            
+            if (ownerFilter || submittedByFilter) {
+                const parts = [];
+                
+                if (ownerFilter) {
+                    parts.push(`Owner: <strong>${ownerFilter}</strong>`);
+                }
+                
+                if (submittedByFilter) {
+                    parts.push(`Account/Customer: <strong>${submittedByFilter}</strong>`);
+                }
+                
+                statusText = '<i class="bi bi-funnel-fill"></i> <span>Reviewing ' + parts.join(' | ') + '</span>';
+            } else {
+                statusText = '<i class="bi bi-funnel"></i> <span>Reviewing Over All Owners and Accounts/Customers</span>';
+            }
+            
+            filterStatusElement.innerHTML = statusText;
+        }
+
+        function toggleFilters() {
+            const content = document.getElementById('global-filters-content');
+            const button = document.getElementById('filters-toggle-btn');
+            const buttonText = document.getElementById('filter-toggle-text');
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                button.classList.remove('active');
+                buttonText.textContent = 'Show Filters';
+            } else {
+                content.classList.add('show');
+                button.classList.add('active');
+                buttonText.textContent = 'Hide Filters';
+            }
         }
 
         function renderKPIDashboard() {
@@ -5006,6 +5288,7 @@
                         loggedCases: 0,
                         closedCases: 0,
                         slaViolated: 0,
+                        subsequentSLA: 0,
                         totalAgingDays: 0,
                         incLogged: 0,
                         incClosed: 0,
@@ -5021,6 +5304,7 @@
                 stats.closedCases = monthlyDataClosed[monthKey]?.closedCases || 0;
                 
                 if (d.isSlaViolated) stats.slaViolated++;
+                if (d.isClosed && d.subsequentSLABreachCount > 0) stats.subsequentSLA++;
                 stats.totalAgingDays += d.agingDays || 0;
                 
                 // Track INC and SR separately
@@ -5076,11 +5360,18 @@
                 const slaCompliance = stats.total > 0 ? (((stats.total - stats.slaViolated) / stats.total) * 100).toFixed(1) : 100;
                 const avgResolution = stats.closedForPerformance > 0 ? (stats.totalAgingDays / stats.total).toFixed(1) : 0;
                 
-                // Calculate performance score (simplified)
+                // Calculate performance score with Subsequent SLA Miss penalty
                 let performanceScore = 0;
                 if (stats.total > 0) {
                     const closureRate = stats.total > 0 ? ((stats.closedForPerformance / stats.total) * 100) : 0;
+                    
+                    // Base score: SLA Compliance (60%) + Closure Rate (40%)
                     performanceScore = (parseFloat(slaCompliance) * 0.6) + (closureRate * 0.4);
+                    
+                    // Penalty for subsequent SLA misses: -1% per miss
+                    performanceScore -= (stats.subsequentSLA * 1);
+                    
+                    // Ensure score is between 0 and 100
                     performanceScore = Math.max(0, Math.min(100, performanceScore));
                 }
                 
@@ -5101,6 +5392,7 @@
                         <td><strong>${monthLabels[index]}</strong></td>
                         <td>${stats.loggedCases}</td>
                         <td>${stats.closedCases}</td>
+                        <td>${stats.subsequentSLA}</td>
                         <td><span class="badge ${parseFloat(slaCompliance) >= 90 ? 'bg-success' : parseFloat(slaCompliance) >= 80 ? 'bg-warning' : 'bg-danger'}">${slaCompliance}%</span></td>
                         <td>${avgResolution} days</td>
                         <td><strong style="color: ${performanceScore >= 80 ? 'var(--success-color)' : performanceScore >= 65 ? 'var(--warning-color)' : 'var(--danger-color)'}">${performanceScore.toFixed(1)}</strong></td>
@@ -5567,6 +5859,7 @@
                         loggedCases: 0,
                         closedCases: 0,
                         slaViolated: 0,
+                        subsequentSLA: 0,
                         totalAgingDays: 0,
                         incLogged: 0,
                         incClosed: 0,
@@ -5581,6 +5874,7 @@
                 stats.closedCases = monthlyDataClosed[monthKey]?.closedCases || 0;
                 
                 if (d.isSlaViolated) stats.slaViolated++;
+                if (d.isClosed && d.subsequentSLABreachCount > 0) stats.subsequentSLA++;
                 stats.totalAgingDays += d.agingDays || 0;
                 
                 if (d.isINC) {
@@ -5614,7 +5908,14 @@
                 let performanceScore = 0;
                 if (stats.total > 0) {
                     const closureRate = stats.total > 0 ? ((stats.closedCases / stats.loggedCases) * 100) : 0;
+                    
+                    // Base score: SLA Compliance (60%) + Closure Rate (40%)
                     performanceScore = (parseFloat(slaCompliance) * 0.6) + (closureRate * 0.4);
+                    
+                    // Penalty for subsequent SLA misses: -1% per miss
+                    performanceScore -= (stats.subsequentSLA * 1);
+                    
+                    // Ensure score is between 0 and 100
                     performanceScore = Math.max(0, Math.min(100, performanceScore));
                 }
                 
@@ -5622,6 +5923,7 @@
                     'Month': monthName,
                     'Logged Cases': stats.loggedCases,
                     'Closed Cases': stats.closedCases,
+                    'Subsequent SLA Miss': stats.subsequentSLA,
                     'SLA Compliance %': slaCompliance,
                     'Avg Resolution (Days)': avgResolution,
                     'SR Logged': stats.srLogged,
