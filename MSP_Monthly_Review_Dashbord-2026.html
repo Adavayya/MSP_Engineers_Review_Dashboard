@@ -1521,11 +1521,11 @@
             <div class="logo-container d-flex align-items-center">
                 <div class="navbar-brand">
                     <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="MSP Logo" style="height: 32px; margin-right: 12px;">
-                    <div class="brand-icon">
+                   <!--  <div class="brand-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                         </svg>
-                    </div>
+                    </div> -->
                     MSP Support - Monthly Performance Dashboard
                 </div>
             </div>
@@ -3386,9 +3386,12 @@
                     case 'kpi-open-inc': drillDownKey = 'openINC'; break;
                     
                     // Section 3: SLA Compliance
-                    case 'kpi-overall-sla': drillDownKey = 'totalOpen'; break;
+                    case 'kpi-overall-sla': drillDownKey = 'slaViolated'; break;
+                    case 'kpi-sr-sla-compliance': drillDownKey = 'slaSR'; break;
+                    case 'kpi-inc-sla-compliance': drillDownKey = 'slaINC'; break;
                     case 'kpi-sla-sr': drillDownKey = 'slaSR'; break;
                     case 'kpi-sla-inc': drillDownKey = 'slaINC'; break;
+                    case 'kpi-edoc': drillDownKey = 'edocBreach'; break;
                     case 'kpi-subsequent-sla': drillDownKey = 'subsequentSLA'; break;
                     case 'kpi-cpe-calls': drillDownKey = 'cpeCalls'; break;
                     
@@ -3796,11 +3799,17 @@
                     break;
                     
                 // Section 3
+                case 'slaViolated':
+                    drillDownData = filteredData.filter(d => d.isSlaViolated);
+                    break;
                 case 'slaSR':
                     drillDownData = filteredData.filter(d => d.isSR && d.isSlaViolated);
                     break;
                 case 'slaINC':
                     drillDownData = filteredData.filter(d => d.isINC && d.isSlaViolated);
+                    break;
+                case 'edocBreach':
+                    drillDownData = filteredData.filter(d => d.isEdocBreached);
                     break;
                 case 'subsequentSLA':
                     drillDownData = filteredData.filter(d => d.isClosed && d.subsequentSLABreachCount > 0);
@@ -3830,6 +3839,9 @@
                     break;
                     
                 // Compliance drilldowns
+                case 'aging15':
+                    drillDownData = filteredData.filter(d => d.isAging15Violated);
+                    break;
                 case 'slaCompliance':
                     drillDownData = filteredData.filter(d => d.isSlaViolated);
                     break;
@@ -4790,13 +4802,6 @@
                     </div>
                 </div>
                 <div class="stats-card">
-                    <div class="stats-title">Follow-up Compliance</div>
-                    <div class="stats-value">${metrics.followupComplianceRate}%</div>
-                    <div class="stats-change ${parseFloat(metrics.followupComplianceRate) >= 95 ? 'positive' : 'negative'}">
-                        ${parseFloat(metrics.followupComplianceRate) >= 95 ? '✓ On Track' : '✗ Behind Schedule'}
-                    </div>
-                </div>
-                <div class="stats-card">
                     <div class="stats-title">EDOC Compliance</div>
                     <div class="stats-value">${metrics.edocComplianceRate}%</div>
                     <div class="stats-change ${parseFloat(metrics.edocComplianceRate) >= 95 ? 'positive' : 'negative'}">
@@ -4840,16 +4845,6 @@
                     <div class="drilldown-item-title">Aging >15 Days</div>
                     <div class="drilldown-item-value">${metrics.agingViolated}</div>
                     <div class="drilldown-item-desc">Cases aging beyond 15 days</div>
-                </div>
-                <div class="drilldown-item" onclick="openComplianceDrillDown('email')">
-                    <div class="drilldown-item-title">Email Compliance Issues</div>
-                    <div class="drilldown-item-value">${metrics.emailViolated}</div>
-                    <div class="drilldown-item-desc">Email follow-up/response missed</div>
-                </div>
-                <div class="drilldown-item" onclick="openComplianceDrillDown('followup')">
-                    <div class="drilldown-item-title">Follow-up Missed</div>
-                    <div class="drilldown-item-value">${metrics.followupMissed}</div>
-                    <div class="drilldown-item-desc">Cases with missed follow-up dates</div>
                 </div>
                 <div class="drilldown-item" onclick="openComplianceDrillDown('edoc')">
                     <div class="drilldown-item-title">EDOC Breaches</div>
@@ -6375,8 +6370,63 @@
         }
         
         function downloadDashboardPDF() {
-            // PDF download implementation
-            alert("PDF download feature would be implemented here");
+            showLoading(true);
+            
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            
+            // Get the active tab content
+            const activeTab = document.querySelector('.tab-pane.active');
+            if (!activeTab) {
+                showLoading(false);
+                alert('No active view to export');
+                return;
+            }
+            
+            // Temporarily hide buttons and other non-printable elements
+            const elementsToHide = activeTab.querySelectorAll('.btn, button, .no-print');
+            elementsToHide.forEach(el => el.style.display = 'none');
+            
+            html2canvas(activeTab, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                width: activeTab.scrollWidth,
+                height: activeTab.scrollHeight
+            }).then(canvas => {
+                // Restore hidden elements
+                elementsToHide.forEach(el => el.style.display = '');
+                
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210; // A4 width in mm
+                const pageHeight = 297; // A4 height in mm
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                // Add new pages if content is longer than one page
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // Generate filename with current date
+                const filename = `MSP_Dashboard_${new Date().toLocaleDateString().replace(/\//g,'-')}.pdf`;
+                pdf.save(filename);
+                
+                showLoading(false);
+            }).catch(error => {
+                // Restore hidden elements in case of error
+                elementsToHide.forEach(el => el.style.display = '');
+                console.error('PDF generation error:', error);
+                alert('Error generating PDF. Please try again.');
+                showLoading(false);
+            });
         }
         
         function processData() {
