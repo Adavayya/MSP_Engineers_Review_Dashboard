@@ -206,13 +206,169 @@
             opacity: 0.8;
         }
 
+        /* New Year Popup Styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 24px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.5s ease-out;
+            color: white;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .popup-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .popup-emoji {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+
+        .popup-title {
+            font-size: 36px;
+            font-weight: 800;
+            margin: 0 0 15px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup-message {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        .popup-year {
+            font-size: 72px;
+            font-weight: 900;
+            margin: 20px 0;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to right, #fff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .popup-footer {
+            font-size: 14px;
+            margin-top: 20px;
+            opacity: 0.9;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffd700;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: scale(0.8) translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
         @media (max-width: 950px) {
             .dashboard-grid { grid-template-columns: 1fr; }
+            .popup-content {
+                padding: 40px 30px;
+            }
+            .popup-year {
+                font-size: 56px;
+            }
         }
     </style>
 </head>
 
 <body>
+
+<!-- New Year Popup -->
+<div class="popup-overlay active" id="newYearPopup">
+    <div class="popup-content">
+        <button class="popup-close" onclick="closePopup()">×</button>
+        <div class="popup-emoji">🎉</div>
+		        <div class="logo">
+            <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="SapphireIMS">
+        </div>
+        <h2 class="popup-title">Happy New Year!</h2>
+        <div class="popup-year">2026</div>
+        <p class="popup-message">
+            Wishing you and your family a year filled with success, growth, and exceptional achievements.
+            <br><br>
+            Let's make 2026 our best year yet! 🚀
+        </p>
+        <div class="popup-footer">
+            <strong>– MSP Team SapphireIMS</strong>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark Mode</button>
@@ -263,16 +419,16 @@
                     <li><b>Response Missed:</b> Initial acknowledgment or subsequent update breaches.</li>
                 </ul>
 
-                <span class="section-title">Today’s Focus & Learning</span>
+                <span class="section-title">Today's Focus & Learning</span>
                 <ul class="info-list">
                     <li><b>Top n Closures:</b> Priority closures before EOD.</li>
                     <li><b>Planned Follow-ups:</b> Ownership and timeline commitments.</li>
-                    <li><b>Improvement:</b> Yesterday’s misses and best practices shared.</li>
+                    <li><b>Improvement:</b> Yesterday's misses and best practices shared.</li>
                 </ul>
             </div>
 
             <div class="summary-box">
-                <b>Daily Summary:</b> “What’s open, what’s at risk, what must close today, and what we learned.”
+                <b>Daily Summary:</b> "What's open, what's at risk, what must close today, and what we learned."
             </div>
 
             <div class="action-area">
@@ -328,7 +484,7 @@
             </div>
 
             <div class="summary-box">
-                <b>Monthly Summary:</b> “How well we met SLAs, how efficiently we resolved issues, what customers felt, and what we will improve.”
+                <b>Monthly Summary:</b> "How well we met SLAs, how efficiently we resolved issues, what customers felt, and what we will improve."
             </div>
 
             <div class="action-area">
@@ -346,7 +502,25 @@
         <b>SapphireIMS MSP Review Portal</b> | Internal & Confidential
     </footer>
 </div>
+
 <script>
+    // Close popup function
+    function closePopup() {
+        document.getElementById('newYearPopup').classList.remove('active');
+    }
+
+    // Close popup when clicking outside
+    document.getElementById('newYearPopup').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closePopup();
+        }
+    });
+
+    // Show popup on every page load
+    window.addEventListener('load', function() {
+        document.getElementById('newYearPopup').classList.add('active');
+    });
+
     function toggleTheme() {
         const isDark = document.body.classList.toggle("dark");
         localStorage.setItem("theme", isDark ? "dark" : "light");
@@ -367,8 +541,6 @@
         localStorage.setItem("theme", "dark");
     }
 </script>
-
-
 
 </body>
 </html>
