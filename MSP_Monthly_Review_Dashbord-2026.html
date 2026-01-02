@@ -163,64 +163,105 @@
             font-size: 0.85rem;
         }
         
-        .global-filters { 
-            background: var(--card-background); 
-            padding: 24px; 
-            border-radius: var(--radius-lg); 
-            margin-bottom: 24px; 
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
-            position: relative;
-            overflow: hidden;
+        /* Side Panel Filters */
+        .filter-side-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: var(--card-background);
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+            transition: right 0.3s ease-in-out;
+            z-index: 1050;
+            overflow-y: auto;
+            border-left: 3px solid var(--primary-color);
         }
         
-        .global-filters-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
+        .filter-side-panel.open {
+            right: 0;
         }
         
-        .global-filters-content.show {
-            max-height: 500px;
-            transition: max-height 0.4s ease-in;
-        }
-        
-        .filters-toggle-btn {
-            background: var(--primary-color);
+        .filter-panel-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #0066cc 0%, #00b8d4 100%);
             color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .filter-panel-header h5 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .filter-panel-close {
+            background: transparent;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            color: white;
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.2s;
         }
         
-        .filters-toggle-btn:hover {
-            background: #0052a3;
-            transform: translateY(-1px);
+        .filter-panel-close:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
         
-        .filters-toggle-btn i {
-            transition: transform 0.3s;
+        .filter-panel-body {
+            padding: 20px;
         }
         
-        .filters-toggle-btn.active i {
-            transform: rotate(180deg);
+        .filter-toggle-fab {
+            position: fixed;
+            right: 20px;
+            top: 80px;
+            width: 44px;
+            height: 44px;
+            background: #1a202c;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            z-index: 1040;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .global-filters::before {
-            content: '';
-            position: absolute;
+        .filter-toggle-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.4);
+            background: #2d3748;
+        }
+        
+        .filter-panel-overlay {
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1045;
+            display: none;
+            transition: opacity 0.3s;
+        }
+        
+        .filter-panel-overlay.show {
+            display: block;
         }
         
         .filter-label {
@@ -2004,13 +2045,26 @@
             <div class="row mb-3">
                 <div class="col-12">
                     <div class="data-load-info">
-                        <div class="info-item">
-                            <span class="info-label"><i class="bi bi-calendar-range"></i> Data Load Period:</span>
-                            <span class="info-value" id="dataLoadPeriod">Loading...</span>
+                        <div class="d-flex align-items-center gap-4 flex-wrap">
+                            <div class="info-item">
+                                <span class="info-label"><i class="bi bi-calendar-range"></i> Data Load Period:</span>
+                                <span class="info-value" id="dataLoadPeriod">Loading...</span>
+                            </div>
+                            <div class="filter-status" id="filterStatus">
+                                <i class="bi bi-funnel"></i>
+                                <span>Reviewing Over All Owners and Accounts/Customers</span>
+                            </div>
                         </div>
-                        <div class="filter-status" id="filterStatus">
-                            <i class="bi bi-funnel"></i>
-                            <span>Reviewing Over All Owners and Accounts/Customers</span>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-primary" onclick="window.print()" title="Print Report">
+                                <i class="bi bi-printer-fill me-1"></i>Print Report
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary" id="download-pdf-btn-banner" title="Download PDF">
+                                <i class="bi bi-file-pdf-fill me-1"></i>Download PDF
+                            </button>
+                            <button class="btn btn-sm btn-outline-success" onclick="exportFullData()" title="Export Data">
+                                <i class="bi bi-download me-1"></i>Export Excel
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -2018,78 +2072,75 @@
             
             <!-- REMOVED: Time Period Selector Section -->
             
-            <div class="row mb-3">
-                <div class="col-12">
-                    <div class="global-filters">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <div class="d-flex align-items-center gap-3">
-                                <h6 class="mb-0"><i class="bi bi-funnel-fill me-2" style="color: var(--primary-color);"></i>Global Filters</h6>
-                                <button class="filters-toggle-btn" id="filters-toggle-btn" onclick="toggleFilters()">
-                                    <i class="bi bi-chevron-down"></i>
-                                    <span id="filter-toggle-text">Show Filters</span>
-                                </button>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-sm btn-outline-danger" id="clear-filters-btn">
-                                    <i class="bi bi-x-circle me-1"></i>Clear All
-                                </button>
-                                <button class="btn-print icon-btn-tooltip" onclick="window.print()" data-tooltip="Print Report">
-                                    <i class="bi bi-printer-fill"></i>
-                                </button>
-                                <button class="pdf-download-btn icon-btn-tooltip" id="download-pdf-btn" data-tooltip="Download PDF">
-                                    <i class="bi bi-file-pdf-fill"></i>
-                                </button>
-                                <button class="btn-export-icon icon-btn-tooltip" onclick="exportFullData()" data-tooltip="Export Data">
-                                    <i class="bi bi-download"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="global-filters-content" id="global-filters-content">
-                            <div class="row g-2 mt-2">
-                                <div class="col-md-2 col-6">
-                                    <label class="form-label small fw-bold mb-1">Owner</label>
-                                    <select class="form-select form-select-sm" id="global-filter-owner">
-                                        <option value="">All Owners</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 col-6">
-                                    <label class="form-label small fw-bold mb-1">Submitted By</label>
-                                    <select class="form-select form-select-sm" id="global-filter-submittedby">
-                                        <option value="">All Submitted By</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 col-6">
-                                    <label class="form-label small fw-bold mb-1">Service Type</label>
-                                    <select class="form-select form-select-sm" id="global-filter-service">
-                                        <option value="">All Service Types</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 col-6">
-                                    <label class="form-label small fw-bold mb-1">Status</label>
-                                    <select class="form-select form-select-sm" id="global-filter-status">
-                                        <option value="">All Statuses</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 col-6">
-                                    <label class="form-label small fw-bold mb-1">SLA Status</label>
-                                    <select class="form-select form-select-sm" id="global-filter-sla">
-                                        <option value="">All SLA Status</option>
-                                        <option value="Violated">SLA Violated</option>
-                                        <option value="Non-Violated">SLA Non-Violated</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="filter-tags" id="active-filters-tags" style="display: none;">
-                            <!-- Active filter tags will appear here -->
-                        </div>
-                        
-                        <div class="mt-2 small text-muted">
-                            <i class="bi bi-info-circle me-1"></i>
-                            <span id="active-filters-count">0 filters active</span> | 
-                            <span id="filtered-cases-count">Showing 0 of 0 cases</span>
-                        </div>
+            <!-- Filter Toggle FAB Button -->
+            <button class="filter-toggle-fab" id="filter-toggle-fab" onclick="toggleFilterPanel()">
+                <i class="bi bi-funnel-fill"></i>
+            </button>
+            
+            <!-- Filter Panel Overlay -->
+            <div class="filter-panel-overlay" id="filter-panel-overlay" onclick="toggleFilterPanel()"></div>
+            
+            <!-- Side Filter Panel -->
+            <div class="filter-side-panel" id="filter-side-panel">
+                <div class="filter-panel-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5><i class="bi bi-funnel-fill me-2"></i>Global Filters</h5>
+                        <button class="filter-panel-close" onclick="toggleFilterPanel()">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="filter-panel-body">
+                    <div class="mb-3">
+                        <label class="filter-label">Owner</label>
+                        <select class="form-select form-select-sm" id="global-filter-owner">
+                            <option value="">All Owners</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-label">Submitted By</label>
+                        <select class="form-select form-select-sm" id="global-filter-submittedby">
+                            <option value="">All Submitted By</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-label">Service Type</label>
+                        <select class="form-select form-select-sm" id="global-filter-service">
+                            <option value="">All Service Types</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-label">Status</label>
+                        <select class="form-select form-select-sm" id="global-filter-status">
+                            <option value="">All Statuses</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-label">SLA Status</label>
+                        <select class="form-select form-select-sm" id="global-filter-sla">
+                            <option value="">All SLA Status</option>
+                            <option value="Violated">SLA Violated</option>
+                            <option value="Non-Violated">SLA Non-Violated</option>
+                        </select>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="d-flex flex-column gap-2">
+                        <button class="btn btn-sm btn-outline-danger w-100" id="clear-filters-btn">
+                            <i class="bi bi-x-circle me-1"></i>Clear All Filters
+                        </button>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="filter-tags" id="active-filters-tags" style="display: none;">
+                        <!-- Active filter tags will appear here -->
+                    </div>
+                    
+                    <div class="mt-3 small text-muted">
+                        <div><i class="bi bi-info-circle me-1"></i><span id="active-filters-count">0 filters active</span></div>
+                        <div class="mt-1"><span id="filtered-cases-count">Showing 0 of 0 cases</span></div>
                     </div>
                 </div>
             </div>
@@ -2486,7 +2537,7 @@
                                                             <th>Total Cases</th>
                                                             <th>Closed Cases</th>
                                                             <th>SLA Compliance</th>
-                                                            <th>Avg Resolution Time</th>
+                                                            <th>Avg Resolution Days - 24/7</th>
                                                             <th>FCR Rate</th>
                                                             <th>CPE Calls</th>
                                                         </tr>
@@ -2523,7 +2574,7 @@
                                                             <th>Closed Cases</th>
                                                             <th>SLA Compliance</th>
                                                             <th>FCR</th>
-                                                            <th>Avg Resolution Time (Days)</th>
+                                                            <th>Avg Resolution Days - 24/7</th>
                                                             <th>Subsequent SLA Miss</th>
                                                             <th>CPE Calls</th>
                                                             <th>Performance Score</th>
@@ -2797,7 +2848,7 @@
                                                     <th>Closed Cases</th>
                                                     <th>Subsequent SLA Miss</th>
                                                     <th>SLA Compliance %</th>
-                                                    <th>Avg Resolution (Days)</th>
+                                                    <th>Avg Resolution Days - 24/7</th>
                                                     <th>Performance Score</th>
                                                 </tr>
                                             </thead>
@@ -3596,7 +3647,13 @@
 
             document.getElementById('process-data-btn').onclick = processData;
             document.getElementById('clear-filters-btn').onclick = clearAllFilters;
-            document.getElementById('download-pdf-btn').onclick = downloadDashboardPDF;
+            
+            // Wire up PDF download buttons (both in banner and side panel if present)
+            const pdfBtnBanner = document.getElementById('download-pdf-btn-banner');
+            if (pdfBtnBanner) pdfBtnBanner.onclick = downloadDashboardPDF;
+            
+            const pdfBtnPanel = document.getElementById('download-pdf-btn');
+            if (pdfBtnPanel) pdfBtnPanel.onclick = downloadDashboardPDF;
 
             // Set up filter event listeners
             document.getElementById('global-filter-service').addEventListener('change', updateGlobalFilters);
@@ -4171,19 +4228,16 @@
             filterStatusElement.innerHTML = statusText;
         }
 
-        function toggleFilters() {
-            const content = document.getElementById('global-filters-content');
-            const button = document.getElementById('filters-toggle-btn');
-            const buttonText = document.getElementById('filter-toggle-text');
+        function toggleFilterPanel() {
+            const panel = document.getElementById('filter-side-panel');
+            const overlay = document.getElementById('filter-panel-overlay');
             
-            if (content.classList.contains('show')) {
-                content.classList.remove('show');
-                button.classList.remove('active');
-                buttonText.textContent = 'Show Filters';
+            if (panel.classList.contains('open')) {
+                panel.classList.remove('open');
+                overlay.classList.remove('show');
             } else {
-                content.classList.add('show');
-                button.classList.add('active');
-                buttonText.textContent = 'Hide Filters';
+                panel.classList.add('open');
+                overlay.classList.add('show');
             }
         }
 
@@ -4742,7 +4796,7 @@
                         total: 0,
                         closed: 0,
                         slaViolated: 0,
-                        totalAging: 0,
+                        tat247Values: [],
                         fcr: 0,
                         cpeCalls: 0
                     };
@@ -4750,7 +4804,7 @@
                 customerStats[d.submittedBy].total++;
                 if(d.isClosed) {
                     customerStats[d.submittedBy].closed++;
-                    customerStats[d.submittedBy].totalAging += d.agingDays;
+                    customerStats[d.submittedBy].tat247Values.push(parseFloat(d.tat247) || 0);
                     if(d.agingDays < 2) customerStats[d.submittedBy].fcr++;
                 }
                 if(d.isSlaViolated) customerStats[d.submittedBy].slaViolated++;
@@ -4764,7 +4818,7 @@
             const customerRows = Object.keys(customerStats).sort().map(customer => {
                 const stats = customerStats[customer];
                 const slaCompliance = stats.total > 0 ? (((stats.total - stats.slaViolated) / stats.total) * 100).toFixed(1) : 100;
-                const avgResolutionTime = stats.closed > 0 ? (stats.totalAging / stats.closed).toFixed(1) : 0;
+                const avgResolutionTime = stats.tat247Values.length > 0 ? (stats.tat247Values.reduce((a, b) => a + b, 0) / stats.tat247Values.length).toFixed(1) : 0;
                 const fcrRate = stats.closed > 0 ? ((stats.fcr / stats.closed) * 100).toFixed(1) : 0;
                 
                 return `
@@ -4796,11 +4850,11 @@
                         fcr: 0,
                         subsequentSLA: 0,
                         cpeCalls: 0,
-                        totalAgingDays: 0
+                        tat247Values: []
                     };
                 }
                 engineerStats[d.owner].total++;
-                engineerStats[d.owner].totalAgingDays += parseFloat(d.agingDays) || 0;
+                engineerStats[d.owner].tat247Values.push(parseFloat(d.tat247) || 0);
                 if(d.isClosed) {
                     engineerStats[d.owner].closed++;
                     if(d.agingDays < 2) engineerStats[d.owner].fcr++;
@@ -4818,7 +4872,7 @@
                 const stats = engineerStats[engineer];
                 const slaCompliance = stats.total > 0 ? (((stats.total - stats.slaViolated) / stats.total) * 100).toFixed(1) : 100;
                 const fcrRate = stats.closed > 0 ? ((stats.fcr / stats.closed) * 100).toFixed(1) : 0;
-                const avgResolutionTime = stats.total > 0 ? (stats.totalAgingDays / stats.total).toFixed(1) : 0;
+                const avgResolutionTime = stats.tat247Values.length > 0 ? (stats.tat247Values.reduce((a, b) => a + b, 0) / stats.tat247Values.length).toFixed(1) : 0;
                 
                 // Calculate performance score (0-100)
                 let performanceScore = 0;
@@ -6074,7 +6128,7 @@
                         <td>${stats.closedCases}</td>
                         <td>${stats.subsequentSLA}</td>
                         <td><span class="badge ${parseFloat(slaCompliance) >= 90 ? 'bg-success' : parseFloat(slaCompliance) >= 80 ? 'bg-warning' : 'bg-danger'}">${slaCompliance}%</span></td>
-                        <td>${avgResolution} days</td>
+                        <td>${avg247} days</td>
                         <td><strong style="color: ${performanceScore >= 80 ? 'var(--success-color)' : performanceScore >= 65 ? 'var(--warning-color)' : 'var(--danger-color)'}">${performanceScore.toFixed(1)}</strong></td>
                     </tr>
                 `;
@@ -6991,7 +7045,7 @@
                     'Total Cases': stats.total,
                     'Closed Cases': stats.closed,
                     'SLA Compliance': slaCompliance + '%',
-                    'Avg Resolution Time (Days)': avgResolutionTime,
+                    'Avg Resolution Days - 24/7': avgResolutionTime,
                     'FCR Rate': fcrRate + '%',
                     'CPE Calls': stats.cpeCalls
                 };
@@ -7068,7 +7122,7 @@
                     'Closed Cases': stats.closed,
                     'SLA Compliance': slaCompliance + '%',
                     'FCR Rate': fcrRate + '%',
-                    'Avg Resolution Time (Days)': avgResolutionTime,
+                    'Avg Resolution Days - 24/7': avgResolutionTime,
                     'Subsequent SLA Miss': stats.subsequentSLA,
                     'CPE Calls': stats.cpeCalls,
                     'Performance Score': performanceScore.toFixed(1)
@@ -7093,61 +7147,137 @@
         function downloadDashboardPDF() {
             showLoading(true);
             
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            
-            // Get the active tab content
-            const activeTab = document.querySelector('.tab-pane.active');
-            if (!activeTab) {
-                showLoading(false);
-                alert('No active view to export');
-                return;
-            }
-            
-            // Temporarily hide buttons and other non-printable elements
-            const elementsToHide = activeTab.querySelectorAll('.btn, button, .no-print');
-            elementsToHide.forEach(el => el.style.display = 'none');
-            
-            html2canvas(activeTab, {
-                scale: 2,
-                useCORS: true,
-                logging: false,
-                width: activeTab.scrollWidth,
-                height: activeTab.scrollHeight
-            }).then(canvas => {
-                // Restore hidden elements
-                elementsToHide.forEach(el => el.style.display = '');
-                
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 210; // A4 width in mm
-                const pageHeight = 297; // A4 height in mm
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                let heightLeft = imgHeight;
-                let position = 0;
-                
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-                
-                // Add new pages if content is longer than one page
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
+            try {
+                const { jsPDF } = window.jspdf;
+                if (!jsPDF) {
+                    throw new Error('jsPDF library not loaded');
                 }
                 
-                // Generate filename with current date
-                const filename = `MSP_Dashboard_${new Date().toLocaleDateString().replace(/\//g,'-')}.pdf`;
-                pdf.save(filename);
+                const pdf = new jsPDF('p', 'mm', 'a4');
                 
-                showLoading(false);
-            }).catch(error => {
-                // Restore hidden elements in case of error
-                elementsToHide.forEach(el => el.style.display = '');
-                console.error('PDF generation error:', error);
+                // Get the active tab content
+                const activeTab = document.querySelector('.tab-pane.active');
+                if (!activeTab) {
+                    showLoading(false);
+                    alert('No active view to export');
+                    return;
+                }
+                
+                // Get the tab name for the title
+                const activeTabButton = document.querySelector('.nav-link.active');
+                const tabName = activeTabButton ? activeTabButton.textContent.trim() : 'Dashboard';
+                
+                // Clone the active tab to avoid modifying the original
+                const clonedTab = activeTab.cloneNode(true);
+                
+                // Make all nested tab content visible for PDF (remove fade/show classes)
+                const nestedTabPanes = clonedTab.querySelectorAll('.tab-pane');
+                nestedTabPanes.forEach(pane => {
+                    pane.classList.remove('fade');
+                    pane.classList.add('show', 'active');
+                    pane.style.display = 'block';
+                    pane.style.opacity = '1';
+                });
+                
+                // Make all accordion content visible
+                const accordionCollapses = clonedTab.querySelectorAll('.accordion-collapse');
+                accordionCollapses.forEach(collapse => {
+                    collapse.classList.add('show');
+                    collapse.style.display = 'block';
+                });
+                
+                // Remove all buttons and interactive elements from clone
+                const elementsToRemove = clonedTab.querySelectorAll('.btn, button, .no-print, input, select');
+                elementsToRemove.forEach(el => el.remove());
+                
+                // Temporarily add clone to document for rendering
+                clonedTab.style.position = 'absolute';
+                clonedTab.style.left = '-9999px';
+                clonedTab.style.width = '1200px';
+                clonedTab.style.background = 'white';
+                clonedTab.style.padding = '20px';
+                clonedTab.style.overflow = 'visible';
+                clonedTab.style.height = 'auto';
+                document.body.appendChild(clonedTab);
+                
+                // Give browser time to render all content
+                setTimeout(() => {
+                    // Use html2canvas to capture the content
+                    html2canvas(clonedTab, {
+                        scale: 1.5,
+                        useCORS: true,
+                        logging: false,
+                        backgroundColor: '#ffffff',
+                        width: clonedTab.scrollWidth,
+                        height: clonedTab.scrollHeight,
+                        windowWidth: clonedTab.scrollWidth,
+                        windowHeight: clonedTab.scrollHeight
+                    }).then(canvas => {
+                        // Remove the cloned element
+                        document.body.removeChild(clonedTab);
+                        
+                        const imgData = canvas.toDataURL('image/png');
+                        const imgWidth = 190; // Leave margins
+                        const pageHeight = 277; // A4 height minus margins
+                        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                        
+                        // Add header with logo and title on first page
+                        pdf.setFillColor(0, 102, 204);
+                        pdf.rect(0, 0, 210, 25, 'F');
+                        
+                        pdf.setTextColor(255, 255, 255);
+                        pdf.setFontSize(20);
+                        pdf.setFont('helvetica', 'bold');
+                        pdf.text('MSP Support Dashboard', 105, 12, { align: 'center' });
+                        
+                        pdf.setFontSize(12);
+                        pdf.setFont('helvetica', 'normal');
+                        pdf.text(tabName, 105, 19, { align: 'center' });
+                        
+                        let heightLeft = imgHeight;
+                        let position = 30; // Start below header
+                        
+                        // Add first page content
+                        if (heightLeft + position > pageHeight) {
+                            // Content is taller than one page
+                            const firstPageHeight = pageHeight - position;
+                            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                            heightLeft -= (pageHeight - position);
+                            
+                            // Add subsequent pages
+                            while (heightLeft > 0) {
+                                pdf.addPage();
+                                position = heightLeft - imgHeight + 10;
+                                pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                                heightLeft -= pageHeight;
+                            }
+                        } else {
+                            // Content fits in one page
+                            pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+                        }
+                        
+                        // Generate filename with current date and tab name
+                        const dateStr = new Date().toLocaleDateString().replace(/\//g,'-');
+                        const sanitizedTabName = tabName.replace(/[^a-z0-9]/gi, '_');
+                        const filename = `MSP_${sanitizedTabName}_${dateStr}.pdf`;
+                        pdf.save(filename);
+                        
+                        showLoading(false);
+                    }).catch(error => {
+                        // Clean up clone if still exists
+                        if (document.body.contains(clonedTab)) {
+                            document.body.removeChild(clonedTab);
+                        }
+                        console.error('PDF generation error:', error);
+                        alert('Error generating PDF. Please try again.');
+                        showLoading(false);
+                    });
+                }, 500); // Give time for content to render
+            } catch(error) {
+                console.error('PDF setup error:', error);
                 alert('Error generating PDF. Please try again.');
                 showLoading(false);
-            });
+            }
         }
         
         function processData() {
