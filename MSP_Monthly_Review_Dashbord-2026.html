@@ -1449,6 +1449,290 @@
             opacity: 1;
         }
         
+        /* Monthly Accounts Review - A4 Report Styles */
+        .mar-report-sheet {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Centered Title Section */
+        .mar-title-section {
+            text-align: center;
+            padding: 30px 45px 20px 45px;
+            border-bottom: 2px solid #0f172a;
+            flex-shrink: 0;
+        }
+
+        .mar-main-title {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        /* First Banner: Logo and Report Period */
+        .mar-top-banner {
+            padding: 25px 45px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to right, #f8fafc, #ffffff);
+            border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .mar-logo img {
+            height: 48px;
+        }
+
+        .mar-report-period {
+            text-align: right;
+        }
+
+        .mar-period-label {
+            font-size: 10px;
+            font-weight: 800;
+            color: #64748b;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .mar-period-value {
+            background: #0f172a;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        /* Second Banner: Customer Name and TAM */
+        .mar-customer-banner {
+            padding: 25px 45px 20px 45px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .mar-customer-name {
+            margin: 0 0 10px 0;
+            font-size: 26px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }
+
+        .mar-tam-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e293b;
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+
+        .mar-kpi-grid {
+            padding: 30px 45px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .mar-kpi-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .mar-kpi-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .mar-kpi-value {
+            font-size: 30px;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1;
+        }
+
+        .mar-kpi-sub {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .mar-kpi-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
+            opacity: 0.1;
+        }
+
+        .mar-content-grid {
+            padding: 10px 45px 20px 45px;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 30px;
+            flex-shrink: 0;
+        }
+
+        .mar-section-header {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mar-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 12px;
+        }
+
+        .mar-table th {
+            background: #f8fafc;
+            padding: 12px;
+            text-align: left;
+            font-weight: 700;
+            color: #64748b;
+            border-bottom: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .mar-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .mar-table th:last-child,
+        .mar-table td:last-child {
+            border-right: none;
+        }
+
+        .mar-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .mar-num {
+            text-align: right;
+            font-feature-settings: "tnum";
+            font-weight: 700;
+        }
+
+        .mar-row-total td {
+            background: #f1f5f9;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        /* Charts Section */
+        .mar-charts-section {
+            padding: 20px 45px;
+            flex-shrink: 0;
+        }
+
+        .mar-chart-box {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .mar-chart-container {
+            height: 250px;
+            position: relative;
+        }
+
+        .mar-open-cases-grid {
+            padding: 20px 45px 30px 45px;
+            flex-shrink: 0;
+        }
+
+        .mar-open-cases-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .mar-bottom-section {
+            padding: 0 45px 30px 45px;
+            flex-shrink: 0;
+            margin-top: auto;
+        }
+
+        .mar-footer {
+            text-align: center;
+            border-top: 2px solid #0f172a;
+            padding-top: 20px;
+            color: #0f172a;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* SLA Status Colors */
+        #mar-card-sla.border-success {
+            border-top: 4px solid #10b981;
+        }
+
+        #mar-card-sla.border-warning {
+            border-top: 4px solid #f59e0b;
+        }
+
+        #mar-card-sla.border-danger {
+            border-top: 4px solid #ef4444;
+        }
+
+        .txt-success {
+            color: #10b981;
+        }
+
+        .txt-warning {
+            color: #f59e0b;
+        }
+
+        .txt-danger {
+            color: #ef4444;
+        }
+        
         .btn-print Styles for A4 */
         @media print {
             body {
@@ -1508,9 +1792,120 @@
                 height: auto !important;
             }
             
+            /* Monthly Accounts Review Print Styles */
+            .no-print {
+                display: none !important;
+            }
+            
+            /* Hide all dashboard elements when printing Monthly Accounts Review */
+            body.printing-mar .navbar,
+            body.printing-mar .global-filters,
+            body.printing-mar .nav-tabs,
+            body.printing-mar .data-load-info,
+            body.printing-mar .active-filters-container {
+                display: none !important;
+            }
+            
+            body.printing-mar .tab-content {
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            .mar-report-sheet {
+                box-shadow: none !important;
+                width: 100% !important;
+                height: auto !important;
+                margin: 0 !important;
+                page-break-after: always;
+            }
+            
+            .mar-title-section {
+                padding: 20px 40px 15px 40px !important;
+                page-break-after: avoid;
+            }
+            
+            .mar-top-banner {
+                padding: 20px 40px !important;
+                page-break-after: avoid;
+            }
+            
+            .mar-customer-banner {
+                padding: 20px 40px 15px 40px !important;
+                page-break-after: avoid;
+            }
+            
+            .mar-kpi-grid {
+                padding: 25px 40px !important;
+                gap: 15px !important;
+                page-break-inside: avoid;
+            }
+            
+            .mar-content-grid {
+                padding: 10px 40px 15px 40px !important;
+                page-break-inside: avoid;
+            }
+            
+            .mar-charts-section {
+                padding: 15px 40px !important;
+                page-break-inside: avoid;
+            }
+            
+            .mar-open-cases-grid {
+                padding: 15px 40px 20px 40px !important;
+                page-break-inside: avoid;
+            }
+            
+            .mar-bottom-section {
+                padding: 15px 40px 20px 40px !important;
+                margin-top: auto;
+            }
+            
+            .mar-table td,
+            .mar-table th {
+                padding: 10px 12px !important;
+            }
+            
+            .mar-period-value {
+                background-color: #0f172a !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .mar-row-total td {
+                background-color: #f1f5f9 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            #mar-card-sla.border-success,
+            #mar-card-sla.border-warning,
+            #mar-card-sla.border-danger {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .mar-title-section {
+                border-bottom-color: #0f172a !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .mar-footer {
+                border-top-color: #0f172a !important;
+                color: #0f172a !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .mar-chart-container canvas {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+            
             @page {
                 size: A4;
-                margin: 15mm;
+                margin: 10mm;
             }
         }
     </style>
@@ -1723,6 +2118,11 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="view-category-analysis-tab" data-bs-toggle="tab" data-bs-target="#view-category-analysis" type="button" role="tab">
                         <i class="bi bi-tags-fill me-2"></i>Category Analysis
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="view-monthly-accounts-tab" data-bs-toggle="tab" data-bs-target="#view-monthly-accounts" type="button" role="tab">
+                        <i class="bi bi-file-earmark-text me-2"></i>Monthly Accounts Review
                     </button>
                 </li>
             </ul>
@@ -2358,7 +2758,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
-                                        <i class="bi bi-hourglass-split me-2"></i>#5 - Average Resolution Trend
+                                        <i class="bi bi-hourglass-split me-2"></i>#5 - Average Resolution Trend (Days)
                                     </h6>
                                     <div class="chart-container" style="height: 300px;">
                                         <canvas id="avgResolutionTrendChart"></canvas>
@@ -2534,6 +2934,253 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Monthly Accounts Review Tab Content - NEW SECTION -->
+                <div class="tab-pane fade" id="view-monthly-accounts" role="tabpanel">
+                    
+                    <!-- Print Button Bar -->
+                    <div class="d-flex justify-content-end mb-3 no-print">
+                        <button class="btn btn-primary" onclick="printMonthlyAccountsReport()">
+                            <i class="bi bi-printer me-2"></i>Print Report
+                        </button>
+                    </div>
+
+                    <!-- A4 Report Sheet -->
+                    <div class="mar-report-sheet" id="marReportSheet">
+                        
+                        <!-- Centered Title -->
+                        <div class="mar-title-section">
+                            <h2 class="mar-main-title">Monthly Accounts Review - <span id="mar-title-year">2025</span></h2>
+                        </div>
+                        
+                        <!-- First Banner: Logo and Report Period -->
+                        <div class="mar-top-banner">
+                            <div class="mar-logo">
+                                <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="SapphireIMS">
+                            </div>
+                            <div class="mar-report-period">
+                                <div class="mar-period-label">COMPLIANCE REPORT PERIOD</div>
+                                <div class="mar-period-value" id="mar-report-period">December 2025</div>
+                            </div>
+                        </div>
+
+                        <!-- Second Banner: Customer Name and TAM -->
+                        <div class="mar-customer-banner">
+                            <h1 class="mar-customer-name" id="mar-customer-name">Customer Name</h1>
+                            <div class="mar-tam-info">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                <span>Technical Account Manager: <strong id="mar-tam-name">Adavayya Vastrad</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- KPI Cards -->
+                        <div class="mar-kpi-grid">
+                            <div class="mar-kpi-card" id="mar-card-sla">
+                                <div class="mar-kpi-label">SLA Compliance</div>
+                                <div class="mar-kpi-value" id="mar-sla-value">0%</div>
+                                <div class="mar-kpi-sub" id="mar-sla-text">On Track</div>
+                                <svg class="mar-kpi-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                            <div class="mar-kpi-card">
+                                <div class="mar-kpi-label">CSAT Score</div>
+                                <div class="mar-kpi-value" id="mar-csat-value">N/A</div>
+                                <div class="mar-kpi-sub" style="color: #64748b; font-weight: 500;">
+                                    <span id="mar-csat-count">0</span> Surveys
+                                </div>
+                                <svg class="mar-kpi-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                                </svg>
+                            </div>
+                            <div class="mar-kpi-card">
+                                <div class="mar-kpi-label">Tickets Logged</div>
+                                <div class="mar-kpi-value" id="mar-logged-value">0</div>
+                                <div class="mar-kpi-sub" style="color: #64748b; font-weight: 500;">All Categories</div>
+                                <svg class="mar-kpi-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                                </svg>
+                            </div>
+                            <div class="mar-kpi-card">
+                                <div class="mar-kpi-label">Tickets Resolved</div>
+                                <div class="mar-kpi-value" id="mar-resolved-value">0</div>
+                                <div class="mar-kpi-sub" style="color: #64748b; font-weight: 500;">This Period</div>
+                                <svg class="mar-kpi-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Content Grid with Tables and Charts -->
+                        <div class="mar-content-grid">
+                            <div>
+                                <div class="mar-section-header">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                                    </svg>
+                                    Ticket Volume Analysis
+                                </div>
+                                <table class="mar-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th class="mar-num">Open</th>
+                                            <th class="mar-num">Logged</th>
+                                            <th class="mar-num">Resolved</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Incident</td>
+                                            <td class="mar-num" id="mar-inc-open">0</td>
+                                            <td class="mar-num" id="mar-inc-logged">0</td>
+                                            <td class="mar-num" id="mar-inc-resolved">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Service Req</td>
+                                            <td class="mar-num" id="mar-sr-open">0</td>
+                                            <td class="mar-num" id="mar-sr-logged">0</td>
+                                            <td class="mar-num" id="mar-sr-resolved">0</td>
+                                        </tr>
+                                        <tr class="mar-row-total">
+                                            <td>Total</td>
+                                            <td class="mar-num" id="mar-total-open">0</td>
+                                            <td class="mar-num" id="mar-total-logged">0</td>
+                                            <td class="mar-num" id="mar-total-resolved">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div>
+                                <div class="mar-section-header">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Performance (Avg Days)
+                                </div>
+                                <table class="mar-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th class="mar-num">Incident</th>
+                                            <th class="mar-num">SR</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Actual (24/7)</td>
+                                            <td class="mar-num" id="mar-time-inc-247">0</td>
+                                            <td class="mar-num" id="mar-time-sr-247">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>SLA Target</td>
+                                            <td class="mar-num" id="mar-time-inc-sla">0</td>
+                                            <td class="mar-num" id="mar-time-sr-sla">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Charts Section -->
+                        <div class="mar-charts-section">
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <div class="mar-chart-box">
+                                        <div class="mar-section-header">
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                            </svg>
+                                            Overall Volume Trend (Logged vs Closed)
+                                        </div>
+                                        <div class="mar-chart-container">
+                                            <canvas id="marOverallVolumeChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-12">
+                                    <div class="mar-chart-box">
+                                        <div class="mar-section-header">
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                            </svg>
+                                            Average Resolution Trend
+                                        </div>
+                                        <div class="mar-chart-container">
+                                            <canvas id="marAvgResolutionChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-12">
+                                    <div class="mar-chart-box">
+                                        <div class="mar-section-header">
+                                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            SLA Compliance Trend
+                                        </div>
+                                        <div class="mar-chart-container">
+                                            <canvas id="marSLAComplianceChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Open Cases Overview -->
+                        <div class="mar-open-cases-grid">
+                            <div class="mar-open-cases-box">
+                                <div class="mar-section-header" style="margin-bottom: 10px;">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Open Cases Overview
+                                </div>
+                                <table class="mar-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th class="mar-num">Count</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Total Open Calls</td>
+                                            <td class="mar-num" id="mar-total-open-cases">0</td>
+                                            <td id="mar-open-cases-status">No Open Cases</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Incident (INC) Open</td>
+                                            <td class="mar-num" id="mar-inc-open-cases">0</td>
+                                            <td id="mar-inc-open-status">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Service Request (SR) Open</td>
+                                            <td class="mar-num" id="mar-sr-open-cases">0</td>
+                                            <td id="mar-sr-open-status">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="mar-bottom-section">
+                            <footer class="mar-footer">
+                                GENERATED BY SAPPHIREIMS CUSTOMER SUCCESS – MSP Support
+                            </footer>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -3112,7 +3759,9 @@
                 correspondingInternalTicket: findCol(['Corresponding Internal Ticket', 'Internal Ticket', 'CPE Ticket']),
                 supportCategory: findCol(['Support Category', 'SupportCategory', 'Category']),
                 feature: findCol(['Feature', 'Product Feature']),
-                subFeature: findCol(['Sub Feature', 'SubFeature', 'Sub-Feature'])
+                subFeature: findCol(['Sub Feature', 'SubFeature', 'Sub-Feature']),
+                tat247: findCol(['TAT (247)', 'TAT(247)', 'TAT (24/7)', 'TAT(24/7)', 'TAT(24//7)', 'TAT 24/7', 'TAT 24//7', 'TAT ( 24/7 )', 'TAT ( 24//7 )']),
+                tatSLA: findCol(['TAT (SLA)', 'TAT(SLA)', 'TAT SLA', 'TAT( SLA )', 'TAT ( SLA )'])
             };
 
             processedData = rawData.map(row => {
@@ -3183,6 +3832,8 @@
                     supportCategory: row[colMap.supportCategory] || 'Uncategorized',
                     feature: row[colMap.feature] || 'N/A',
                     subFeature: row[colMap.subFeature] || 'N/A',
+                    tat247: parseNum(row[colMap.tat247] || '0'),
+                    tatSLA: parseNum(row[colMap.tatSLA] || '0'),
                     
                     // For drill-down exports
                     aging15Status: aging15Status,
@@ -3205,6 +3856,14 @@
                     
                     _raw: row
                 };
+            });
+
+            // Debug: Check if TAT columns are being read
+            console.log('Column Mapping - TAT247:', colMap.tat247);
+            console.log('Column Mapping - TATSLA:', colMap.tatSLA);
+            console.log('Sample TAT values from first 3 rows:');
+            processedData.slice(0, 3).forEach((d, i) => {
+                console.log(`Row ${i}: tat247=${d.tat247}, tatSLA=${d.tatSLA}, isClosed=${d.isClosed}, service=${d.service}`);
             });
 
             filteredData = [...processedData];
@@ -3286,6 +3945,9 @@
             updateMonthlyPerformance();
             updateMonthlyComparison();
             updateCategoryAnalysis();
+            
+            // Update Monthly Accounts Review
+            loadMonthlyAccountsReview();
             
             // Auto-hide filters after applying
             const content = document.getElementById('global-filters-content');
@@ -3445,6 +4107,7 @@
             renderPerformanceView();
             updateDataLoadPeriod();
             updateFilterStatus();
+            initializeMonthlyAccountsReview(); // Initialize Monthly Accounts Review dropdown
         }
 
         function updateDataLoadPeriod() {
@@ -5289,7 +5952,10 @@
                         incClosed: 0,
                         srLogged: 0,
                         srClosed: 0,
-                        closedForPerformance: 0
+                        closedForPerformance: 0,
+                        // Add TAT tracking for new chart
+                        tat247Values: [],
+                        tatSLAValues: []
                     };
                 }
                 
@@ -5315,6 +5981,11 @@
                 // Count closed cases in this submission month for performance calculation
                 if (d.isClosed) {
                     stats.closedForPerformance++;
+                    // Collect TAT values for closed cases
+                    stats.tat247Values.push(parseFloat(d.tat247) || 0);
+                    if (d.tatSLA && parseFloat(d.tatSLA) > 0) {
+                        stats.tatSLAValues.push(parseFloat(d.tatSLA));
+                    }
                 }
             });
             
@@ -5343,6 +6014,8 @@
             const incClosedData = [];
             const avgResolutionData = [];
             const performanceScoreData = [];
+            const avg247Data = [];  // New: TAT(247) average data
+            const avgSLAData = [];  // New: TAT(SLA) average data
             
             const tableBody = document.getElementById('monthlyComparisonTableBody');
             if (!tableBody) return;
@@ -5354,6 +6027,16 @@
                 // Calculate metrics
                 const slaCompliance = stats.total > 0 ? (((stats.total - stats.slaViolated) / stats.total) * 100).toFixed(1) : 100;
                 const avgResolution = stats.closedForPerformance > 0 ? (stats.totalAgingDays / stats.total).toFixed(1) : 0;
+                
+                // Calculate TAT(247) average: SUM / COUNT
+                const avg247 = stats.tat247Values.length > 0 
+                    ? (stats.tat247Values.reduce((a, b) => a + b, 0) / stats.tat247Values.length).toFixed(1)
+                    : 0;
+                
+                // Calculate TAT(SLA) average: AVERAGE of non-zero values
+                const avgSLA = stats.tatSLAValues.length > 0
+                    ? (stats.tatSLAValues.reduce((a, b) => a + b, 0) / stats.tatSLAValues.length).toFixed(1)
+                    : 0;
                 
                 // Calculate performance score with Subsequent SLA Miss penalty
                 let performanceScore = 0;
@@ -5380,6 +6063,8 @@
                 incClosedData.push(stats.incClosed);
                 avgResolutionData.push(parseFloat(avgResolution));
                 performanceScoreData.push(performanceScore);
+                avg247Data.push(parseFloat(avg247));  // New: Push TAT(247) data
+                avgSLAData.push(parseFloat(avgSLA));   // New: Push TAT(SLA) data
                 
                 // Add table row
                 const row = `
@@ -5720,24 +6405,44 @@
                 });
             }
             
-            // Chart 5: Average Resolution Time Trend
+            // Chart 5: Average Resolution Time Trend (Dual Line: 24/7 vs Actual SLA)
             const avgResolutionCtx = document.getElementById('avgResolutionTrendChart');
             if (avgResolutionCtx) {
                 window.comparisonCharts.avgResolution = new Chart(avgResolutionCtx, {
                     type: 'line',
                     data: {
                         labels: monthLabels,
-                        datasets: [{
-                            label: 'Avg Resolution Time (Days)',
-                            data: avgResolutionData,
-                            borderColor: '#ff9100',
-                            backgroundColor: 'rgba(255, 145, 0, 0.1)',
-                            tension: 0.4,
-                            fill: true,
-                            borderWidth: 3,
-                            pointRadius: 5,
-                            pointHoverRadius: 7
-                        }]
+                        datasets: [
+                            {
+                                label: '24/7 Performance (Avg Days)',
+                                data: avg247Data,
+                                borderColor: '#ff9100',
+                                backgroundColor: 'rgba(255, 145, 0, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                borderWidth: 3,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                pointBackgroundColor: '#ff9100',
+                                pointBorderColor: '#ffffff',
+                                pointBorderWidth: 2
+                            },
+                            {
+                                label: 'Actual SLA Performance (Avg Days)',
+                                data: avgSLAData,
+                                borderColor: '#d32f2f',
+                                backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                borderWidth: 3,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                pointBackgroundColor: '#d32f2f',
+                                pointBorderColor: '#ffffff',
+                                pointBorderWidth: 2,
+                                borderDash: [5, 5]
+                            }
+                        ]
                     },
                     options: {
                         responsive: true,
@@ -5748,7 +6453,15 @@
                                 position: 'top',
                                 labels: {
                                     font: { size: 12, weight: '600' },
-                                    usePointStyle: true
+                                    usePointStyle: true,
+                                    padding: 15
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.parsed.y + ' days';
+                                    }
                                 }
                             }
                         },
@@ -5757,12 +6470,20 @@
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: 'Days'
+                                    text: 'Days',
+                                    font: { size: 13, weight: '600' }
                                 },
                                 ticks: {
                                     callback: function(value) {
                                         return value + ' days';
                                     }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    maxRotation: 45,
+                                    minRotation: 0,
+                                    autoSkip: false
                                 }
                             }
                         }
@@ -6431,6 +7152,945 @@
         
         function processData() {
             // Already implemented in the main flow
+        }
+
+        // Monthly Accounts Review Functions
+        let marOverallVolumeChart = null;
+        let marAvgResolutionChart = null;
+        let marSLAComplianceChart = null;
+        let marCustomerData = {};
+
+        function initializeMonthlyAccountsReview() {
+            // This function will be called when data is loaded
+            // It will use the global filters to determine which customer to show
+            loadMonthlyAccountsReview();
+        }
+
+        function loadMonthlyAccountsReview() {
+            // Determine which filter is active and get its value
+            let filterName = 'All Customers';
+            let customerData = filteredData;
+            
+            // Check which filter is active (in priority order)
+            if (globalFilters.owner) {
+                filterName = `Owner: ${globalFilters.owner}`;
+                customerData = filteredData.filter(d => d.owner === globalFilters.owner);
+            } else if (globalFilters.submittedby) {
+                filterName = `Customer: ${globalFilters.submittedby}`;
+                customerData = filteredData.filter(d => d.submittedBy === globalFilters.submittedby);
+            } else if (globalFilters.service) {
+                filterName = `Service: ${globalFilters.service}`;
+                customerData = filteredData.filter(d => d.service === globalFilters.service);
+            } else if (globalFilters.status) {
+                filterName = `Status: ${globalFilters.status}`;
+                customerData = filteredData.filter(d => d.currentStatus === globalFilters.status);
+            }
+            
+            if (customerData.length === 0) {
+                // No data for this filter
+                updateMarReport({
+                    totalLogged: 0,
+                    incLogged: 0,
+                    srLogged: 0,
+                    totalClosed: 0,
+                    incClosed: 0,
+                    srClosed: 0,
+                    totalOpen: 0,
+                    incOpen: 0,
+                    srOpen: 0,
+                    slaViolated: 0,
+                    avgIncResolution247: '0.0',
+                    avgSRResolution247: '0.0',
+                    avgIncResolutionSLA: '0.0',
+                    avgSRResolutionSLA: '0.0',
+                    slaCompliance: 100,
+                    csatScore: null,
+                    csatCount: 0,
+                    monthlyBreakdown: {}
+                }, filterName);
+                return;
+            }
+            
+            marCustomerData = calculateCustomerMetrics(customerData);
+            updateMarReport(marCustomerData, filterName);
+        }
+
+        function calculateCustomerMetrics(customerData) {
+            const metrics = {
+                // Total counts
+                totalLogged: customerData.length,
+                incLogged: customerData.filter(d => d.isINC).length,
+                srLogged: customerData.filter(d => d.isSR).length,
+                
+                // Closed counts - must be "Close" or "Resolve - Pending User Confirmation"
+                totalClosed: customerData.filter(d => d.isClosed).length,
+                incClosed: customerData.filter(d => d.isClosed && d.isINC).length,
+                srClosed: customerData.filter(d => d.isClosed && d.isSR).length,
+                
+                // Open counts - excluding "Close", "Resolve - Pending User Confirmation", and empty statuses
+                totalOpen: customerData.filter(d => !d.isClosed && d.currentStatus && d.currentStatus.trim() !== '').length,
+                incOpen: customerData.filter(d => !d.isClosed && d.isINC && d.currentStatus && d.currentStatus.trim() !== '').length,
+                srOpen: customerData.filter(d => !d.isClosed && d.isSR && d.currentStatus && d.currentStatus.trim() !== '').length,
+                
+                // SLA violations among CLOSED cases only
+                slaViolatedClosed: customerData.filter(d => d.isClosed && d.isSlaViolated).length,
+                slaViolated: customerData.filter(d => d.isSlaViolated).length,
+                
+                // Get CLOSED cases for calculations
+                closedSRCases: customerData.filter(d => d.isClosed && d.isSR),
+                closedINCCases: customerData.filter(d => d.isClosed && d.isINC),
+                
+                // CSAT data (placeholder)
+                csatScore: null,
+                csatCount: 0
+            };
+            
+            // Calculate 24/7 Performance (AVG Days) - SUMIFS / COUNTIFS as per Excel formula
+            // For SR: SUM(TAT247 values) / COUNT(closed SR cases)
+            const srTat247Sum = metrics.closedSRCases.reduce((sum, d) => sum + (parseFloat(d.tat247) || 0), 0);
+            const srClosedCount = metrics.closedSRCases.length;
+            metrics.avgSRResolution247 = srClosedCount > 0 ? (srTat247Sum / srClosedCount).toFixed(1) : '0.0';
+            
+            // For INC: SUM(TAT247 values) / COUNT(closed INC cases)
+            const incTat247Sum = metrics.closedINCCases.reduce((sum, d) => sum + (parseFloat(d.tat247) || 0), 0);
+            const incClosedCount = metrics.closedINCCases.length;
+            metrics.avgIncResolution247 = incClosedCount > 0 ? (incTat247Sum / incClosedCount).toFixed(1) : '0.0';
+            
+            // Calculate Actual SLA Performance (AVG Days) - AVERAGE as per Excel formula
+            // For SR: AVERAGE(TAT(SLA) values for closed SR)
+            const srTatSLAValues = metrics.closedSRCases.map(d => parseFloat(d.tatSLA) || 0).filter(v => v > 0);
+            metrics.avgSRResolutionSLA = srTatSLAValues.length > 0
+                ? (srTatSLAValues.reduce((a, b) => a + b, 0) / srTatSLAValues.length).toFixed(1)
+                : '0.0';
+            
+            // For INC: AVERAGE(TAT(SLA) values for closed INC)
+            const incTatSLAValues = metrics.closedINCCases.map(d => parseFloat(d.tatSLA) || 0).filter(v => v > 0);
+            metrics.avgIncResolutionSLA = incTatSLAValues.length > 0
+                ? (incTatSLAValues.reduce((a, b) => a + b, 0) / incTatSLAValues.length).toFixed(1)
+                : '0.0';
+            
+            // Calculate SLA compliance percentage - using CLOSED cases only in denominator
+            metrics.slaCompliance = metrics.totalClosed > 0 
+                ? (((metrics.totalClosed - metrics.slaViolatedClosed) / metrics.totalClosed) * 100).toFixed(1)
+                : 100;
+            
+            // Calculate monthly breakdown for charts - EXACTLY like Monthly Performance Comparison
+            const monthlyDataLogged = {};  // Track by submission date
+            const monthlyDataClosed = {};  // Track by resolve date
+            
+            // First pass: Count logged cases by submission month
+            customerData.forEach(d => {
+                const monthKey = d.monthYear;  // Already based on submissionTime
+                if (!monthlyDataLogged[monthKey]) {
+                    monthlyDataLogged[monthKey] = {
+                        loggedCases: 0,
+                        incLogged: 0,
+                        srLogged: 0
+                    };
+                }
+                monthlyDataLogged[monthKey].loggedCases++;
+                if (d.isINC) monthlyDataLogged[monthKey].incLogged++;
+                if (d.isSR) monthlyDataLogged[monthKey].srLogged++;
+            });
+            
+            // Second pass: Count closed cases by resolve month
+            customerData.forEach(d => {
+                if (d.isClosed && d.resolveTime && d.resolveTime !== '--' && d.resolveTime !== 'NULL') {
+                    const resolveDate = new Date(d.resolveTime);
+                    if (!isNaN(resolveDate.getTime())) {
+                        const monthKey = `${resolveDate.getMonth()+1}-${resolveDate.getFullYear()}`;
+                        if (!monthlyDataClosed[monthKey]) {
+                            monthlyDataClosed[monthKey] = {
+                                closedCases: 0,
+                                incClosed: 0,
+                                srClosed: 0
+                            };
+                        }
+                        monthlyDataClosed[monthKey].closedCases++;
+                        if (d.isINC) monthlyDataClosed[monthKey].incClosed++;
+                        if (d.isSR) monthlyDataClosed[monthKey].srClosed++;
+                    }
+                }
+            });
+            
+            // Third pass: Calculate performance metrics by submission month
+            const monthlyData = {};
+            customerData.forEach(d => {
+                const monthKey = d.monthYear;
+                if (!monthlyData[monthKey]) {
+                    monthlyData[monthKey] = {
+                        total: 0,
+                        loggedCases: 0,
+                        incLogged: 0,
+                        srLogged: 0,
+                        closedCases: 0,
+                        incClosed: 0,
+                        srClosed: 0,
+                        totalAgingDays: 0,
+                        slaViolated: 0,
+                        slaViolatedClosed: 0,
+                        incResolutionTimes247: [],
+                        srResolutionTimes247: [],
+                        incResolutionTimesSLA: [],
+                        srResolutionTimesSLA: []
+                    };
+                }
+                
+                // Increment counters for this submission month
+                monthlyData[monthKey].total++;
+                monthlyData[monthKey].loggedCases = monthlyDataLogged[monthKey]?.loggedCases || 0;
+                monthlyData[monthKey].incLogged = monthlyDataLogged[monthKey]?.incLogged || 0;
+                monthlyData[monthKey].srLogged = monthlyDataLogged[monthKey]?.srLogged || 0;
+                
+                // Add aging days for ALL cases (not just closed) - THIS IS KEY for avg resolution calculation
+                monthlyData[monthKey].totalAgingDays += parseFloat(d.agingDays) || 0;
+                
+                // Track SLA violations
+                if (d.isSlaViolated) {
+                    monthlyData[monthKey].slaViolated++;
+                    if (d.isClosed) {
+                        monthlyData[monthKey].slaViolatedClosed++;
+                    }
+                }
+                
+                // Collect resolution times for closed cases only - using TAT columns
+                if (d.isClosed) {
+                    if (d.isINC) {
+                        monthlyData[monthKey].incResolutionTimes247.push(parseFloat(d.tat247) || 0);
+                        monthlyData[monthKey].incResolutionTimesSLA.push(parseFloat(d.tatSLA) || 0);
+                    } else if (d.isSR) {
+                        monthlyData[monthKey].srResolutionTimes247.push(parseFloat(d.tat247) || 0);
+                        monthlyData[monthKey].srResolutionTimesSLA.push(parseFloat(d.tatSLA) || 0);
+                    }
+                }
+            });
+            
+            // Add closed counts from resolve date tracking
+            Object.keys(monthlyDataClosed).forEach(monthKey => {
+                if (!monthlyData[monthKey]) {
+                    monthlyData[monthKey] = {
+                        total: 0,
+                        loggedCases: 0,
+                        incLogged: 0,
+                        srLogged: 0,
+                        closedCases: 0,
+                        incClosed: 0,
+                        srClosed: 0,
+                        totalAgingDays: 0,
+                        slaViolated: 0,
+                        slaViolatedClosed: 0,
+                        incResolutionTimes247: [],
+                        srResolutionTimes247: [],
+                        incResolutionTimesSLA: [],
+                        srResolutionTimesSLA: []
+                    };
+                }
+                monthlyData[monthKey].closedCases = monthlyDataClosed[monthKey].closedCases;
+                monthlyData[monthKey].incClosed = monthlyDataClosed[monthKey].incClosed;
+                monthlyData[monthKey].srClosed = monthlyDataClosed[monthKey].srClosed;
+            });
+            
+            // Calculate average resolution times per month
+            Object.keys(monthlyData).forEach(monthKey => {
+                const data = monthlyData[monthKey];
+                
+                // Calculate 24/7 Performance averages using SUM/COUNT (SUMIFS/COUNTIFS)
+                // For INC: SUM of TAT247 values / COUNT of closed INC
+                const incTat247Sum = data.incResolutionTimes247.reduce((a, b) => a + b, 0);
+                data.avgIncResolution247 = data.incResolutionTimes247.length > 0
+                    ? (incTat247Sum / data.incResolutionTimes247.length).toFixed(1)
+                    : 0;
+                
+                // For SR: SUM of TAT247 values / COUNT of closed SR
+                const srTat247Sum = data.srResolutionTimes247.reduce((a, b) => a + b, 0);
+                data.avgSRResolution247 = data.srResolutionTimes247.length > 0
+                    ? (srTat247Sum / data.srResolutionTimes247.length).toFixed(1)
+                    : 0;
+                
+                // Calculate Actual SLA Performance averages using AVERAGE function
+                // For INC: AVERAGE of TAT(SLA) values (excluding zeros)
+                const incTatSLANonZero = data.incResolutionTimesSLA.filter(v => v > 0);
+                data.avgIncResolutionSLA = incTatSLANonZero.length > 0
+                    ? (incTatSLANonZero.reduce((a, b) => a + b, 0) / incTatSLANonZero.length).toFixed(1)
+                    : 0;
+                
+                // For SR: AVERAGE of TAT(SLA) values (excluding zeros)
+                const srTatSLANonZero = data.srResolutionTimesSLA.filter(v => v > 0);
+                data.avgSRResolutionSLA = srTatSLANonZero.length > 0
+                    ? (srTatSLANonZero.reduce((a, b) => a + b, 0) / srTatSLANonZero.length).toFixed(1)
+                    : 0;
+                
+                // Keep the resolution times arrays for chart usage
+                // Don't delete them - they're needed for the trend charts
+            });
+            
+            metrics.monthlyBreakdown = monthlyData;
+            
+            return metrics;
+        }
+
+        function updateMarReport(metrics, customerName) {
+            // Get data period from raw data
+            const dates = rawData
+                .map(row => {
+                    const submissionTime = row['Submission Time'] || row['Submission time'] || 
+                                         row['Created Date'] || row['Created Time'] || 
+                                         row['SubmissionTime'] || row['CreatedDate'];
+                    if (submissionTime && submissionTime !== '--' && submissionTime !== 'NULL') {
+                        const date = new Date(submissionTime);
+                        if (!isNaN(date.getTime())) {
+                            return date;
+                        }
+                    }
+                    return null;
+                })
+                .filter(d => d !== null)
+                .sort((a, b) => a - b);
+            
+            let yearText = '2025';
+            let periodText = 'December 2025';
+            
+            if (dates.length > 0) {
+                const minDate = dates[0];
+                const maxDate = dates[dates.length - 1];
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+                
+                // Get year range
+                const minYear = minDate.getFullYear();
+                const maxYear = maxDate.getFullYear();
+                yearText = minYear === maxYear ? minYear.toString() : `${minYear}-${maxYear}`;
+                
+                // Get month-year range for report period
+                const minMonthYear = `${monthNames[minDate.getMonth()]} ${minDate.getFullYear()}`;
+                const maxMonthYear = `${monthNames[maxDate.getMonth()]} ${maxDate.getFullYear()}`;
+                periodText = minMonthYear === maxMonthYear ? minMonthYear : `${minMonthYear} - ${maxMonthYear}`;
+            }
+            
+            // Update title year
+            document.getElementById('mar-title-year').textContent = yearText;
+            
+            // Update report period
+            document.getElementById('mar-report-period').textContent = periodText;
+            
+            // Update customer name
+            document.getElementById('mar-customer-name').textContent = customerName;
+            
+            // Update TAM name
+            document.getElementById('mar-tam-name').textContent = 'Adavayya Vastrad';
+            
+            // Update KPIs
+            updateMarKPIs(metrics);
+            
+            // Update tables
+            updateMarTables(metrics);
+            
+            // Update charts
+            updateMarCharts(metrics);
+            
+            // Update open cases overview
+            updateMarOpenCases(metrics);
+        }
+
+        function updateMarKPIs(metrics) {
+            // SLA Compliance
+            const slaCard = document.getElementById('mar-card-sla');
+            const slaValue = document.getElementById('mar-sla-value');
+            const slaText = document.getElementById('mar-sla-text');
+            
+            slaValue.textContent = metrics.slaCompliance + '%';
+            slaCard.className = 'mar-kpi-card'; // Reset classes
+            
+            if (metrics.slaCompliance >= 95) {
+                slaText.textContent = 'Excellent';
+                slaText.className = 'mar-kpi-sub txt-success';
+                slaCard.classList.add('border-success');
+            } else if (metrics.slaCompliance >= 85) {
+                slaText.textContent = 'Good';
+                slaText.className = 'mar-kpi-sub txt-warning';
+                slaCard.classList.add('border-warning');
+            } else {
+                slaText.textContent = 'Action Required';
+                slaText.className = 'mar-kpi-sub txt-danger';
+                slaCard.classList.add('border-danger');
+            }
+            
+            // CSAT Score
+            document.getElementById('mar-csat-value').textContent = metrics.csatScore || 'N/A';
+            document.getElementById('mar-csat-count').textContent = metrics.csatCount;
+            
+            // Tickets Logged
+            document.getElementById('mar-logged-value').textContent = metrics.totalLogged;
+            
+            // Tickets Resolved
+            document.getElementById('mar-resolved-value').textContent = metrics.totalClosed;
+        }
+
+        function updateMarTables(metrics) {
+            // Ticket Volume Analysis Table
+            document.getElementById('mar-inc-open').textContent = metrics.incOpen;
+            document.getElementById('mar-inc-logged').textContent = metrics.incLogged;
+            document.getElementById('mar-inc-resolved').textContent = metrics.incClosed;
+            
+            document.getElementById('mar-sr-open').textContent = metrics.srOpen;
+            document.getElementById('mar-sr-logged').textContent = metrics.srLogged;
+            document.getElementById('mar-sr-resolved').textContent = metrics.srClosed;
+            
+            document.getElementById('mar-total-open').textContent = metrics.totalOpen;
+            document.getElementById('mar-total-logged').textContent = metrics.totalLogged;
+            document.getElementById('mar-total-resolved').textContent = metrics.totalClosed;
+            
+            // Performance (Avg Days) Table
+            document.getElementById('mar-time-inc-247').textContent = metrics.avgIncResolution247;
+            document.getElementById('mar-time-inc-sla').textContent = metrics.avgIncResolutionSLA;
+            document.getElementById('mar-time-sr-247').textContent = metrics.avgSRResolution247;
+            document.getElementById('mar-time-sr-sla').textContent = metrics.avgSRResolutionSLA;
+        }
+
+        function updateMarCharts(metrics) {
+            // Get sorted months for all charts
+            const monthlyData = metrics.monthlyBreakdown || {};
+            const sortedMonths = Object.keys(monthlyData).sort((a, b) => {
+                const [monthA, yearA] = a.split('-').map(Number);
+                const [monthB, yearB] = b.split('-').map(Number);
+                return yearA !== yearB ? yearA - yearB : monthA - monthB;
+            });
+            
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const labels = sortedMonths.map(key => {
+                const [month, year] = key.split('-');
+                return `${monthNames[parseInt(month) - 1]} ${year}`;
+            });
+            
+            // Chart 1: Overall Volume Trend (Logged vs Closed) - EXACTLY like Monthly Performance Comparison
+            const overallVolumeCtx = document.getElementById('marOverallVolumeChart');
+            if (overallVolumeCtx) {
+                if (marOverallVolumeChart) {
+                    marOverallVolumeChart.destroy();
+                }
+                
+                const loggedData = sortedMonths.map(key => monthlyData[key]?.loggedCases || 0);
+                const closedData = sortedMonths.map(key => monthlyData[key]?.closedCases || 0);
+                
+                marOverallVolumeChart = new Chart(overallVolumeCtx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Logged Cases (by Submission Date)',
+                                data: loggedData,
+                                backgroundColor: 'rgba(0, 102, 204, 0.1)',
+                                borderColor: '#0066cc',
+                                borderWidth: 3,
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                pointBackgroundColor: '#0066cc',
+                                pointBorderColor: '#ffffff',
+                                pointBorderWidth: 2
+                            },
+                            {
+                                label: 'Closed Cases (by Resolve Date)',
+                                data: closedData,
+                                backgroundColor: 'rgba(0, 200, 83, 0.1)',
+                                borderColor: '#00c853',
+                                borderWidth: 3,
+                                tension: 0.4,
+                                fill: true,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                pointBackgroundColor: '#00c853',
+                                pointBorderColor: '#ffffff',
+                                pointBorderWidth: 2
+                            }
+                        ]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        size: 12,
+                                        weight: '600',
+                                        family: "'Plus Jakarta Sans', sans-serif"
+                                    },
+                                    usePointStyle: true
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Cases',
+                                    font: {
+                                        size: 12,
+                                        weight: '600',
+                                        family: "'Plus Jakarta Sans', sans-serif"
+                                    }
+                                },
+                                ticks: {
+                                    font: {
+                                        family: "'Plus Jakarta Sans', sans-serif"
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        family: "'Plus Jakarta Sans', sans-serif"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Chart 2: Average Resolution Trend - Show 24/7 vs Actual SLA with CORRECT formulas
+            const avgResolutionCtx = document.getElementById('marAvgResolutionChart');
+            if (avgResolutionCtx) {
+                if (marAvgResolutionChart) {
+                    marAvgResolutionChart.destroy();
+                }
+                
+                // Calculate 24/7 Performance using SUMIFS/COUNTIFS formula
+                // SUM(TAT247 for closed INC) / COUNT(closed INC)
+                const avg247INC = sortedMonths.map(key => {
+                    const data = monthlyData[key];
+                    if (!data || !data.incResolutionTimes247 || data.incResolutionTimes247.length === 0) return 0;
+                    const sum = data.incResolutionTimes247.reduce((a, b) => a + b, 0);
+                    return (sum / data.incResolutionTimes247.length).toFixed(1);
+                });
+                
+                const avg247SR = sortedMonths.map(key => {
+                    const data = monthlyData[key];
+                    if (!data || !data.srResolutionTimes247 || data.srResolutionTimes247.length === 0) return 0;
+                    const sum = data.srResolutionTimes247.reduce((a, b) => a + b, 0);
+                    return (sum / data.srResolutionTimes247.length).toFixed(1);
+                });
+                
+                // Calculate Actual SLA Performance using AVERAGE formula (excluding zeros)
+                const avgSLAINC = sortedMonths.map(key => {
+                    const data = monthlyData[key];
+                    if (!data || !data.incResolutionTimesSLA) return 0;
+                    const nonZero = data.incResolutionTimesSLA.filter(v => v > 0);
+                    if (nonZero.length === 0) return 0;
+                    return (nonZero.reduce((a, b) => a + b, 0) / nonZero.length).toFixed(1);
+                });
+                
+                const avgSLASR = sortedMonths.map(key => {
+                    const data = monthlyData[key];
+                    if (!data || !data.srResolutionTimesSLA) return 0;
+                    const nonZero = data.srResolutionTimesSLA.filter(v => v > 0);
+                    if (nonZero.length === 0) return 0;
+                    return (nonZero.reduce((a, b) => a + b, 0) / nonZero.length).toFixed(1);
+                });
+                
+                // Calculate combined weighted average for 24/7 (based on count of cases)
+                const avg247Combined = sortedMonths.map((key, idx) => {
+                    const incVal = parseFloat(avg247INC[idx]) || 0;
+                    const srVal = parseFloat(avg247SR[idx]) || 0;
+                    const data = monthlyData[key];
+                    const incCount = data?.incResolutionTimes247?.length || 0;
+                    const srCount = data?.srResolutionTimes247?.length || 0;
+                    const totalCount = incCount + srCount;
+                    if (totalCount === 0) return 0;
+                    return ((incVal * incCount + srVal * srCount) / totalCount).toFixed(1);
+                });
+                
+                // Calculate combined weighted average for Actual SLA (based on count of non-zero cases)
+                const avgSLACombined = sortedMonths.map((key, idx) => {
+                    const incVal = parseFloat(avgSLAINC[idx]) || 0;
+                    const srVal = parseFloat(avgSLASR[idx]) || 0;
+                    const data = monthlyData[key];
+                    const incCount = data?.incResolutionTimesSLA?.filter(v => v > 0).length || 0;
+                    const srCount = data?.srResolutionTimesSLA?.filter(v => v > 0).length || 0;
+                    const totalCount = incCount + srCount;
+                    if (totalCount === 0) return 0;
+                    return ((incVal * incCount + srVal * srCount) / totalCount).toFixed(1);
+                });
+                
+                marAvgResolutionChart = new Chart(avgResolutionCtx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: '24/7 Performance (Avg Days)',
+                                data: avg247Combined,
+                                borderColor: '#ff9100',
+                                backgroundColor: 'rgba(255, 145, 0, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                borderWidth: 3,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                pointBackgroundColor: '#ff9100',
+                                pointBorderColor: '#ffffff',
+                                pointBorderWidth: 2
+                            },
+                            {
+                                label: 'Actual SLA Performance (Avg Days)',
+                                data: avgSLACombined,
+                                borderColor: '#d32f2f',
+                                backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                                tension: 0.4,
+                                fill: true,
+                                borderWidth: 3,
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                pointBackgroundColor: '#d32f2f',
+                                pointBorderColor: '#ffffff',
+                                pointBorderWidth: 2,
+                                borderDash: [5, 5]
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        size: 12,
+                                        weight: '600',
+                                        family: "'Plus Jakarta Sans', sans-serif"
+                                    },
+                                    usePointStyle: true,
+                                    padding: 15
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.parsed.y + ' days';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Days',
+                                    font: {
+                                        size: 12,
+                                        weight: '600',
+                                        family: "'Plus Jakarta Sans', sans-serif"
+                                    }
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + ' days';
+                                    },
+                                    font: {
+                                        family: "'Plus Jakarta Sans', sans-serif"
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        family: "'Plus Jakarta Sans', sans-serif"
+                                    },
+                                    maxRotation: 45,
+                                    minRotation: 0,
+                                    autoSkip: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Chart 3: SLA Compliance Trend - Using CLOSED cases in denominator
+            const slaComplianceCtx = document.getElementById('marSLAComplianceChart');
+            if (slaComplianceCtx) {
+                if (marSLAComplianceChart) {
+                    marSLAComplianceChart.destroy();
+                }
+                
+                const slaComplianceData = sortedMonths.map(key => {
+                    const data = monthlyData[key];
+                    const totalClosed = (data?.closedCases || 0);
+                    const slaViolatedClosed = (data?.slaViolatedClosed || 0);
+                    return totalClosed > 0 ? ((totalClosed - slaViolatedClosed) / totalClosed * 100).toFixed(1) : 100;
+                });
+                
+                marSLAComplianceChart = new Chart(slaComplianceCtx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'SLA Compliance %',
+                            data: slaComplianceData,
+                            borderColor: '#0d6efd',
+                            backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 3,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            pointBackgroundColor: '#0d6efd',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        size: 12,
+                                        weight: '600',
+                                        family: "'Plus Jakarta Sans', sans-serif"
+                                    },
+                                    usePointStyle: true
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 80,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Percentage',
+                                    font: {
+                                        size: 12,
+                                        weight: '600',
+                                        family: "'Plus Jakarta Sans', sans-serif"
+                                    }
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    },
+                                    font: {
+                                        family: "'Plus Jakarta Sans', sans-serif"
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        family: "'Plus Jakarta Sans', sans-serif"
+                                    },
+                                    maxRotation: 45,
+                                    minRotation: 0,
+                                    autoSkip: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function updateMarOpenCases(metrics) {
+            // Total Open Cases
+            document.getElementById('mar-total-open-cases').textContent = metrics.totalOpen;
+            document.getElementById('mar-inc-open-cases').textContent = metrics.incOpen;
+            document.getElementById('mar-sr-open-cases').textContent = metrics.srOpen;
+            
+            // Status for total open
+            const openStatus = document.getElementById('mar-open-cases-status');
+            if (metrics.totalOpen === 0) {
+                openStatus.textContent = 'No Open Cases';
+                openStatus.style.color = '#10b981';
+                openStatus.style.fontWeight = '600';
+            } else if (metrics.totalOpen <= 3) {
+                openStatus.textContent = 'Healthy';
+                openStatus.style.color = '#10b981';
+                openStatus.style.fontWeight = '600';
+            } else if (metrics.totalOpen <= 10) {
+                openStatus.textContent = 'Moderate';
+                openStatus.style.color = '#f59e0b';
+                openStatus.style.fontWeight = '600';
+            } else {
+                openStatus.textContent = 'Attention Needed';
+                openStatus.style.color = '#ef4444';
+                openStatus.style.fontWeight = '700';
+            }
+            
+            // Status for INC open
+            const incOpenStatus = document.getElementById('mar-inc-open-status');
+            if (metrics.incOpen === 0) {
+                incOpenStatus.textContent = 'No Open INC';
+                incOpenStatus.style.color = '#10b981';
+            } else if (metrics.incOpen <= 2) {
+                incOpenStatus.textContent = 'Low';
+                incOpenStatus.style.color = '#10b981';
+            } else if (metrics.incOpen <= 5) {
+                incOpenStatus.textContent = 'Medium';
+                incOpenStatus.style.color = '#f59e0b';
+            } else {
+                incOpenStatus.textContent = 'High';
+                incOpenStatus.style.color = '#ef4444';
+            }
+            
+            // Status for SR open
+            const srOpenStatus = document.getElementById('mar-sr-open-status');
+            if (metrics.srOpen === 0) {
+                srOpenStatus.textContent = 'No Open SR';
+                srOpenStatus.style.color = '#10b981';
+            } else if (metrics.srOpen <= 2) {
+                srOpenStatus.textContent = 'Low';
+                srOpenStatus.style.color = '#10b981';
+            } else if (metrics.srOpen <= 5) {
+                srOpenStatus.textContent = 'Medium';
+                srOpenStatus.style.color = '#f59e0b';
+            } else {
+                srOpenStatus.textContent = 'High';
+                srOpenStatus.style.color = '#ef4444';
+            }
+        }
+
+        function printMonthlyAccountsReport() {
+            const reportSheet = document.getElementById('marReportSheet');
+            if (!reportSheet) return;
+            
+            // Convert charts to images before printing
+            const charts = reportSheet.querySelectorAll('canvas');
+            const chartImages = [];
+            
+            charts.forEach((canvas, index) => {
+                const imgData = canvas.toDataURL('image/png');
+                chartImages.push({
+                    id: canvas.id,
+                    data: imgData,
+                    width: canvas.width,
+                    height: canvas.height
+                });
+            });
+            
+            const printWindow = window.open('', '', 'width=1200,height=800');
+            printWindow.document.write('<html><head><title>Monthly Accounts Review Report</title>');
+            
+            // Copy all styles
+            const styles = document.querySelectorAll('style, link[rel="stylesheet"]');
+            styles.forEach(style => {
+                printWindow.document.write(style.outerHTML);
+            });
+            
+            printWindow.document.write(`
+                <style>
+                    @media print {
+                        body { 
+                            margin: 0; 
+                            padding: 0; 
+                            background: white; 
+                        }
+                        @page { 
+                            size: A4 portrait; 
+                            margin: 15mm; 
+                        }
+                        .no-print { 
+                            display: none !important; 
+                        }
+                        canvas { 
+                            display: none !important; 
+                        }
+                        .chart-print-image { 
+                            display: block !important; 
+                            max-width: 100%; 
+                            height: auto; 
+                        }
+                        
+                        /* Page 1: Up to Overall Volume Trend */
+                        .page-1 {
+                            page-break-after: always;
+                        }
+                        
+                        /* Page 2: Average Resolution Trend onwards */
+                        .page-2 {
+                            page-break-before: always;
+                        }
+                        
+                        /* Prevent breaking inside chart boxes */
+                        .mar-chart-box {
+                            page-break-inside: avoid;
+                        }
+                    }
+                    @media screen {
+                        .chart-print-image { 
+                            display: none; 
+                        }
+                    }
+                    body { 
+                        margin: 0; 
+                        padding: 20px; 
+                        background: white; 
+                        font-family: 'Plus Jakarta Sans', sans-serif;
+                    }
+                    .no-print { 
+                        display: none !important; 
+                    }
+                </style>
+            `);
+            
+            printWindow.document.write('</head><body>');
+            
+            // Clone the report sheet
+            const clonedReport = reportSheet.cloneNode(true);
+            
+            // Find the charts section and split it
+            const chartsSection = clonedReport.querySelector('.mar-charts-section');
+            if (chartsSection) {
+                // Find all chart rows
+                const chartRows = chartsSection.querySelectorAll('.row');
+                
+                // First row (Overall Volume) should be on Page 1
+                if (chartRows[0]) {
+                    chartRows[0].classList.add('page-1');
+                }
+                
+                // Remaining rows (Avg Resolution, SLA Compliance) should be on Page 2
+                for (let i = 1; i < chartRows.length; i++) {
+                    if (i === 1) {
+                        chartRows[i].classList.add('page-2');
+                    }
+                }
+            }
+            
+            // Replace canvas elements with images
+            chartImages.forEach(chart => {
+                const canvasElement = clonedReport.querySelector(`#${chart.id}`);
+                if (canvasElement) {
+                    const img = printWindow.document.createElement('img');
+                    img.src = chart.data;
+                    img.className = 'chart-print-image';
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    canvasElement.parentNode.replaceChild(img, canvasElement);
+                }
+            });
+            
+            printWindow.document.write(clonedReport.outerHTML);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            
+            setTimeout(() => {
+                printWindow.focus();
+                printWindow.print();
+                setTimeout(() => printWindow.close(), 500);
+            }, 500);
         }
     </script>
 </body>
