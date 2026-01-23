@@ -349,7 +349,7 @@
 
 <body>
 
-<!-- New Year Popup -->
+<!-- New Year Popup 
 <div class="popup-overlay active" id="newYearPopup">
     <div class="popup-content">
         <button class="popup-close" onclick="closePopup()">×</button>
@@ -368,7 +368,7 @@
             <strong>– MSP Team SapphireIMS</strong>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="container">
     <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Dark Mode</button>
@@ -504,23 +504,7 @@
 </div>
 
 <script>
-    // Close popup function
-    function closePopup() {
-        document.getElementById('newYearPopup').classList.remove('active');
-    }
-
-    // Close popup when clicking outside
-    document.getElementById('newYearPopup').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closePopup();
-        }
-    });
-
-    // Show popup on every page load
-    window.addEventListener('load', function() {
-        document.getElementById('newYearPopup').classList.add('active');
-    });
-
+   
     function toggleTheme() {
         const isDark = document.body.classList.toggle("dark");
         localStorage.setItem("theme", isDark ? "dark" : "light");
