@@ -163,6 +163,201 @@
             font-size: 0.85rem;
         }
         
+        /* Modern Sidebar Styles - Slide-in Panel */
+        .sidebar {
+            position: fixed;
+            left: -320px;
+            top: 0;
+            width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            border-right: 3px solid var(--primary-color);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+            transition: left 0.3s ease-in-out;
+            z-index: 1050;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar.open {
+            left: 0;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #0066cc 0%, #00b8d4 100%);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-header h5 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .sidebar-close {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sidebar-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .sidebar-toggle {
+            position: fixed;
+            left: 20px;
+            top: 80px;
+            width: 44px;
+            height: 44px;
+            background: #1a202c;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1040;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .sidebar-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.4);
+            background: #2d3748;
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 0;
+            overflow-x: hidden;
+        }
+        
+        .sidebar-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .sidebar-content::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+        
+        .sidebar-content::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+        
+        .nav-section-title {
+            padding: 8px 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-section-title i {
+            font-size: 0.7rem;
+            margin-right: 6px;
+            opacity: 0.8;
+        }
+        
+        .sidebar .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            margin: 4px 12px;
+            border-radius: var(--radius-sm);
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+            text-decoration: none;
+            position: relative;
+            white-space: nowrap;
+        }
+        
+        .sidebar .nav-link:hover {
+            background: linear-gradient(135deg, rgba(0, 102, 204, 0.08), rgba(0, 184, 212, 0.08));
+            border-color: rgba(0, 102, 204, 0.2);
+            transform: translateX(4px);
+        }
+        
+        .sidebar .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .sidebar .nav-link i {
+            font-size: 1rem;
+            width: 24px;
+            min-width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+        
+        .nav-link-text {
+            flex: 1;
+        }
+        
+        /* Sidebar overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1049;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(2px);
+        }
+        
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
         /* Side Panel Filters */
         .filter-side-panel {
             position: fixed;
@@ -1948,7 +2143,98 @@
                 size: A4;
                 margin: 10mm;
             }
+            /* Sidebar Styles */
+        .sidebar-menu {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            position: sticky;
+            top: 20px;
         }
+
+        .sidebar-menu .nav-link {
+            color: var(--text-muted);
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 0;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .sidebar-menu .nav-link:hover {
+            background-color: var(--sky-blue-light);
+            color: var(--primary-color);
+        }
+
+        .sidebar-menu .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .sidebar-menu .nav-link i {
+            margin-right: 10px;
+            font-size: 1rem;
+        }
+        
+        .section-banner {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-banner h4 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Sidebar Layout */
+        .dashboard-container {
+            display: block;
+            margin-top: 0;
+        }
+
+        .main-content {
+            padding: 20px;
+            min-height: calc(100vh - 56px);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 992px) {
+            .sidebar-toggle {
+                display: none !important;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+        }
+
+        /* Resolution Code Table Styles */
+        .res-code-table th {
+            background-color: var(--sky-blue-light);
+            color: var(--primary-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+        
+        .res-code-table td {
+            vertical-align: middle;
+            font-size: 0.8rem;
+        }
+    }
     </style>
 </head>
 <body>
@@ -2019,8 +2305,9 @@
                                         <option value="">-- Select an Excel file --</option>
                                         <!-- Add your Excel file names from MSPData folder -->
                                         <option value="MSPData/MSPMonthlyReview_2025.xlsx">MSP Monthly Review 2025</option>
+										<!-- Add more files as needed with MSPData/ prefix -->
+                                        <option value="MSPData/MSPMonthlyReview_2025-2026.xlsx">MSP Monthly Review 2025-2026</option>
 										<!-- Add more files as needed with MSPData/ prefix 
-                                        <option value="MSPData/MSPMonthlyReview_December2025.xlsx">MSP December 2025</option>
                                         <option value="MSPData/MSPMonthlyReview_January2026.xlsx">MSP January 2026</option>
                                         Add more files as needed with MSPData/ prefix -->
                                     </select>
@@ -2040,6 +2327,9 @@
         </div>
 
         <div id="dashboard-section" style="display: none;">
+            
+            <!-- Sidebar Overlay -->
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileSidebar()"></div>
             
             <!-- NEW: Data Load Period Info Banner -->
             <div class="row mb-3">
@@ -2123,6 +2413,37 @@
                             <option value="Non-Violated">SLA Non-Violated</option>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label class="filter-label"><i class="bi bi-calendar-range me-1"></i>Timescale</label>
+                        <select class="form-select form-select-sm" id="global-filter-timescale">
+                            <option value="all">All Time (Default)</option>
+                            <option value="current-month">Current Month</option>
+                            <option value="last-month">Last Month</option>
+                            <option value="last-month-include-current">Last Month + Current Month</option>
+                            <option value="last-2-months">Last 2 Months</option>
+                            <option value="last-2-months-include-current">Last 2 Months + Current Month</option>
+                            <option value="last-3-months">Last 3 Months</option>
+                            <option value="last-3-months-include-current">Last 3 Months + Current Month</option>
+                            <option value="last-4-months">Last 4 Months</option>
+                            <option value="last-4-months-include-current">Last 4 Months + Current Month</option>
+                            <option value="last-5-months">Last 5 Months</option>
+                            <option value="last-5-months-include-current">Last 5 Months + Current Month</option>
+                            <option value="last-6-months">Last 6 Months</option>
+                            <option value="last-6-months-include-current">Last 6 Months + Current Month</option>
+                            <option value="last-7-months">Last 7 Months</option>
+                            <option value="last-7-months-include-current">Last 7 Months + Current Month</option>
+                            <option value="last-8-months">Last 8 Months</option>
+                            <option value="last-8-months-include-current">Last 8 Months + Current Month</option>
+                            <option value="last-9-months">Last 9 Months</option>
+                            <option value="last-9-months-include-current">Last 9 Months + Current Month</option>
+                            <option value="last-10-months">Last 10 Months</option>
+                            <option value="last-10-months-include-current">Last 10 Months + Current Month</option>
+                            <option value="last-11-months">Last 11 Months</option>
+                            <option value="last-11-months-include-current">Last 11 Months + Current Month</option>
+                            <option value="current-year">Current Year</option>
+                            <option value="last-year">Last Year</option>
+                        </select>
+                    </div>
                     
                     <hr class="my-4">
                     
@@ -2145,38 +2466,72 @@
                 </div>
             </div>
 
-            <ul class="nav nav-tabs main-view-tabs mb-0" id="mainViewTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="view-dashboard-tab" data-bs-toggle="tab" data-bs-target="#view-dashboard" type="button" role="tab">
-                        <i class="bi bi-grid-1x2 me-2"></i>Dashboard View
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="view-performance-tab" data-bs-toggle="tab" data-bs-target="#view-performance" type="button" role="tab">
-                        <i class="bi bi-list-columns-reverse me-2"></i>Performance View
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="view-monthly-tab" data-bs-toggle="tab" data-bs-target="#view-monthly" type="button" role="tab">
-                        <i class="bi bi-graph-up me-2"></i>Monthly Performance
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="view-monthly-comparison-tab" data-bs-toggle="tab" data-bs-target="#view-monthly-comparison" type="button" role="tab">
-                        <i class="bi bi-bar-chart-line me-2"></i>Monthly Performance Comparison
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="view-category-analysis-tab" data-bs-toggle="tab" data-bs-target="#view-category-analysis" type="button" role="tab">
-                        <i class="bi bi-tags-fill me-2"></i>Category Analysis
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="view-monthly-accounts-tab" data-bs-toggle="tab" data-bs-target="#view-monthly-accounts" type="button" role="tab">
-                        <i class="bi bi-file-earmark-text me-2"></i>Monthly Accounts Review
-                    </button>
-                </li>
-            </ul>
+    <div class="dashboard-container">
+        <!-- Sidebar Toggle FAB Button -->
+        <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Open Menu">
+            <i class="bi bi-list"></i>
+        </button>
+        
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+        
+        <!-- Sidebar Navigation Panel -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h5><i class="bi bi-list-ul"></i>Navigation Menu</h5>
+                <button class="sidebar-close" onclick="toggleSidebar()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="sidebar-content">
+                <div class="nav-section-title"><i class="bi bi-house-door-fill me-1"></i>MAIN VIEWS</div>
+                <div class="nav flex-column" id="mainViewTabs" role="tablist">
+                    <a class="nav-link active" id="view-dashboard-tab" data-bs-toggle="tab" data-bs-target="#view-dashboard" role="tab" onclick="updateBannerTitle('Dashboard View'); toggleSidebar();">
+                        <i class="bi bi-grid-1x2"></i>
+                        <span class="nav-link-text">Dashboard View</span>
+                    </a>
+                    <a class="nav-link" id="view-performance-tab" data-bs-toggle="tab" data-bs-target="#view-performance" role="tab" onclick="updateBannerTitle('Performance View'); toggleSidebar();">
+                        <i class="bi bi-list-columns-reverse"></i>
+                        <span class="nav-link-text">Performance View</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section-title"><i class="bi bi-graph-up-arrow me-1"></i>ANALYTICS</div>
+                <div class="nav flex-column" id="analyticsViewTabs" role="tablist">
+                    <a class="nav-link" id="view-monthly-tab" data-bs-toggle="tab" data-bs-target="#view-monthly" role="tab" onclick="updateBannerTitle('Monthly Performance'); toggleSidebar();">
+                        <i class="bi bi-graph-up"></i>
+                        <span class="nav-link-text">Monthly Performance</span>
+                    </a>
+                    <a class="nav-link" id="view-monthly-comparison-tab" data-bs-toggle="tab" data-bs-target="#view-monthly-comparison" role="tab" onclick="updateBannerTitle('Monthly Performance Comparison'); toggleSidebar();">
+                        <i class="bi bi-bar-chart-line"></i>
+                        <span class="nav-link-text">Monthly Comparison</span>
+                    </a>
+                    <a class="nav-link" id="view-category-analysis-tab" data-bs-toggle="tab" data-bs-target="#view-category-analysis" role="tab" onclick="updateBannerTitle('Category Analysis'); toggleSidebar();">
+                        <i class="bi bi-tags-fill"></i>
+                        <span class="nav-link-text">Category Analysis</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section-title"><i class="bi bi-file-earmark-bar-graph me-1"></i>REPORTS</div>
+                <div class="nav flex-column" id="reportsViewTabs" role="tablist">
+                    <a class="nav-link" id="view-resolution-code-tab" data-bs-toggle="tab" data-bs-target="#view-resolution-code" role="tab" onclick="updateBannerTitle('Resolution Code Review'); toggleSidebar();">
+                        <i class="bi bi-check2-square"></i>
+                        <span class="nav-link-text">Resolution Code Review</span>
+                    </a>
+                    <a class="nav-link" id="view-monthly-accounts-tab" data-bs-toggle="tab" data-bs-target="#view-monthly-accounts" role="tab" onclick="updateBannerTitle('Monthly Accounts Review'); toggleSidebar();">
+                        <i class="bi bi-file-earmark-text"></i>
+                        <span class="nav-link-text">Monthly Accounts Review</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Dynamic Section Banner -->
+            <div class="section-banner" id="currentSectionBanner">
+                <h4 id="currentSectionTitle"><i class="bi bi-grid-1x2 me-2"></i>Dashboard View</h4>
+            </div>
 
             <div class="tab-content view-content" id="mainViewTabsContent">
                 
@@ -2831,6 +3186,34 @@
                         </div>
                     </div>
 
+                    <!-- Trend Charts Row 4 - NEW -->
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-telephone-inbound me-2"></i>#7 - CPE Logged Trend
+                                    </h6>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="cpeLoggedTrendChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-lightning-charge me-2"></i>#8 - FCR Trend
+                                    </h6>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="monthlyFcrTrendChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Monthly Comparison Summary Table -->
                     <div class="row">
                         <div class="col-12 mb-4">
@@ -2853,6 +3236,80 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="monthlyComparisonTableBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resolution Code Review Tab Content - NEW SECTION -->
+                <div class="tab-pane fade" id="view-resolution-code" role="tabpanel">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 style="color: var(--primary-color);">
+                                    <i class="bi bi-check2-square me-2"></i>Resolution Code Review
+                                </h5>
+                                <div>
+                                    <button class="btn btn-sm btn-success" onclick="exportResolutionCodeAnalysis()">
+                                        <i class="bi bi-download me-1"></i> Export Analysis
+                                    </button>
+                                </div>
+                            </div>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">
+                                Analysis of call volumes by Resolution Code and Sub Resolution Code
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                                        Resolution Code Analysis
+                                    </h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover res-code-table mb-0" id="resolutionCodeTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Resolution Code</th>
+                                                    <th>Count</th>
+                                                    <th>% of Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="resolutionCodeTableBody">
+                                                <!-- Populated by JS -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                                        Sub Resolution Code Analysis
+                                    </h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover res-code-table mb-0" id="subResolutionCodeTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Sub Resolution Code</th>
+                                                    <th>Count</th>
+                                                    <th>% of Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="subResolutionCodeTableBody">
+                                                <!-- Populated by JS -->
                                             </tbody>
                                         </table>
                                     </div>
@@ -3237,6 +3694,8 @@
             </div>
         </div>
     </div>
+        </div>
+    </div>
 
     <div class="loading-spinner" id="loadingSpinner">
         <div class="spinner-border"></div>
@@ -3293,7 +3752,7 @@
         let drillDownData = [];
         let drillDownTitleForExport = '';
         let drillDownExportData = [];
-        let globalFilters = { owner: '', submittedby: '', service: '', status: '', sla: '' };
+        let globalFilters = { owner: '', submittedby: '', service: '', status: '', sla: '', timescale: 'all' };
         let charts = {};
         let scorecardData = [];
         let currentView = 'list'; // 'list' or 'grid'
@@ -3661,6 +4120,7 @@
             document.getElementById('global-filter-status').addEventListener('change', updateGlobalFilters);
             document.getElementById('global-filter-sla').addEventListener('change', updateGlobalFilters);
             document.getElementById('global-filter-submittedby').addEventListener('change', updateGlobalFilters);
+            document.getElementById('global-filter-timescale').addEventListener('change', updateGlobalFilters);
             
             // Setup tab filter listeners
             setupTabFilterListeners();
@@ -3669,6 +4129,7 @@
             updateMonthlyPerformance();
             updateMonthlyComparison();
             updateCategoryAnalysis();
+            updateResolutionCodeAnalysis();
         }
 
         function setupTabFilterListeners() {
@@ -3818,7 +4279,9 @@
                 feature: findCol(['Feature', 'Product Feature']),
                 subFeature: findCol(['Sub Feature', 'SubFeature', 'Sub-Feature']),
                 tat247: findCol(['TAT (247)', 'TAT(247)', 'TAT (24/7)', 'TAT(24/7)', 'TAT(24//7)', 'TAT 24/7', 'TAT 24//7', 'TAT ( 24/7 )', 'TAT ( 24//7 )']),
-                tatSLA: findCol(['TAT (SLA)', 'TAT(SLA)', 'TAT SLA', 'TAT( SLA )', 'TAT ( SLA )'])
+                tatSLA: findCol(['TAT (SLA)', 'TAT(SLA)', 'TAT SLA', 'TAT( SLA )', 'TAT ( SLA )']),
+                resolutionCode: findCol(['Resolution Code', 'ResolutionCode']),
+                subResolutionCode: findCol(['Sub Resolution Code', 'SubResolutionCode'])
             };
 
             processedData = rawData.map(row => {
@@ -3891,6 +4354,8 @@
                     subFeature: row[colMap.subFeature] || 'N/A',
                     tat247: parseNum(row[colMap.tat247] || '0'),
                     tatSLA: parseNum(row[colMap.tatSLA] || '0'),
+                    resolutionCode: row[colMap.resolutionCode] || 'N/A',
+                    subResolutionCode: row[colMap.subResolutionCode] || 'N/A',
                     
                     // For drill-down exports
                     aging15Status: aging15Status,
@@ -3937,6 +4402,7 @@
             updateMonthlyPerformance();
             updateMonthlyComparison();
             updateCategoryAnalysis();
+            updateResolutionCodeAnalysis();
         }
 
         function populateFilterDropdowns() {
@@ -3974,6 +4440,150 @@
             }
         }
 
+        function getTimescaleDateRange(timescaleValue) {
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            const currentMonth = today.getMonth(); // 0-indexed
+            
+            let startDate = null;
+            let endDate = null;
+            
+            switch(timescaleValue) {
+                case 'all':
+                    return { startDate: null, endDate: null }; // No filtering
+                    
+                case 'current-month':
+                    startDate = new Date(currentYear, currentMonth, 1);
+                    endDate = new Date(currentYear, currentMonth + 1, 0); // Last day of current month
+                    break;
+                    
+                case 'last-month':
+                    startDate = new Date(currentYear, currentMonth - 1, 1);
+                    endDate = new Date(currentYear, currentMonth, 0); // Last day of last month
+                    break;
+                    
+                case 'last-month-include-current':
+                    startDate = new Date(currentYear, currentMonth - 1, 1);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
+                    break;
+                    
+                case 'last-2-months':
+                    startDate = new Date(currentYear, currentMonth - 2, 1);
+                    endDate = new Date(currentYear, currentMonth, 0);
+                    break;
+                    
+                case 'last-2-months-include-current':
+                    startDate = new Date(currentYear, currentMonth - 2, 1);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
+                    break;
+                    
+                case 'last-3-months':
+                    startDate = new Date(currentYear, currentMonth - 3, 1);
+                    endDate = new Date(currentYear, currentMonth, 0);
+                    break;
+                    
+                case 'last-3-months-include-current':
+                    startDate = new Date(currentYear, currentMonth - 3, 1);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
+                    break;
+                    
+                case 'last-4-months':
+                    startDate = new Date(currentYear, currentMonth - 4, 1);
+                    endDate = new Date(currentYear, currentMonth, 0);
+                    break;
+                    
+                case 'last-4-months-include-current':
+                    startDate = new Date(currentYear, currentMonth - 4, 1);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
+                    break;
+                    
+                case 'last-5-months':
+                    startDate = new Date(currentYear, currentMonth - 5, 1);
+                    endDate = new Date(currentYear, currentMonth, 0);
+                    break;
+                    
+                case 'last-5-months-include-current':
+                    startDate = new Date(currentYear, currentMonth - 5, 1);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
+                    break;
+                    
+                case 'last-6-months':
+                    startDate = new Date(currentYear, currentMonth - 6, 1);
+                    endDate = new Date(currentYear, currentMonth, 0);
+                    break;
+                    
+                case 'last-6-months-include-current':
+                    startDate = new Date(currentYear, currentMonth - 6, 1);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
+                    break;
+                    
+                case 'last-7-months':
+                    startDate = new Date(currentYear, currentMonth - 7, 1);
+                    endDate = new Date(currentYear, currentMonth, 0);
+                    break;
+                    
+                case 'last-7-months-include-current':
+                    startDate = new Date(currentYear, currentMonth - 7, 1);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
+                    break;
+                    
+                case 'last-8-months':
+                    startDate = new Date(currentYear, currentMonth - 8, 1);
+                    endDate = new Date(currentYear, currentMonth, 0);
+                    break;
+                    
+                case 'last-8-months-include-current':
+                    startDate = new Date(currentYear, currentMonth - 8, 1);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
+                    break;
+                    
+                case 'last-9-months':
+                    startDate = new Date(currentYear, currentMonth - 9, 1);
+                    endDate = new Date(currentYear, currentMonth, 0);
+                    break;
+                    
+                case 'last-9-months-include-current':
+                    startDate = new Date(currentYear, currentMonth - 9, 1);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
+                    break;
+                    
+                case 'last-10-months':
+                    startDate = new Date(currentYear, currentMonth - 10, 1);
+                    endDate = new Date(currentYear, currentMonth, 0);
+                    break;
+                    
+                case 'last-10-months-include-current':
+                    startDate = new Date(currentYear, currentMonth - 10, 1);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
+                    break;
+                    
+                case 'last-11-months':
+                    startDate = new Date(currentYear, currentMonth - 11, 1);
+                    endDate = new Date(currentYear, currentMonth, 0);
+                    break;
+                    
+                case 'last-11-months-include-current':
+                    startDate = new Date(currentYear, currentMonth - 11, 1);
+                    endDate = new Date(currentYear, currentMonth + 1, 0);
+                    break;
+                    
+                case 'current-year':
+                    startDate = new Date(currentYear, 0, 1); // Jan 1 of current year
+                    endDate = new Date(currentYear, 11, 31); // Dec 31 of current year
+                    break;
+                    
+                case 'last-year':
+                    startDate = new Date(currentYear - 1, 0, 1); // Jan 1 of last year
+                    endDate = new Date(currentYear - 1, 11, 31); // Dec 31 of last year
+                    break;
+                    
+                default:
+                    return { startDate: null, endDate: null };
+            }
+            
+            return { startDate, endDate };
+        }
+        
         function updateGlobalFilters() {
             showLoading(true);
             
@@ -3982,6 +4592,16 @@
             globalFilters.service = document.getElementById('global-filter-service').value;
             globalFilters.status = document.getElementById('global-filter-status').value;
             globalFilters.sla = document.getElementById('global-filter-sla').value;
+            globalFilters.timescale = document.getElementById('global-filter-timescale').value;
+            
+            // Get date range for timescale filter
+            const { startDate, endDate } = getTimescaleDateRange(globalFilters.timescale);
+            
+            // Debug logging for timescale
+            if (startDate && endDate) {
+                console.log('Timescale Filter Active:', globalFilters.timescale);
+                console.log('Date Range:', startDate.toLocaleDateString(), 'to', endDate.toLocaleDateString());
+            }
 
             // Filter by global filters
             filteredData = processedData.filter(d => {
@@ -3991,8 +4611,22 @@
                 if (globalFilters.status && d.currentStatus !== globalFilters.status) return false;
                 if (globalFilters.sla === 'Violated' && !d.isSlaViolated) return false;
                 if (globalFilters.sla === 'Non-Violated' && d.isSlaViolated) return false;
+                
+                // Timescale filtering - compare only dates, ignore time
+                if (startDate && endDate && d.submissionDate) {
+                    // Create date-only versions (set time to midnight for accurate comparison)
+                    const caseDateOnly = new Date(d.submissionDate.getFullYear(), d.submissionDate.getMonth(), d.submissionDate.getDate());
+                    const startDateOnly = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+                    const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+                    
+                    if (caseDateOnly < startDateOnly || caseDateOnly > endDateOnly) return false;
+                }
+                
                 return true;
             });
+            
+            // Debug: Show how many cases matched the filter
+            console.log(`Filtered ${filteredData.length} cases out of ${processedData.length} total cases`);
 
             updateActiveFiltersDisplay();
             
@@ -4002,6 +4636,7 @@
             updateMonthlyPerformance();
             updateMonthlyComparison();
             updateCategoryAnalysis();
+            updateResolutionCodeAnalysis();
             
             // Update Monthly Accounts Review
             loadMonthlyAccountsReview();
@@ -4028,6 +4663,11 @@
             if (globalFilters.service) activeFilters.push({key: 'service', label: 'Service Type', value: globalFilters.service});
             if (globalFilters.status) activeFilters.push({key: 'status', label: 'Status', value: globalFilters.status});
             if (globalFilters.sla) activeFilters.push({key: 'sla', label: 'SLA Status', value: globalFilters.sla});
+            if (globalFilters.timescale && globalFilters.timescale !== 'all') {
+                // Format the timescale display text
+                const timescaleText = document.getElementById('global-filter-timescale').selectedOptions[0].text;
+                activeFilters.push({key: 'timescale', label: 'Timescale', value: timescaleText});
+            }
 
             const activeFiltersTags = document.getElementById('active-filters-tags');
             const activeFiltersCount = document.getElementById('active-filters-count');
@@ -4061,12 +4701,14 @@
             document.getElementById('global-filter-service').value = '';
             document.getElementById('global-filter-status').value = '';
             document.getElementById('global-filter-sla').value = '';
+            document.getElementById('global-filter-timescale').value = 'all';
             
             globalFilters.owner = '';
             globalFilters.submittedby = '';
             globalFilters.service = '';
             globalFilters.status = '';
             globalFilters.sla = '';
+            globalFilters.timescale = 'all';
             
             filteredData = [...processedData];
             
@@ -4077,6 +4719,7 @@
             updateMonthlyPerformance();
             updateMonthlyComparison();
             updateCategoryAnalysis();
+            updateResolutionCodeAnalysis();
         }
 
         function updateOwnerFilter(owner) {
@@ -5972,9 +6615,12 @@
             filteredData.forEach(d => {
                 const monthKey = d.monthYear;
                 if (!monthlyDataLogged[monthKey]) {
-                    monthlyDataLogged[monthKey] = { loggedCases: 0 };
+                    monthlyDataLogged[monthKey] = { loggedCases: 0, cpeLogged: 0 };
                 }
                 monthlyDataLogged[monthKey].loggedCases++;
+                if (d.correspondingInternalTicket && d.correspondingInternalTicket !== 'N/A' && d.correspondingInternalTicket !== '') {
+                    monthlyDataLogged[monthKey].cpeLogged++;
+                }
             });
             
             // Second pass: Count closed cases by resolve month
@@ -5984,9 +6630,10 @@
                     if (!isNaN(resolveDate.getTime())) {
                         const monthKey = `${resolveDate.getMonth()+1}-${resolveDate.getFullYear()}`;
                         if (!monthlyDataClosed[monthKey]) {
-                            monthlyDataClosed[monthKey] = { closedCases: 0 };
+                            monthlyDataClosed[monthKey] = { closedCases: 0, fcrCompliant: 0 };
                         }
                         monthlyDataClosed[monthKey].closedCases++;
+                        if (d.agingDays < 2) monthlyDataClosed[monthKey].fcrCompliant++;
                     }
                 }
             });
@@ -5999,6 +6646,8 @@
                         total: 0,
                         loggedCases: 0,
                         closedCases: 0,
+                        cpeLogged: 0,
+                        fcrCompliant: 0,
                         slaViolated: 0,
                         subsequentSLA: 0,
                         totalAgingDays: 0,
@@ -6016,7 +6665,9 @@
                 const stats = monthlyStats[monthKey];
                 stats.total++;
                 stats.loggedCases = monthlyDataLogged[monthKey]?.loggedCases || 0;
+                stats.cpeLogged = monthlyDataLogged[monthKey]?.cpeLogged || 0;
                 stats.closedCases = monthlyDataClosed[monthKey]?.closedCases || 0;
+                stats.fcrCompliant = monthlyDataClosed[monthKey]?.fcrCompliant || 0;
                 
                 if (d.isSlaViolated) stats.slaViolated++;
                 if (d.isClosed && d.subsequentSLABreachCount > 0) stats.subsequentSLA++;
@@ -6070,6 +6721,8 @@
             const performanceScoreData = [];
             const avg247Data = [];  // New: TAT(247) average data
             const avgSLAData = [];  // New: TAT(SLA) average data
+            const cpeLoggedData = [];
+            const fcrTrendData = [];
             
             const tableBody = document.getElementById('monthlyComparisonTableBody');
             if (!tableBody) return;
@@ -6091,6 +6744,9 @@
                 const avgSLA = stats.tatSLAValues.length > 0
                     ? (stats.tatSLAValues.reduce((a, b) => a + b, 0) / stats.tatSLAValues.length).toFixed(1)
                     : 0;
+
+                // FCR Calculation: (FCR Compliant Closed / Total Closed) * 100
+                const fcrRate = stats.closedCases > 0 ? ((stats.fcrCompliant / stats.closedCases) * 100).toFixed(1) : 0;
                 
                 // Calculate performance score with Subsequent SLA Miss penalty
                 let performanceScore = 0;
@@ -6119,6 +6775,8 @@
                 performanceScoreData.push(performanceScore);
                 avg247Data.push(parseFloat(avg247));  // New: Push TAT(247) data
                 avgSLAData.push(parseFloat(avgSLA));   // New: Push TAT(SLA) data
+                cpeLoggedData.push(stats.cpeLogged);
+                fcrTrendData.push(parseFloat(fcrRate));
                 
                 // Add table row
                 const row = `
@@ -6136,9 +6794,29 @@
             });
             
             // Destroy existing charts before creating new ones
+            const chartIds = [
+                'overallLoggedClosedChart', 'slaComplianceTrendChart', 'srLoggedClosedChart', 
+                'incLoggedClosedChart', 'avgResolutionTrendChart', 'overallPerformanceTrendChart',
+                'cpeLoggedTrendChart', 'monthlyFcrTrendChart'
+            ];
+            
+            chartIds.forEach(id => {
+                const chartInstance = Chart.getChart(id);
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+            });
+
             if (window.comparisonCharts) {
                 Object.values(window.comparisonCharts).forEach(chart => {
-                    if (chart) chart.destroy();
+                    if (chart && typeof chart.destroy === 'function') {
+                        try {
+                            // Check if chart is already destroyed (Chart.js 3+ properties)
+                            if (chart.ctx) chart.destroy();
+                        } catch(e) {
+                            console.warn('Error destroying chart:', e);
+                        }
+                    }
                 });
             }
             window.comparisonCharts = {};
@@ -6590,6 +7268,81 @@
                     }
                 });
             }
+
+            // Chart 7: CPE Logged Trend
+            const cpeLoggedCtx = document.getElementById('cpeLoggedTrendChart');
+            if (cpeLoggedCtx) {
+                window.comparisonCharts.cpeLogged = new Chart(cpeLoggedCtx, {
+                    type: 'line',
+                    data: {
+                        labels: monthLabels,
+                        datasets: [{
+                            label: 'CPE Logged',
+                            data: cpeLoggedData,
+                            borderColor: '#0066cc',
+                            backgroundColor: 'rgba(0, 102, 204, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 3,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: true, position: 'top' },
+                            tooltip: { mode: 'index', intersect: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Count' } }
+                        }
+                    }
+                });
+            }
+
+            // Chart 8: FCR Trend
+            const fcrTrendCtx = document.getElementById('monthlyFcrTrendChart');
+            if (fcrTrendCtx) {
+                window.comparisonCharts.fcrTrend = new Chart(fcrTrendCtx, {
+                    type: 'line',
+                    data: {
+                        labels: monthLabels,
+                        datasets: [{
+                            label: 'FCR %',
+                            data: fcrTrendData,
+                            borderColor: '#00c853',
+                            backgroundColor: 'rgba(0, 200, 83, 0.1)',
+                            tension: 0.4,
+                            fill: true,
+                            borderWidth: 3,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: true, position: 'top' },
+                            tooltip: { 
+                                mode: 'index', 
+                                intersect: false,
+                                callbacks: { label: function(c) { return c.dataset.label + ': ' + c.parsed.y + '%'; } }
+                            }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: true, 
+                                max: 100, 
+                                title: { display: true, text: 'Percentage' },
+                                ticks: { callback: function(v) { return v + '%'; } }
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         function exportMonthlyComparison() {
@@ -6765,9 +7518,15 @@
             });
             
             // Destroy existing charts
+            const catChartIds = ['supportCategoryChart', 'topFeaturesChart', 'topFeaturesSLAChart'];
+            catChartIds.forEach(id => {
+                const chartInstance = Chart.getChart(id);
+                if (chartInstance) chartInstance.destroy();
+            });
+
             if (window.categoryCharts) {
                 Object.values(window.categoryCharts).forEach(chart => {
-                    if (chart) chart.destroy();
+                    if (chart && chart.ctx) chart.destroy();
                 });
             }
             window.categoryCharts = {};
@@ -8222,6 +8981,164 @@
                 setTimeout(() => printWindow.close(), 500);
             }, 500);
         }
+        // Sidebar & UI Functions
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+        
+        function toggleMobileSidebar() {
+            toggleSidebar();
+        }
+
+        function updateBannerTitle(title) {
+            const bannerTitle = document.getElementById('currentSectionTitle');
+            // Update icon based on title
+            let icon = 'bi-grid-1x2';
+            if(title.includes('Performance View')) icon = 'bi-list-columns-reverse';
+            else if(title.includes('Monthly Performance')) icon = 'bi-graph-up';
+            else if(title.includes('Monthly Comparison')) icon = 'bi-bar-chart-line';
+            else if(title.includes('Resolution Code')) icon = 'bi-check2-square';
+            else if(title.includes('Category')) icon = 'bi-tags-fill';
+            else if(title.includes('Accounts')) icon = 'bi-file-earmark-text';
+            
+            bannerTitle.innerHTML = `<i class="bi ${icon} me-2"></i>${title}`;
+        }
+
+        // Resolution Code Analysis
+        function updateResolutionCodeAnalysis() {
+            const resCodeCounts = {};
+            const subResCodeCounts = {};
+            const total = filteredData.length;
+
+            filteredData.forEach(d => {
+                const resCode = d.resolutionCode || 'N/A';
+                const subResCode = d.subResolutionCode || 'N/A';
+                
+                resCodeCounts[resCode] = (resCodeCounts[resCode] || 0) + 1;
+                subResCodeCounts[subResCode] = (subResCodeCounts[subResCode] || 0) + 1;
+            });
+
+            // Render Resolution Code Table
+            const resTableBody = document.getElementById('resolutionCodeTableBody');
+            if (resTableBody) {
+                resTableBody.innerHTML = '';
+                Object.entries(resCodeCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .forEach(([code, count]) => {
+                        const pct = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                        resTableBody.innerHTML += `
+                            <tr>
+                                <td>${code}</td>
+                                <td>${count}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress flex-grow-1 me-2" style="height: 6px;">
+                                            <div class="progress-bar" role="progressbar" style="width: ${pct}%" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <span>${pct}%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+            }
+
+            // Render Sub Resolution Code Table
+            const subResTableBody = document.getElementById('subResolutionCodeTableBody');
+            if (subResTableBody) {
+                subResTableBody.innerHTML = '';
+                Object.entries(subResCodeCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .forEach(([code, count]) => {
+                        const pct = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                        subResTableBody.innerHTML += `
+                            <tr>
+                                <td>${code}</td>
+                                <td>${count}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress flex-grow-1 me-2" style="height: 6px;">
+                                            <div class="progress-bar" role="progressbar" style="width: ${pct}%" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <span>${pct}%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+            }
+        }
+
+        function exportResolutionCodeAnalysis() {
+            const wb = XLSX.utils.book_new();
+            
+            // Resolution Code Sheet
+            const resData = [];
+            const resCodeCounts = {};
+            filteredData.forEach(d => {
+                const resCode = d.resolutionCode || 'N/A';
+                resCodeCounts[resCode] = (resCodeCounts[resCode] || 0) + 1;
+            });
+            
+            resData.push(['Resolution Code', 'Count', '% of Total']);
+            const total = filteredData.length;
+            
+            Object.entries(resCodeCounts)
+                .sort((a, b) => b[1] - a[1])
+                .forEach(([code, count]) => {
+                    const pct = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                    resData.push([code, count, pct + '%']);
+                });
+                
+            const wsRes = XLSX.utils.aoa_to_sheet(resData);
+            XLSX.utils.book_append_sheet(wb, wsRes, "Resolution Codes");
+            
+            // Sub Resolution Code Sheet
+            const subResData = [];
+            const subResCodeCounts = {};
+            filteredData.forEach(d => {
+                const code = d.subResolutionCode || 'N/A';
+                subResCodeCounts[code] = (subResCodeCounts[code] || 0) + 1;
+            });
+            
+            subResData.push(['Sub Resolution Code', 'Count', '% of Total']);
+            
+            Object.entries(subResCodeCounts)
+                .sort((a, b) => b[1] - a[1])
+                .forEach(([code, count]) => {
+                    const pct = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+                    subResData.push([code, count, pct + '%']);
+                });
+                
+            const wsSubRes = XLSX.utils.aoa_to_sheet(subResData);
+            XLSX.utils.book_append_sheet(wb, wsSubRes, "Sub Resolution Codes");
+            
+            XLSX.writeFile(wb, `Resolution_Code_Analysis_${new Date().toISOString().split('T')[0]}.xlsx`);
+        }
+
+        // Auto-close mobile sidebar when menu item clicked
+        document.addEventListener('DOMContentLoaded', function() {
+            // Select all nav links from all sections
+            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 992) {
+                        setTimeout(() => {
+                            const sidebar = document.getElementById('sidebar');
+                            const overlay = document.getElementById('sidebarOverlay');
+                            if (sidebar && sidebar.classList.contains('mobile-open')) {
+                                sidebar.classList.remove('mobile-open');
+                                if (overlay) overlay.classList.remove('show');
+                            }
+                        }, 300);
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
