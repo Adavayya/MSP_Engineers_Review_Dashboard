@@ -2510,6 +2510,10 @@
                         <i class="bi bi-check2-square"></i>
                         <span class="nav-link-text">Resolution Code Review</span>
                     </a>
+                    <a class="nav-link" id="view-resolution-review-tab" data-bs-toggle="tab" data-bs-target="#view-resolution-review" role="tab" onclick="updateBannerTitle('Resolution Review'); toggleSidebar(); updateResolutionReviewTab();">
+                        <i class="bi bi-clipboard-check"></i>
+                        <span class="nav-link-text">Resolution Review</span>
+                    </a>
                     <a class="nav-link" id="view-monthly-accounts-tab" data-bs-toggle="tab" data-bs-target="#view-monthly-accounts" role="tab" onclick="updateBannerTitle('Monthly Accounts Review'); toggleSidebar();">
                         <i class="bi bi-file-earmark-text"></i>
                         <span class="nav-link-text">Monthly Accounts Review</span>
@@ -3516,6 +3520,142 @@
                     </div>
                 </div>
 
+                <!-- Resolution Review Tab Content - NEW SECTION -->
+                <div class="tab-pane fade" id="view-resolution-review" role="tabpanel">
+                    
+                    <!-- Export Button Bar -->
+                    <div class="d-flex justify-content-end mb-3 no-print">
+                        <button class="btn btn-success" onclick="exportResolutionReview()">
+                            <i class="bi bi-file-earmark-excel me-2"></i>Export to Excel
+                        </button>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <div style="font-size: 2rem; color: var(--primary-color);">
+                                        <i class="bi bi-card-list"></i>
+                                    </div>
+                                    <h6 class="mt-2" style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Unique Problem Statements</h6>
+                                    <h3 id="uniqueProblemStatements" style="color: var(--primary-color); font-weight: 700;">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <div style="font-size: 2rem; color: var(--success-color);">
+                                        <i class="bi bi-list-check"></i>
+                                    </div>
+                                    <h6 class="mt-2" style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Unique Resolution Steps</h6>
+                                    <h3 id="uniqueResolutionSteps" style="color: var(--success-color); font-weight: 700;">0</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="row mb-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-bar-chart-fill me-2"></i>Top 10 Problem Statements
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="problemStatementsChart" style="height: 300px;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-bar-chart-fill me-2"></i>Top 10 Resolution Steps
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="resolutionStepsChart" style="height: 300px;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Tables -->
+                    <div class="row mb-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-table me-2"></i>Problem Statement Analysis
+                                    </h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table table-striped table-hover mb-0">
+                                            <thead style="position: sticky; top: 0; background-color: #f8f9fa; z-index: 1;">
+                                                <tr>
+                                                    <th style="width: 60%;">Problem Statement</th>
+                                                    <th style="width: 20%;">Count</th>
+                                                    <th style="width: 20%;">% of Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="problemStatementTableBody">
+                                                <!-- Populated by JS -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-table me-2"></i>Resolution Steps Analysis
+                                    </h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table table-striped table-hover mb-0">
+                                            <thead style="position: sticky; top: 0; background-color: #f8f9fa; z-index: 1;">
+                                                <tr>
+                                                    <th style="width: 60%;">Resolution Summary (Steps)</th>
+                                                    <th style="width: 20%;">Count</th>
+                                                    <th style="width: 20%;">% of Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="resolutionStepsTableBody">
+                                                <!-- Populated by JS -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Insights and Recommendations -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-lightbulb me-2"></i>Key Insights & Recommendations
+                                    </h6>
+                                </div>
+                                <div class="card-body" id="insightsContent">
+                                    <!-- Insights will be populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Monthly Accounts Review Tab Content - NEW SECTION -->
                 <div class="tab-pane fade" id="view-monthly-accounts" role="tabpanel">
                     
@@ -4353,7 +4493,10 @@
                 tat247: findCol(['TAT (247)', 'TAT(247)', 'TAT (24/7)', 'TAT(24/7)', 'TAT(24//7)', 'TAT 24/7', 'TAT 24//7', 'TAT ( 24/7 )', 'TAT ( 24//7 )']),
                 tatSLA: findCol(['TAT (SLA)', 'TAT(SLA)', 'TAT SLA', 'TAT( SLA )', 'TAT ( SLA )']),
                 resolutionCode: findCol(['Resolution Code', 'ResolutionCode']),
-                subResolutionCode: findCol(['Sub Resolution Code', 'SubResolutionCode'])
+                subResolutionCode: findCol(['Sub Resolution Code', 'SubResolutionCode']),
+                problemStatement: findCol(['Problem Statement / Requirement', 'Problem Statement', 'Requirement']),
+                resolutionSummary: findCol(['Resolution Summary (Steps)', 'Resolution Summary', 'Resolution Steps']),
+                severityLevel: findCol(['Severity Level', 'Severity', 'Priority'])
             };
 
             processedData = rawData.map(row => {
@@ -4428,6 +4571,9 @@
                     tatSLA: parseNum(row[colMap.tatSLA] || '0'),
                     resolutionCode: row[colMap.resolutionCode] || 'N/A',
                     subResolutionCode: row[colMap.subResolutionCode] || 'N/A',
+                    problemStatement: row[colMap.problemStatement] || '',
+                    resolutionSummary: row[colMap.resolutionSummary] || '',
+                    severityLevel: row[colMap.severityLevel] || '',
                     
                     // For drill-down exports
                     aging15Status: aging15Status,
@@ -8511,7 +8657,248 @@
         function updateMarCharts(metrics) {
             // Get sorted months for all charts
             const monthlyData = metrics.monthlyBreakdown || {};
-            const sortedMonths = Object.keys(monthlyData).sort((a, b) => {
+            
+            // Filter months based on timescale selection
+            let filteredMonthlyData = monthlyData;
+            if (globalFilters.timescale && globalFilters.timescale !== 'all') {
+                const today = new Date();
+                const currentYear = today.getFullYear();
+                const currentMonth = today.getMonth(); // 0-indexed (0 = Jan, 1 = Feb, etc.)
+                
+                let startMonth = null;
+                let startYear = null;
+                let endMonth = null;
+                let endYear = null;
+                
+                switch(globalFilters.timescale) {
+                    case 'current-month':
+                        startMonth = currentMonth;
+                        startYear = currentYear;
+                        endMonth = currentMonth;
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'last-month':
+                        const lastMonth = new Date(currentYear, currentMonth - 1, 1);
+                        startMonth = lastMonth.getMonth();
+                        startYear = lastMonth.getFullYear();
+                        endMonth = lastMonth.getMonth();
+                        endYear = lastMonth.getFullYear();
+                        break;
+                        
+                    case 'last-month-include-current':
+                        const lastMonthIncl = new Date(currentYear, currentMonth - 1, 1);
+                        startMonth = lastMonthIncl.getMonth();
+                        startYear = lastMonthIncl.getFullYear();
+                        endMonth = currentMonth;
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'last-2-months':
+                        const last2Months = new Date(currentYear, currentMonth - 2, 1);
+                        startMonth = last2Months.getMonth();
+                        startYear = last2Months.getFullYear();
+                        const endLast2 = new Date(currentYear, currentMonth, 0);
+                        endMonth = endLast2.getMonth();
+                        endYear = endLast2.getFullYear();
+                        break;
+                        
+                    case 'last-2-months-include-current':
+                        const last2MonthsIncl = new Date(currentYear, currentMonth - 2, 1);
+                        startMonth = last2MonthsIncl.getMonth();
+                        startYear = last2MonthsIncl.getFullYear();
+                        endMonth = currentMonth;
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'last-3-months':
+                        const last3Months = new Date(currentYear, currentMonth - 3, 1);
+                        startMonth = last3Months.getMonth();
+                        startYear = last3Months.getFullYear();
+                        const endLast3 = new Date(currentYear, currentMonth, 0);
+                        endMonth = endLast3.getMonth();
+                        endYear = endLast3.getFullYear();
+                        break;
+                        
+                    case 'last-3-months-include-current':
+                        const last3MonthsIncl = new Date(currentYear, currentMonth - 3, 1);
+                        startMonth = last3MonthsIncl.getMonth();
+                        startYear = last3MonthsIncl.getFullYear();
+                        endMonth = currentMonth;
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'last-4-months':
+                        const last4Months = new Date(currentYear, currentMonth - 4, 1);
+                        startMonth = last4Months.getMonth();
+                        startYear = last4Months.getFullYear();
+                        const endLast4 = new Date(currentYear, currentMonth, 0);
+                        endMonth = endLast4.getMonth();
+                        endYear = endLast4.getFullYear();
+                        break;
+                        
+                    case 'last-4-months-include-current':
+                        const last4MonthsIncl = new Date(currentYear, currentMonth - 4, 1);
+                        startMonth = last4MonthsIncl.getMonth();
+                        startYear = last4MonthsIncl.getFullYear();
+                        endMonth = currentMonth;
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'last-5-months':
+                        const last5Months = new Date(currentYear, currentMonth - 5, 1);
+                        startMonth = last5Months.getMonth();
+                        startYear = last5Months.getFullYear();
+                        const endLast5 = new Date(currentYear, currentMonth, 0);
+                        endMonth = endLast5.getMonth();
+                        endYear = endLast5.getFullYear();
+                        break;
+                        
+                    case 'last-5-months-include-current':
+                        const last5MonthsIncl = new Date(currentYear, currentMonth - 5, 1);
+                        startMonth = last5MonthsIncl.getMonth();
+                        startYear = last5MonthsIncl.getFullYear();
+                        endMonth = currentMonth;
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'last-6-months':
+                        const last6Months = new Date(currentYear, currentMonth - 6, 1);
+                        startMonth = last6Months.getMonth();
+                        startYear = last6Months.getFullYear();
+                        const endLast6 = new Date(currentYear, currentMonth, 0);
+                        endMonth = endLast6.getMonth();
+                        endYear = endLast6.getFullYear();
+                        break;
+                        
+                    case 'last-6-months-include-current':
+                        const last6MonthsIncl = new Date(currentYear, currentMonth - 6, 1);
+                        startMonth = last6MonthsIncl.getMonth();
+                        startYear = last6MonthsIncl.getFullYear();
+                        endMonth = currentMonth;
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'last-7-months':
+                        const last7Months = new Date(currentYear, currentMonth - 7, 1);
+                        startMonth = last7Months.getMonth();
+                        startYear = last7Months.getFullYear();
+                        const endLast7 = new Date(currentYear, currentMonth, 0);
+                        endMonth = endLast7.getMonth();
+                        endYear = endLast7.getFullYear();
+                        break;
+                        
+                    case 'last-7-months-include-current':
+                        const last7MonthsIncl = new Date(currentYear, currentMonth - 7, 1);
+                        startMonth = last7MonthsIncl.getMonth();
+                        startYear = last7MonthsIncl.getFullYear();
+                        endMonth = currentMonth;
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'last-8-months':
+                        const last8Months = new Date(currentYear, currentMonth - 8, 1);
+                        startMonth = last8Months.getMonth();
+                        startYear = last8Months.getFullYear();
+                        const endLast8 = new Date(currentYear, currentMonth, 0);
+                        endMonth = endLast8.getMonth();
+                        endYear = endLast8.getFullYear();
+                        break;
+                        
+                    case 'last-8-months-include-current':
+                        const last8MonthsIncl = new Date(currentYear, currentMonth - 8, 1);
+                        startMonth = last8MonthsIncl.getMonth();
+                        startYear = last8MonthsIncl.getFullYear();
+                        endMonth = currentMonth;
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'last-9-months':
+                        const last9Months = new Date(currentYear, currentMonth - 9, 1);
+                        startMonth = last9Months.getMonth();
+                        startYear = last9Months.getFullYear();
+                        const endLast9 = new Date(currentYear, currentMonth, 0);
+                        endMonth = endLast9.getMonth();
+                        endYear = endLast9.getFullYear();
+                        break;
+                        
+                    case 'last-9-months-include-current':
+                        const last9MonthsIncl = new Date(currentYear, currentMonth - 9, 1);
+                        startMonth = last9MonthsIncl.getMonth();
+                        startYear = last9MonthsIncl.getFullYear();
+                        endMonth = currentMonth;
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'last-10-months':
+                        const last10Months = new Date(currentYear, currentMonth - 10, 1);
+                        startMonth = last10Months.getMonth();
+                        startYear = last10Months.getFullYear();
+                        const endLast10 = new Date(currentYear, currentMonth, 0);
+                        endMonth = endLast10.getMonth();
+                        endYear = endLast10.getFullYear();
+                        break;
+                        
+                    case 'last-10-months-include-current':
+                        const last10MonthsIncl = new Date(currentYear, currentMonth - 10, 1);
+                        startMonth = last10MonthsIncl.getMonth();
+                        startYear = last10MonthsIncl.getFullYear();
+                        endMonth = currentMonth;
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'last-11-months':
+                        const last11Months = new Date(currentYear, currentMonth - 11, 1);
+                        startMonth = last11Months.getMonth();
+                        startYear = last11Months.getFullYear();
+                        const endLast11 = new Date(currentYear, currentMonth, 0);
+                        endMonth = endLast11.getMonth();
+                        endYear = endLast11.getFullYear();
+                        break;
+                        
+                    case 'last-11-months-include-current':
+                        const last11MonthsIncl = new Date(currentYear, currentMonth - 11, 1);
+                        startMonth = last11MonthsIncl.getMonth();
+                        startYear = last11MonthsIncl.getFullYear();
+                        endMonth = currentMonth;
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'current-year':
+                        startMonth = 0; // January
+                        startYear = currentYear;
+                        endMonth = 11; // December
+                        endYear = currentYear;
+                        break;
+                        
+                    case 'last-year':
+                        startMonth = 0; // January
+                        startYear = currentYear - 1;
+                        endMonth = 11; // December
+                        endYear = currentYear - 1;
+                        break;
+                }
+                
+                // Filter months that fall within the range
+                if (startMonth !== null && endMonth !== null) {
+                    filteredMonthlyData = {};
+                    Object.keys(monthlyData).forEach(monthKey => {
+                        const [month, year] = monthKey.split('-').map(Number);
+                        const monthIndex = month - 1; // Convert to 0-indexed
+                        
+                        // Check if this month falls within the range
+                        const monthDate = new Date(year, monthIndex, 1);
+                        const startDate = new Date(startYear, startMonth, 1);
+                        const endDate = new Date(endYear, endMonth, 1);
+                        
+                        if (monthDate >= startDate && monthDate <= endDate) {
+                            filteredMonthlyData[monthKey] = monthlyData[monthKey];
+                        }
+                    });
+                }
+            }
+            
+            const sortedMonths = Object.keys(filteredMonthlyData).sort((a, b) => {
                 const [monthA, yearA] = a.split('-').map(Number);
                 const [monthB, yearB] = b.split('-').map(Number);
                 return yearA !== yearB ? yearA - yearB : monthA - monthB;
@@ -8530,8 +8917,8 @@
                     marOverallVolumeChart.destroy();
                 }
                 
-                const loggedData = sortedMonths.map(key => monthlyData[key]?.loggedCases || 0);
-                const closedData = sortedMonths.map(key => monthlyData[key]?.closedCases || 0);
+                const loggedData = sortedMonths.map(key => filteredMonthlyData[key]?.loggedCases || 0);
+                const closedData = sortedMonths.map(key => filteredMonthlyData[key]?.closedCases || 0);
                 
                 marOverallVolumeChart = new Chart(overallVolumeCtx, {
                     type: 'line',
@@ -8624,14 +9011,14 @@
                 // Calculate 24/7 Performance using SUMIFS/COUNTIFS formula
                 // SUM(TAT247 for closed INC) / COUNT(closed INC)
                 const avg247INC = sortedMonths.map(key => {
-                    const data = monthlyData[key];
+                    const data = filteredMonthlyData[key];
                     if (!data || !data.incResolutionTimes247 || data.incResolutionTimes247.length === 0) return 0;
                     const sum = data.incResolutionTimes247.reduce((a, b) => a + b, 0);
                     return (sum / data.incResolutionTimes247.length).toFixed(1);
                 });
                 
                 const avg247SR = sortedMonths.map(key => {
-                    const data = monthlyData[key];
+                    const data = filteredMonthlyData[key];
                     if (!data || !data.srResolutionTimes247 || data.srResolutionTimes247.length === 0) return 0;
                     const sum = data.srResolutionTimes247.reduce((a, b) => a + b, 0);
                     return (sum / data.srResolutionTimes247.length).toFixed(1);
@@ -8639,7 +9026,7 @@
                 
                 // Calculate Actual SLA Performance using AVERAGE formula (excluding zeros)
                 const avgSLAINC = sortedMonths.map(key => {
-                    const data = monthlyData[key];
+                    const data = filteredMonthlyData[key];
                     if (!data || !data.incResolutionTimesSLA) return 0;
                     const nonZero = data.incResolutionTimesSLA.filter(v => v > 0);
                     if (nonZero.length === 0) return 0;
@@ -8647,7 +9034,7 @@
                 });
                 
                 const avgSLASR = sortedMonths.map(key => {
-                    const data = monthlyData[key];
+                    const data = filteredMonthlyData[key];
                     if (!data || !data.srResolutionTimesSLA) return 0;
                     const nonZero = data.srResolutionTimesSLA.filter(v => v > 0);
                     if (nonZero.length === 0) return 0;
@@ -8658,7 +9045,7 @@
                 const avg247Combined = sortedMonths.map((key, idx) => {
                     const incVal = parseFloat(avg247INC[idx]) || 0;
                     const srVal = parseFloat(avg247SR[idx]) || 0;
-                    const data = monthlyData[key];
+                    const data = filteredMonthlyData[key];
                     const incCount = data?.incResolutionTimes247?.length || 0;
                     const srCount = data?.srResolutionTimes247?.length || 0;
                     const totalCount = incCount + srCount;
@@ -8670,7 +9057,7 @@
                 const avgSLACombined = sortedMonths.map((key, idx) => {
                     const incVal = parseFloat(avgSLAINC[idx]) || 0;
                     const srVal = parseFloat(avgSLASR[idx]) || 0;
-                    const data = monthlyData[key];
+                    const data = filteredMonthlyData[key];
                     const incCount = data?.incResolutionTimesSLA?.filter(v => v > 0).length || 0;
                     const srCount = data?.srResolutionTimesSLA?.filter(v => v > 0).length || 0;
                     const totalCount = incCount + srCount;
@@ -8783,7 +9170,7 @@
                 }
                 
                 const slaComplianceData = sortedMonths.map(key => {
-                    const data = monthlyData[key];
+                    const data = filteredMonthlyData[key];
                     const totalClosed = (data?.closedCases || 0);
                     const slaViolatedClosed = (data?.slaViolatedClosed || 0);
                     return totalClosed > 0 ? ((totalClosed - slaViolatedClosed) / totalClosed * 100).toFixed(1) : 100;
@@ -9082,38 +9469,51 @@
 
         // Resolution Code Analysis
         function updateResolutionCodeAnalysis() {
+            // Filter by Current Status: only "Close" and "Resolve - Pending User Confirmation"
+            const statusFilteredData = filteredData.filter(d => {
+                const status = d.currentStatus ? String(d.currentStatus).trim() : '';
+                return status === 'Close' || status === 'Resolve - Pending User Confirmation';
+            });
+            
             const resCodeCounts = {};
             const subResCodeCounts = {};
             const resCodeTimes = {};
             const resCodeSLA = {};
-            const total = filteredData.length;
+            const total = statusFilteredData.length;
 
-            filteredData.forEach(d => {
-                const resCode = d.resolutionCode || 'N/A';
-                const subResCode = d.subResolutionCode || 'N/A';
+            statusFilteredData.forEach(d => {
+                const resCode = d.resolutionCode ? String(d.resolutionCode).trim() : '';
+                const subResCode = d.subResolutionCode ? String(d.subResolutionCode).trim() : '';
                 
-                resCodeCounts[resCode] = (resCodeCounts[resCode] || 0) + 1;
-                subResCodeCounts[subResCode] = (subResCodeCounts[subResCode] || 0) + 1;
-                
-                if (!resCodeTimes[resCode]) {
-                    resCodeTimes[resCode] = [];
-                    resCodeSLA[resCode] = { compliant: 0, total: 0 };
+                // Ignore blank, 'N/A', and '-' values for resolution code
+                if (resCode && resCode !== 'N/A' && resCode !== '' && resCode !== '-') {
+                    resCodeCounts[resCode] = (resCodeCounts[resCode] || 0) + 1;
+                    
+                    if (!resCodeTimes[resCode]) {
+                        resCodeTimes[resCode] = [];
+                        resCodeSLA[resCode] = { compliant: 0, total: 0 };
+                    }
+                    
+                    // Use tat247 for resolution time if available
+                    const resolutionTime = d.tat247 || d.resolutionTime || 0;
+                    resCodeTimes[resCode].push(resolutionTime);
+                    
+                    resCodeSLA[resCode].total++;
+                    // Check SLA compliance - use isSlaViolated if available
+                    if (d.isSlaViolated === false || d.slaViolationStatus === 'Non-Violated') {
+                        resCodeSLA[resCode].compliant++;
+                    } else if (d.slaCompliance) {
+                        // Fallback for other data formats
+                        const slaComp = String(d.slaCompliance).toLowerCase();
+                        if (slaComp === 'yes' || slaComp === '1' || slaComp === 'true') {
+                            resCodeSLA[resCode].compliant++;
+                        }
+                    }
                 }
                 
-                // Use tat247 for resolution time if available
-                const resolutionTime = d.tat247 || d.resolutionTime || 0;
-                resCodeTimes[resCode].push(resolutionTime);
-                
-                resCodeSLA[resCode].total++;
-                // Check SLA compliance - use isSlaViolated if available
-                if (d.isSlaViolated === false || d.slaViolationStatus === 'Non-Violated') {
-                    resCodeSLA[resCode].compliant++;
-                } else if (d.slaCompliance) {
-                    // Fallback for other data formats
-                    const slaComp = String(d.slaCompliance).toLowerCase();
-                    if (slaComp === 'yes' || slaComp === '1' || slaComp === 'true') {
-                        resCodeSLA[resCode].compliant++;
-                    }
+                // Ignore blank, 'N/A', and '-' values for sub resolution code
+                if (subResCode && subResCode !== 'N/A' && subResCode !== '' && subResCode !== '-') {
+                    subResCodeCounts[subResCode] = (subResCodeCounts[subResCode] || 0) + 1;
                 }
             });
 
@@ -9347,18 +9747,27 @@
         }
 
         function exportResolutionCodeAnalysis() {
+            // Filter by Current Status: only "Close" and "Resolve - Pending User Confirmation"
+            const statusFilteredData = filteredData.filter(d => {
+                const status = d.currentStatus ? String(d.currentStatus).trim() : '';
+                return status === 'Close' || status === 'Resolve - Pending User Confirmation';
+            });
+            
             const wb = XLSX.utils.book_new();
             
-            // Resolution Code Sheet
+            // Resolution Code Sheet (excluding blank and "-")
             const resData = [];
             const resCodeCounts = {};
-            filteredData.forEach(d => {
-                const resCode = d.resolutionCode || 'N/A';
-                resCodeCounts[resCode] = (resCodeCounts[resCode] || 0) + 1;
+            statusFilteredData.forEach(d => {
+                const resCode = d.resolutionCode ? String(d.resolutionCode).trim() : '';
+                // Ignore blank, 'N/A', and '-' values
+                if (resCode && resCode !== 'N/A' && resCode !== '' && resCode !== '-') {
+                    resCodeCounts[resCode] = (resCodeCounts[resCode] || 0) + 1;
+                }
             });
             
             resData.push(['Resolution Code', 'Count', '% of Total']);
-            const total = filteredData.length;
+            const total = statusFilteredData.length;
             
             Object.entries(resCodeCounts)
                 .sort((a, b) => b[1] - a[1])
@@ -9370,12 +9779,15 @@
             const wsRes = XLSX.utils.aoa_to_sheet(resData);
             XLSX.utils.book_append_sheet(wb, wsRes, "Resolution Codes");
             
-            // Sub Resolution Code Sheet
+            // Sub Resolution Code Sheet (excluding blank and "-")
             const subResData = [];
             const subResCodeCounts = {};
-            filteredData.forEach(d => {
-                const code = d.subResolutionCode || 'N/A';
-                subResCodeCounts[code] = (subResCodeCounts[code] || 0) + 1;
+            statusFilteredData.forEach(d => {
+                const code = d.subResolutionCode ? String(d.subResolutionCode).trim() : '';
+                // Ignore blank, 'N/A', and '-' values
+                if (code && code !== 'N/A' && code !== '' && code !== '-') {
+                    subResCodeCounts[code] = (subResCodeCounts[code] || 0) + 1;
+                }
             });
             
             subResData.push(['Sub Resolution Code', 'Count', '% of Total']);
@@ -9391,6 +9803,400 @@
             XLSX.utils.book_append_sheet(wb, wsSubRes, "Sub Resolution Codes");
             
             XLSX.writeFile(wb, `Resolution_Code_Analysis_${new Date().toISOString().split('T')[0]}.xlsx`);
+        }
+
+        // Resolution Review Functions
+        function updateResolutionReviewTab() {
+            if (!filteredData || filteredData.length === 0) {
+                console.log('Resolution Review: No filtered data available');
+                return;
+            }
+            
+            console.log('Resolution Review: Processing', filteredData.length, 'records');
+            
+            // Filter by Current Status: only "Close" and "Resolve - Pending User Confirmation"
+            const statusFilteredData = filteredData.filter(d => {
+                const status = d.currentStatus ? String(d.currentStatus).trim() : '';
+                return status === 'Close' || status === 'Resolve - Pending User Confirmation';
+            });
+            
+            console.log('Resolution Review: After status filter:', statusFilteredData.length, 'records');
+            
+            // Collect problem statements and resolution steps (excluding blank and "-")
+            const problemStatements = {};
+            const resolutionSteps = {};
+            let validProblemCount = 0;
+            let validStepsCount = 0;
+            
+            statusFilteredData.forEach(d => {
+                const problemStatement = d.problemStatement ? String(d.problemStatement).trim() : '';
+                const resolutionStep = d.resolutionSummary ? String(d.resolutionSummary).trim() : '';
+                
+                // Count all problem statements and steps - ignore blank and "-"
+                if (problemStatement && problemStatement !== 'N/A' && problemStatement !== '' && problemStatement !== '-') {
+                    problemStatements[problemStatement] = (problemStatements[problemStatement] || 0) + 1;
+                    validProblemCount++;
+                }
+                if (resolutionStep && resolutionStep !== 'N/A' && resolutionStep !== '' && resolutionStep !== '-') {
+                    resolutionSteps[resolutionStep] = (resolutionSteps[resolutionStep] || 0) + 1;
+                    validStepsCount++;
+                }
+            });
+            
+            console.log('Resolution Review: Valid problems:', validProblemCount, 'Valid steps:', validStepsCount);
+            console.log('Resolution Review: Unique problems:', Object.keys(problemStatements).length, 'Unique steps:', Object.keys(resolutionSteps).length);
+            
+            const totalCalls = statusFilteredData.length;
+            
+            // Update summary cards
+            document.getElementById('uniqueProblemStatements').textContent = Object.keys(problemStatements).length;
+            document.getElementById('uniqueResolutionSteps').textContent = Object.keys(resolutionSteps).length;
+            
+            // Sort and get top 10
+            const sortedProblems = Object.entries(problemStatements).sort((a, b) => b[1] - a[1]);
+            const sortedSteps = Object.entries(resolutionSteps).sort((a, b) => b[1] - a[1]);
+            const top10Problems = sortedProblems.slice(0, 10);
+            const top10Steps = sortedSteps.slice(0, 10);
+            
+            // Update Problem Statements Chart
+            const problemChartCtx = document.getElementById('problemStatementsChart');
+            if (problemChartCtx) {
+                if (window.problemStatementsChart && typeof window.problemStatementsChart.destroy === 'function') {
+                    window.problemStatementsChart.destroy();
+                }
+                window.problemStatementsChart = new Chart(problemChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: top10Problems.map(([text]) => text.substring(0, 40) + (text.length > 40 ? '...' : '')),
+                        datasets: [{
+                            label: 'Count',
+                            data: top10Problems.map(([, count]) => count),
+                            backgroundColor: 'rgba(0, 102, 204, 0.7)',
+                            borderColor: 'rgba(0, 102, 204, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: { legend: { display: false } },
+                        scales: { x: { beginAtZero: true } }
+                    }
+                });
+            }
+            
+            // Update Resolution Steps Chart
+            const stepsChartCtx = document.getElementById('resolutionStepsChart');
+            if (stepsChartCtx) {
+                if (window.resolutionStepsChart && typeof window.resolutionStepsChart.destroy === 'function') {
+                    window.resolutionStepsChart.destroy();
+                }
+                window.resolutionStepsChart = new Chart(stepsChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: top10Steps.map(([text]) => text.substring(0, 40) + (text.length > 40 ? '...' : '')),
+                        datasets: [{
+                            label: 'Count',
+                            data: top10Steps.map(([, count]) => count),
+                            backgroundColor: 'rgba(0, 200, 83, 0.7)',
+                            borderColor: 'rgba(0, 200, 83, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y',
+                        plugins: { legend: { display: false } },
+                        scales: { x: { beginAtZero: true } }
+                    }
+                });
+            }
+            
+            // Update Problem Statement Table
+            const problemTableBody = document.getElementById('problemStatementTableBody');
+            if (problemTableBody) {
+                problemTableBody.innerHTML = '';
+                sortedProblems.forEach(([text, count]) => {
+                    const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(2) : 0;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td title="${text}" style="max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${text}</td>
+                        <td style="font-weight: 600;">${count}</td>
+                        <td style="font-weight: 600; color: var(--primary-color); font-family: 'JetBrains Mono', monospace;">${pct}%</td>
+                    `;
+                    problemTableBody.appendChild(tr);
+                });
+            }
+            
+            // Update Resolution Steps Table
+            const stepsTableBody = document.getElementById('resolutionStepsTableBody');
+            if (stepsTableBody) {
+                stepsTableBody.innerHTML = '';
+                sortedSteps.forEach(([text, count]) => {
+                    const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(2) : 0;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td title="${text}" style="max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${text}</td>
+                        <td style="font-weight: 600;">${count}</td>
+                        <td style="font-weight: 600; color: var(--primary-color); font-family: 'JetBrains Mono', monospace;">${pct}%</td>
+                    `;
+                    stepsTableBody.appendChild(tr);
+                });
+            }
+            
+            // Generate Insights
+            generateResolutionReviewInsights(sortedProblems, sortedSteps, totalCalls);
+        }
+        
+        function generateResolutionReviewInsights(problems, steps, totalCalls) {
+            const insightsContent = document.getElementById('insightsContent');
+            if (!insightsContent) return;
+            
+            // AI Sentiment Analysis - Analyze patterns in problems and resolutions
+            const aiAnalysis = performAISentimentAnalysis(problems, steps, totalCalls);
+            
+            let insights = '<div style="background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); border-left: 4px solid var(--warning-color); padding: 15px; border-radius: 8px; margin-bottom: 15px;">';
+            insights += '<div style="font-weight: 700; color: #e65100; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;"><i class="bi bi-lightbulb-fill"></i>AI-Powered Analysis & Key Findings</div>';
+            insights += '<ul style="margin-bottom: 0; padding-left: 20px;">';
+            
+            // Display AI analysis findings
+            aiAnalysis.findings.forEach(finding => {
+                insights += `<li style="margin-bottom: 6px;">${finding}</li>`;
+            });
+            
+            insights += '</ul></div>';
+            
+            // AI-Generated Recommendations
+            insights += '<div style="background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); border-left: 4px solid var(--primary-color); padding: 15px; border-radius: 8px;">';
+            insights += '<div style="font-weight: 700; color: #006064; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;"><i class="bi bi-check-circle-fill"></i>AI-Generated Recommendations</div>';
+            insights += '<ul style="margin-bottom: 0; padding-left: 20px;">';
+            
+            // Display AI recommendations
+            aiAnalysis.recommendations.forEach(rec => {
+                insights += `<li style="margin-bottom: 6px;">${rec}</li>`;
+            });
+            
+            insights += '</ul></div>';
+            
+            // Sentiment Summary
+            insights += '<div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-left: 4px solid #9c27b0; padding: 15px; border-radius: 8px; margin-top: 15px;">';
+            insights += '<div style="font-weight: 700; color: #6a1b9a; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;"><i class="bi bi-graph-up"></i>Pattern Analysis Summary</div>';
+            insights += `<p style="margin-bottom: 8px;"><strong>Overall Sentiment:</strong> ${aiAnalysis.sentiment.overall}</p>`;
+            insights += `<p style="margin-bottom: 8px;"><strong>Problem Complexity:</strong> ${aiAnalysis.sentiment.problemComplexity}</p>`;
+            insights += `<p style="margin-bottom: 8px;"><strong>Resolution Effectiveness:</strong> ${aiAnalysis.sentiment.resolutionEffectiveness}</p>`;
+            insights += `<p style="margin-bottom: 0;"><strong>Priority Action:</strong> ${aiAnalysis.sentiment.priorityAction}</p>`;
+            insights += '</div>';
+            
+            insightsContent.innerHTML = insights;
+        }
+        
+        function performAISentimentAnalysis(problems, steps, totalCalls) {
+            const analysis = {
+                findings: [],
+                recommendations: [],
+                sentiment: {
+                    overall: '',
+                    problemComplexity: '',
+                    resolutionEffectiveness: '',
+                    priorityAction: ''
+                }
+            };
+            
+            // Analyze problem concentration
+            const uniqueProblems = problems.length;
+            const top3Problems = problems.slice(0, 3);
+            const top3Count = top3Problems.reduce((sum, [, count]) => sum + count, 0);
+            const top3Percentage = totalCalls > 0 ? (top3Count / totalCalls) * 100 : 0;
+            
+            // Analyze resolution patterns
+            const uniqueSteps = steps.length;
+            const top3Steps = steps.slice(0, 3);
+            const top3StepsCount = top3Steps.reduce((sum, [, count]) => sum + count, 0);
+            const top3StepsPercentage = totalCalls > 0 ? (top3StepsCount / totalCalls) * 100 : 0;
+            
+            // Finding 1: Problem concentration analysis
+            if (top3Percentage > 60) {
+                analysis.findings.push(`<strong>High Problem Concentration:</strong> The top 3 problem statements account for ${top3Percentage.toFixed(1)}% of all closed/resolved tickets, indicating <span style="color: #d32f2f;">concentrated pain points</span> that require immediate attention.`);
+            } else if (top3Percentage > 40) {
+                analysis.findings.push(`<strong>Moderate Problem Concentration:</strong> The top 3 problems represent ${top3Percentage.toFixed(1)}% of tickets, showing <span style="color: #ff9100;">moderate focus areas</span> with room for process improvements.`);
+            } else {
+                analysis.findings.push(`<strong>Diverse Problem Landscape:</strong> Top 3 problems account for only ${top3Percentage.toFixed(1)}% of tickets, indicating <span style="color: #0066cc;">high variety</span> in support issues requiring comprehensive knowledge base.`);
+            }
+            
+            // Finding 2: Top problem insight
+            if (problems.length > 0) {
+                const topProblem = problems[0];
+                const topPct = totalCalls > 0 ? ((topProblem[1] / totalCalls) * 100).toFixed(1) : 0;
+                const problemText = topProblem[0].length > 100 ? topProblem[0].substring(0, 100) + '...' : topProblem[0];
+                analysis.findings.push(`<strong>Most Critical Issue:</strong> "${problemText}" dominates with ${topProblem[1]} occurrences (${topPct}%), suggesting a <span style="color: #d32f2f;">systemic issue</span> requiring root cause analysis.`);
+            }
+            
+            // Finding 3: Resolution effectiveness
+            if (top3StepsPercentage > 50) {
+                analysis.findings.push(`<strong>Standardized Resolutions:</strong> Top 3 resolution steps handle ${top3StepsPercentage.toFixed(1)}% of cases, indicating <span style="color: #00c853;">strong standardization potential</span> and effective documentation.`);
+            } else if (top3StepsPercentage > 30) {
+                analysis.findings.push(`<strong>Moderate Resolution Patterns:</strong> Top 3 steps cover ${top3StepsPercentage.toFixed(1)}% of cases, showing <span style="color: #ff9100;">opportunity for standardization</span> in common scenarios.`);
+            } else {
+                analysis.findings.push(`<strong>Varied Resolution Approaches:</strong> Top 3 steps represent only ${top3StepsPercentage.toFixed(1)}% of cases, indicating <span style="color: #0066cc;">diverse resolution methods</span> that may benefit from consolidation.`);
+            }
+            
+            // Finding 4: Problem-resolution correlation
+            const problemStepRatio = uniqueSteps > 0 ? uniqueProblems / uniqueSteps : 0;
+            if (problemStepRatio > 1.5) {
+                analysis.findings.push(`<strong>Resolution Gap Detected:</strong> ${uniqueProblems} unique problems with only ${uniqueSteps} resolution approaches (ratio: ${problemStepRatio.toFixed(2)}:1) suggests <span style="color: #d32f2f;">insufficient documentation</span> of resolution procedures.`);
+            } else if (problemStepRatio < 0.7) {
+                analysis.findings.push(`<strong>Over-Documented Resolutions:</strong> ${uniqueSteps} resolution steps for ${uniqueProblems} problems (ratio: ${problemStepRatio.toFixed(2)}:1) indicates <span style="color: #ff9100;">potential for consolidation</span> and simplification.`);
+            } else {
+                analysis.findings.push(`<strong>Balanced Documentation:</strong> Good correlation between ${uniqueProblems} problems and ${uniqueSteps} resolution steps (ratio: ${problemStepRatio.toFixed(2)}:1) shows <span style="color: #00c853;">healthy documentation practices</span>.`);
+            }
+            
+            // Finding 5: Scale analysis
+            if (uniqueProblems > 100) {
+                analysis.findings.push(`<strong>High Complexity Environment:</strong> ${uniqueProblems} unique problem types detected, requiring <span style="color: #d32f2f;">comprehensive knowledge management</span> and advanced search capabilities.`);
+            } else if (uniqueProblems > 50) {
+                analysis.findings.push(`<strong>Moderate Complexity:</strong> ${uniqueProblems} problem types identified, suitable for <span style="color: #ff9100;">categorized SOP development</span> and structured training.`);
+            } else {
+                analysis.findings.push(`<strong>Manageable Scope:</strong> ${uniqueProblems} problem types present, ideal for <span style="color: #00c853;">focused SOP creation</span> and quick wins in standardization.`);
+            }
+            
+            // Generate recommendations based on analysis
+            
+            // Recommendation 1: Based on concentration
+            if (top3Percentage > 60) {
+                analysis.recommendations.push(`<strong>Immediate Action - Root Cause Analysis:</strong> The top 3 problems (${top3Percentage.toFixed(0)}% of volume) require urgent investigation. Create dedicated task force to identify underlying causes and implement preventive measures within 2 weeks.`);
+            } else if (top3Percentage > 40) {
+                analysis.recommendations.push(`<strong>Priority Focus - SOP Development:</strong> Develop comprehensive SOPs for the top 5-10 problem statements covering ${Math.round(top3Percentage + 15)}% of volume, targeting completion within 1 month.`);
+            } else {
+                analysis.recommendations.push(`<strong>Strategic Approach - Knowledge Base Enhancement:</strong> Build searchable knowledge base with AI-powered search for ${uniqueProblems} problem types, prioritizing top 20% by volume.`);
+            }
+            
+            // Recommendation 2: Resolution standardization
+            if (top3StepsPercentage > 50) {
+                analysis.recommendations.push(`<strong>Automation Opportunity:</strong> Top resolution steps (${top3StepsPercentage.toFixed(0)}% of cases) are excellent candidates for workflow automation, chatbot integration, or self-service portal. Expected ROI: 40-60% reduction in handling time.`);
+            } else {
+                analysis.recommendations.push(`<strong>Standardization Initiative:</strong> Consolidate and document resolution approaches to increase consistency. Target: Reduce resolution step variations by 30% through standardized procedures and templates.`);
+            }
+            
+            // Recommendation 3: Training focus
+            const topProblemsList = problems.slice(0, 5).map(([text]) => text.length > 50 ? text.substring(0, 50) + '...' : text).join('; ');
+            analysis.recommendations.push(`<strong>Targeted Training Program:</strong> Conduct monthly training sessions focusing on top 5 problems: "${topProblemsList}". Include hands-on scenarios and resolution simulations to improve first-call resolution rate.`);
+            
+            // Recommendation 4: Quality assurance
+            if (problemStepRatio > 1.5) {
+                analysis.recommendations.push(`<strong>Documentation Enhancement Required:</strong> Problem-to-resolution ratio (${problemStepRatio.toFixed(2)}:1) indicates gaps. Mandate resolution documentation for all closed tickets and conduct quarterly documentation audits.`);
+            } else if (problemStepRatio < 0.7) {
+                analysis.recommendations.push(`<strong>Documentation Consolidation Needed:</strong> Simplify resolution procedures by merging similar steps. Conduct documentation review to eliminate redundancies and improve clarity.`);
+            } else {
+                analysis.recommendations.push(`<strong>Maintain Best Practices:</strong> Current documentation ratio (${problemStepRatio.toFixed(2)}:1) is optimal. Continue quarterly reviews to maintain quality and relevance of SOPs.`);
+            }
+            
+            // Recommendation 5: Continuous improvement
+            analysis.recommendations.push(`<strong>Performance Metrics & Monitoring:</strong> Implement real-time dashboards tracking: (1) Top 10 problem/resolution trends, (2) First-call resolution rates by category, (3) Documentation usage analytics. Review monthly and adjust strategies quarterly.`);
+            
+            // Recommendation 6: Customer experience
+            if (totalCalls > 500) {
+                analysis.recommendations.push(`<strong>Proactive Communication Strategy:</strong> With ${totalCalls} closed/resolved tickets, establish proactive notification system for known issues, reducing reactive support volume by an estimated 15-25%.`);
+            }
+            
+            // Determine overall sentiment
+            if (top3Percentage > 60 || uniqueProblems > 100) {
+                analysis.sentiment.overall = "🔴 Needs Immediate Attention - High concentration or complexity detected";
+                analysis.sentiment.priorityAction = "Establish dedicated improvement team within 1 week";
+            } else if (top3Percentage > 40 || uniqueProblems > 50) {
+                analysis.sentiment.overall = "🟡 Moderate - Room for significant improvements";
+                analysis.sentiment.priorityAction = "Initiate standardization project within 2 weeks";
+            } else {
+                analysis.sentiment.overall = "🟢 Good - Well-distributed and manageable";
+                analysis.sentiment.priorityAction = "Continue optimization and maintain best practices";
+            }
+            
+            // Problem complexity assessment
+            if (uniqueProblems > 100) {
+                analysis.sentiment.problemComplexity = "High (100+ unique types) - Requires advanced KM system";
+            } else if (uniqueProblems > 50) {
+                analysis.sentiment.problemComplexity = "Moderate (50-100 types) - Structured SOPs needed";
+            } else {
+                analysis.sentiment.problemComplexity = "Low (<50 types) - Manageable with focused documentation";
+            }
+            
+            // Resolution effectiveness
+            if (top3StepsPercentage > 50) {
+                analysis.sentiment.resolutionEffectiveness = "High - Strong standardization (Top 3: " + top3StepsPercentage.toFixed(0) + "%)";
+            } else if (top3StepsPercentage > 30) {
+                analysis.sentiment.resolutionEffectiveness = "Moderate - Some patterns evident (Top 3: " + top3StepsPercentage.toFixed(0) + "%)";
+            } else {
+                analysis.sentiment.resolutionEffectiveness = "Low - Highly varied approaches (Top 3: " + top3StepsPercentage.toFixed(0) + "%)";
+            }
+            
+            return analysis;
+        }
+        
+        function exportResolutionReview() {
+            if (!filteredData || filteredData.length === 0) {
+                alert('No data available to export. Please load an Excel file first.');
+                return;
+            }
+            
+            // Filter by Current Status: only "Close" and "Resolve - Pending User Confirmation"
+            const statusFilteredData = filteredData.filter(d => {
+                const status = d.currentStatus ? String(d.currentStatus).trim() : '';
+                return status === 'Close' || status === 'Resolve - Pending User Confirmation';
+            });
+            
+            // Collect data (excluding blank and "-" rows)
+            const problemStatements = {};
+            const resolutionSteps = {};
+            
+            statusFilteredData.forEach(d => {
+                const problemStatement = d.problemStatement ? String(d.problemStatement).trim() : '';
+                const resolutionStep = d.resolutionSummary ? String(d.resolutionSummary).trim() : '';
+                
+                if (problemStatement && problemStatement !== 'N/A' && problemStatement !== '' && problemStatement !== '-') {
+                    problemStatements[problemStatement] = (problemStatements[problemStatement] || 0) + 1;
+                }
+                if (resolutionStep && resolutionStep !== 'N/A' && resolutionStep !== '' && resolutionStep !== '-') {
+                    resolutionSteps[resolutionStep] = (resolutionSteps[resolutionStep] || 0) + 1;
+                }
+            });
+            
+            const totalCalls = statusFilteredData.length;
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            
+            // Sheet 1: Problem Statement Analysis
+            const problemData = [['Problem Statement', 'Count', '% of Total']];
+            Object.entries(problemStatements).sort((a, b) => b[1] - a[1]).forEach(([text, count]) => {
+                const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(2) : 0;
+                problemData.push([text, count, pct + '%']);
+            });
+            const wsProblem = XLSX.utils.aoa_to_sheet(problemData);
+            XLSX.utils.book_append_sheet(wb, wsProblem, 'Problem Statements');
+            
+            // Sheet 2: Resolution Steps Analysis
+            const stepsData = [['Resolution Summary (Steps)', 'Count', '% of Total']];
+            Object.entries(resolutionSteps).sort((a, b) => b[1] - a[1]).forEach(([text, count]) => {
+                const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(2) : 0;
+                stepsData.push([text, count, pct + '%']);
+            });
+            const wsSteps = XLSX.utils.aoa_to_sheet(stepsData);
+            XLSX.utils.book_append_sheet(wb, wsSteps, 'Resolution Steps');
+            
+            // Sheet 3: Summary
+            const summaryData = [
+                ['Metric', 'Value'],
+                ['Total Calls', totalCalls],
+                ['Unique Problem Statements', Object.keys(problemStatements).length],
+                ['Unique Resolution Steps', Object.keys(resolutionSteps).length]
+            ];
+            const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
+            XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
+            
+            // Export file
+            const timestamp = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(wb, `Resolution_Review_Analysis_${timestamp}.xlsx`);
         }
 
         // Auto-close mobile sidebar when menu item clicked
