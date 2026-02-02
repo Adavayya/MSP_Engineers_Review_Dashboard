@@ -8537,9 +8537,17 @@
         }
 
         function updateMarReport(metrics, customerName) {
-            // Get data period from raw data
-            const dates = rawData
+            // Get data period - use filteredData when timescale is not "All Time", otherwise use rawData
+            const useFilteredDates = globalFilters.timescale && globalFilters.timescale !== 'all';
+            const dataSource = useFilteredDates ? filteredData : rawData;
+            
+            const dates = dataSource
                 .map(row => {
+                    // For filteredData (processed data), use submissionDate directly
+                    if (useFilteredDates && row.submissionDate) {
+                        return row.submissionDate;
+                    }
+                    // For rawData, parse from submission time column
                     const submissionTime = row['Submission Time'] || row['Submission time'] || 
                                          row['Created Date'] || row['Created Time'] || 
                                          row['SubmissionTime'] || row['CreatedDate'];
