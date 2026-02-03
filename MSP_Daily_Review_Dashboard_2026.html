@@ -940,6 +940,11 @@
                         <i class="bi bi-list-columns-reverse me-2"></i>Detailed View
                     </button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="view-opencases-tab" data-bs-toggle="tab" data-bs-target="#view-opencases" type="button" role="tab">
+                        <i class="bi bi-graph-up-arrow me-2"></i>Open Cases Analyses
+                    </button>
+                </li>
             </ul>
 
             <div class="tab-content view-content" id="mainViewTabsContent">
@@ -1401,6 +1406,157 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Open Cases Analyses Section -->
+                <div class="tab-pane fade" id="view-opencases" role="tabpanel">
+                    <div class="mb-4">
+                        <h4 class="text-primary mb-3">
+                            <i class="bi bi-graph-up-arrow me-2"></i>Open Cases Analyses
+                        </h4>
+                        
+                        <!-- Account Wise Analyses -->
+                        <div class="card mb-4">
+                            <div class="card-header" style="background: linear-gradient(135deg, var(--primary-color), #7B3FD9); color: white;">
+                                <h5 class="mb-0"><i class="bi bi-building me-2"></i>Account Wise Analyses</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-lg-6">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">1. Overall Case Volume</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="accountCaseVolumeChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">2. SLA Compliance</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="accountSLAComplianceChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">3. Aging & Old Cases</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="accountAgingChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">4. Follow-up & Response Misses</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="accountFollowupChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">5. Subsequent SLA & Response Tracking</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="accountSubsequentSLAChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">6. Idle Case Monitoring & SR-Specific Compliance (EDOC)</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="accountIdleEDOCChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Engineer Wise Analyses -->
+                        <div class="card mb-4">
+                            <div class="card-header" style="background: linear-gradient(135deg, var(--secondary-color), #5D9CFF); color: white;">
+                                <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i>Engineer Wise Analyses</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-lg-6">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">1. Overall Case Volume</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="engineerCaseVolumeChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">2. SLA Compliance</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="engineerSLAComplianceChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">3. Aging & Old Cases</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="engineerAgingChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">4. Follow-up & Response Misses</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="engineerFollowupChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">5. Subsequent SLA & Response Tracking</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="engineerSubsequentSLAChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card shadow-sm">
+                                            <div class="card-header bg-light">
+                                                <h6 class="mb-0">6. Idle Case Monitoring & SR-Specific Compliance (EDOC)</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <canvas id="engineerIdleEDOCChart" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1689,6 +1845,17 @@
             document.getElementById('global-filter-status').addEventListener('change', updateGlobalFilters);
             document.getElementById('global-filter-sla').addEventListener('change', updateGlobalFilters);
             document.getElementById('global-filter-submittedby').addEventListener('change', updateGlobalFilters);
+            
+            // Add event listener for Open Cases Analyses tab
+            const openCasesTab = document.getElementById('view-opencases-tab');
+            if (openCasesTab) {
+                openCasesTab.addEventListener('shown.bs.tab', function (event) {
+                    // Render charts when tab is shown
+                    if (filteredData.length > 0) {
+                        renderOpenCasesAnalyses();
+                    }
+                });
+            }
             
             setupTabFilterListeners();
         }
@@ -1996,6 +2163,13 @@
             updateActiveFiltersDisplay();
             
             updateDashboard();
+            
+            // Update Open Cases Analyses charts if that tab is currently visible
+            const openCasesTab = document.getElementById('view-opencases');
+            if (openCasesTab && openCasesTab.classList.contains('active')) {
+                renderOpenCasesAnalyses();
+            }
+            
             showLoading(false);
         }
 
@@ -2050,6 +2224,12 @@
             
             updateActiveFiltersDisplay();
             updateDashboard();
+            
+            // Update Open Cases Analyses charts if that tab is currently visible
+            const openCasesTab = document.getElementById('view-opencases');
+            if (openCasesTab && openCasesTab.classList.contains('active')) {
+                renderOpenCasesAnalyses();
+            }
         }
 
         function updateOwnerFilter(owner) {
@@ -3425,8 +3605,331 @@
                 document.getElementById('dashboard-section').style.display = 'block';
                 document.getElementById('total-cases').textContent = `${processedData.length} Cases Loaded`;
                 updateDashboard();
+                initializeOpenCasesAnalyses();
                 showLoading(false);
             }, 500);
+        }
+
+        // Open Cases Analyses Chart Functions
+        function initializeOpenCasesAnalyses() {
+            // Don't render immediately as the tab might be hidden
+            // Charts will be rendered when the tab is first shown
+        }
+
+        function renderOpenCasesAnalyses() {
+            // This function is called when the Open Cases Analyses tab is shown
+            renderAccountWiseAnalyses();
+            renderEngineerWiseAnalyses();
+        }
+
+        function renderAccountWiseAnalyses() {
+            // Aggregate data by submittedBy (Account)
+            const accountData = {};
+            
+            filteredData.forEach(d => {
+                const account = d.submittedBy || 'Unknown';
+                if (!accountData[account]) {
+                    accountData[account] = {
+                        totalCases: 0,
+                        slaCompliant: 0,
+                        slaViolated: 0,
+                        aging15Plus: 0,
+                        aging25Plus: 0,
+                        followupMissed: 0,
+                        responseMissed: 0,
+                        subsequentSLAMiss: 0,
+                        subsequentRespMiss: 0,
+                        idle1Day: 0,
+                        idle3Day: 0,
+                        edocBreached: 0
+                    };
+                }
+                
+                accountData[account].totalCases++;
+                if (d.isSlaViolated) accountData[account].slaViolated++;
+                else accountData[account].slaCompliant++;
+                if (d.isAging15Violated) accountData[account].aging15Plus++;
+                if (d.isOldest25) accountData[account].aging25Plus++;
+                if (d.isFollowUpMissed) accountData[account].followupMissed++;
+                if (d.emailCompliance === 'Email Response Missed') accountData[account].responseMissed++;
+                if (d.isSubsequentSLABreach) accountData[account].subsequentSLAMiss++;
+                if (d.isSubsequentResponseMissed) accountData[account].subsequentRespMiss++;
+                if (d.isIdle1) accountData[account].idle1Day++;
+                if (d.isIdle3) accountData[account].idle3Day++;
+                if (d.isEdocBreached) accountData[account].edocBreached++;
+            });
+
+            const accounts = Object.keys(accountData).sort();
+            
+            // Chart 1: Overall Case Volume
+            createLineChart('accountCaseVolumeChart', 
+                accounts,
+                accounts.map(a => accountData[a].totalCases),
+                'Total Cases by Account',
+                'rgba(95, 37, 159, 1)',
+                'rgba(95, 37, 159, 0.1)'
+            );
+
+            // Chart 2: SLA Compliance
+            createMultiLineChart('accountSLAComplianceChart',
+                accounts,
+                [
+                    { label: 'SLA Compliant', data: accounts.map(a => accountData[a].slaCompliant), color: 'rgba(0, 184, 148, 1)' },
+                    { label: 'SLA Violated', data: accounts.map(a => accountData[a].slaViolated), color: 'rgba(255, 59, 92, 1)' }
+                ],
+                'SLA Compliance by Account'
+            );
+
+            // Chart 3: Aging & Old Cases
+            createMultiLineChart('accountAgingChart',
+                accounts,
+                [
+                    { label: 'Aging >15 Days', data: accounts.map(a => accountData[a].aging15Plus), color: 'rgba(255, 159, 0, 1)' },
+                    { label: 'Aging >25 Days', data: accounts.map(a => accountData[a].aging25Plus), color: 'rgba(255, 59, 92, 1)' }
+                ],
+                'Aging Cases by Account'
+            );
+
+            // Chart 4: Follow-up & Response Misses
+            createMultiLineChart('accountFollowupChart',
+                accounts,
+                [
+                    { label: 'Follow-up Missed', data: accounts.map(a => accountData[a].followupMissed), color: 'rgba(255, 159, 0, 1)' },
+                    { label: 'Response Missed', data: accounts.map(a => accountData[a].responseMissed), color: 'rgba(255, 59, 92, 1)' }
+                ],
+                'Follow-up & Response Misses by Account'
+            );
+
+            // Chart 5: Subsequent SLA & Response Tracking
+            createMultiLineChart('accountSubsequentSLAChart',
+                accounts,
+                [
+                    { label: 'Subsequent SLA Miss', data: accounts.map(a => accountData[a].subsequentSLAMiss), color: 'rgba(255, 59, 92, 1)' },
+                    { label: 'Subsequent Response Miss', data: accounts.map(a => accountData[a].subsequentRespMiss), color: 'rgba(255, 159, 0, 1)' }
+                ],
+                'Subsequent SLA & Response by Account'
+            );
+
+            // Chart 6: Idle Case Monitoring & SR-Specific Compliance (EDOC)
+            createMultiLineChart('accountIdleEDOCChart',
+                accounts,
+                [
+                    { label: 'Idle >1 Day', data: accounts.map(a => accountData[a].idle1Day), color: 'rgba(255, 159, 0, 1)' },
+                    { label: 'Idle >3 Days', data: accounts.map(a => accountData[a].idle3Day), color: 'rgba(255, 59, 92, 1)' },
+                    { label: 'EDOC Breached', data: accounts.map(a => accountData[a].edocBreached), color: 'rgba(123, 63, 217, 1)' }
+                ],
+                'Idle Cases & EDOC by Account'
+            );
+        }
+
+        function renderEngineerWiseAnalyses() {
+            // Aggregate data by owner (Engineer)
+            const engineerData = {};
+            
+            filteredData.forEach(d => {
+                const engineer = d.owner || 'Unassigned';
+                if (!engineerData[engineer]) {
+                    engineerData[engineer] = {
+                        totalCases: 0,
+                        slaCompliant: 0,
+                        slaViolated: 0,
+                        aging15Plus: 0,
+                        aging25Plus: 0,
+                        followupMissed: 0,
+                        responseMissed: 0,
+                        subsequentSLAMiss: 0,
+                        subsequentRespMiss: 0,
+                        idle1Day: 0,
+                        idle3Day: 0,
+                        edocBreached: 0
+                    };
+                }
+                
+                engineerData[engineer].totalCases++;
+                if (d.isSlaViolated) engineerData[engineer].slaViolated++;
+                else engineerData[engineer].slaCompliant++;
+                if (d.isAging15Violated) engineerData[engineer].aging15Plus++;
+                if (d.isOldest25) engineerData[engineer].aging25Plus++;
+                if (d.isFollowUpMissed) engineerData[engineer].followupMissed++;
+                if (d.emailCompliance === 'Email Response Missed') engineerData[engineer].responseMissed++;
+                if (d.isSubsequentSLABreach) engineerData[engineer].subsequentSLAMiss++;
+                if (d.isSubsequentResponseMissed) engineerData[engineer].subsequentRespMiss++;
+                if (d.isIdle1) engineerData[engineer].idle1Day++;
+                if (d.isIdle3) engineerData[engineer].idle3Day++;
+                if (d.isEdocBreached) engineerData[engineer].edocBreached++;
+            });
+
+            const engineers = Object.keys(engineerData).sort();
+            
+            // Chart 1: Overall Case Volume
+            createLineChart('engineerCaseVolumeChart', 
+                engineers,
+                engineers.map(e => engineerData[e].totalCases),
+                'Total Cases by Engineer',
+                'rgba(61, 127, 255, 1)',
+                'rgba(61, 127, 255, 0.1)'
+            );
+
+            // Chart 2: SLA Compliance
+            createMultiLineChart('engineerSLAComplianceChart',
+                engineers,
+                [
+                    { label: 'SLA Compliant', data: engineers.map(e => engineerData[e].slaCompliant), color: 'rgba(0, 184, 148, 1)' },
+                    { label: 'SLA Violated', data: engineers.map(e => engineerData[e].slaViolated), color: 'rgba(255, 59, 92, 1)' }
+                ],
+                'SLA Compliance by Engineer'
+            );
+
+            // Chart 3: Aging & Old Cases
+            createMultiLineChart('engineerAgingChart',
+                engineers,
+                [
+                    { label: 'Aging >15 Days', data: engineers.map(e => engineerData[e].aging15Plus), color: 'rgba(255, 159, 0, 1)' },
+                    { label: 'Aging >25 Days', data: engineers.map(e => engineerData[e].aging25Plus), color: 'rgba(255, 59, 92, 1)' }
+                ],
+                'Aging Cases by Engineer'
+            );
+
+            // Chart 4: Follow-up & Response Misses
+            createMultiLineChart('engineerFollowupChart',
+                engineers,
+                [
+                    { label: 'Follow-up Missed', data: engineers.map(e => engineerData[e].followupMissed), color: 'rgba(255, 159, 0, 1)' },
+                    { label: 'Response Missed', data: engineers.map(e => engineerData[e].responseMissed), color: 'rgba(255, 59, 92, 1)' }
+                ],
+                'Follow-up & Response Misses by Engineer'
+            );
+
+            // Chart 5: Subsequent SLA & Response Tracking
+            createMultiLineChart('engineerSubsequentSLAChart',
+                engineers,
+                [
+                    { label: 'Subsequent SLA Miss', data: engineers.map(e => engineerData[e].subsequentSLAMiss), color: 'rgba(255, 59, 92, 1)' },
+                    { label: 'Subsequent Response Miss', data: engineers.map(e => engineerData[e].subsequentRespMiss), color: 'rgba(255, 159, 0, 1)' }
+                ],
+                'Subsequent SLA & Response by Engineer'
+            );
+
+            // Chart 6: Idle Case Monitoring & SR-Specific Compliance (EDOC)
+            createMultiLineChart('engineerIdleEDOCChart',
+                engineers,
+                [
+                    { label: 'Idle >1 Day', data: engineers.map(e => engineerData[e].idle1Day), color: 'rgba(255, 159, 0, 1)' },
+                    { label: 'Idle >3 Days', data: engineers.map(e => engineerData[e].idle3Day), color: 'rgba(255, 59, 92, 1)' },
+                    { label: 'EDOC Breached', data: engineers.map(e => engineerData[e].edocBreached), color: 'rgba(123, 63, 217, 1)' }
+                ],
+                'Idle Cases & EDOC by Engineer'
+            );
+        }
+
+        function createLineChart(canvasId, labels, data, title, borderColor, backgroundColor) {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
+
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+
+            charts[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: title,
+                        data: data,
+                        borderColor: borderColor,
+                        backgroundColor: backgroundColor,
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        title: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createMultiLineChart(canvasId, labels, datasets, title) {
+            const ctx = document.getElementById(canvasId);
+            if (!ctx) return;
+
+            if (charts[canvasId]) {
+                charts[canvasId].destroy();
+            }
+
+            const chartDatasets = datasets.map(ds => ({
+                label: ds.label,
+                data: ds.data,
+                borderColor: ds.color,
+                backgroundColor: ds.color.replace('1)', '0.1)'),
+                borderWidth: 3,
+                fill: false,
+                tension: 0.4,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }));
+
+            charts[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: chartDatasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        title: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
         }
     </script>
 </body>
