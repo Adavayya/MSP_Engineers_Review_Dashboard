@@ -169,7 +169,7 @@
             left: -320px;
             top: 0;
             width: 250px;
-            height: 80vh;
+            height: 100vh;
             background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
             border-right: 3px solid var(--primary-color);
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
@@ -2514,6 +2514,10 @@
                         <i class="bi bi-clipboard-check"></i>
                         <span class="nav-link-text">Resolution Review</span>
                     </a>
+                    <a class="nav-link" id="view-config-rca-review-tab" data-bs-toggle="tab" data-bs-target="#view-config-rca-review" role="tab" onclick="updateBannerTitle('Config Details/RCA Review'); toggleSidebar(); updateConfigRCAReviewTab();">
+                        <i class="bi bi-gear-fill"></i>
+                        <span class="nav-link-text">Config Details/RCA Review</span>
+                    </a>
                     <a class="nav-link" id="view-monthly-accounts-tab" data-bs-toggle="tab" data-bs-target="#view-monthly-accounts" role="tab" onclick="updateBannerTitle('Monthly Accounts Review'); toggleSidebar();">
                         <i class="bi bi-file-earmark-text"></i>
                         <span class="nav-link-text">Monthly Accounts Review</span>
@@ -3591,7 +3595,7 @@
                             <div class="card">
                                 <div class="card-header bg-white">
                                     <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
-                                        <i class="bi bi-table me-2"></i>Problem Statement Analysis
+                                        <i class="bi bi-table me-2"></i>Problem Statement Analysis (Click to Drill Down)
                                     </h6>
                                 </div>
                                 <div class="card-body p-0">
@@ -3616,7 +3620,7 @@
                             <div class="card">
                                 <div class="card-header bg-white">
                                     <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
-                                        <i class="bi bi-table me-2"></i>Resolution Steps Analysis
+                                        <i class="bi bi-table me-2"></i>Resolution Steps Analysis (Click to Drill Down)
                                     </h6>
                                 </div>
                                 <div class="card-body p-0">
@@ -3656,7 +3660,158 @@
                     </div>
                 </div>
 
-                <!-- Monthly Accounts Review Tab Content - NEW SECTION -->
+                
+                <!-- Config Details/RCA Review Tab Content -->
+                <div class="tab-pane fade" id="view-config-rca-review" role="tabpanel">
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="alert alert-info" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 4px solid #1976d2;">
+                                <strong><i class="bi bi-info-circle me-2"></i>Service Analysis:</strong> Use the filters below to analyze Service Request and Incident Management separately or combined.
+                                <strong>Click any row</strong> in the tables to drill down and view detailed ticket information.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3 no-print flex-wrap">
+                        <div class="btn-group" role="group">
+                            <input type="radio" class="btn-check" name="serviceTypeConfigRCA" id="serviceTypeAllConfigRCA" value="all" checked onclick="updateConfigRCAReviewTab()">
+                            <label class="btn btn-outline-primary btn-sm" for="serviceTypeAllConfigRCA">
+                                <i class="bi bi-collection me-1"></i>All Services
+                            </label>
+                            <input type="radio" class="btn-check" name="serviceTypeConfigRCA" id="serviceTypeSRConfigRCA" value="sr" onclick="updateConfigRCAReviewTab()">
+                            <label class="btn btn-outline-success btn-sm" for="serviceTypeSRConfigRCA">
+                                <i class="bi bi-clipboard-check me-1"></i>Service Request
+                            </label>
+                            <input type="radio" class="btn-check" name="serviceTypeConfigRCA" id="serviceTypeINCConfigRCA" value="inc" onclick="updateConfigRCAReviewTab()">
+                            <label class="btn btn-outline-danger btn-sm" for="serviceTypeINCConfigRCA">
+                                <i class="bi bi-exclamation-triangle me-1"></i>Incident Management
+                            </label>
+                        </div>
+                        <button class="btn btn-success btn-sm" onclick="exportConfigRCAReview()">
+                            <i class="bi bi-file-earmark-excel me-2"></i>Export to Excel
+                        </button>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <div style="font-size: 2rem; color: var(--primary-color);">
+                                        <i class="bi bi-card-list"></i>
+                                    </div>
+                                    <h6 class="mt-2" style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Unique RCA Details</h6>
+                                    <h3 id="uniqueRCADetails" style="color: var(--primary-color); font-weight: 700;">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <div style="font-size: 2rem; color: var(--success-color);">
+                                        <i class="bi bi-list-check"></i>
+                                    </div>
+                                    <h6 class="mt-2" style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Unique Configuration Details</h6>
+                                    <h3 id="uniqueConfigDetails" style="color: var(--success-color); font-weight: 700;">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-bar-chart-fill me-2"></i>Top 10 RCA Details
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="rcaDetailsChart" style="height: 300px;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-bar-chart-fill me-2"></i>Top 10 Configuration Details
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="configDetailsChart" style="height: 300px;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-table me-2"></i>RCA Details Analysis (Click to Drill Down)
+                                    </h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table table-striped table-hover mb-0">
+                                            <thead style="position: sticky; top: 0; background-color: #f8f9fa; z-index: 1;">
+                                                <tr>
+                                                    <th style="width: 60%;">RCA Details</th>
+                                                    <th style="width: 20%;">Count</th>
+                                                    <th style="width: 20%;">% of Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="rcaDetailsTableBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-table me-2"></i>Configuration Details Analysis (Click to Drill Down)
+                                    </h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table table-striped table-hover mb-0">
+                                            <thead style="position: sticky; top: 0; background-color: #f8f9fa; z-index: 1;">
+                                                <tr>
+                                                    <th style="width: 60%;">Configuration Details</th>
+                                                    <th style="width: 20%;">Count</th>
+                                                    <th style="width: 20%;">% of Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="configDetailsTableBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">
+                                        <i class="bi bi-lightbulb me-2"></i>Key Insights & Actionable Recommendations
+                                    </h6>
+                                </div>
+                                <div class="card-body" id="insightsContentConfigRCA">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+<!-- Monthly Accounts Review Tab Content - NEW SECTION -->
                 <div class="tab-pane fade" id="view-monthly-accounts" role="tabpanel">
                     
                     <!-- Print Button Bar -->
@@ -4496,7 +4651,9 @@
                 subResolutionCode: findCol(['Sub Resolution Code', 'SubResolutionCode']),
                 problemStatement: findCol(['Problem Statement / Requirement', 'Problem Statement', 'Requirement']),
                 resolutionSummary: findCol(['Resolution Summary (Steps)', 'Resolution Summary', 'Resolution Steps']),
-                severityLevel: findCol(['Severity Level', 'Severity', 'Priority'])
+                severityLevel: findCol(['Severity Level', 'Severity', 'Priority']),
+                rcaDetails: findCol(['RCA details', 'RCA Details', 'RCA']),
+                configDetails: findCol(['Details of Configuration performed or Clarifications Provided', 'Configuration Details', 'Config Details'])
             };
 
             processedData = rawData.map(row => {
@@ -4574,6 +4731,8 @@
                     problemStatement: row[colMap.problemStatement] || '',
                     resolutionSummary: row[colMap.resolutionSummary] || '',
                     severityLevel: row[colMap.severityLevel] || '',
+                    rcaDetails: row[colMap.rcaDetails] || '',
+                    configDetails: row[colMap.configDetails] || '',
                     
                     // For drill-down exports
                     aging15Status: aging15Status,
@@ -4856,6 +5015,10 @@
             updateCategoryAnalysis();
             updateResolutionCodeAnalysis();
             
+            // Update Resolution Review and Config/RCA Review tabs
+            updateResolutionReviewTab();
+            updateConfigRCAReviewTab();
+            
             // Update Monthly Accounts Review
             loadMonthlyAccountsReview();
             
@@ -4938,6 +5101,10 @@
             updateMonthlyComparison();
             updateCategoryAnalysis();
             updateResolutionCodeAnalysis();
+            
+            // Update Resolution Review and Config/RCA Review tabs
+            updateResolutionReviewTab();
+            updateConfigRCAReviewTab();
         }
 
         function updateOwnerFilter(owner) {
@@ -9929,11 +10096,13 @@
                 sortedProblems.forEach(([text, count]) => {
                     const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(2) : 0;
                     const tr = document.createElement('tr');
+                    tr.style.cursor = 'pointer';
                     tr.innerHTML = `
                         <td title="${text}" style="max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${text}</td>
                         <td style="font-weight: 600;">${count}</td>
                         <td style="font-weight: 600; color: var(--primary-color); font-family: 'JetBrains Mono', monospace;">${pct}%</td>
                     `;
+                    tr.onclick = () => drillDownResolutionReview('problem', text);
                     problemTableBody.appendChild(tr);
                 });
             }
@@ -9945,11 +10114,13 @@
                 sortedSteps.forEach(([text, count]) => {
                     const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(2) : 0;
                     const tr = document.createElement('tr');
+                    tr.style.cursor = 'pointer';
                     tr.innerHTML = `
                         <td title="${text}" style="max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${text}</td>
                         <td style="font-weight: 600;">${count}</td>
                         <td style="font-weight: 600; color: var(--primary-color); font-family: 'JetBrains Mono', monospace;">${pct}%</td>
                     `;
+                    tr.onclick = () => drillDownResolutionReview('resolution', text);
                     stepsTableBody.appendChild(tr);
                 });
             }
@@ -9962,40 +10133,177 @@
             const insightsContent = document.getElementById('insightsContent');
             if (!insightsContent) return;
             
-            // AI Sentiment Analysis - Analyze patterns in problems and resolutions
-            const aiAnalysis = performAISentimentAnalysis(problems, steps, totalCalls);
+            const uniqueProblems = problems.length;
+            const uniqueSteps = steps.length;
+            const top3Problems = problems.slice(0, 3);
+            const top5Problems = problems.slice(0, 5);
+            const top3Steps = steps.slice(0, 3);
+            const top5Steps = steps.slice(0, 5);
             
-            let insights = '<div style="background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); border-left: 4px solid var(--warning-color); padding: 15px; border-radius: 8px; margin-bottom: 15px;">';
-            insights += '<div style="font-weight: 700; color: #e65100; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;"><i class="bi bi-lightbulb-fill"></i>AI-Powered Analysis & Key Findings</div>';
-            insights += '<ul style="margin-bottom: 0; padding-left: 20px;">';
+            const top3ProblemCount = top3Problems.reduce((sum, [, count]) => sum + count, 0);
+            const top5ProblemCount = top5Problems.reduce((sum, [, count]) => sum + count, 0);
+            const top3StepsCount = top3Steps.reduce((sum, [, count]) => sum + count, 0);
+            const top5StepsCount = top5Steps.reduce((sum, [, count]) => sum + count, 0);
             
-            // Display AI analysis findings
-            aiAnalysis.findings.forEach(finding => {
-                insights += `<li style="margin-bottom: 6px;">${finding}</li>`;
+            const top3ProblemPct = totalCalls > 0 ? (top3ProblemCount / totalCalls) * 100 : 0;
+            const top5ProblemPct = totalCalls > 0 ? (top5ProblemCount / totalCalls) * 100 : 0;
+            const top3StepsPct = totalCalls > 0 ? (top3StepsCount / totalCalls) * 100 : 0;
+            const top5StepsPct = totalCalls > 0 ? (top5StepsCount / totalCalls) * 100 : 0;
+            
+            let insights = '';
+            
+            // INSIGHTS SECTION
+            insights += '<div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 4px solid #1976d2; padding: 20px; border-radius: 8px; margin-bottom: 20px;">';
+            insights += '<h6 style="font-weight: 700; color: #0d47a1; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;"><i class="bi bi-graph-up"></i>KEY INSIGHTS & EVIDENCE</h6>';
+            
+            // Insight 1: Problem Concentration
+            insights += '<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">';
+            insights += '<div style="font-weight: 600; color: #1565c0; margin-bottom: 8px;">📊 Problem Concentration Analysis</div>';
+            insights += '<div style="margin-left: 20px; font-size: 0.75rem;">';
+            insights += `<strong>Evidence:</strong> Top 3 problems account for <span style="background: #fff59d; padding: 2px 6px; border-radius: 3px; font-weight: 700;">${top3ProblemPct.toFixed(1)}%</span> of all ${totalCalls} tickets (${top3ProblemCount} tickets)<br>`;
+            insights += `Top 5 problems cover <span style="background: #fff59d; padding: 2px 6px; border-radius: 3px; font-weight: 700;">${top5ProblemPct.toFixed(1)}%</span> of volume (${top5ProblemCount} tickets)<br>`;
+            insights += `<strong>Top Issues:</strong><ul style="margin: 8px 0 0 0; padding-left: 20px;">`;
+            top3Problems.forEach(([text, count]) => {
+                const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(1) : 0;
+                insights += `<li>${text.substring(0, 100)}${text.length > 100 ? '...' : ''} <strong>(${count} tickets, ${pct}%)</strong></li>`;
             });
+            insights += '</ul></div></div>';
             
-            insights += '</ul></div>';
-            
-            // AI-Generated Recommendations
-            insights += '<div style="background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); border-left: 4px solid var(--primary-color); padding: 15px; border-radius: 8px;">';
-            insights += '<div style="font-weight: 700; color: #006064; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;"><i class="bi bi-check-circle-fill"></i>AI-Generated Recommendations</div>';
-            insights += '<ul style="margin-bottom: 0; padding-left: 20px;">';
-            
-            // Display AI recommendations
-            aiAnalysis.recommendations.forEach(rec => {
-                insights += `<li style="margin-bottom: 6px;">${rec}</li>`;
+            // Insight 2: Resolution Standardization
+            insights += '<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">';
+            insights += '<div style="font-weight: 600; color: #00695c; margin-bottom: 8px;">⚙️ Resolution Standardization Level</div>';
+            insights += '<div style="margin-left: 20px; font-size: 0.75rem;">';
+            insights += `<strong>Evidence:</strong> Top 3 resolution steps handle <span style="background: #c8e6c9; padding: 2px 6px; border-radius: 3px; font-weight: 700;">${top3StepsPct.toFixed(1)}%</span> of cases (${top3StepsCount} tickets)<br>`;
+            insights += `${uniqueSteps} unique resolution approaches identified across all tickets<br>`;
+            insights += `<strong>Most Used Resolutions:</strong><ul style="margin: 8px 0 0 0; padding-left: 20px;">`;
+            top3Steps.forEach(([text, count]) => {
+                const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(1) : 0;
+                insights += `<li>${text.substring(0, 100)}${text.length > 100 ? '...' : ''} <strong>(${count} uses, ${pct}%)</strong></li>`;
             });
+            insights += '</ul></div></div>';
             
-            insights += '</ul></div>';
+            // Insight 3: Efficiency Ratio
+            const problemStepRatio = uniqueSteps > 0 ? uniqueProblems / uniqueSteps : 0;
+            insights += '<div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">';
+            insights += '<div style="font-weight: 600; color: #e65100; margin-bottom: 8px;">🎯 Problem-to-Solution Efficiency</div>';
+            insights += '<div style="margin-left: 20px; font-size: 0.75rem;">';
+            insights += `<strong>Evidence:</strong> Ratio of ${problemStepRatio.toFixed(2)}:1 (${uniqueProblems} problems / ${uniqueSteps} solutions)<br>`;
+            if (problemStepRatio > 1.2) {
+                insights += `<strong>Assessment:</strong> <span style="color: #d84315;">More problems than solutions</span> - indicates documentation gaps or varied resolution approaches<br>`;
+            } else if (problemStepRatio < 0.8) {
+                insights += `<strong>Assessment:</strong> <span style="color: #d84315;">More solutions than problems</span> - may indicate over-documentation or redundant procedures<br>`;
+            } else {
+                insights += `<strong>Assessment:</strong> <span style="color: #2e7d32;">Well-balanced</span> - good alignment between problems and solutions<br>`;
+            }
+            insights += '</div></div>';
             
-            // Sentiment Summary
-            insights += '<div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-left: 4px solid #9c27b0; padding: 15px; border-radius: 8px; margin-top: 15px;">';
-            insights += '<div style="font-weight: 700; color: #6a1b9a; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;"><i class="bi bi-graph-up"></i>Pattern Analysis Summary</div>';
-            insights += `<p style="margin-bottom: 8px;"><strong>Overall Sentiment:</strong> ${aiAnalysis.sentiment.overall}</p>`;
-            insights += `<p style="margin-bottom: 8px;"><strong>Problem Complexity:</strong> ${aiAnalysis.sentiment.problemComplexity}</p>`;
-            insights += `<p style="margin-bottom: 8px;"><strong>Resolution Effectiveness:</strong> ${aiAnalysis.sentiment.resolutionEffectiveness}</p>`;
-            insights += `<p style="margin-bottom: 0;"><strong>Priority Action:</strong> ${aiAnalysis.sentiment.priorityAction}</p>`;
             insights += '</div>';
+            
+            // ACTIONS SECTION
+            insights += '<div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left: 4px solid #f57c00; padding: 20px; border-radius: 8px; margin-bottom: 20px;">';
+            insights += '<h6 style="font-weight: 700; color: #e65100; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;"><i class="bi bi-lightning-charge-fill"></i>IMMEDIATE ACTIONS REQUIRED</h6>';
+            
+            let actionNumber = 1;
+            
+            // Action 1: High concentration issues
+            if (top3ProblemPct > 50) {
+                insights += `<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
+                insights += `<div style="font-weight: 600; color: #d32f2f; margin-bottom: 8px;">${actionNumber++}. URGENT: Address High-Concentration Issues</div>`;
+                insights += `<div style="margin-left: 20px; font-size: 0.75rem;">`;
+                insights += `<strong>Why:</strong> Top 3 problems (${top3ProblemPct.toFixed(1)}%) affecting ${top3ProblemCount} tickets - high impact opportunity<br>`;
+                insights += `<strong>Action:</strong> Form task force to eliminate root causes of these 3 problems within 30 days<br>`;
+                insights += `<strong>Expected Impact:</strong> Could reduce ticket volume by ~${Math.round(top3ProblemPct)}%<br>`;
+                insights += `<strong>Owner:</strong> Service Manager + Technical Lead<br>`;
+                insights += `<strong>Timeline:</strong> Start immediately, complete within 4 weeks`;
+                insights += `</div></div>`;
+            }
+            
+            // Action 2: Create SOPs
+            insights += `<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
+            insights += `<div style="font-weight: 600; color: #1976d2; margin-bottom: 8px;">${actionNumber++}. Create Standard Operating Procedures</div>`;
+            insights += `<div style="margin-left: 20px; font-size: 0.75rem;">`;
+            insights += `<strong>Why:</strong> Top 5 problems cover ${top5ProblemPct.toFixed(1)}% (${top5ProblemCount} tickets) - standardization opportunity<br>`;
+            insights += `<strong>Action:</strong> Document step-by-step SOPs for these 5 problems with screenshots and troubleshooting guides<br>`;
+            insights += `<strong>Expected Impact:</strong> Reduce resolution time by 30-40% for these ticket types<br>`;
+            insights += `<strong>Owner:</strong> Senior Support Engineers<br>`;
+            insights += `<strong>Timeline:</strong> Complete within 6 weeks, 1 SOP per week`;
+            insights += `</div></div>`;
+            
+            // Action 3: Automation opportunity
+            if (top3StepsPct > 40) {
+                insights += `<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
+                insights += `<div style="font-weight: 600; color: #00695c; margin-bottom: 8px;">${actionNumber++}. Implement Automation for Common Resolutions</div>`;
+                insights += `<div style="margin-left: 20px; font-size: 0.75rem;">`;
+                insights += `<strong>Why:</strong> Top 3 resolution steps used in ${top3StepsPct.toFixed(1)}% (${top3StepsCount} tickets) - high automation ROI<br>`;
+                insights += `<strong>Action:</strong> Develop self-service scripts/tools for these 3 most common resolutions<br>`;
+                insights += `<strong>Expected Impact:</strong> 50-60% reduction in handling time for automated cases<br>`;
+                insights += `<strong>Owner:</strong> Automation Team + DevOps<br>`;
+                insights += `<strong>Timeline:</strong> Pilot in 8 weeks, full rollout in 12 weeks`;
+                insights += `</div></div>`;
+            }
+            
+            // Action 4: Training program
+            insights += `<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
+            insights += `<div style="font-weight: 600; color: #7b1fa2; margin-bottom: 8px;">${actionNumber++}. Launch Targeted Training Program</div>`;
+            insights += `<div style="margin-left: 20px; font-size: 0.75rem;">`;
+            insights += `<strong>Why:</strong> ${uniqueProblems} unique problem types require comprehensive team knowledge<br>`;
+            insights += `<strong>Action:</strong> Monthly training sessions covering top 10 problems with hands-on labs and Q&A<br>`;
+            insights += `<strong>Expected Impact:</strong> Improve First Call Resolution rate by 15-20%<br>`;
+            insights += `<strong>Owner:</strong> Training Manager<br>`;
+            insights += `<strong>Timeline:</strong> Start next month, ongoing monthly sessions`;
+            insights += `</div></div>`;
+            
+            // Action 5: Performance monitoring
+            insights += `<div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
+            insights += `<div style="font-weight: 600; color: #f57c00; margin-bottom: 8px;">${actionNumber++}. Setup Performance Tracking Dashboard</div>`;
+            insights += `<div style="margin-left: 20px; font-size: 0.75rem;">`;
+            insights += `<strong>Why:</strong> Need real-time visibility into top problem trends and resolution effectiveness<br>`;
+            insights += `<strong>Action:</strong> Create weekly dashboard tracking: (a) Top 10 problem trends, (b) Resolution time by type, (c) Recurring issue alerts<br>`;
+            insights += `<strong>Expected Impact:</strong> Early detection of emerging issues, faster response to trends<br>`;
+            insights += `<strong>Owner:</strong> Analytics Team<br>`;
+            insights += `<strong>Timeline:</strong> Setup in 2 weeks, review weekly`;
+            insights += `</div></div>`;
+            
+            insights += '</div>';
+            
+            // OVERALL ASSESSMENT
+            let statusColor = '#4caf50';
+            let statusIcon = '🟢';
+            let statusText = 'GOOD';
+            let priorityAction = 'Continue monitoring and optimization';
+            
+            if (top3ProblemPct > 60 || uniqueProblems > 100) {
+                statusColor = '#f44336';
+                statusIcon = '🔴';
+                statusText = 'CRITICAL';
+                priorityAction = 'Immediate executive attention required';
+            } else if (top3ProblemPct > 40 || uniqueProblems > 50) {
+                statusColor = '#ff9800';
+                statusIcon = '🟡';
+                statusText = 'NEEDS IMPROVEMENT';
+                priorityAction = 'Start improvement program within 2 weeks';
+            }
+            
+            insights += `<div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-left: 4px solid #9c27b0; padding: 20px; border-radius: 8px;">`;
+            insights += `<h6 style="font-weight: 700; color: #6a1b9a; margin-bottom: 15px;">📈 OVERALL ASSESSMENT</h6>`;
+            insights += `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">`;
+            insights += `<div style="background: white; padding: 12px; border-radius: 6px;">`;
+            insights += `<div style="font-size: 0.65rem; color: #666; text-transform: uppercase; margin-bottom: 4px;">Status</div>`;
+            insights += `<div style="font-weight: 700; font-size: 1rem; color: ${statusColor};">${statusIcon} ${statusText}</div>`;
+            insights += `</div>`;
+            insights += `<div style="background: white; padding: 12px; border-radius: 6px;">`;
+            insights += `<div style="font-size: 0.65rem; color: #666; text-transform: uppercase; margin-bottom: 4px;">Total Tickets Analyzed</div>`;
+            insights += `<div style="font-weight: 700; font-size: 1rem; color: #1976d2;">${totalCalls}</div>`;
+            insights += `</div>`;
+            insights += `<div style="background: white; padding: 12px; border-radius: 6px;">`;
+            insights += `<div style="font-size: 0.65rem; color: #666; text-transform: uppercase; margin-bottom: 4px;">Problem Diversity</div>`;
+            insights += `<div style="font-weight: 700; font-size: 1rem; color: #7b1fa2;">${uniqueProblems} unique types</div>`;
+            insights += `</div>`;
+            insights += `<div style="background: white; padding: 12px; border-radius: 6px;">`;
+            insights += `<div style="font-size: 0.65rem; color: #666; text-transform: uppercase; margin-bottom: 4px;">Priority Action</div>`;
+            insights += `<div style="font-weight: 600; font-size: 0.75rem; color: #d32f2f;">${priorityAction}</div>`;
+            insights += `</div>`;
+            insights += `</div></div>`;
             
             insightsContent.innerHTML = insights;
         }
@@ -10207,7 +10515,873 @@
             XLSX.writeFile(wb, `Resolution_Review_Analysis_${timestamp}.xlsx`);
         }
 
-        // Auto-close mobile sidebar when menu item clicked
+        
+        // Enhanced Resolution Review with Drill-down
+        function drillDownResolutionReview(type, value) {
+            if (!filteredData || filteredData.length === 0) return;
+            
+            const statusFilteredData = filteredData.filter(d => {
+                const status = d.currentStatus ? String(d.currentStatus).trim() : '';
+                return status === 'Close' || status === 'Resolve - Pending User Confirmation';
+            });
+            
+            let matchingTickets = [];
+            if (type === 'problem') {
+                matchingTickets = statusFilteredData.filter(d => {
+                    const problem = d.problemStatement ? String(d.problemStatement).trim() : '';
+                    return problem === value;
+                });
+            } else {
+                matchingTickets = statusFilteredData.filter(d => {
+                    const resolution = d.resolutionSummary ? String(d.resolutionSummary).trim() : '';
+                    return resolution === value;
+                });
+            }
+            
+            if (matchingTickets.length === 0) {
+                alert('No matching tickets found');
+                return;
+            }
+            
+            // Create modal with Problem Statement and Resolution Summary columns
+            showDrillDownModalResolution(type === 'problem' ? 'Problem Statement' : 'Resolution Step', value, matchingTickets, type);
+        }
+
+        // Enhanced Config/RCA Review with Drill-down
+        function drillDownConfigRCA(type, value) {
+            if (!filteredData || filteredData.length === 0) return;
+            
+            const serviceType = document.querySelector('input[name="serviceTypeConfigRCA"]:checked')?.value || 'all';
+            
+            let statusFilteredData = filteredData.filter(d => {
+                const status = d.currentStatus ? String(d.currentStatus).trim() : '';
+                return status === 'Close' || status === 'Resolve - Pending User Confirmation';
+            });
+            
+            if (serviceType === 'sr') {
+                statusFilteredData = statusFilteredData.filter(d => d.service === 'Service Request');
+            } else if (serviceType === 'inc') {
+                statusFilteredData = statusFilteredData.filter(d => d.service === 'Incident Management');
+            }
+            
+            let matchingTickets = [];
+            if (type === 'rca') {
+                matchingTickets = statusFilteredData.filter(d => {
+                    const rca = d.rcaDetails ? String(d.rcaDetails).trim() : '';
+                    return rca === value;
+                });
+            } else {
+                matchingTickets = statusFilteredData.filter(d => {
+                    const config = d.configDetails ? String(d.configDetails).trim() : '';
+                    return config === value;
+                });
+            }
+            
+            if (matchingTickets.length === 0) {
+                alert('No matching tickets found');
+                return;
+            }
+            
+            showDrillDownModalConfigRCA(type === 'rca' ? 'RCA Details' : 'Configuration Details', value, matchingTickets, type);
+        }
+
+        // Universal Drill-down Modal for Resolution Review with Problem Statement and Resolution Summary columns
+        function showDrillDownModalResolution(fieldName, fieldValue, tickets, type) {
+            // Store data globally for export function
+            window.currentDrillDownData = {
+                fieldName: fieldName,
+                fieldValue: fieldValue,
+                tickets: tickets
+            };
+            
+            const modalHTML = `
+                <div class="modal fade" id="drillDownModalResolution" tabindex="-1">
+                    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%); color: white;">
+                                <h5 class="modal-title">
+                                    <i class="bi bi-funnel-fill me-2"></i>
+                                    Drill-Down: ${fieldName}
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-info mb-3">
+                                    <strong>${fieldName}:</strong> ${fieldValue.length > 200 ? fieldValue.substring(0, 200) + '...' : fieldValue}
+                                    <br><strong>Total Tickets:</strong> ${tickets.length}
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover table-sm">
+                                        <thead style="background-color: #f8f9fa; position: sticky; top: 0;">
+                                            <tr>
+                                                <th>Incident ID</th>
+                                                <th>Service</th>
+                                                <th>Title</th>
+                                                <th>Owner</th>
+                                                <th>Status</th>
+                                                <th>Aging</th>
+                                                <th>Submitted By</th>
+                                                <th>Problem Statement / Requirement</th>
+                                                <th>Resolution Summary (Steps)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${tickets.map(t => `
+                                                <tr>
+                                                    <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;">${t.incidentId}</td>
+                                                    <td>
+                                                        <span class="badge ${t.service === 'Service Request' ? 'bg-success' : 'bg-danger'}" style="font-size: 0.65rem;">
+                                                            ${t.service === 'Service Request' ? 'SR' : 'INC'}
+                                                        </span>
+                                                    </td>
+                                                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${t.title}">${t.title}</td>
+                                                    <td>${t.owner}</td>
+                                                    <td><span class="badge bg-secondary" style="font-size: 0.65rem;">${t.currentStatus}</span></td>
+                                                    <td><strong>${t.agingDays}</strong> days</td>
+                                                    <td>${t.submittedBy}</td>
+                                                    <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${t.problemStatement || 'N/A'}">${t.problemStatement || 'N/A'}</td>
+                                                    <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${t.resolutionSummary || 'N/A'}">${t.resolutionSummary || 'N/A'}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-success" onclick="exportDrillDownResolution()">
+                                    <i class="bi bi-file-earmark-excel me-2"></i>Export to Excel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById('drillDownModalResolution');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('drillDownModalResolution'));
+            modal.show();
+        }
+
+        // Export drill-down data for Resolution Review
+        function exportDrillDownResolution() {
+            if (!window.currentDrillDownData || !window.currentDrillDownData.tickets) {
+                alert('No data to export');
+                return;
+            }
+            
+            const { fieldName, tickets } = window.currentDrillDownData;
+            
+            const wb = XLSX.utils.book_new();
+            const wsData = [[
+                'Incident ID', 'Service', 'Title', 'Owner', 'Status', 'Aging Days', 
+                'Submitted By', 'Support Category', 'Problem Statement / Requirement', 'Resolution Summary (Steps)'
+            ]];
+            
+            tickets.forEach(t => {
+                wsData.push([
+                    t.incidentId,
+                    t.service,
+                    t.title,
+                    t.owner,
+                    t.currentStatus,
+                    t.agingDays,
+                    t.submittedBy,
+                    t.supportCategory,
+                    t.problemStatement || 'N/A',
+                    t.resolutionSummary || 'N/A'
+                ]);
+            });
+            
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Tickets');
+            
+            const timestamp = new Date().toISOString().split('T')[0];
+            const safeName = fieldName.replace(/[^a-zA-Z0-9]/g, '_');
+            XLSX.writeFile(wb, `DrillDown_${safeName}_${timestamp}.xlsx`);
+        }
+
+        // Universal Drill-down Modal for Config/RCA Review with RCA and Config details columns
+        function showDrillDownModalConfigRCA(fieldName, fieldValue, tickets, type) {
+            // Store data globally for export function
+            window.currentDrillDownDataConfigRCA = {
+                fieldName: fieldName,
+                fieldValue: fieldValue,
+                tickets: tickets
+            };
+            
+            const modalHTML = `
+                <div class="modal fade" id="drillDownModalConfigRCA" tabindex="-1">
+                    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%); color: white;">
+                                <h5 class="modal-title">
+                                    <i class="bi bi-funnel-fill me-2"></i>
+                                    Drill-Down: ${fieldName}
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-info mb-3">
+                                    <strong>${fieldName}:</strong> ${fieldValue.length > 200 ? fieldValue.substring(0, 200) + '...' : fieldValue}
+                                    <br><strong>Total Tickets:</strong> ${tickets.length}
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover table-sm">
+                                        <thead style="background-color: #f8f9fa; position: sticky; top: 0;">
+                                            <tr>
+                                                <th>Incident ID</th>
+                                                <th>Service</th>
+                                                <th>Title</th>
+                                                <th>Owner</th>
+                                                <th>Status</th>
+                                                <th>Aging</th>
+                                                <th>Submitted By</th>
+                                                <th>RCA Details</th>
+                                                <th>Details of Configuration performed or Clarifications Provided</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${tickets.map(t => `
+                                                <tr>
+                                                    <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;">${t.incidentId}</td>
+                                                    <td>
+                                                        <span class="badge ${t.service === 'Service Request' ? 'bg-success' : 'bg-danger'}" style="font-size: 0.65rem;">
+                                                            ${t.service === 'Service Request' ? 'SR' : 'INC'}
+                                                        </span>
+                                                    </td>
+                                                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${t.title}">${t.title}</td>
+                                                    <td>${t.owner}</td>
+                                                    <td><span class="badge bg-secondary" style="font-size: 0.65rem;">${t.currentStatus}</span></td>
+                                                    <td><strong>${t.agingDays}</strong> days</td>
+                                                    <td>${t.submittedBy}</td>
+                                                    <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${t.rcaDetails || 'N/A'}">${t.rcaDetails || 'N/A'}</td>
+                                                    <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${t.configDetails || 'N/A'}">${t.configDetails || 'N/A'}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-success" onclick="exportDrillDownConfigRCA()">
+                                    <i class="bi bi-file-earmark-excel me-2"></i>Export to Excel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById('drillDownModalConfigRCA');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('drillDownModalConfigRCA'));
+            modal.show();
+        }
+
+        // Export drill-down data for Config/RCA Review
+        function exportDrillDownConfigRCA() {
+            if (!window.currentDrillDownDataConfigRCA || !window.currentDrillDownDataConfigRCA.tickets) {
+                alert('No data to export');
+                return;
+            }
+            
+            const { fieldName, tickets } = window.currentDrillDownDataConfigRCA;
+            
+            const wb = XLSX.utils.book_new();
+            const wsData = [[
+                'Incident ID', 'Service', 'Title', 'Owner', 'Status', 'Aging Days', 
+                'Submitted By', 'Support Category', 'RCA Details', 'Details of Configuration performed or Clarifications Provided'
+            ]];
+            
+            tickets.forEach(t => {
+                wsData.push([
+                    t.incidentId,
+                    t.service,
+                    t.title,
+                    t.owner,
+                    t.currentStatus,
+                    t.agingDays,
+                    t.submittedBy,
+                    t.supportCategory,
+                    t.rcaDetails || 'N/A',
+                    t.configDetails || 'N/A'
+                ]);
+            });
+            
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Tickets');
+            
+            const timestamp = new Date().toISOString().split('T')[0];
+            const safeName = fieldName.replace(/[^a-zA-Z0-9]/g, '_');
+            XLSX.writeFile(wb, `DrillDown_${safeName}_${timestamp}.xlsx`);
+        }
+
+        // Universal Drill-down Modal
+        function showDrillDownModal(fieldName, fieldValue, tickets) {
+            const modalHTML = `
+                <div class="modal fade" id="drillDownModal" tabindex="-1">
+                    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%); color: white;">
+                                <h5 class="modal-title">
+                                    <i class="bi bi-funnel-fill me-2"></i>
+                                    Drill-Down: ${fieldName}
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="alert alert-info mb-3">
+                                    <strong>${fieldName}:</strong> ${fieldValue.length > 200 ? fieldValue.substring(0, 200) + '...' : fieldValue}
+                                    <br><strong>Total Tickets:</strong> ${tickets.length}
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover table-sm">
+                                        <thead style="background-color: #f8f9fa; position: sticky; top: 0;">
+                                            <tr>
+                                                <th>Incident ID</th>
+                                                <th>Service</th>
+                                                <th>Title</th>
+                                                <th>Owner</th>
+                                                <th>Status</th>
+                                                <th>Aging</th>
+                                                <th>Submitted By</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${tickets.map(t => `
+                                                <tr>
+                                                    <td style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;">${t.incidentId}</td>
+                                                    <td>
+                                                        <span class="badge ${t.service === 'Service Request' ? 'bg-success' : 'bg-danger'}" style="font-size: 0.65rem;">
+                                                            ${t.service === 'Service Request' ? 'SR' : 'INC'}
+                                                        </span>
+                                                    </td>
+                                                    <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${t.title}">${t.title}</td>
+                                                    <td>${t.owner}</td>
+                                                    <td><span class="badge bg-secondary" style="font-size: 0.65rem;">${t.currentStatus}</span></td>
+                                                    <td><strong>${t.agingDays}</strong> days</td>
+                                                    <td>${t.submittedBy}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-success" onclick="exportDrillDown('${fieldName}', '${fieldValue.replace(/'/g, "\\'")}', ${JSON.stringify(tickets.map(t => t.incidentId))})">
+                                    <i class="bi bi-file-earmark-excel me-2"></i>Export List
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById('drillDownModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('drillDownModal'));
+            modal.show();
+        }
+
+        // Export drill-down data
+        function exportDrillDown(fieldName, fieldValue, incidentIds) {
+            if (!filteredData || incidentIds.length === 0) {
+                alert('No data to export');
+                return;
+            }
+            
+            const tickets = filteredData.filter(d => incidentIds.includes(d.incidentId));
+            
+            const wb = XLSX.utils.book_new();
+            const wsData = [[
+                'Incident ID', 'Service', 'Title', 'Owner', 'Status', 'Aging Days', 
+                'Submitted By', 'Support Category', 'Resolution Code', 'Sub Resolution Code'
+            ]];
+            
+            tickets.forEach(t => {
+                wsData.push([
+                    t.incidentId,
+                    t.service,
+                    t.title,
+                    t.owner,
+                    t.currentStatus,
+                    t.agingDays,
+                    t.submittedBy,
+                    t.supportCategory,
+                    t.resolutionCode,
+                    t.subResolutionCode
+                ]);
+            });
+            
+            const ws = XLSX.utils.aoa_to_sheet(wsData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Tickets');
+            
+            const timestamp = new Date().toISOString().split('T')[0];
+            const safeName = fieldName.replace(/[^a-zA-Z0-9]/g, '_');
+            XLSX.writeFile(wb, `DrillDown_${safeName}_${timestamp}.xlsx`);
+        }
+
+
+        // Config Details/RCA Review Functions
+        function updateConfigRCAReviewTab() {
+            if (!filteredData || filteredData.length === 0) {
+                console.log('Config/RCA Review: No filtered data available');
+                return;
+            }
+            
+            const serviceType = document.querySelector('input[name="serviceTypeConfigRCA"]:checked')?.value || 'all';
+            
+            let statusFilteredData = filteredData.filter(d => {
+                const status = d.currentStatus ? String(d.currentStatus).trim() : '';
+                return status === 'Close' || status === 'Resolve - Pending User Confirmation';
+            });
+            
+            if (serviceType === 'sr') {
+                statusFilteredData = statusFilteredData.filter(d => d.service === 'Service Request');
+            } else if (serviceType === 'inc') {
+                statusFilteredData = statusFilteredData.filter(d => d.service === 'Incident Management');
+            }
+            
+            const rcaDetails = {};
+            const configDetails = {};
+            
+            statusFilteredData.forEach(d => {
+                const rca = d.rcaDetails ? String(d.rcaDetails).trim() : '';
+                const config = d.configDetails ? String(d.configDetails).trim() : '';
+                
+                if (rca && rca !== 'N/A' && rca !== '' && rca !== '-') {
+                    rcaDetails[rca] = (rcaDetails[rca] || 0) + 1;
+                }
+                if (config && config !== 'N/A' && config !== '' && config !== '-') {
+                    configDetails[config] = (configDetails[config] || 0) + 1;
+                }
+            });
+            
+            const totalCalls = statusFilteredData.length;
+            
+            document.getElementById('uniqueRCADetails').textContent = Object.keys(rcaDetails).length;
+            document.getElementById('uniqueConfigDetails').textContent = Object.keys(configDetails).length;
+            
+            const sortedRCA = Object.entries(rcaDetails).sort((a, b) => b[1] - a[1]);
+            const sortedConfig = Object.entries(configDetails).sort((a, b) => b[1] - a[1]);
+            const top10RCA = sortedRCA.slice(0, 10);
+            const top10Config = sortedConfig.slice(0, 10);
+            
+            // RCA Chart
+            const rcaChartCtx = document.getElementById('rcaDetailsChart');
+            if (rcaChartCtx) {
+                if (window.rcaDetailsChart && typeof window.rcaDetailsChart.destroy === 'function') {
+                    window.rcaDetailsChart.destroy();
+                }
+                
+                if (top10RCA.length > 0) {
+                    window.rcaDetailsChart = new Chart(rcaChartCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: top10RCA.map(([text]) => text.substring(0, 40) + (text.length > 40 ? '...' : '')),
+                            datasets: [{
+                                label: 'Count',
+                                data: top10RCA.map(([, count]) => count),
+                                backgroundColor: 'rgba(0, 102, 204, 0.7)',
+                                borderColor: 'rgba(0, 102, 204, 1)',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            indexAxis: 'y',
+                            plugins: { legend: { display: false } },
+                            scales: { x: { beginAtZero: true } }
+                        }
+                    });
+                } else {
+                    // Clear canvas if no data
+                    const ctx = rcaChartCtx.getContext('2d');
+                    ctx.clearRect(0, 0, rcaChartCtx.width, rcaChartCtx.height);
+                    ctx.font = '14px Arial';
+                    ctx.fillStyle = '#999';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('No RCA data available', rcaChartCtx.width / 2, rcaChartCtx.height / 2);
+                }
+            }
+            
+            // Config Chart
+            const configChartCtx = document.getElementById('configDetailsChart');
+            if (configChartCtx) {
+                if (window.configDetailsChart && typeof window.configDetailsChart.destroy === 'function') {
+                    window.configDetailsChart.destroy();
+                }
+                
+                if (top10Config.length > 0) {
+                    window.configDetailsChart = new Chart(configChartCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: top10Config.map(([text]) => text.substring(0, 40) + (text.length > 40 ? '...' : '')),
+                            datasets: [{
+                                label: 'Count',
+                                data: top10Config.map(([, count]) => count),
+                                backgroundColor: 'rgba(0, 200, 83, 0.7)',
+                                borderColor: 'rgba(0, 200, 83, 1)',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            indexAxis: 'y',
+                            plugins: { legend: { display: false } },
+                            scales: { x: { beginAtZero: true } }
+                        }
+                    });
+                } else {
+                    // Clear canvas if no data
+                    const ctx = configChartCtx.getContext('2d');
+                    ctx.clearRect(0, 0, configChartCtx.width, configChartCtx.height);
+                    ctx.font = '14px Arial';
+                    ctx.fillStyle = '#999';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('No Configuration data available', configChartCtx.width / 2, configChartCtx.height / 2);
+                }
+            }
+            
+            // RCA Table with drill-down
+            const rcaTableBody = document.getElementById('rcaDetailsTableBody');
+            if (rcaTableBody) {
+                rcaTableBody.innerHTML = '';
+                sortedRCA.forEach(([text, count]) => {
+                    const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(2) : 0;
+                    const tr = document.createElement('tr');
+                    tr.style.cursor = 'pointer';
+                    tr.innerHTML = `
+                        <td title="${text}" style="max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${text}</td>
+                        <td style="font-weight: 600;">${count}</td>
+                        <td style="font-weight: 600; color: var(--primary-color); font-family: 'JetBrains Mono', monospace;">${pct}%</td>
+                    `;
+                    tr.onclick = () => drillDownConfigRCA('rca', text);
+                    rcaTableBody.appendChild(tr);
+                });
+            }
+            
+            // Config Table with drill-down
+            const configTableBody = document.getElementById('configDetailsTableBody');
+            if (configTableBody) {
+                configTableBody.innerHTML = '';
+                sortedConfig.forEach(([text, count]) => {
+                    const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(2) : 0;
+                    const tr = document.createElement('tr');
+                    tr.style.cursor = 'pointer';
+                    tr.innerHTML = `
+                        <td title="${text}" style="max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${text}</td>
+                        <td style="font-weight: 600;">${count}</td>
+                        <td style="font-weight: 600; color: var(--primary-color); font-family: 'JetBrains Mono', monospace;">${pct}%</td>
+                    `;
+                    tr.onclick = () => drillDownConfigRCA('config', text);
+                    configTableBody.appendChild(tr);
+                });
+            }
+            
+            generateConfigRCAInsights(sortedRCA, sortedConfig, totalCalls, serviceType);
+        }
+        
+        function generateConfigRCAInsights(rcaDetails, configDetails, totalCalls, serviceType) {
+            const insightsContent = document.getElementById('insightsContentConfigRCA');
+            if (!insightsContent) return;
+            
+            const uniqueRCA = rcaDetails.length;
+            const uniqueConfig = configDetails.length;
+            const top3RCA = rcaDetails.slice(0, 3);
+            const top5RCA = rcaDetails.slice(0, 5);
+            const top3Config = configDetails.slice(0, 3);
+            
+            const top3RCACount = top3RCA.reduce((sum, [, count]) => sum + count, 0);
+            const top5RCACount = top5RCA.reduce((sum, [, count]) => sum + count, 0);
+            const top3ConfigCount = top3Config.reduce((sum, [, count]) => sum + count, 0);
+            
+            const top3RCAPct = totalCalls > 0 ? (top3RCACount / totalCalls) * 100 : 0;
+            const top5RCAPct = totalCalls > 0 ? (top5RCACount / totalCalls) * 100 : 0;
+            const top3ConfigPct = totalCalls > 0 ? (top3ConfigCount / totalCalls) * 100 : 0;
+            
+            let serviceLabel = 'All Services';
+            if (serviceType === 'sr') serviceLabel = 'Service Requests';
+            if (serviceType === 'inc') serviceLabel = 'Incident Management';
+            
+            let insights = '';
+            
+            // INSIGHTS SECTION
+            insights += '<div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 4px solid #1976d2; padding: 20px; border-radius: 8px; margin-bottom: 20px;">';
+            insights += `<h6 style="font-weight: 700; color: #0d47a1; margin-bottom: 15px;"><i class="bi bi-graph-up me-2"></i>KEY INSIGHTS & EVIDENCE - ${serviceLabel}</h6>`;
+            
+            // Insight 1: RCA Concentration
+            insights += '<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">';
+            insights += '<div style="font-weight: 600; color: #1565c0; margin-bottom: 8px;">📊 Root Cause Analysis Concentration</div>';
+            insights += '<div style="margin-left: 20px; font-size: 0.75rem;">';
+            insights += `<strong>Evidence:</strong> Top 3 RCA patterns account for <span style="background: #fff59d; padding: 2px 6px; border-radius: 3px; font-weight: 700;">${top3RCAPct.toFixed(1)}%</span> of all ${totalCalls} tickets (${top3RCACount} tickets)<br>`;
+            insights += `Top 5 RCA patterns cover <span style="background: #fff59d; padding: 2px 6px; border-radius: 3px; font-weight: 700;">${top5RCAPct.toFixed(1)}%</span> of volume (${top5RCACount} tickets)<br>`;
+            insights += `<strong>Top Root Causes:</strong><ul style="margin: 8px 0 0 0; padding-left: 20px;">`;
+            top3RCA.forEach(([text, count]) => {
+                const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(1) : 0;
+                insights += `<li>${text.substring(0, 100)}${text.length > 100 ? '...' : ''} <strong>(${count} tickets, ${pct}%)</strong></li>`;
+            });
+            insights += '</ul></div></div>';
+            
+            // Insight 2: Configuration Standardization
+            insights += '<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">';
+            insights += '<div style="font-weight: 600; color: #00695c; margin-bottom: 8px;">⚙️ Configuration Standardization Level</div>';
+            insights += '<div style="margin-left: 20px; font-size: 0.75rem;">';
+            insights += `<strong>Evidence:</strong> Top 3 configuration approaches handle <span style="background: #c8e6c9; padding: 2px 6px; border-radius: 3px; font-weight: 700;">${top3ConfigPct.toFixed(1)}%</span> of cases (${top3ConfigCount} tickets)<br>`;
+            insights += `${uniqueConfig} unique configuration methods identified<br>`;
+            insights += `<strong>Most Used Configurations:</strong><ul style="margin: 8px 0 0 0; padding-left: 20px;">`;
+            top3Config.forEach(([text, count]) => {
+                const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(1) : 0;
+                insights += `<li>${text.substring(0, 100)}${text.length > 100 ? '...' : ''} <strong>(${count} uses, ${pct}%)</strong></li>`;
+            });
+            insights += '</ul></div></div>';
+            
+            // Insight 3: Service-specific pattern
+            if (serviceType === 'sr') {
+                insights += '<div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">';
+                insights += '<div style="font-weight: 600; color: #2e7d32; margin-bottom: 8px;">📝 Service Request Pattern</div>';
+                insights += '<div style="margin-left: 20px; font-size: 0.75rem;">';
+                insights += `<strong>Observation:</strong> Service Requests show ${uniqueConfig} distinct configuration approaches<br>`;
+                insights += '<strong>Opportunity:</strong> High potential for self-service automation and configuration templates';
+                insights += '</div></div>';
+            } else if (serviceType === 'inc') {
+                insights += '<div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">';
+                insights += '<div style="font-weight: 600; color: #c62828; margin-bottom: 8px;">⚡ Incident Pattern</div>';
+                insights += '<div style="margin-left: 20px; font-size: 0.75rem;">';
+                insights += `<strong>Observation:</strong> Incidents have ${uniqueRCA} distinct root causes requiring attention<br>`;
+                insights += '<strong>Focus Area:</strong> Preventive measures to reduce recurring incidents';
+                insights += '</div></div>';
+            }
+            
+            insights += '</div>';
+            
+            // ACTIONS SECTION
+            insights += '<div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left: 4px solid #f57c00; padding: 20px; border-radius: 8px; margin-bottom: 20px;">';
+            insights += '<h6 style="font-weight: 700; color: #e65100; margin-bottom: 15px;"><i class="bi bi-lightning-charge-fill me-2"></i>ACTIONABLE RECOMMENDATIONS</h6>';
+            
+            let actionNumber = 1;
+            
+            // Action 1: High RCA concentration
+            if (top3RCAPct > 50) {
+                insights += `<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
+                insights += `<div style="font-weight: 600; color: #d32f2f; margin-bottom: 8px;">${actionNumber++}. PRIORITY: Eliminate Top Root Causes</div>`;
+                insights += `<div style="margin-left: 20px; font-size: 0.75rem;">`;
+                insights += `<strong>Why:</strong> Top 3 RCA patterns (${top3RCAPct.toFixed(1)}%) affecting ${top3RCACount} tickets - massive impact potential<br>`;
+                insights += `<strong>Action:</strong> Launch root cause elimination project for these 3 issues<br>`;
+                insights += `<strong>Expected Impact:</strong> Reduce ticket volume by ~${Math.round(top3RCAPct)}%<br>`;
+                insights += `<strong>Owner:</strong> Technical Lead + Service Manager<br>`;
+                insights += `<strong>Timeline:</strong> Complete fixes within 45 days`;
+                insights += `</div></div>`;
+            }
+            
+            // Action 2: Configuration automation
+            if (top3ConfigPct > 40) {
+                insights += `<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
+                insights += `<div style="font-weight: 600; color: #1976d2; margin-bottom: 8px;">${actionNumber++}. Automate Common Configurations</div>`;
+                insights += `<div style="margin-left: 20px; font-size: 0.75rem;">`;
+                insights += `<strong>Why:</strong> Top 3 configurations used in ${top3ConfigPct.toFixed(1)}% of cases - high automation ROI<br>`;
+                insights += `<strong>Action:</strong> Develop scripts/templates for these 3 configurations<br>`;
+                insights += `<strong>Expected Impact:</strong> 60% faster resolution for automated cases<br>`;
+                insights += `<strong>Owner:</strong> Automation Team<br>`;
+                insights += `<strong>Timeline:</strong> Pilot in 6 weeks, rollout in 10 weeks`;
+                insights += `</div></div>`;
+            }
+            
+            // Action 3: Knowledge Base
+            insights += `<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
+            insights += `<div style="font-weight: 600; color: #00695c; margin-bottom: 8px;">${actionNumber++}. Build RCA Knowledge Base</div>`;
+            insights += `<div style="margin-left: 20px; font-size: 0.75rem;">`;
+            insights += `<strong>Why:</strong> ${uniqueRCA} unique RCA patterns require documented troubleshooting guides<br>`;
+            insights += `<strong>Action:</strong> Create searchable KB with RCA playbooks, starting with top 10 patterns<br>`;
+            insights += `<strong>Expected Impact:</strong> 25-30% faster diagnosis time<br>`;
+            insights += `<strong>Owner:</strong> Senior Engineers + Documentation Team<br>`;
+            insights += `<strong>Timeline:</strong> Top 10 in 8 weeks, full coverage in 6 months`;
+            insights += `</div></div>`;
+            
+            // Service-specific action
+            if (serviceType === 'sr') {
+                insights += `<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
+                insights += `<div style="font-weight: 600; color: #7b1fa2; margin-bottom: 8px;">${actionNumber++}. SR-Specific: Self-Service Portal</div>`;
+                insights += `<div style="margin-left: 20px; font-size: 0.75rem;">`;
+                insights += `<strong>Why:</strong> Service Requests ideal for self-service automation<br>`;
+                insights += `<strong>Action:</strong> Build self-service portal with configuration wizards for top 5 SR types<br>`;
+                insights += `<strong>Expected Impact:</strong> 30-40% of SRs handled via self-service<br>`;
+                insights += `<strong>Owner:</strong> Product Team + UX Designer<br>`;
+                insights += `<strong>Timeline:</strong> MVP in 12 weeks`;
+                insights += `</div></div>`;
+            } else if (serviceType === 'inc') {
+                insights += `<div style="background: white; padding: 15px; border-radius: 6px; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
+                insights += `<div style="font-weight: 600; color: #7b1fa2; margin-bottom: 8px;">${actionNumber++}. INC-Specific: Proactive Monitoring</div>`;
+                insights += `<div style="margin-left: 20px; font-size: 0.75rem;">`;
+                insights += `<strong>Why:</strong> Many incidents can be prevented with early detection<br>`;
+                insights += `<strong>Action:</strong> Implement monitoring for top 5 RCA patterns with automated alerts<br>`;
+                insights += `<strong>Expected Impact:</strong> 20-25% reduction in incident volume<br>`;
+                insights += `<strong>Owner:</strong> Infrastructure Team<br>`;
+                insights += `<strong>Timeline:</strong> Setup in 8 weeks`;
+                insights += `</div></div>`;
+            }
+            
+            // Action: Training
+            insights += `<div style="background: white; padding: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
+            insights += `<div style="font-weight: 600; color: #f57c00; margin-bottom: 8px;">${actionNumber++}. Continuous Training Program</div>`;
+            insights += `<div style="margin-left: 20px; font-size: 0.75rem;">`;
+            insights += `<strong>Why:</strong> Complex environment requires ongoing skill development<br>`;
+            insights += `<strong>Action:</strong> Monthly training on top RCA patterns + configuration best practices<br>`;
+            insights += `<strong>Expected Impact:</strong> 15-20% improvement in FCR rate<br>`;
+            insights += `<strong>Owner:</strong> Training Manager<br>`;
+            insights += `<strong>Timeline:</strong> Launch next month, ongoing`;
+            insights += `</div></div>`;
+            
+            insights += '</div>';
+            
+            // OVERALL ASSESSMENT
+            let statusColor = '#4caf50';
+            let statusIcon = '🟢';
+            let statusText = 'GOOD';
+            let priorityAction = 'Continue monitoring and incremental improvements';
+            
+            if (top3RCAPct > 60 || uniqueRCA > 100) {
+                statusColor = '#f44336';
+                statusIcon = '🔴';
+                statusText = 'CRITICAL';
+                priorityAction = 'Immediate action required - establish task force';
+            } else if (top3RCAPct > 40 || uniqueRCA > 50) {
+                statusColor = '#ff9800';
+                statusIcon = '🟡';
+                statusText = 'NEEDS IMPROVEMENT';
+                priorityAction = 'Launch improvement program within 2 weeks';
+            }
+            
+            insights += `<div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-left: 4px solid #9c27b0; padding: 20px; border-radius: 8px;">`;
+            insights += `<h6 style="font-weight: 700; color: #6a1b9a; margin-bottom: 15px;">📈 OVERALL ASSESSMENT - ${serviceLabel}</h6>`;
+            insights += `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">`;
+            insights += `<div style="background: white; padding: 12px; border-radius: 6px;">`;
+            insights += `<div style="font-size: 0.65rem; color: #666; text-transform: uppercase; margin-bottom: 4px;">Status</div>`;
+            insights += `<div style="font-weight: 700; font-size: 1rem; color: ${statusColor};">${statusIcon} ${statusText}</div>`;
+            insights += `</div>`;
+            insights += `<div style="background: white; padding: 12px; border-radius: 6px;">`;
+            insights += `<div style="font-size: 0.65rem; color: #666; text-transform: uppercase; margin-bottom: 4px;">Tickets Analyzed</div>`;
+            insights += `<div style="font-weight: 700; font-size: 1rem; color: #1976d2;">${totalCalls}</div>`;
+            insights += `</div>`;
+            insights += `<div style="background: white; padding: 12px; border-radius: 6px;">`;
+            insights += `<div style="font-size: 0.65rem; color: #666; text-transform: uppercase; margin-bottom: 4px;">RCA Complexity</div>`;
+            insights += `<div style="font-weight: 700; font-size: 1rem; color: #7b1fa2;">${uniqueRCA} unique patterns</div>`;
+            insights += `</div>`;
+            insights += `<div style="background: white; padding: 12px; border-radius: 6px;">`;
+            insights += `<div style="font-size: 0.65rem; color: #666; text-transform: uppercase; margin-bottom: 4px;">Priority Action</div>`;
+            insights += `<div style="font-weight: 600; font-size: 0.75rem; color: #d32f2f;">${priorityAction}</div>`;
+            insights += `</div>`;
+            insights += `</div></div>`;
+            
+            insightsContent.innerHTML = insights;
+        }
+        
+        function exportConfigRCAReview() {
+            if (!filteredData || filteredData.length === 0) {
+                alert('No data available to export');
+                return;
+            }
+            
+            const serviceType = document.querySelector('input[name="serviceTypeConfigRCA"]:checked')?.value || 'all';
+            
+            let statusFilteredData = filteredData.filter(d => {
+                const status = d.currentStatus ? String(d.currentStatus).trim() : '';
+                return status === 'Close' || status === 'Resolve - Pending User Confirmation';
+            });
+            
+            if (serviceType === 'sr') {
+                statusFilteredData = statusFilteredData.filter(d => d.service === 'Service Request');
+            } else if (serviceType === 'inc') {
+                statusFilteredData = statusFilteredData.filter(d => d.service === 'Incident Management');
+            }
+            
+            const rcaDetails = {};
+            const configDetails = {};
+            
+            statusFilteredData.forEach(d => {
+                const rca = d.rcaDetails ? String(d.rcaDetails).trim() : '';
+                const config = d.configDetails ? String(d.configDetails).trim() : '';
+                
+                if (rca && rca !== 'N/A' && rca !== '' && rca !== '-') {
+                    rcaDetails[rca] = (rcaDetails[rca] || 0) + 1;
+                }
+                if (config && config !== 'N/A' && config !== '' && config !== '-') {
+                    configDetails[config] = (configDetails[config] || 0) + 1;
+                }
+            });
+            
+            const totalCalls = statusFilteredData.length;
+            const wb = XLSX.utils.book_new();
+            
+            // RCA Sheet
+            const rcaData = [['RCA Details', 'Count', '% of Total']];
+            Object.entries(rcaDetails).sort((a, b) => b[1] - a[1]).forEach(([text, count]) => {
+                const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(2) : 0;
+                rcaData.push([text, count, pct + '%']);
+            });
+            const wsRCA = XLSX.utils.aoa_to_sheet(rcaData);
+            XLSX.utils.book_append_sheet(wb, wsRCA, 'RCA Details');
+            
+            // Config Sheet
+            const configData = [['Configuration Details', 'Count', '% of Total']];
+            Object.entries(configDetails).sort((a, b) => b[1] - a[1]).forEach(([text, count]) => {
+                const pct = totalCalls > 0 ? ((count / totalCalls) * 100).toFixed(2) : 0;
+                configData.push([text, count, pct + '%']);
+            });
+            const wsConfig = XLSX.utils.aoa_to_sheet(configData);
+            XLSX.utils.book_append_sheet(wb, wsConfig, 'Config Details');
+            
+            // Summary Sheet
+            let serviceLabel = 'All Services';
+            if (serviceType === 'sr') serviceLabel = 'Service Request';
+            if (serviceType === 'inc') serviceLabel = 'Incident Management';
+            
+            const summaryData = [
+                ['Metric', 'Value'],
+                ['Service Type', serviceLabel],
+                ['Total Tickets', totalCalls],
+                ['Unique RCA Patterns', Object.keys(rcaDetails).length],
+                ['Unique Configurations', Object.keys(configDetails).length]
+            ];
+            const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
+            XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
+            
+            const timestamp = new Date().toISOString().split('T')[0];
+            const serviceFileSuffix = serviceType === 'all' ? 'All' : (serviceType === 'sr' ? 'SR' : 'INC');
+            XLSX.writeFile(wb, `Config_RCA_Review_${serviceFileSuffix}_${timestamp}.xlsx`);
+        }
+
+// Auto-close mobile sidebar when menu item clicked
         document.addEventListener('DOMContentLoaded', function() {
             // Select all nav links from all sections
             const navLinks = document.querySelectorAll('.sidebar .nav-link');
