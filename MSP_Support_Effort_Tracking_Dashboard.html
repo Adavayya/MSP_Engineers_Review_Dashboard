@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSP Support Engineers - Effort Tracking Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #50C878;
+            --accent-color: #FFB347;
+            --warning-color: #FFA07A;
+            --danger-color: #FF6B6B;
+            --light-blue: #E6F3FF;
+            --medium-blue: #BFE0FF;
+            --dark-blue: #2C3E50;
+            --light-gray: #F8FAFC;
+            --border-color: #D1E0EB;
+            --success-color: #5CB85C;
+            --sky-blue: #87CEEB;
+            --bright-sky: #7EC8E3;
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #F0F9FF 0%, #E6F3FF 100%);
+            min-height: 100vh;
+            font-size: 0.85rem;
+            color: #2C3E50;
+        }
+        
+        /* Bright Sky Blue Theme */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), #5B9AE0) !important;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+        
+        .card { 
+            border: none; 
+            border-radius: 12px; 
+            box-shadow: 0 6px 16px rgba(74, 144, 226, 0.12); 
+            margin-bottom: 12px; 
+            transition: all 0.25s;
+            background: white;
+            border: 1px solid rgba(74, 144, 226, 0.1);
+        }
+        
+        .card:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 12px 24px rgba(74, 144, 226, 0.2);
+            border-color: var(--primary-color);
+        }
+        
+        .global-filters { 
+            background: white; 
+            padding: 16px; 
+            border-radius: 12px; 
+            margin-bottom: 16px; 
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.08);
+        }
+        
+        .main-view-tabs .nav-link { 
+            font-size: 0.85rem; 
+            font-weight: 600;
+            color: #4A5568; 
+            margin-right: 4px; 
+            border-radius: 8px 8px 0 0; 
+            padding: 8px 20px;
+            background-color: var(--light-blue);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            transition: all 0.2s;
+        }
+        
+        .main-view-tabs .nav-link:hover {
+            background-color: var(--medium-blue);
+            color: var(--primary-color);
+        }
+        
+        .main-view-tabs .nav-link.active { 
+            background: white; 
+            color: var(--primary-color); 
+            border-bottom: 3px solid var(--primary-color);
+            font-weight: 700;
+            box-shadow: 0 -4px 8px rgba(74, 144, 226, 0.1);
+        }
+        
+        .view-content { 
+            border: 1px solid var(--border-color); 
+            border-top: none; 
+            background: white; 
+            padding: 24px; 
+            border-radius: 0 0 16px 16px; 
+            min-height: 500px;
+            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.1);
+        }
+        
+        /* Date banner */
+        .date-banner {
+            background: linear-gradient(135deg, var(--light-blue), white);
+            border: 1px solid var(--primary-color);
+            border-left: 5px solid var(--primary-color);
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.15);
+        }
+        
+        .date-range {
+            font-weight: 600;
+            color: var(--primary-color);
+            background: white;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 2px 4px rgba(74, 144, 226, 0.1);
+        }
+        
+        .kpi-section-title { 
+            font-size: 0.7rem; 
+            font-weight: 700; 
+            color: var(--primary-color); 
+            border-bottom: 2px solid var(--light-blue); 
+            padding-bottom: 8px; 
+            margin-bottom: 15px; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .kpi-card { 
+            background: white; 
+            border-radius: 10px; 
+            border: 1px solid var(--border-color);
+            padding: 16px; 
+            cursor: pointer; 
+            height: 100%; 
+            transition: all 0.25s;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.1);
+        }
+        
+        .kpi-card:hover { 
+            background: var(--light-blue);
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.2);
+        }
+        
+        .kpi-title { 
+            font-size: 0.65rem; 
+            color: #4A5568; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            margin-bottom: 6px; 
+        }
+        
+        .kpi-value { 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            color: var(--primary-color); 
+            margin: 6px 0;
+            line-height: 1;
+        }
+        
+        .kpi-status-tag { 
+            font-size: 0.6rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            padding: 3px 10px; 
+            border-radius: 20px; 
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .bg-urgent { background: #FFE5E5; color: #FF6B6B; border: 1px solid #FF6B6B; }
+        .bg-action-needed { background: #FFF4E5; color: #FFB347; border: 1px solid #FFB347; }
+        .bg-monitor { background: #FFF4E5; color: #FFA07A; border: 1px solid #FFA07A; }
+        .bg-good { background: #E5F6E5; color: #5CB85C; border: 1px solid #5CB85C; }
+        .bg-info-tag { background: #E5F0FF; color: #4A90E2; border: 1px solid #4A90E2; }
+        
+        /* Table styling */
+        .scorecard-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .scorecard-table th { 
+            background: linear-gradient(135deg, var(--primary-color), #5B9AE0); 
+            color: white; 
+            font-size: 0.7rem; 
+            padding: 10px 6px; 
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            border: none;
+        }
+        
+        .scorecard-table td { 
+            font-size: 0.75rem; 
+            padding: 8px 6px; 
+            border: 1px solid var(--border-color);
+            white-space: nowrap;
+            background: white;
+        }
+        
+        /* #2 - Optimized column widths for Effort Stats table */
+        #effortStatsTable {
+            table-layout: fixed;
+            width: 90%;
+            margin: 0;
+        }
+        
+        #effortStatsTable th,
+        #effortStatsTable td {
+            padding: 8px 2px !important;
+            font-size: 0.75rem !important;
+        }
+        
+        /* Column 1 - Owner/Engineer - More space on left/right */
+        #effortStatsTable th:nth-child(1),
+        #effortStatsTable td:nth-child(1) {
+            width: 15%;
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+            text-align: left;
+        }
+        
+        /* Column 2 - Total Incidents Attended */
+        #effortStatsTable th:nth-child(2),
+        #effortStatsTable td:nth-child(2) {
+            width: 15%;
+            text-align: center;
+        }
+        
+        /* Column 3 - Total Effort (In Minutes) */
+        #effortStatsTable th:nth-child(3),
+        #effortStatsTable td:nth-child(3) {
+            width: 15%;
+            text-align: center;
+        }
+        
+        /* Column 4 - Total Effort (HH:MM) */
+        #effortStatsTable th:nth-child(4),
+        #effortStatsTable td:nth-child(4) {
+            width: 15%;
+            text-align: center;
+            padding-right: 15px !important;
+        }
+        
+        /* Updated column headers */
+        #effortStatsTable th:nth-child(2)::before {
+            content: "⬇️ ";
+            font-size: 0.7rem;
+            margin-right: 2px;
+        }
+        
+        #effortStatsTable th:nth-child(3)::before {
+            content: "⏱️ ";
+            font-size: 0.7rem;
+            margin-right: 2px;
+        }
+        
+        #effortStatsTable th:nth-child(4)::before {
+            content: "⌛ ";
+            font-size: 0.7rem;
+            margin-right: 2px;
+        }
+        
+        /* Owner scorecard table */
+        #owner-scorecard-table {
+            table-layout: fixed;
+            width: 90%;
+        }
+        
+        #owner-scorecard-table th,
+        #owner-scorecard-table td {
+            padding: 8px 4px !important;
+            font-size: 0.72rem !important;
+        }
+        
+        #owner-scorecard-table th:nth-child(1) { width: 15%; }
+        #owner-scorecard-table th:nth-child(2) { width: 10%; }
+        #owner-scorecard-table th:nth-child(3) { width: 9%; }
+        #owner-scorecard-table th:nth-child(4) { width: 9%; }
+        #owner-scorecard-table th:nth-child(5) { width: 9%; }
+        #owner-scorecard-table th:nth-child(6) { width: 9%; }
+        #owner-scorecard-table th:nth-child(7) { width: 9%; }
+        #owner-scorecard-table th:nth-child(8) { width: 12%; }
+        #owner-scorecard-table th:nth-child(9) { width: 20%; }
+        
+        .owner-tag { 
+            background: var(--light-blue); 
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            font-size: 0.75rem; 
+            font-weight: 600;
+            color: var(--primary-color);
+            display: inline-block;
+            white-space: nowrap;
+            border: 1px solid var(--primary-color);
+        }
+        
+        .upload-area {
+            text-align: center; 
+            border: 2px dashed var(--primary-color); 
+            padding: 30px; 
+            cursor: pointer;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--light-blue), white);
+            transition: all 0.25s;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--secondary-color);
+            background: linear-gradient(135deg, white, var(--light-blue));
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #5B9AE0);
+            border: none;
+            font-weight: 600;
+            padding: 6px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5B9AE0, var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
+        }
+        
+        .btn-outline-primary {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: white;
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 10px;
+            background: var(--light-blue);
+            border-radius: 10px;
+        }
+        
+        .filter-tag {
+            background: white;
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 2px 4px rgba(74, 144, 226, 0.1);
+        }
+        
+        .filter-tag .close {
+            color: var(--danger-color);
+            cursor: pointer;
+            margin-left: 4px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .filter-tag .close:hover {
+            color: #FF4D4D;
+        }
+        
+        /* Drill-down modal */
+        .drilldown-table th {
+            background: linear-gradient(135deg, var(--primary-color), #5B9AE0);
+            color: white;
+            font-size: 0.7rem;
+            padding: 10px 8px;
+            font-weight: 600;
+            border: none;
+            white-space: nowrap;
+        }
+        
+        .drilldown-table td {
+            font-size: 0.75rem;
+            padding: 8px 6px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), #5B9AE0);
+            color: white;
+            border-bottom: none;
+            padding: 15px 20px;
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .modal-title {
+            color: white;
+            font-weight: 600;
+        }
+        
+        .btn-close {
+            filter: brightness(0) invert(1);
+        }
+        
+        /* Metric cards */
+        .metric-card { 
+            border: 1px solid var(--border-color); 
+            border-radius: 12px; 
+            background: white;
+            transition: all 0.25s;
+            box-shadow: 0 6px 15px rgba(74, 144, 226, 0.1);
+        }
+        
+        .metric-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(74, 144, 226, 0.2);
+        }
+        
+        .metric-card .card-body { 
+            text-align: center; 
+            padding: 20px 15px;
+        }
+        
+        .metric-value { 
+            font-size: 2.2rem; 
+            font-weight: 800; 
+            color: var(--primary-color); 
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        
+        .metric-label { 
+            font-size: 0.8rem; 
+            color: #4A5568; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            font-weight: 600;
+        }
+        
+        /* Scorecard status */
+        .score-green { 
+            background: #E5F6E5; 
+            color: #2E7D32; 
+            font-weight: 700; 
+            border-left: 4px solid #5CB85C; 
+        }
+        
+        .score-amber { 
+            background: #FFF4E5; 
+            color: #B85C00; 
+            font-weight: 700; 
+            border-left: 4px solid #FFB347; 
+        }
+        
+        .score-red { 
+            background: #FFE5E5; 
+            color: #C62828; 
+            font-weight: 700; 
+            border-left: 4px solid #FF6B6B; 
+        }
+        
+        .score-bar { 
+            height: 8px; 
+            border-radius: 4px; 
+            background: #E2E8F0; 
+            overflow: hidden; 
+        }
+        
+        .score-bar-fill { 
+            height: 100%; 
+            border-radius: 4px; 
+        }
+        
+        /* Loading spinner */
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .loading-spinner.active {
+            display: flex;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: var(--primary-color);
+        }
+        
+        /* Export buttons */
+        .export-btn-group {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-excel {
+            background: linear-gradient(135deg, #2E7D32, #3D8B40);
+            color: white;
+            border: none;
+        }
+        
+        .btn-excel:hover {
+            background: linear-gradient(135deg, #3D8B40, #2E7D32);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-pdf {
+            background: linear-gradient(135deg, #C62828, #D32F2F);
+            color: white;
+            border: none;
+        }
+        
+        .btn-pdf:hover {
+            background: linear-gradient(135deg, #D32F2F, #C62828);
+            color: white;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow">
+        <div class="container-fluid">
+            <div class="logo-container d-flex align-items-center">
+                <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="Logo" style="height: 32px;" class="me-3">
+                <a class="navbar-brand" href="#">
+                    MSP Support Engineers - Effort Tracking Dashboard
+                </a>
+            </div>
+            <div class="d-flex align-items-center text-white">
+                <span id="last-updated" class="me-3 small opacity-90"></span>
+                <span id="total-cases" class="badge bg-white text-primary shadow-sm px-3 py-2">0 Cases Loaded</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-3">
+        
+        <!-- Upload Section -->
+        <div class="row mb-3" id="upload-section">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="upload-area" id="drop-area">
+                            <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="Logo" style="height: 40px; margin-bottom: 15px; opacity: 0.9;">
+                            <h5 class="mb-2">Upload MSP Support Effort Detailed Summary Report</h5>
+                            <p class="text-muted mb-3 small">Drag & Drop Excel/CSV or Click to Browse</p>
+                            <button class="btn btn-primary btn-md px-4">
+                                <i class="bi bi-cloud-upload me-2"></i>Select File
+                            </button>
+                            <input type="file" id="file-input" accept=".xlsx,.xls,.csv" style="display: none;">
+                        </div>
+                        <div id="file-info" class="mt-3" style="display: none;">
+                            <div class="alert alert-light d-flex justify-content-between align-items-center border" style="background: var(--light-blue);">
+                                <div>
+                                    <i class="bi bi-file-earmark-spreadsheet me-2 text-primary"></i>
+                                    <span id="file-name" class="fw-bold"></span> 
+                                    <span id="row-count" class="badge bg-primary ms-2"></span>
+                                </div>
+                                <button class="btn btn-sm btn-primary" id="process-data-btn">
+                                    <i class="bi bi-play-circle me-1"></i> Process Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" style="display: none;">
+            
+            <!-- Date Range Banner - #3 -->
+            <div class="date-banner" id="date-range-banner" style="display: none;">
+                <div>
+                    <i class="bi bi-calendar-range me-2" style="color: var(--primary-color);"></i>
+                    <strong>Data Period:</strong> 
+                    <span id="data-period-start"></span> to <span id="data-period-end"></span>
+                </div>
+                <span class="date-range" id="data-range-type"></span>
+            </div>
+            
+            <!-- Global Filters -->
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="global-filters">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0"><i class="bi bi-funnel-fill me-2" style="color: var(--primary-color);"></i>Global Filters</h6>
+                            <div class="export-btn-group">
+                                <!-- #4 - Added back global Excel export -->
+                                <button class="btn btn-sm btn-excel" onclick="exportFullData()">
+                                    <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
+                                </button>
+                                <button class="btn btn-sm btn-pdf" id="download-pdf-btn">
+                                    <i class="bi bi-file-pdf me-1"></i> Export PDF
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary ms-2" id="clear-filters-btn">
+                                    <i class="bi bi-x-circle me-1"></i>Clear
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-2">
+                            <!-- #4 - Timescale Filter -->
+                            <div class="col-md-2 col-6">
+                                <label class="form-label small fw-bold mb-1">Timescale</label>
+                                <select class="form-select form-select-sm" id="global-filter-timescale">
+                                    <option value="all">All Data</option>
+                                    <option value="today">Today</option>
+                                    <option value="last1">Last Day</option>
+                                    <option value="last2">Last 2 Days</option>
+                                    <option value="last3">Last 3 Days</option>
+                                    <option value="last4">Last 4 Days</option>
+                                    <option value="last5">Last 5 Days</option>
+                                    <option value="currentweek">Current Week</option>
+                                    <option value="lastweek">Last Week</option>
+                                    <option value="currentmonth">Current Month</option>
+                                    <option value="lastmonth">Last Month</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-2 col-6">
+                                <label class="form-label small fw-bold mb-1">Owner</label>
+                                <select class="form-select form-select-sm" id="global-filter-owner" multiple size="1" style="height: 31px;">
+                                    <option value="">All Owners</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 col-6">
+                                <label class="form-label small fw-bold mb-1">Submitted By</label>
+                                <select class="form-select form-select-sm" id="global-filter-submittedby" multiple size="1" style="height: 31px;">
+                                    <option value="">All</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 col-6">
+                                <label class="form-label small fw-bold mb-1">Service Type</label>
+                                <select class="form-select form-select-sm" id="global-filter-service" multiple size="1" style="height: 31px;">
+                                    <option value="">All</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 col-6">
+                                <label class="form-label small fw-bold mb-1">Status</label>
+                                <select class="form-select form-select-sm" id="global-filter-status" multiple size="1" style="height: 31px;">
+                                    <option value="">All</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 col-6">
+                                <label class="form-label small fw-bold mb-1">Activity Engineer</label>
+                                <select class="form-select form-select-sm" id="global-filter-activityengineer" multiple size="1" style="height: 31px;">
+                                    <option value="">All</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-tags" id="active-filters-tags" style="display: none;"></div>
+                        
+                        <div class="mt-2 small text-muted">
+                            <i class="bi bi-info-circle me-1"></i>
+                            <span id="active-filters-count">0 filters active</span> | 
+                            <span id="filtered-cases-count">Showing 0 of 0 cases</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Tabs -->
+            <ul class="nav nav-tabs main-view-tabs" id="mainViewTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" id="view-effort-stats-tab" data-bs-toggle="tab" data-bs-target="#view-effort-stats" type="button">
+                        <i class="bi bi-table me-2"></i>Effort Stats Analyses
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="view-effort-detail-tab" data-bs-toggle="tab" data-bs-target="#view-effort-detail" type="button">
+                        <i class="bi bi-bar-chart-line me-2"></i>Detailed Effort Analyses
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content view-content" id="mainViewTabsContent">
+                
+                <!-- Effort Stats Analyses Tab -->
+                <div class="tab-pane fade show active" id="view-effort-stats" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0" style="color: var(--primary-color);">Effort Stats Analyses</h5>
+                        <button class="btn btn-sm btn-excel" onclick="exportEffortStatsToExcel()">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export to Excel
+                        </button>
+                    </div>
+                    
+                    <div class="table-responsive" style="max-height: 600px; overflow-x: auto; overflow-y: auto;">
+                        <table class="table table-bordered scorecard-table" id="effortStatsTable">
+                            <thead>
+                                <tr>
+                                    <th>Owner / Engineer</th>
+                                    <th>Total Ticket Attended</th>
+                                    <th>Total Effort (In Minutes)</th>
+                                    <th>Total Effort (HH:MM)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="effortStatsBody">
+                                <tr><td colspan="4" class="text-center text-muted py-4">Upload and process an Excel file to see effort data.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Team Performance Scorecard -->
+                    <div class="mt-5">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0" style="color: var(--primary-color); font-weight: 700;">Team Performance Scorecard <small class="text-muted fw-normal">(9 hr / 540 min daily target)</small></h6>
+                            <button class="btn btn-sm btn-excel" onclick="exportTeamScorecardToExcel()">
+                                <i class="bi bi-file-earmark-excel me-1"></i> Export Scorecard
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered scorecard-table" id="owner-scorecard-table">
+                                <thead>
+                                    <tr>
+                                        <th>Activity Engineer</th>
+                                        <th>Total Incidents</th>
+                                        <th>Total Mins</th>
+                                        <th>HH:MM</th>
+                                        <th>Target</th>
+                                        <th>Daily Avg</th>
+                                        <th>HH:MM</th>
+                                        <th>Achievement</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="owner-scorecard-body">
+                                    <tr><td colspan="9" class="text-center text-muted py-3">Upload and process an Excel file to see scorecard data.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Effort Analyses Tab -->
+                <div class="tab-pane fade" id="view-effort-detail" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0" style="color: var(--primary-color);">Detailed Effort Analyses</h5>
+                        <div>
+                            <button class="btn btn-sm btn-excel me-2" onclick="exportMonthlyEffortToExcel()">
+                                <i class="bi bi-file-earmark-excel me-1"></i> Monthly
+                            </button>
+                            <button class="btn btn-sm btn-excel" onclick="exportDailyEffortToExcel()">
+                                <i class="bi bi-file-earmark-excel me-1"></i> Daily
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" id="totalEffortMinutes">0</div>
+                                    <div class="metric-label">Total Minutes</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" style="color: var(--secondary-color);" id="totalEffortHHMM">0:00</div>
+                                    <div class="metric-label">Total HH:MM</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" style="color: var(--accent-color);" id="totalEngineers">0</div>
+                                    <div class="metric-label">Engineers</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" style="color: var(--warning-color);" id="totalActivities">0</div>
+                                    <div class="metric-label">Activities</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-light py-3">
+                                    <h6 class="mb-0" style="color: var(--primary-color);">Effort per Engineer (Minutes)</h6>
+                                </div>
+                                <div class="card-body p-3">
+                                    <canvas id="effortByEngineerBarChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-light py-3">
+                                    <h6 class="mb-0" style="color: var(--primary-color);">Effort Share (%)</h6>
+                                </div>
+                                <div class="card-body p-3">
+                                    <canvas id="effortByEngineerPieChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Effort Tracking -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0" style="color: var(--primary-color);">Monthly Effort Tracking <small id="monthlyEffortPeriod" class="ms-2 text-muted"></small></h6>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered scorecard-table" id="monthlyEffortTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Engineer</th>
+                                            <th>Total Hrs</th>
+                                            <th>Working Days</th>
+                                            <th>Leave</th>
+                                            <th>Worked Days</th>
+                                            <th>Expected Hrs</th>
+                                            <th>Productivity</th>
+                                            <th>Avg Hrs/Day</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="monthlyEffortBody">
+                                        <tr><td colspan="8" class="text-center text-muted py-3">No data available.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Effort Tracking -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0" style="color: var(--primary-color);">Daily Effort Tracking <small id="dailyEffortPeriod" class="ms-2 text-muted"></small></h6>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered scorecard-table" id="dailyEffortTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Engineer</th>
+                                            <th>Date</th>
+                                            <th>Hrs</th>
+                                            <th>Incidents</th>
+                                            <th>Avg Mins</th>
+                                            <th>Target</th>
+                                            <th>Achievement</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dailyEffortBody">
+                                        <tr><td colspan="8" class="text-center text-muted py-3">No data available.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner-border"></div>
+        <div class="mt-2 fw-bold" style="color: var(--primary-color);">Processing data...</div>
+    </div>
+
+    <!-- Drill Down Modal -->
+    <div class="modal fade" id="drillDownModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="drillDownTitle">Effort Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="badge bg-primary" id="drillDownCount">0 Records</span>
+                        <button class="btn btn-sm btn-excel" onclick="exportDrillDownToExcel()">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export to Excel
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered drilldown-table">
+                            <thead id="drillDownHeader"></thead>
+                            <tbody id="drillDownBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let rawData = [];
+        let processedData = [];
+        let filteredData = [];
+        let originalFilteredData = [];
+        let drillDownData = [];
+        let drillDownTitleForExport = '';
+        let drillDownExportData = [];
+        let globalFilters = { owner: [], submittedby: [], service: [], status: [], activityEngineer: [], timescale: 'all' };
+        let charts = {};
+        let effortCharts = {};
+
+        document.addEventListener('DOMContentLoaded', init);
+
+        function init() {
+            const dropArea = document.getElementById('drop-area');
+            const fileInput = document.getElementById('file-input');
+            const uploadButton = dropArea.querySelector('button');
+
+            uploadButton.addEventListener('click', () => fileInput.click());
+            dropArea.addEventListener('click', () => fileInput.click());
+            
+            dropArea.addEventListener('dragover', (e) => { 
+                e.preventDefault(); 
+                dropArea.style.borderColor = 'var(--secondary-color)';
+            });
+            
+            dropArea.addEventListener('dragleave', () => { 
+                dropArea.style.borderColor = 'var(--primary-color)';
+            });
+            
+            dropArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropArea.style.borderColor = 'var(--primary-color)';
+                if (e.dataTransfer.files.length) {
+                    handleFileUpload(e.dataTransfer.files[0]);
+                }
+            });
+            
+            fileInput.onchange = (e) => { 
+                if (e.target.files[0]) {
+                    handleFileUpload(e.target.files[0]);
+                }
+            };
+
+            document.getElementById('process-data-btn').onclick = processData;
+            document.getElementById('clear-filters-btn').onclick = clearAllFilters;
+            document.getElementById('download-pdf-btn').onclick = downloadDashboardPDF;
+            
+            // Filter listeners
+            document.getElementById('global-filter-timescale').addEventListener('change', updateGlobalFilters);
+            document.getElementById('global-filter-service').addEventListener('change', updateGlobalFilters);
+            document.getElementById('global-filter-owner').addEventListener('change', updateGlobalFilters);
+            document.getElementById('global-filter-status').addEventListener('change', updateGlobalFilters);
+            document.getElementById('global-filter-activityengineer').addEventListener('change', updateGlobalFilters);
+            document.getElementById('global-filter-submittedby').addEventListener('change', updateGlobalFilters);
+            
+            // Tab change listener
+            document.getElementById('view-effort-detail-tab').addEventListener('shown.bs.tab', function() {
+                if (filteredData.length > 0) renderDetailedEffortAnalyses();
+            });
+        }
+
+        function handleFileUpload(file) {
+            document.getElementById('file-name').textContent = file.name;
+            document.getElementById('file-info').style.display = 'block';
+            showLoading(true);
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if(file.name.endsWith('.csv')) {
+                    parseCSV(e.target.result);
+                } else {
+                    parseExcel(e.target.result);
+                }
+            };
+            
+            if(file.name.endsWith('.csv')) {
+                reader.readAsText(file);
+            } else {
+                reader.readAsBinaryString(file);
+            }
+        }
+
+        function parseExcel(data) {
+            try {
+                const wb = XLSX.read(data, { type: 'binary' });
+                const ws = wb.Sheets[wb.SheetNames[0]];
+                processExcelData(XLSX.utils.sheet_to_json(ws, { header: 1 }));
+            } catch (error) {
+                showLoading(false);
+                alert("Error parsing Excel file: " + error.message);
+            }
+        }
+
+        function parseCSV(data) {
+            try {
+                processExcelData(data.split('\n').map(r => r.split(',').map(c => c.replace(/^"|"$/g, '').trim())));
+            } catch (error) {
+                showLoading(false);
+                alert("Error parsing CSV file: " + error.message);
+            }
+        }
+
+        function processExcelData(data) {
+            if (!data || data.length < 2) {
+                showLoading(false);
+                alert("No data found or file format is incorrect.");
+                return;
+            }
+
+            const headers = data[0].map(h => h ? h.toString().trim() : '');
+            rawData = data.slice(1).map(row => {
+                const rowObj = {};
+                headers.forEach((header, index) => {
+                    rowObj[header] = row[index];
+                });
+                return rowObj;
+            }).filter(row => Object.values(row).some(v => v && v.toString().trim() !== ''));
+
+            document.getElementById('row-count').textContent = `${rawData.length} rows loaded`;
+            
+            const colMap = {
+                incidentId:      headers[0] || 'RequestID',
+                title:           headers[1] || 'Title',
+                submittedBy:     headers[2] || 'Submitted by',
+                currentStatus:   headers[3] || 'Current Status',
+                owner:           headers[4] || 'Request Owner',
+                service:         headers[6] || 'Service',
+                supportCategory: headers[7] || 'Support Category',
+                feature:         headers[8] || 'Feature',
+                subFeature:      headers[9] || 'Sub Feature',
+                submissionTime:  headers[14] || 'Submission Time',
+                resolveTime:     headers[15] || 'Resolve Time',
+                effortDate:      headers[17] || 'PS Team Effort Details--Date(DD-MMM-YYYY)',
+                activityEngineer: headers[18] || 'PS Team Effort Details--Engineer',
+                investigationType: headers[19] || 'PS Team Effort Details--Investigation Type',
+                effortMinutes:   headers[20] || 'PS Team Effort Details--Time Spent(Mins)',
+                effortComments:  headers[21] || 'PS Team Effort Details--Comments'
+            };
+
+            processedData = rawData.map(row => {
+                const parseNum = (val) => {
+                    if (!val) return 0;
+                    const num = parseFloat(String(val).replace(/[^0-9.-]/g, ''));
+                    return isNaN(num) ? 0 : num;
+                };
+
+                return {
+                    incidentId:       (row[colMap.incidentId] || 'N/A').toString(),
+                    owner:            (row[colMap.owner] || 'Unassigned').toString(),
+                    title:            (row[colMap.title] || 'No Title').toString(),
+                    currentStatus:    (row[colMap.currentStatus] || 'Unknown').toString(),
+                    service:          (row[colMap.service] || '').toString(),
+                    submittedBy:      (row[colMap.submittedBy] || 'Unknown').toString(),
+                    supportCategory:  (row[colMap.supportCategory] || '').toString(),
+                    feature:          (row[colMap.feature] || '').toString(),
+                    subFeature:       (row[colMap.subFeature] || '').toString(),
+                    submissionTime:   (row[colMap.submissionTime] || '').toString(),
+                    resolveTime:      (row[colMap.resolveTime] || '').toString(),
+                    activityEngineer: (row[colMap.activityEngineer] || '').toString().trim(),
+                    effortMinutes:    parseNum(row[colMap.effortMinutes]),
+                    effortDate:       (row[colMap.effortDate] || '').toString().trim(),
+                    investigationType: (row[colMap.investigationType] || '').toString().trim(),
+                    effortComments:   (row[colMap.effortComments] || '').toString().trim(),
+                };
+            }).filter(d => d.activityEngineer && d.effortMinutes > 0);
+
+            filteredData = [...processedData];
+            originalFilteredData = [...processedData];
+            
+            showLoading(false);
+            document.getElementById('upload-section').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+            document.getElementById('total-cases').textContent = `${processedData.length} Cases Loaded`;
+            document.getElementById('last-updated').textContent = `Updated: ${new Date().toLocaleString()}`;
+
+            // Detect and show date range
+            detectDateRange();
+            
+            populateFilterDropdowns();
+            updateDashboard();
+        }
+
+        // #3 - Enhanced date range detection with all options
+        function detectDateRange() {
+            const dates = processedData
+                .map(d => d.effortDate)
+                .filter(d => d && d.trim() !== '')
+                .map(d => new Date(d))
+                .filter(d => !isNaN(d.getTime()));
+            
+            if (dates.length === 0) return;
+            
+            const minDate = new Date(Math.min(...dates));
+            const maxDate = new Date(Math.max(...dates));
+            
+            document.getElementById('data-period-start').textContent = minDate.toLocaleDateString();
+            document.getElementById('data-period-end').textContent = maxDate.toLocaleDateString();
+            
+            // Determine range type with all options
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const diffDays = Math.round((today - minDate) / (1000 * 60 * 60 * 24));
+            const dateRange = Math.round((maxDate - minDate) / (1000 * 60 * 60 * 24));
+            
+            let rangeType = '';
+            
+            if (diffDays === 0 && dateRange === 0) {
+                rangeType = 'Today';
+            } else if (diffDays <= 1 && dateRange <= 1) {
+                rangeType = 'Last Day';
+            } else if (diffDays <= 2 && dateRange <= 2) {
+                rangeType = 'Last 2 Days';
+            } else if (diffDays <= 3 && dateRange <= 3) {
+                rangeType = 'Last 3 Days';
+            } else if (diffDays <= 4 && dateRange <= 4) {
+                rangeType = 'Last 4 Days';
+            } else if (diffDays <= 5 && dateRange <= 5) {
+                rangeType = 'Last 5 Days';
+            } else {
+                // Check week ranges
+                const startOfWeek = new Date(today);
+                startOfWeek.setDate(today.getDate() - today.getDay());
+                
+                const startOfLastWeek = new Date(startOfWeek);
+                startOfLastWeek.setDate(startOfWeek.getDate() - 7);
+                const endOfLastWeek = new Date(startOfLastWeek);
+                endOfLastWeek.setDate(startOfLastWeek.getDate() + 6);
+                
+                const currentMonth = today.getMonth();
+                const currentYear = today.getFullYear();
+                
+                const lastMonth = new Date(today);
+                lastMonth.setMonth(today.getMonth() - 1);
+                
+                const threeMonthsAgo = new Date(today);
+                threeMonthsAgo.setMonth(today.getMonth() - 3);
+                
+                if (minDate >= startOfWeek) {
+                    rangeType = 'Current Week';
+                } else if (maxDate <= endOfLastWeek && minDate >= startOfLastWeek) {
+                    rangeType = 'Last Week';
+                } else if (minDate.getMonth() === currentMonth && minDate.getFullYear() === currentYear) {
+                    rangeType = 'Current Month';
+                } else if (minDate.getMonth() === lastMonth.getMonth() && minDate.getFullYear() === lastMonth.getFullYear()) {
+                    rangeType = 'Last Month';
+                } else if (minDate >= threeMonthsAgo) {
+                    rangeType = 'Last 3 Months';
+                } else {
+                    rangeType = 'Historical';
+                }
+            }
+            
+            document.getElementById('data-range-type').textContent = rangeType;
+            document.getElementById('date-range-banner').style.display = 'flex';
+        }
+
+        // #4 - Timescale filter function with all options
+        function applyTimescaleFilter(data, timescale) {
+            if (timescale === 'all') return data;
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            return data.filter(d => {
+                if (!d.effortDate) return false;
+                const itemDate = new Date(d.effortDate);
+                if (isNaN(itemDate.getTime())) return false;
+                itemDate.setHours(0, 0, 0, 0);
+                
+                const diffDays = Math.round((today - itemDate) / (1000 * 60 * 60 * 24));
+                
+                switch(timescale) {
+                    case 'today': return diffDays === 0;
+                    case 'last1': return diffDays >= 0 && diffDays <= 1;
+                    case 'last2': return diffDays >= 0 && diffDays <= 2;
+                    case 'last3': return diffDays >= 0 && diffDays <= 3;
+                    case 'last4': return diffDays >= 0 && diffDays <= 4;
+                    case 'last5': return diffDays >= 0 && diffDays <= 5;
+                    case 'currentweek': {
+                        const startOfWeek = new Date(today);
+                        startOfWeek.setDate(today.getDate() - today.getDay());
+                        return itemDate >= startOfWeek;
+                    }
+                    case 'lastweek': {
+                        const startOfLastWeek = new Date(today);
+                        startOfLastWeek.setDate(today.getDate() - today.getDay() - 7);
+                        const endOfLastWeek = new Date(startOfLastWeek);
+                        endOfLastWeek.setDate(startOfLastWeek.getDate() + 6);
+                        return itemDate >= startOfLastWeek && itemDate <= endOfLastWeek;
+                    }
+                    case 'currentmonth': {
+                        return itemDate.getMonth() === today.getMonth() && 
+                               itemDate.getFullYear() === today.getFullYear();
+                    }
+                    case 'lastmonth': {
+                        const lastMonth = new Date(today);
+                        lastMonth.setMonth(today.getMonth() - 1);
+                        return itemDate.getMonth() === lastMonth.getMonth() && 
+                               itemDate.getFullYear() === lastMonth.getFullYear();
+                    }
+                    default: return true;
+                }
+            });
+        }
+
+        function populateFilterDropdowns() {
+            const getUniqueValues = (key) => [...new Set(processedData.map(d => d[key]).filter(Boolean).sort())];
+
+            const dropdowns = {
+                'global-filter-owner': getUniqueValues('owner'),
+                'global-filter-submittedby': getUniqueValues('submittedBy'),
+                'global-filter-service': getUniqueValues('service'),
+                'global-filter-status': getUniqueValues('currentStatus'),
+                'global-filter-activityengineer': getUniqueValues('activityEngineer')
+            };
+
+            for (const id in dropdowns) {
+                const select = document.getElementById(id);
+                if (select) {
+                    const label = id.split('-').pop();
+                    const labelText = label === 'owner' ? 'Owners' : 
+                                   label === 'service' ? 'Services' : 
+                                   label === 'status' ? 'Statuses' : 
+                                   label === 'submittedby' ? 'Submitted By' :
+                                   label === 'activityengineer' ? 'Engineers' : 'Options';
+                    
+                    select.innerHTML = `<option value="">All ${labelText}</option>`;
+                    dropdowns[id].forEach(value => {
+                        if (value) {
+                            select.innerHTML += `<option value="${value}">${value}</option>`;
+                        }
+                    });
+                }
+            }
+        }
+
+        function updateGlobalFilters() {
+            showLoading(true);
+            
+            globalFilters.timescale = document.getElementById('global-filter-timescale').value;
+            
+            const ownerSelect = document.getElementById('global-filter-owner');
+            const submittedbySelect = document.getElementById('global-filter-submittedby');
+            const serviceSelect = document.getElementById('global-filter-service');
+            const statusSelect = document.getElementById('global-filter-status');
+            const activityEngineerSelect = document.getElementById('global-filter-activityengineer');
+            
+            globalFilters.owner = Array.from(ownerSelect.selectedOptions).map(opt => opt.value).filter(v => v !== '');
+            globalFilters.submittedby = Array.from(submittedbySelect.selectedOptions).map(opt => opt.value).filter(v => v !== '');
+            globalFilters.service = Array.from(serviceSelect.selectedOptions).map(opt => opt.value).filter(v => v !== '');
+            globalFilters.status = Array.from(statusSelect.selectedOptions).map(opt => opt.value).filter(v => v !== '');
+            globalFilters.activityEngineer = Array.from(activityEngineerSelect.selectedOptions).map(opt => opt.value).filter(v => v !== '');
+
+            // Apply timescale filter first
+            filteredData = applyTimescaleFilter(processedData, globalFilters.timescale);
+            
+            // Apply other filters
+            filteredData = filteredData.filter(d => {
+                if (globalFilters.owner.length > 0 && !globalFilters.owner.includes(d.owner)) return false;
+                if (globalFilters.submittedby.length > 0 && !globalFilters.submittedby.includes(d.submittedBy)) return false;
+                if (globalFilters.service.length > 0 && !globalFilters.service.includes(d.service)) return false;
+                if (globalFilters.status.length > 0 && !globalFilters.status.includes(d.currentStatus)) return false;
+                if (globalFilters.activityEngineer.length > 0 && !globalFilters.activityEngineer.includes(d.activityEngineer)) return false;
+                return true;
+            });
+
+            updateActiveFiltersDisplay();
+            updateDashboard();
+            
+            showLoading(false);
+        }
+
+        function updateActiveFiltersDisplay() {
+            const activeFilters = [];
+            if (globalFilters.timescale !== 'all') {
+                const timescaleLabel = document.getElementById('global-filter-timescale').options[
+                    document.getElementById('global-filter-timescale').selectedIndex
+                ].text;
+                activeFilters.push({key: 'timescale', label: 'Timescale', value: timescaleLabel});
+            }
+            if (globalFilters.owner.length > 0) activeFilters.push({key: 'owner', label: 'Owner', value: globalFilters.owner.join(', ')});
+            if (globalFilters.submittedby.length > 0) activeFilters.push({key: 'submittedby', label: 'Submitted By', value: globalFilters.submittedby.join(', ')});
+            if (globalFilters.service.length > 0) activeFilters.push({key: 'service', label: 'Service', value: globalFilters.service.join(', ')});
+            if (globalFilters.status.length > 0) activeFilters.push({key: 'status', label: 'Status', value: globalFilters.status.join(', ')});
+            if (globalFilters.activityEngineer.length > 0) activeFilters.push({key: 'activityengineer', label: 'Engineer', value: globalFilters.activityEngineer.join(', ')});
+
+            const activeFiltersTags = document.getElementById('active-filters-tags');
+            const activeFiltersCount = document.getElementById('active-filters-count');
+            const filteredCasesCount = document.getElementById('filtered-cases-count');
+
+            if (activeFilters.length > 0) {
+                activeFiltersTags.innerHTML = activeFilters.map(filter => `
+                    <div class="filter-tag">
+                        <i class="bi bi-funnel-fill"></i>
+                        ${filter.label}: ${filter.value}
+                        <span class="close" onclick="removeFilter('${filter.key}')">&times;</span>
+                    </div>
+                `).join('');
+                activeFiltersTags.style.display = 'flex';
+            } else {
+                activeFiltersTags.style.display = 'none';
+            }
+
+            activeFiltersCount.textContent = `${activeFilters.length} filter${activeFilters.length !== 1 ? 's' : ''} active`;
+            filteredCasesCount.textContent = `Showing ${filteredData.length} of ${processedData.length} cases`;
+        }
+
+        function removeFilter(filterKey) {
+            if (filterKey === 'timescale') {
+                document.getElementById('global-filter-timescale').value = 'all';
+            } else {
+                document.getElementById(`global-filter-${filterKey}`).value = '';
+            }
+            updateGlobalFilters();
+        }
+
+        function clearAllFilters() {
+            document.getElementById('global-filter-timescale').value = 'all';
+            ['global-filter-owner', 'global-filter-submittedby', 'global-filter-service', 
+             'global-filter-status', 'global-filter-activityengineer'].forEach(id => {
+                const select = document.getElementById(id);
+                for (let i = 0; i < select.options.length; i++) {
+                    select.options[i].selected = false;
+                }
+            });
+            
+            globalFilters = { owner: [], submittedby: [], service: [], status: [], activityEngineer: [], timescale: 'all' };
+            filteredData = [...processedData];
+            
+            updateActiveFiltersDisplay();
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            renderEffortStatsAnalyses();
+            renderOwnerScorecard();
+            
+            const effortDetailPane = document.getElementById('view-effort-detail');
+            if (effortDetailPane && effortDetailPane.classList.contains('active')) {
+                renderDetailedEffortAnalyses();
+            }
+        }
+
+        // #2 - Effort Stats Analyses with updated column headers and spacing
+        function renderEffortStatsAnalyses() {
+            const engineerMap = {};
+            filteredData.forEach(d => {
+                const eng = (d.activityEngineer || '').trim();
+                if (!eng) return;
+                if (!engineerMap[eng]) {
+                    engineerMap[eng] = { incidents: 0, totalMinutes: 0, rows: [] };
+                }
+                engineerMap[eng].incidents++;
+                engineerMap[eng].totalMinutes += d.effortMinutes || 0;
+                engineerMap[eng].rows.push(d);
+            });
+
+            const engineers = Object.keys(engineerMap).sort();
+
+            const minToHHMM = (mins) => {
+                const totalMins = Math.round(Number(mins) || 0);
+                const h = Math.floor(totalMins / 60);
+                const m = totalMins % 60;
+                return `${h}:${m.toString().padStart(2, '0')}`;
+            };
+
+            const tbody = document.getElementById('effortStatsBody');
+            if (engineers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4">No effort data found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = engineers.map(eng => {
+                const stats = engineerMap[eng];
+                return `<tr style="cursor:pointer;" onclick="drillDownEffortEngineer('${eng.replace(/'/g, "\\'")}')">
+                    <td><span class="owner-tag">${eng}</span></td>
+                    <td class="text-center fw-bold">${stats.incidents}</td>
+                    <td class="text-center fw-bold">${stats.totalMinutes.toFixed(0)}</td>
+                    <td class="text-center fw-bold" style="color: var(--primary-color);">${minToHHMM(stats.totalMinutes)}</td>
+                </tr>`;
+            }).join('');
+
+            window._effortStatsData = engineers.map(eng => ({
+                'Owner/Engineer': eng,
+                'Total Ticket Attended': engineerMap[eng].incidents,
+                'Total Effort (In Minutes)': engineerMap[eng].totalMinutes.toFixed(0),
+                'Total Effort (HH:MM)': minToHHMM(engineerMap[eng].totalMinutes)
+            }));
+            window._effortEngineerMap = engineerMap;
+        }
+
+        function drillDownEffortEngineer(engineer) {
+            const rows = filteredData.filter(d => (d.activityEngineer || '').trim() === (engineer || '').trim());
+            
+            drillDownTitleForExport = 'Effort Details – ' + engineer;
+            
+            document.getElementById('drillDownTitle').textContent = drillDownTitleForExport;
+            document.getElementById('drillDownCount').textContent = rows.length + ' Records';
+            
+            document.getElementById('drillDownHeader').innerHTML = `
+                <th>RequestID</th>
+                <th>Title</th>
+                <th>Submitted by</th>
+                <th>Status</th>
+                <th>Owner</th>
+                <th>Service</th>
+                <th>Effort Date</th>
+                <th>Investigation Type</th>
+                <th>Time Spent (Mins)</th>
+                <th>Comments</th>
+            `;
+            
+            drillDownExportData = rows.map(d => ({
+                'RequestID': d.incidentId,
+                'Title': d.title,
+                'Submitted by': d.submittedBy,
+                'Status': d.currentStatus,
+                'Owner': d.owner,
+                'Service': d.service,
+                'Effort Date': d.effortDate,
+                'Investigation Type': d.investigationType,
+                'Time Spent (Mins)': d.effortMinutes,
+                'Comments': d.effortComments
+            }));
+            
+            let rowsHtml = '';
+            rows.forEach(d => {
+                rowsHtml += '<tr>' +
+                    '<td class="fw-bold">' + (d.incidentId || '--') + '</td>' +
+                    '<td title="' + (d.title || '').replace(/"/g, '&quot;') + '">' + (d.title ? (d.title.length > 30 ? d.title.substring(0, 30) + '…' : d.title) : '--') + '</td>' +
+                    '<td>' + (d.submittedBy || '--') + '</td>' +
+                    '<td>' + (d.currentStatus || '--') + '</td>' +
+                    '<td><span class="owner-tag">' + (d.owner || '--') + '</span></td>' +
+                    '<td>' + (d.service || '--') + '</td>' +
+                    '<td>' + (d.effortDate || '--') + '</td>' +
+                    '<td>' + (d.investigationType || '--') + '</td>' +
+                    '<td class="fw-bold" style="color: var(--primary-color);">' + (d.effortMinutes || 0) + '</td>' +
+                    '<td class="text-muted" style="max-width:200px;white-space:normal;">' + (d.effortComments || '--') + '</td>' +
+                '</tr>';
+            });
+            
+            document.getElementById('drillDownBody').innerHTML = rowsHtml || '<tr><td colspan="10" class="text-center text-muted py-3">No records found.</td></tr>';
+            
+            new bootstrap.Modal(document.getElementById('drillDownModal')).show();
+        }
+
+        function renderOwnerScorecard() {
+            const DAILY_TARGET_MINS = 540;
+            
+            const minToHHMM = (mins) => {
+                const t = Math.round(Number(mins) || 0);
+                const h = Math.floor(t / 60);
+                const m = t % 60;
+                return h + ':' + (m < 10 ? '0' : '') + m;
+            };
+
+            const engMap = {};
+            filteredData.forEach(d => {
+                const eng = (d.activityEngineer || '').trim();
+                if (!eng) return;
+                if (!engMap[eng]) engMap[eng] = { incidents: 0, totalMinutes: 0, dates: new Set() };
+                engMap[eng].incidents++;
+                engMap[eng].totalMinutes += (d.effortMinutes || 0);
+                if (d.effortDate) engMap[eng].dates.add(d.effortDate);
+            });
+
+            const totalAllMins = Object.values(engMap).reduce((s,v) => s + v.totalMinutes, 0);
+            const engineers = Object.keys(engMap).sort();
+
+            const scorecardBody = document.getElementById('owner-scorecard-body');
+            
+            if (engineers.length === 0) {
+                scorecardBody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-3">No effort data found.</td></tr>';
+                return;
+            }
+
+            let scorecardHtml = engineers.map(eng => {
+                const s = engMap[eng];
+                const workingDays = s.dates.size || 1;
+                const targetMins = workingDays * DAILY_TARGET_MINS;
+                const actualMins = Math.round(s.totalMinutes);
+                const avgPerDay = Math.round(actualMins / workingDays);
+                const achievePct = targetMins > 0 ? ((actualMins / targetMins) * 100).toFixed(1) : '0';
+                const achieveNum = parseFloat(achievePct);
+                
+                let statusClass, statusIcon;
+                if (achieveNum >= 90) {
+                    statusClass = 'score-green';
+                    statusIcon = '✅ Met';
+                } else if (achieveNum >= 70) {
+                    statusClass = 'score-amber';
+                    statusIcon = '⚠️ Near';
+                } else {
+                    statusClass = 'score-red';
+                    statusIcon = '❌ Below';
+                }
+
+                const barColor = achieveNum >= 90 ? '#5CB85C' : achieveNum >= 70 ? '#FFB347' : '#FF6B6B';
+
+                return '<tr onclick="drillDownEffortEngineer(\'' + eng.replace(/'/g, "\\'") + '\')" style="cursor:pointer;">' +
+                    '<td><span class="owner-tag">' + eng + '</span></td>' +
+                    '<td class="text-center fw-bold">' + s.incidents + '</td>' +
+                    '<td class="text-center fw-bold">' + actualMins + '</td>' +
+                    '<td class="text-center fw-bold" style="color: var(--primary-color);">' + minToHHMM(actualMins) + '</td>' +
+                    '<td class="text-center text-muted">' + targetMins + '</td>' +
+                    '<td class="text-center fw-bold">' + avgPerDay + '</td>' +
+                    '<td class="text-center fw-bold" style="color: var(--secondary-color);">' + minToHHMM(avgPerDay) + '</td>' +
+                    '<td>' +
+                        '<div class="d-flex align-items-center gap-1">' +
+                            '<div class="score-bar flex-grow-1">' +
+                                '<div class="score-bar-fill" style="width:' + Math.min(achieveNum, 100) + '%;background:' + barColor + ';"></div>' +
+                            '</div>' +
+                            '<span class="small fw-bold" style="color:' + barColor + ';">' + achievePct + '%</span>' +
+                        '</div>' +
+                    '</td>' +
+                    '<td class="' + statusClass + ' text-center fw-bold">' + statusIcon + '</td>' +
+                '</tr>';
+            }).join('');
+
+            scorecardBody.innerHTML = scorecardHtml;
+            
+            // Store data for export - #1
+            window._teamScorecardData = engineers.map(eng => {
+                const s = engMap[eng];
+                const workingDays = s.dates.size || 1;
+                const targetMins = workingDays * DAILY_TARGET_MINS;
+                const actualMins = Math.round(s.totalMinutes);
+                const avgPerDay = Math.round(actualMins / workingDays);
+                const achievePct = targetMins > 0 ? ((actualMins / targetMins) * 100).toFixed(1) : '0';
+                const achieveNum = parseFloat(achievePct);
+                let statusIcon = achieveNum >= 90 ? 'Met' : achieveNum >= 70 ? 'Near' : 'Below';
+                
+                return {
+                    'Activity Engineer': eng,
+                    'Total Incidents': s.incidents,
+                    'Total Mins': actualMins,
+                    'HH:MM': minToHHMM(actualMins),
+                    'Target': targetMins,
+                    'Daily Avg': avgPerDay,
+                    'Daily Avg HH:MM': minToHHMM(avgPerDay),
+                    'Achievement %': achievePct + '%',
+                    'Status': statusIcon
+                };
+            });
+        }
+
+        function renderDetailedEffortAnalyses() {
+            const minToHHMM = (mins) => {
+                const totalMins = Math.round(Number(mins) || 0);
+                const h = Math.floor(totalMins / 60);
+                const m = totalMins % 60;
+                return `${h}:${m.toString().padStart(2,'0')}`;
+            };
+
+            const engineerMap = {};
+            const dateEngineerMap = {};
+
+            filteredData.forEach(d => {
+                const eng = (d.activityEngineer || '').trim();
+                if (!eng) return;
+                if (!engineerMap[eng]) engineerMap[eng] = { incidents: 0, totalMinutes: 0 };
+                engineerMap[eng].incidents++;
+                engineerMap[eng].totalMinutes += d.effortMinutes || 0;
+
+                const dt = (d.effortDate || '').trim();
+                if (dt) {
+                    if (!dateEngineerMap[dt]) dateEngineerMap[dt] = {};
+                    if (!dateEngineerMap[dt][eng]) dateEngineerMap[dt][eng] = 0;
+                    dateEngineerMap[dt][eng] += d.effortMinutes || 0;
+                }
+            });
+
+            const engineers = Object.keys(engineerMap).sort();
+            const totalMins = engineers.reduce((s, e) => s + engineerMap[e].totalMinutes, 0);
+            const totalActivities = engineers.reduce((s, e) => s + engineerMap[e].incidents, 0);
+
+            document.getElementById('totalEffortMinutes').textContent = totalMins.toFixed(0);
+            document.getElementById('totalEffortHHMM').textContent = minToHHMM(totalMins);
+            document.getElementById('totalEngineers').textContent = engineers.length;
+            document.getElementById('totalActivities').textContent = totalActivities;
+
+            if (!engineers.length) {
+                ['effortByEngineerBarChart', 'effortByEngineerPieChart'].forEach(id => {
+                    if (effortCharts[id]) effortCharts[id].destroy();
+                });
+                return;
+            }
+
+            const palette = ['#4A90E2', '#50C878', '#FFB347', '#FFA07A', '#FF6B6B', '#5B9AE0', '#5CB85C', '#FF8C42'];
+
+            // Bar Chart
+            if (document.getElementById('effortByEngineerBarChart')) {
+                if (effortCharts['effortByEngineerBarChart']) effortCharts['effortByEngineerBarChart'].destroy();
+                effortCharts['effortByEngineerBarChart'] = new Chart(document.getElementById('effortByEngineerBarChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: engineers,
+                        datasets: [{
+                            label: 'Total Effort (Minutes)',
+                            data: engineers.map(e => engineerMap[e].totalMinutes.toFixed(1)),
+                            backgroundColor: engineers.map((_, i) => palette[i % palette.length] + 'CC'),
+                            borderColor: engineers.map((_, i) => palette[i % palette.length]),
+                            borderWidth: 2,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { 
+                                beginAtZero: true, 
+                                grid: { color: '#E6F3FF' },
+                                title: { display: true, text: 'Minutes' }
+                            },
+                            x: { ticks: { maxRotation: 45 } }
+                        }
+                    }
+                });
+            }
+
+            // Pie Chart
+            if (document.getElementById('effortByEngineerPieChart')) {
+                if (effortCharts['effortByEngineerPieChart']) effortCharts['effortByEngineerPieChart'].destroy();
+                effortCharts['effortByEngineerPieChart'] = new Chart(document.getElementById('effortByEngineerPieChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: engineers,
+                        datasets: [{
+                            data: engineers.map(e => engineerMap[e].totalMinutes.toFixed(1)),
+                            backgroundColor: engineers.map((_, i) => palette[i % palette.length] + 'DD'),
+                            borderColor: '#fff',
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'right', labels: { font: { size: 11, weight: '600' } } },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => {
+                                        const pct = totalMins > 0 ? ((ctx.parsed / totalMins) * 100).toFixed(1) : 0;
+                                        return ` ${ctx.label}: ${ctx.parsed} min (${pct}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            renderMonthlyEffortTracking();
+            renderDailyEffortTracking();
+        }
+
+        function renderMonthlyEffortTracking() {
+            const WORKING_DAYS_PER_MONTH = 20;
+            const HOURS_PER_DAY = 9;
+            
+            const engineerMap = {};
+            const allDates = new Set();
+            
+            filteredData.forEach(d => {
+                const eng = (d.activityEngineer || '').trim();
+                if (!eng) return;
+                if (!engineerMap[eng]) {
+                    engineerMap[eng] = { totalMinutes: 0, dates: new Set() };
+                }
+                engineerMap[eng].totalMinutes += d.effortMinutes || 0;
+                if (d.effortDate) {
+                    engineerMap[eng].dates.add(d.effortDate);
+                    allDates.add(d.effortDate);
+                }
+            });
+            
+            const dateArray = Array.from(allDates).sort();
+            const periodText = dateArray.length > 0 
+                ? `(${dateArray[0]} to ${dateArray[dateArray.length - 1]})` 
+                : '';
+            document.getElementById('monthlyEffortPeriod').textContent = periodText;
+            
+            const engineers = Object.keys(engineerMap).sort();
+            const tbody = document.getElementById('monthlyEffortBody');
+            
+            if (engineers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-3">No effort data found.</td></tr>';
+                return;
+            }
+            
+            window._monthlyEffortData = [];
+            
+            let html = '';
+            engineers.forEach(eng => {
+                const stats = engineerMap[eng];
+                const totalHours = (stats.totalMinutes / 60).toFixed(2);
+                const workedDays = stats.dates.size;
+                const leave = WORKING_DAYS_PER_MONTH - workedDays;
+                const expectedHours = workedDays * HOURS_PER_DAY;
+                const productivity = expectedHours > 0 ? ((parseFloat(totalHours) / expectedHours) * 100).toFixed(2) : '0.00';
+                const avgHoursPerDay = workedDays > 0 ? (parseFloat(totalHours) / workedDays).toFixed(2) : '0.00';
+                
+                let rowClass = '';
+                const prodNum = parseFloat(productivity);
+                if (prodNum >= 100) rowClass = 'table-success';
+                else if (prodNum >= 80) rowClass = 'table-warning';
+                else if (prodNum < 80) rowClass = 'table-danger';
+                
+                html += `<tr class="${rowClass}">
+                    <td class="fw-bold"><span class="owner-tag">${eng}</span></td>
+                    <td class="text-center fw-bold">${totalHours}</td>
+                    <td class="text-center">${WORKING_DAYS_PER_MONTH}</td>
+                    <td class="text-center">${leave}</td>
+                    <td class="text-center fw-bold">${workedDays}</td>
+                    <td class="text-center">${expectedHours}</td>
+                    <td class="text-center fw-bold ${prodNum < 80 ? 'text-danger' : prodNum >= 100 ? 'text-success' : 'text-warning'}">${productivity}%</td>
+                    <td class="text-center fw-bold" style="color: var(--primary-color);">${avgHoursPerDay}</td>
+                </tr>`;
+                
+                window._monthlyEffortData.push({
+                    'Engineers': eng,
+                    'Total Efforts (Hrs)': totalHours,
+                    'Working Days': WORKING_DAYS_PER_MONTH,
+                    'Leave': leave,
+                    'Worked Days': workedDays,
+                    'Expected Hours': expectedHours,
+                    'Productivity %': productivity,
+                    'Avg. working Hrs/Day': avgHoursPerDay
+                });
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        function renderDailyEffortTracking() {
+            const TARGET_HOURS = 9;
+            
+            // Collect all unique dates and engineers
+            const allDates = new Set();
+            const engineerDateMap = {}; // engineer -> { date -> { minutes, incidents } }
+            
+            filteredData.forEach(d => {
+                const eng = (d.activityEngineer || '').trim();
+                const dt = (d.effortDate || '').trim();
+                if (!eng || !dt) return;
+                
+                if (!engineerDateMap[eng]) {
+                    engineerDateMap[eng] = {};
+                }
+                if (!engineerDateMap[eng][dt]) {
+                    engineerDateMap[eng][dt] = { minutes: 0, incidents: 0 };
+                }
+                
+                engineerDateMap[eng][dt].minutes += d.effortMinutes || 0;
+                engineerDateMap[eng][dt].incidents += 1;
+                allDates.add(dt);
+            });
+            
+            // Sort dates
+            const dateArray = Array.from(allDates).sort();
+            const periodText = dateArray.length > 0 
+                ? `(${dateArray[0]} to ${dateArray[dateArray.length - 1]})` 
+                : '';
+            document.getElementById('dailyEffortPeriod').textContent = periodText;
+            
+            const tbody = document.getElementById('dailyEffortBody');
+            const engineers = Object.keys(engineerDateMap).sort();
+            
+            if (engineers.length === 0 || dateArray.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="20" class="text-center text-muted py-3">No effort data found.</td></tr>';
+                return;
+            }
+            
+            // Build dynamic table header
+            const thead = document.querySelector('#dailyEffortTable thead tr');
+            let headerHtml = '<th style="position: sticky; left: 0; background: white; z-index: 10;">Engineer</th>';
+            
+            dateArray.forEach(date => {
+                headerHtml += `<th class="text-center" style="min-width: 120px;">${date}<br><small class="text-muted">Hrs | Incidents</small></th>`;
+            });
+            
+            headerHtml += '<th class="text-center">Total Hrs</th>';
+            headerHtml += '<th class="text-center">Working Days</th>';
+            headerHtml += '<th class="text-center">Expected Hrs</th>';
+            headerHtml += '<th class="text-center">Avg Hrs/Day</th>';
+            headerHtml += '<th class="text-center">Achievement %</th>';
+            headerHtml += '<th class="text-center">Status</th>';
+            
+            thead.innerHTML = headerHtml;
+            
+            // Store data for export
+            window._dailyEffortData = [];
+            
+            // Build table rows
+            let html = '';
+            engineers.forEach(eng => {
+                const dateData = engineerDateMap[eng];
+                let totalMinutes = 0;
+                let totalIncidents = 0;
+                let workingDays = 0;
+                
+                let rowHtml = `<td class="fw-bold" style="position: sticky; left: 0; background: white; z-index: 5;"><span class="owner-tag">${eng}</span></td>`;
+                
+                // Add data for each date
+                dateArray.forEach(date => {
+                    if (dateData[date]) {
+                        const hrs = (dateData[date].minutes / 60).toFixed(2);
+                        const incidents = dateData[date].incidents;
+                        totalMinutes += dateData[date].minutes;
+                        totalIncidents += incidents;
+                        workingDays++;
+                        
+                        // Color code based on daily achievement
+                        const dailyAchievement = (parseFloat(hrs) / TARGET_HOURS) * 100;
+                        let cellClass = '';
+                        if (dailyAchievement >= 100) {
+                            cellClass = 'table-success';
+                        } else if (dailyAchievement >= 80) {
+                            cellClass = 'table-warning';
+                        } else {
+                            cellClass = 'table-danger';
+                        }
+                        
+                        rowHtml += `<td class="text-center ${cellClass}">${hrs}<br><small class="text-muted">${incidents}</small></td>`;
+                    } else {
+                        rowHtml += `<td class="text-center text-muted">-<br><small>0</small></td>`;
+                    }
+                });
+                
+                // Calculate totals
+                const totalHours = (totalMinutes / 60).toFixed(2);
+                const expectedHours = workingDays * TARGET_HOURS;
+                const avgHoursPerDay = workingDays > 0 ? (totalMinutes / 60 / workingDays).toFixed(2) : '0.00';
+                const achievement = expectedHours > 0 ? ((parseFloat(totalHours) / expectedHours) * 100).toFixed(2) : '0.00';
+                const achievementNum = parseFloat(achievement);
+                
+                let status, statusClass;
+                if (achievementNum >= 100) {
+                    status = '✅ Met';
+                    statusClass = 'text-success';
+                } else if (achievementNum >= 80) {
+                    status = '⚠️ Near';
+                    statusClass = 'text-warning';
+                } else {
+                    status = '❌ Below';
+                    statusClass = 'text-danger';
+                }
+                
+                rowHtml += `<td class="text-center fw-bold">${totalHours}</td>`;
+                rowHtml += `<td class="text-center fw-bold">${workingDays}</td>`;
+                rowHtml += `<td class="text-center">${expectedHours}</td>`;
+                rowHtml += `<td class="text-center fw-bold">${avgHoursPerDay}</td>`;
+                rowHtml += `<td class="text-center fw-bold ${statusClass}">${achievement}%</td>`;
+                rowHtml += `<td class="text-center fw-bold">${status}</td>`;
+                
+                html += `<tr>${rowHtml}</tr>`;
+                
+                // Store for export
+                const exportRow = {
+                    'Engineer': eng,
+                    'Total Hours': totalHours,
+                    'Working Days': workingDays,
+                    'Expected Hours': expectedHours,
+                    'Avg Hours/Day': avgHoursPerDay,
+                    'Achievement %': achievement,
+                    'Status': status.replace(/[✅⚠️❌]/g, '').trim()
+                };
+                
+                // Add each date's data to export
+                dateArray.forEach(date => {
+                    if (dateData[date]) {
+                        const hrs = (dateData[date].minutes / 60).toFixed(2);
+                        exportRow[date] = `${hrs} hrs (${dateData[date].incidents} incidents)`;
+                    } else {
+                        exportRow[date] = '-';
+                    }
+                });
+                
+                window._dailyEffortData.push(exportRow);
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        function exportEffortStatsToExcel() {
+            const data = window._effortStatsData || [];
+            if (!data.length) { alert('No data to export.'); return; }
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Effort Stats');
+            XLSX.writeFile(wb, 'Effort_Stats_Analyses.xlsx');
+        }
+
+
+        function exportTeamScorecardToExcel() {
+            const data = window._teamScorecardData || [];
+            if (!data.length) { 
+                alert('No team scorecard data to export.'); 
+                return; 
+            }
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Team Scorecard');
+            XLSX.writeFile(wb, 'Team_Performance_Scorecard.xlsx');
+        }
+
+        function exportMonthlyEffortToExcel() {
+            const data = window._monthlyEffortData || [];
+            if (!data.length) { alert('No monthly effort data to export.'); return; }
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Monthly Effort');
+            XLSX.writeFile(wb, 'Monthly_Effort_Tracking.xlsx');
+        }
+
+        function exportDailyEffortToExcel() {
+            const data = window._dailyEffortData || [];
+            if (!data.length) { alert('No daily effort data to export.'); return; }
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Daily Effort');
+            XLSX.writeFile(wb, 'Daily_Effort_Tracking.xlsx');
+        }
+
+        function exportDrillDownToExcel() {
+            if (!drillDownExportData || drillDownExportData.length === 0) {
+                alert('No data to export.');
+                return;
+            }
+            const ws = XLSX.utils.json_to_sheet(drillDownExportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'DrillDown');
+            XLSX.writeFile(wb, 'DrillDown_Export.xlsx');
+        }
+
+        // #4 - Global Excel export function restored
+        function exportFullData() {
+            if (!filteredData || filteredData.length === 0) {
+                alert('No filtered data to export.');
+                return;
+            }
+            
+            const exportData = filteredData.map(d => ({
+                'Incident ID': d.incidentId,
+                'Title': d.title,
+                'Owner': d.owner,
+                'Submitted By': d.submittedBy,
+                'Status': d.currentStatus,
+                'Service': d.service,
+                'Activity Engineer': d.activityEngineer,
+                'Effort Date': d.effortDate,
+                'Effort Minutes': d.effortMinutes,
+                'Investigation Type': d.investigationType,
+                'Comments': d.effortComments
+            }));
+            
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Filtered Data');
+            XLSX.writeFile(wb, `MSP_Filtered_Data_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+        }
+
+        function downloadDashboardPDF() {
+            showLoading(true);
+            
+            const element = document.getElementById('view-effort-stats');
+            const clone = element.cloneNode(true);
+            
+            clone.style.position = 'absolute';
+            clone.style.left = '-9999px';
+            clone.style.top = '0';
+            clone.style.width = element.offsetWidth + 'px';
+            clone.style.backgroundColor = 'white';
+            clone.style.padding = '25px';
+            document.body.appendChild(clone);
+            
+            html2canvas(clone, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
+                document.body.removeChild(clone);
+                
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('landscape', 'mm', 'a4');
+                
+                const imgWidth = 280;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                
+                pdf.setFontSize(16);
+                pdf.setTextColor(74, 144, 226);
+                pdf.text('MSP Support Engineers - Effort Dashboard', 15, 15);
+                pdf.setFontSize(9);
+                pdf.setTextColor(44, 62, 80);
+                pdf.text(`Generated on: ${new Date().toLocaleString()}`, 15, 22);
+                pdf.text(`Showing ${filteredData.length} of ${processedData.length} records`, 15, 27);
+                
+                if (globalFilters.timescale !== 'all') {
+                    const timescaleLabel = document.getElementById('global-filter-timescale').options[
+                        document.getElementById('global-filter-timescale').selectedIndex
+                    ].text;
+                    pdf.text(`Timescale: ${timescaleLabel}`, 15, 32);
+                }
+                
+                pdf.addImage(imgData, 'PNG', 10, 37, imgWidth, imgHeight);
+                pdf.save(`MSP_Effort_Dashboard_${new Date().toLocaleDateString().replace(/\//g,'-')}.pdf`);
+                
+                showLoading(false);
+            }).catch(error => {
+                console.error('PDF Error:', error);
+                alert('Error generating PDF. Please try again.');
+                showLoading(false);
+            });
+        }
+
+        function showLoading(show) {
+            const spinner = document.getElementById('loadingSpinner');
+            if (show) spinner.classList.add('active');
+            else spinner.classList.remove('active');
+        }
+
+        function processData() {
+            if (rawData.length === 0) {
+                alert("No data loaded. Please upload a file first.");
+                return;
+            }
+            showLoading(true);
+            setTimeout(() => {
+                filteredData = [...processedData];
+                originalFilteredData = [...processedData];
+                document.getElementById('upload-section').style.display = 'none';
+                document.getElementById('dashboard-section').style.display = 'block';
+                document.getElementById('total-cases').textContent = `${processedData.length} Cases Loaded`;
+                detectDateRange();
+                updateDashboard();
+                showLoading(false);
+            }, 500);
+        }
+    </script>
+</body>
+</html>
