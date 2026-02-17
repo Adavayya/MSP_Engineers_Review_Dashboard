@@ -57,6 +57,321 @@
             border-color: var(--primary-color);
         }
         
+        /* =========================================================
+           SIDEBAR (left slide-in menu)
+        ========================================================= */
+        .sidebar {
+            position: fixed;
+            left: -320px;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            border-right: 3px solid var(--primary-color);
+            box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+            transition: left 0.3s ease-in-out;
+            z-index: 1050;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar.open { left: 0; }
+
+        .sidebar-header {
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-color), #5B9AE0);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-header h5 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-close {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .sidebar-close:hover { background: rgba(255,255,255,0.2); }
+
+        .sidebar-toggle {
+            position: fixed;
+            left: 20px;
+            top: 80px;
+            width: 44px;
+            height: 44px;
+            background: #1a202c;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            z-index: 1040;
+            color: white;
+            font-size: 1rem;
+        }
+        .sidebar-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 14px rgba(0,0,0,0.4);
+            background: #2d3748;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .sidebar-content::-webkit-scrollbar { width: 6px; }
+        .sidebar-content::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 3px; }
+
+        .nav-section-title {
+            padding: 8px 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #4A5568;
+            margin-top: 12px;
+            margin-bottom: 4px;
+        }
+        .sidebar .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 11px 20px;
+            margin: 3px 12px;
+            border-radius: 8px;
+            color: #2C3E50;
+            font-weight: 500;
+            font-size: 0.7rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .sidebar .nav-link:hover {
+            background: linear-gradient(135deg, rgba(74,144,226,0.08), rgba(91,154,224,0.08));
+            border-color: rgba(74,144,226,0.2);
+            transform: translateX(4px);
+        }
+        .sidebar .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-color), #5B9AE0);
+            color: white;
+            font-weight: 600;
+        }
+        .sidebar .nav-link i {
+            font-size: 1rem;
+            width: 24px;
+            min-width: 24px;
+            margin-right: 12px;
+        }
+        .nav-link-text { flex: 1; }
+
+        /* Sidebar overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1049;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(2px);
+        }
+        .sidebar-overlay.show { opacity: 1; visibility: visible; }
+
+        /* =========================================================
+           FILTER SIDE PANEL (right slide-in)
+        ========================================================= */
+        .filter-side-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 340px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+            transition: right 0.3s ease-in-out;
+            z-index: 1050;
+            overflow-y: auto;
+            border-left: 3px solid var(--primary-color);
+        }
+        .filter-side-panel.open { right: 0; }
+
+        .filter-panel-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), #5B9AE0);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .filter-panel-header h5 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .filter-panel-close {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .filter-panel-close:hover { background: rgba(255,255,255,0.2); }
+        .filter-panel-body { padding: 20px; }
+
+        .filter-toggle-fab {
+            position: fixed;
+            right: 20px;
+            top: 80px;
+            width: 44px;
+            height: 44px;
+            background: #1a202c;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            z-index: 1040;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .filter-toggle-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 14px rgba(0,0,0,0.4);
+            background: #2d3748;
+        }
+        .filter-toggle-fab .filter-active-dot {
+            position: absolute;
+            top: 6px; right: 6px;
+            width: 10px; height: 10px;
+            background: #FF6B6B;
+            border-radius: 50%;
+            border: 2px solid white;
+            display: none;
+        }
+        .filter-toggle-fab.has-filters .filter-active-dot { display: block; }
+
+        .filter-panel-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1045;
+            display: none;
+        }
+        .filter-panel-overlay.show { display: block; }
+
+        .filter-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #4A5568;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        /* =========================================================
+           DASHBOARD CONTAINER + SECTION BANNER
+        ========================================================= */
+        .dashboard-container { display: block; margin-top: 0; }
+        .main-content { padding: 20px; min-height: calc(100vh - 56px); }
+
+        .section-banner {
+            background: linear-gradient(135deg, var(--primary-color), #5B9AE0);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(74,144,226,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .section-banner h4 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* =========================================================
+           REPOSITORY SECTION
+        ========================================================= */
+        .repo-section {
+            background: linear-gradient(135deg, var(--light-blue), white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        /* =========================================================
+           DATA INFO BANNER (shows active filter status)
+        ========================================================= */
+        .data-load-info {
+            background: linear-gradient(135deg, var(--light-blue), #BFE0FF);
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            border: 1px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .data-load-info .info-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+        }
+        .data-load-info .info-value {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #2C3E50;
+            background: white;
+            padding: 3px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+        .data-load-info .filter-status {
+            font-size: 0.7rem;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
         .global-filters { 
             background: white; 
             padding: 16px; 
@@ -565,8 +880,7 @@
                 </a>
             </div>
             <div class="d-flex align-items-center text-white">
-                <span id="last-updated" class="me-3 small opacity-90"></span>
-                <span id="total-cases" class="badge bg-white text-primary shadow-sm px-3 py-2">0 Cases Loaded</span>
+                <span id="last-updated-nav" class="me-3 small opacity-90"></span>
             </div>
         </div>
     </nav>
@@ -599,6 +913,38 @@
                                 </button>
                             </div>
                         </div>
+
+                        <!-- OR Divider -->
+                        <div class="d-flex align-items-center my-4">
+                            <hr class="flex-grow-1">
+                            <span class="px-3 text-muted fw-bold" style="font-size: 0.9rem;">OR</span>
+                            <hr class="flex-grow-1">
+                        </div>
+
+                        <!-- Repository File Selection -->
+                        <div class="repo-section text-center" id="repo-section">
+                            <h6 class="mb-2" style="color: var(--primary-color); font-weight: 700;">
+                                <i class="bi bi-github me-2"></i>Select Data File from Repository
+                            </h6>
+                            <p class="text-muted small mb-3">Choose an Excel file from the MSPEffort GitHub repository</p>
+                            <div class="row justify-content-center">
+                                <div class="col-md-6">
+                                    <select class="form-select form-select-sm mb-3" id="repository-file-select">
+                                        <option value="">-- Select an Excel file --</option>
+                                        <option value="MSPEffort/MSPSupportEffortDetailedSummary_Jan2026.xlsx">Support Effort Detailed Summary_Jan2026</option>
+                                        
+                                        <!-- Add more files as needed with MSPEffort/ prefix -->
+                                    </select>
+                                    <button class="btn btn-sm btn-primary" id="load-repository-file-btn" disabled>
+                                        <i class="bi bi-cloud-download me-2"></i>Load Selected File
+                                    </button>
+                                    <p class="small mt-3" id="repository-note">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        <span id="repo-status">Checking connection...</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -606,115 +952,162 @@
 
         <!-- Dashboard Section -->
         <div id="dashboard-section" style="display: none;">
-            
-            <!-- Date Range Banner - #3 -->
-            <div class="date-banner" id="date-range-banner" style="display: none;">
-                <div>
-                    <i class="bi bi-calendar-range me-2" style="color: var(--primary-color);"></i>
-                    <strong>Data Period:</strong> 
-                    <span id="data-period-start"></span> to <span id="data-period-end"></span>
+
+            <!-- Sidebar Overlay -->
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+            <!-- Filter Panel Overlay -->
+            <div class="filter-panel-overlay" id="filter-panel-overlay" onclick="toggleFilterPanel()"></div>
+
+            <!-- Sidebar Toggle FAB (left) -->
+            <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Open Menu">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <!-- Filter Toggle FAB (right) -->
+            <button class="filter-toggle-fab" id="filter-toggle-fab" onclick="toggleFilterPanel()" title="Global Filters">
+                <i class="bi bi-funnel-fill"></i>
+                <span class="filter-active-dot"></span>
+            </button>
+
+            <!-- LEFT SIDEBAR: Navigation Menu -->
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <h5><i class="bi bi-menu-button-wide me-2"></i>MSP Effort Dashboard</h5>
+                    <button class="sidebar-close" onclick="toggleSidebar()"><i class="bi bi-x-lg"></i></button>
                 </div>
-                <span class="date-range" id="data-range-type"></span>
-            </div>
-            
-            <!-- Global Filters -->
-            <div class="row mb-3">
-                <div class="col-12">
-                    <div class="global-filters">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="mb-0"><i class="bi bi-funnel-fill me-2" style="color: var(--primary-color);"></i>Global Filters</h6>
-                            <div class="export-btn-group">
-                                <!-- #4 - Added back global Excel export -->
-                                <button class="btn btn-sm btn-excel" onclick="exportFullData()">
-                                    <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
-                                </button>
-                                <button class="btn btn-sm btn-pdf" id="download-pdf-btn">
-                                    <i class="bi bi-file-pdf me-1"></i> Export PDF
-                                </button>
-                                <button class="btn btn-sm btn-outline-secondary ms-2" id="clear-filters-btn">
-                                    <i class="bi bi-x-circle me-1"></i>Clear
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="row g-2">
-                            <!-- #4 - Timescale Filter -->
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Timescale</label>
-                                <select class="form-select form-select-sm" id="global-filter-timescale">
-                                    <option value="all">All Data</option>
-                                    <option value="today">Today</option>
-                                    <option value="last1">Last Day</option>
-                                    <option value="last2">Last 2 Days</option>
-                                    <option value="last3">Last 3 Days</option>
-                                    <option value="last4">Last 4 Days</option>
-                                    <option value="last5">Last 5 Days</option>
-                                    <option value="currentweek">Current Week</option>
-                                    <option value="lastweek">Last Week</option>
-                                    <option value="currentmonth">Current Month</option>
-                                    <option value="lastmonth">Last Month</option>
-                                </select>
-                            </div>
-                            
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Owner</label>
-                                <select class="form-select form-select-sm" id="global-filter-owner" multiple size="1" style="height: 31px;">
-                                    <option value="">All Owners</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Submitted By</label>
-                                <select class="form-select form-select-sm" id="global-filter-submittedby" multiple size="1" style="height: 31px;">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Service Type</label>
-                                <select class="form-select form-select-sm" id="global-filter-service" multiple size="1" style="height: 31px;">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Status</label>
-                                <select class="form-select form-select-sm" id="global-filter-status" multiple size="1" style="height: 31px;">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Activity Engineer</label>
-                                <select class="form-select form-select-sm" id="global-filter-activityengineer" multiple size="1" style="height: 31px;">
-                                    <option value="">All</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="filter-tags" id="active-filters-tags" style="display: none;"></div>
-                        
-                        <div class="mt-2 small text-muted">
-                            <i class="bi bi-info-circle me-1"></i>
-                            <span id="active-filters-count">0 filters active</span> | 
-                            <span id="filtered-cases-count">Showing 0 of 0 cases</span>
-                        </div>
+                <div class="sidebar-content">
+                    <div class="nav-section-title"><i class="bi bi-bar-chart-line me-1"></i>SECTIONS</div>
+                    <div class="nav flex-column">
+                        <a class="nav-link active" id="sb-effort-stats" onclick="switchSection('view-effort-stats','Effort Stats Analyses','bi-table')">
+                            <i class="bi bi-table"></i><span class="nav-link-text">Effort Stats Analyses</span>
+                        </a>
+                        <a class="nav-link" id="sb-effort-detail" onclick="switchSection('view-effort-detail','Detailed Effort Analyses','bi-bar-chart-line')">
+                            <i class="bi bi-bar-chart-line"></i><span class="nav-link-text">Detailed Effort Analyses</span>
+                        </a>
+                        <a class="nav-link" id="sb-daily-review" onclick="switchSection('view-daily-review','Daily Effort Review','bi-calendar-day')">
+                            <i class="bi bi-calendar-day"></i><span class="nav-link-text">Daily Effort Review</span>
+                        </a>
+                        <a class="nav-link" id="sb-monthly-review" onclick="switchSection('view-monthly-review','Monthly Effort Review','bi-calendar-month')">
+                            <i class="bi bi-calendar-month"></i><span class="nav-link-text">Monthly Effort Review</span>
+                        </a>
+                        <a class="nav-link" id="sb-support-category" onclick="switchSection('view-support-category','Support Category Effort','bi-tags')">
+                            <i class="bi bi-tags"></i><span class="nav-link-text">Support Category Effort</span>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Main Tabs -->
-            <ul class="nav nav-tabs main-view-tabs" id="mainViewTabs" role="tablist">
-                <li class="nav-item">
-                    <button class="nav-link active" id="view-effort-stats-tab" data-bs-toggle="tab" data-bs-target="#view-effort-stats" type="button">
-                        <i class="bi bi-table me-2"></i>Effort Stats Analyses
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button class="nav-link" id="view-effort-detail-tab" data-bs-toggle="tab" data-bs-target="#view-effort-detail" type="button">
-                        <i class="bi bi-bar-chart-line me-2"></i>Detailed Effort Analyses
-                    </button>
-                </li>
-            </ul>
+            <!-- RIGHT SIDE FILTER PANEL -->
+            <div class="filter-side-panel" id="filter-side-panel">
+                <div class="filter-panel-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5><i class="bi bi-funnel-fill me-2"></i>Global Filters</h5>
+                        <button class="filter-panel-close" onclick="toggleFilterPanel()"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                </div>
+                <div class="filter-panel-body">
+                    <div class="mb-3">
+                        <label class="filter-label"><i class="bi bi-calendar-range me-1"></i>Timescale</label>
+                        <select class="form-select form-select-sm" id="global-filter-timescale">
+                            <option value="all">All Data</option>
+                            <option value="today">Today</option>
+                            <option value="last1">Last Day</option>
+                            <option value="last2">Last 2 Days</option>
+                            <option value="last3">Last 3 Days</option>
+                            <option value="last4">Last 4 Days</option>
+                            <option value="last5">Last 5 Days</option>
+                            <option value="currentweek">Current Week</option>
+                            <option value="lastweek">Last Week</option>
+                            <option value="currentmonth">Current Month</option>
+                            <option value="lastmonth">Last Month</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-label">Owner</label>
+                        <select class="form-select form-select-sm" id="global-filter-owner">
+                            <option value="">All Owners</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-label">Submitted By</label>
+                        <select class="form-select form-select-sm" id="global-filter-submittedby">
+                            <option value="">All Submitted By</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-label">Service Type</label>
+                        <select class="form-select form-select-sm" id="global-filter-service">
+                            <option value="">All Service Types</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-label">Status</label>
+                        <select class="form-select form-select-sm" id="global-filter-status">
+                            <option value="">All Statuses</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-label">Activity Engineer</label>
+                        <select class="form-select form-select-sm" id="global-filter-activityengineer">
+                            <option value="">All Engineers</option>
+                        </select>
+                    </div>
+                    <hr class="my-3">
+                    <div class="d-flex flex-column gap-2 mb-3">
+                        <button class="btn btn-sm btn-excel w-100" onclick="exportFullData()">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
+                        </button>
+                        <button class="btn btn-sm btn-pdf w-100" id="download-pdf-btn">
+                            <i class="bi bi-file-pdf me-1"></i> Export PDF
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary w-100" id="clear-filters-btn">
+                            <i class="bi bi-x-circle me-1"></i>Clear All Filters
+                        </button>
+                    </div>
+                    <div class="filter-tags" id="active-filters-tags" style="display: none;"></div>
+                    <div class="mt-2 small text-muted">
+                        <div><i class="bi bi-info-circle me-1"></i><span id="active-filters-count">0 filters active</span></div>
+                        <div class="mt-1"><span id="filtered-cases-count">Showing 0 of 0 cases</span></div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- MAIN CONTENT AREA -->
+            <div class="main-content dashboard-container">
+
+            <!-- Data Load Info Banner -->
+            <div class="data-load-info" id="date-range-banner" style="display: none;">
+                <div class="d-flex align-items-center gap-4 flex-wrap">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span class="info-label"><i class="bi bi-calendar-range me-1"></i>Data Period:</span>
+                        <span class="info-value"><span id="data-period-start"></span> → <span id="data-period-end"></span></span>
+                    </div>
+                    <div class="filter-status" id="filterStatus">
+                        <i class="bi bi-funnel me-1"></i>
+                        <span id="data-range-type">All Records</span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 align-items-center">
+                    <span id="total-cases" class="badge" style="background: linear-gradient(135deg, var(--primary-color), #5B9AE0); color: white; padding: 6px 14px; border-radius: 20px; font-weight: 600;">0 Cases</span>
+                    <span id="last-updated" class="small text-muted"></span>
+                </div>
+            </div>
+
+            <!-- Section Banner -->
+            <div class="section-banner" id="currentSectionBanner">
+                <h4 id="currentSectionTitle"><i class="bi bi-table me-2"></i>Effort Stats Analyses</h4>
+            </div>
+
+            <!-- Main Tabs (hidden, driven by sidebar) -->
             <div class="tab-content view-content" id="mainViewTabsContent">
-                
+                <ul class="nav nav-tabs main-view-tabs d-none" id="mainViewTabs" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" id="view-effort-stats-tab" data-bs-toggle="tab" data-bs-target="#view-effort-stats" type="button">Effort Stats Analyses</button></li>
+                    <li class="nav-item"><button class="nav-link" id="view-effort-detail-tab" data-bs-toggle="tab" data-bs-target="#view-effort-detail" type="button">Detailed Effort Analyses</button></li>
+                    <li class="nav-item"><button class="nav-link" id="view-daily-review-tab" data-bs-toggle="tab" data-bs-target="#view-daily-review" type="button">Daily Effort Review</button></li>
+                    <li class="nav-item"><button class="nav-link" id="view-monthly-review-tab" data-bs-toggle="tab" data-bs-target="#view-monthly-review" type="button">Monthly Effort Review</button></li>
+                    <li class="nav-item"><button class="nav-link" id="view-support-category-tab" data-bs-toggle="tab" data-bs-target="#view-support-category" type="button">Support Category Effort</button></li>
+                </ul>
                 <!-- Effort Stats Analyses Tab -->
                 <div class="tab-pane fade show active" id="view-effort-stats" role="tabpanel">
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -901,9 +1294,260 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Daily Effort Review Tab -->
+                <div class="tab-pane fade" id="view-daily-review" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0" style="color: var(--primary-color);">Daily Effort Review</h5>
+                        <button class="btn btn-sm btn-excel" onclick="exportDailyReviewToExcel()">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export to Excel
+                        </button>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" id="drTotalMinutes">0</div>
+                                    <div class="metric-label">Total Minutes</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" style="color: var(--secondary-color);" id="drTotalHHMM">0:00</div>
+                                    <div class="metric-label">Total HH:MM</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" style="color: var(--accent-color);" id="drTotalEngineers">0</div>
+                                    <div class="metric-label">Engineers</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" style="color: var(--warning-color);" id="drTotalActivities">0</div>
+                                    <div class="metric-label">Activities</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Effort Review Table -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0" style="color: var(--primary-color);">Daily Effort Review <small id="dailyReviewPeriod" class="ms-2 text-muted"></small></h6>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered scorecard-table" id="dailyReviewTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Engineer</th>
+                                            <th>Date</th>
+                                            <th>Hrs</th>
+                                            <th>Incidents</th>
+                                            <th>Avg Mins</th>
+                                            <th>Target</th>
+                                            <th>Achievement</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dailyReviewBody">
+                                        <tr><td colspan="8" class="text-center text-muted py-3">No data available.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monthly Effort Review Tab -->
+                <div class="tab-pane fade" id="view-monthly-review" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0" style="color: var(--primary-color);">Monthly Effort Review</h5>
+                        <button class="btn btn-sm btn-excel" onclick="exportMonthlyReviewToExcel()">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export to Excel
+                        </button>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" id="mrTotalMinutes">0</div>
+                                    <div class="metric-label">Total Minutes</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" style="color: var(--secondary-color);" id="mrTotalHHMM">0:00</div>
+                                    <div class="metric-label">Total HH:MM</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" style="color: var(--accent-color);" id="mrTotalEngineers">0</div>
+                                    <div class="metric-label">Engineers</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" style="color: var(--warning-color);" id="mrTotalActivities">0</div>
+                                    <div class="metric-label">Activities</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Effort Review Table -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0" style="color: var(--primary-color);">Monthly Effort Review <small id="monthlyReviewPeriod" class="ms-2 text-muted"></small></h6>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered scorecard-table" id="monthlyReviewTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Engineer</th>
+                                            <th>Total Hrs</th>
+                                            <th>Total Mins</th>
+                                            <th>Period Working Days</th>
+                                            <th>Weekday Worked</th>
+                                            <th>Weekend Worked</th>
+                                            <th>Leave / Absent Days</th>
+                                            <th>Expected Hrs (Weekdays × 9)</th>
+                                            <th>Productivity %</th>
+                                            <th>Avg Hrs/Day</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="monthlyReviewBody">
+                                        <tr><td colspan="10" class="text-center text-muted py-3">No data available.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Support Category Effort Tab -->
+                <div class="tab-pane fade" id="view-support-category" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="mb-0" style="color: var(--primary-color);">Support Category Effort</h5>
+                        <button class="btn btn-sm btn-excel" onclick="exportSupportCategoryToExcel()">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export to Excel
+                        </button>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" id="scTotalTickets">0</div>
+                                    <div class="metric-label">Total Tickets</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" style="color: var(--secondary-color);" id="scTotalMinutes">0</div>
+                                    <div class="metric-label">Total Minutes</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" style="color: var(--accent-color);" id="scTotalHHMM">0:00</div>
+                                    <div class="metric-label">Total HH:MM</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card">
+                                <div class="card-body">
+                                    <div class="metric-value" style="color: var(--warning-color);" id="scUniqueCategories">0</div>
+                                    <div class="metric-label">Categories</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts for Support Category -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-light py-3">
+                                    <h6 class="mb-0" style="color: var(--primary-color);">Effort by Support Category (Minutes)</h6>
+                                </div>
+                                <div class="card-body p-3">
+                                    <canvas id="supportCategoryBarChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-light py-3">
+                                    <h6 class="mb-0" style="color: var(--primary-color);">Effort Share by Category (%)</h6>
+                                </div>
+                                <div class="card-body p-3">
+                                    <canvas id="supportCategoryPieChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Support Category Effort Table -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light py-3">
+                            <h6 class="mb-0" style="color: var(--primary-color);">Support Category Effort Details</h6>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="table-responsive" style="max-height: 600px; overflow-y: auto; overflow-x: auto;">
+                                <table class="table table-sm table-bordered scorecard-table" id="supportCategoryTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Service</th>
+                                            <th>Support Category</th>
+                                            <th>Feature</th>
+                                            <th>Sub Feature</th>
+                                            <th>Total Tickets</th>
+                                            <th>Total Effort (Mins)</th>
+                                            <th>Total Effort (HH:MM)</th>
+                                            <th>Avg Mins / Ticket</th>
+                                            <th>% of Total Effort</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="supportCategoryBody">
+                                        <tr><td colspan="9" class="text-center text-muted py-3">No data available.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </div>
-    </div>
+        </div><!-- /.main-content.dashboard-container -->
+    </div><!-- /#dashboard-section -->
+    </div><!-- /.container-fluid -->
 
     <!-- Loading Spinner -->
     <div class="loading-spinner" id="loadingSpinner">
@@ -957,47 +1601,101 @@
             const fileInput = document.getElementById('file-input');
             const uploadButton = dropArea.querySelector('button');
 
-            uploadButton.addEventListener('click', () => fileInput.click());
+            uploadButton.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
             dropArea.addEventListener('click', () => fileInput.click());
             
             dropArea.addEventListener('dragover', (e) => { 
                 e.preventDefault(); 
                 dropArea.style.borderColor = 'var(--secondary-color)';
             });
-            
             dropArea.addEventListener('dragleave', () => { 
                 dropArea.style.borderColor = 'var(--primary-color)';
             });
-            
             dropArea.addEventListener('drop', (e) => {
                 e.preventDefault();
                 dropArea.style.borderColor = 'var(--primary-color)';
-                if (e.dataTransfer.files.length) {
-                    handleFileUpload(e.dataTransfer.files[0]);
-                }
+                if (e.dataTransfer.files.length) handleFileUpload(e.dataTransfer.files[0]);
             });
             
-            fileInput.onchange = (e) => { 
-                if (e.target.files[0]) {
-                    handleFileUpload(e.target.files[0]);
-                }
-            };
+            fileInput.onchange = (e) => { if (e.target.files[0]) handleFileUpload(e.target.files[0]); };
 
             document.getElementById('process-data-btn').onclick = processData;
             document.getElementById('clear-filters-btn').onclick = clearAllFilters;
             document.getElementById('download-pdf-btn').onclick = downloadDashboardPDF;
+
+            // Repository file loader — check if running on web server or locally
+            const repositoryFileSelect = document.getElementById('repository-file-select');
+            const loadRepositoryFileBtn = document.getElementById('load-repository-file-btn');
+            const repoStatus = document.getElementById('repo-status');
+
+            const isWebServer = window.location.protocol === 'http:' || window.location.protocol === 'https:';
+
+            if (isWebServer) {
+                repoStatus.textContent = 'Repository connected - Select a file from dropdown';
+                repoStatus.style.color = 'var(--success-color)';
+            } else {
+                repoStatus.textContent = 'Local mode - Repository dropdown disabled. Use manual upload above.';
+                repoStatus.style.color = 'var(--warning-color)';
+                repositoryFileSelect.disabled = true;
+            }
+
+            if (repositoryFileSelect && loadRepositoryFileBtn) {
+                repositoryFileSelect.addEventListener('change', function() {
+                    loadRepositoryFileBtn.disabled = !this.value || !isWebServer;
+                });
+
+                loadRepositoryFileBtn.addEventListener('click', function() {
+                    const filePath = repositoryFileSelect.value;
+                    if (!filePath) { alert('Please select a file from the dropdown.'); return; }
+                    if (!isWebServer) {
+                        alert('Repository loading only works when hosted on a web server (like GitHub Pages).\nPlease use the manual upload option above.');
+                        return;
+                    }
+                    showLoading(true);
+                    repoStatus.textContent = 'Loading file...';
+                    fetch(filePath)
+                        .then(r => {
+                            if (!r.ok) throw new Error(`File not found: ${filePath}`);
+                            return r.arrayBuffer();
+                        })
+                        .then(data => {
+                            const arr = new Uint8Array(data);
+                            const wb = XLSX.read(arr, { type: 'array' });
+                            const ws = wb.Sheets[wb.SheetNames[0]];
+                            const sheetData = XLSX.utils.sheet_to_json(ws, { header: 1 });
+                            if (!sheetData || sheetData.length < 2) throw new Error('The selected file is empty or has no valid data.');
+                            const fileName = filePath.split('/').pop();
+                            document.getElementById('file-name').textContent = fileName;
+                            document.getElementById('file-info').style.display = 'block';
+                            repoStatus.textContent = `Processing ${sheetData.length - 1} rows...`;
+                            processExcelData(sheetData);
+                        })
+                        .catch(err => {
+                            repoStatus.textContent = '✗ Error loading file';
+                            repoStatus.style.color = 'var(--danger-color)';
+                            alert(`Error loading file: ${err.message}\n\nMake sure the file exists in the MSPEffort/ folder in your GitHub repository.`);
+                            showLoading(false);
+                        });
+                });
+            }
+
+            // Filter listeners (now single-select dropdowns in side panel)
+            ['global-filter-timescale','global-filter-service','global-filter-owner',
+             'global-filter-status','global-filter-activityengineer','global-filter-submittedby']
+            .forEach(id => document.getElementById(id).addEventListener('change', updateGlobalFilters));
             
-            // Filter listeners
-            document.getElementById('global-filter-timescale').addEventListener('change', updateGlobalFilters);
-            document.getElementById('global-filter-service').addEventListener('change', updateGlobalFilters);
-            document.getElementById('global-filter-owner').addEventListener('change', updateGlobalFilters);
-            document.getElementById('global-filter-status').addEventListener('change', updateGlobalFilters);
-            document.getElementById('global-filter-activityengineer').addEventListener('change', updateGlobalFilters);
-            document.getElementById('global-filter-submittedby').addEventListener('change', updateGlobalFilters);
-            
-            // Tab change listener
+            // Tab change listeners (for lazy rendering when switching via sidebar)
             document.getElementById('view-effort-detail-tab').addEventListener('shown.bs.tab', function() {
                 if (filteredData.length > 0) renderDetailedEffortAnalyses();
+            });
+            document.getElementById('view-daily-review-tab').addEventListener('shown.bs.tab', function() {
+                if (filteredData.length > 0) renderDailyEffortReview();
+            });
+            document.getElementById('view-monthly-review-tab').addEventListener('shown.bs.tab', function() {
+                if (filteredData.length > 0) renderMonthlyEffortReview();
+            });
+            document.getElementById('view-support-category-tab').addEventListener('shown.bs.tab', function() {
+                if (filteredData.length > 0) renderSupportCategoryEffort();
             });
         }
 
@@ -1112,8 +1810,9 @@
             showLoading(false);
             document.getElementById('upload-section').style.display = 'none';
             document.getElementById('dashboard-section').style.display = 'block';
-            document.getElementById('total-cases').textContent = `${processedData.length} Cases Loaded`;
-            document.getElementById('last-updated').textContent = `Updated: ${new Date().toLocaleString()}`;
+            document.getElementById('total-cases').textContent = `${processedData.length} Cases`;
+            document.getElementById('last-updated').textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+            document.getElementById('date-range-banner').style.display = 'flex';
 
             // Detect and show date range
             detectDateRange();
@@ -1250,28 +1949,19 @@
             const getUniqueValues = (key) => [...new Set(processedData.map(d => d[key]).filter(Boolean).sort())];
 
             const dropdowns = {
-                'global-filter-owner': getUniqueValues('owner'),
-                'global-filter-submittedby': getUniqueValues('submittedBy'),
-                'global-filter-service': getUniqueValues('service'),
-                'global-filter-status': getUniqueValues('currentStatus'),
-                'global-filter-activityengineer': getUniqueValues('activityEngineer')
+                'global-filter-owner': { values: getUniqueValues('owner'), label: 'All Owners' },
+                'global-filter-submittedby': { values: getUniqueValues('submittedBy'), label: 'All Submitted By' },
+                'global-filter-service': { values: getUniqueValues('service'), label: 'All Service Types' },
+                'global-filter-status': { values: getUniqueValues('currentStatus'), label: 'All Statuses' },
+                'global-filter-activityengineer': { values: getUniqueValues('activityEngineer'), label: 'All Engineers' }
             };
 
             for (const id in dropdowns) {
                 const select = document.getElementById(id);
                 if (select) {
-                    const label = id.split('-').pop();
-                    const labelText = label === 'owner' ? 'Owners' : 
-                                   label === 'service' ? 'Services' : 
-                                   label === 'status' ? 'Statuses' : 
-                                   label === 'submittedby' ? 'Submitted By' :
-                                   label === 'activityengineer' ? 'Engineers' : 'Options';
-                    
-                    select.innerHTML = `<option value="">All ${labelText}</option>`;
-                    dropdowns[id].forEach(value => {
-                        if (value) {
-                            select.innerHTML += `<option value="${value}">${value}</option>`;
-                        }
+                    select.innerHTML = `<option value="">${dropdowns[id].label}</option>`;
+                    dropdowns[id].values.forEach(value => {
+                        if (value) select.innerHTML += `<option value="${value}">${value}</option>`;
                     });
                 }
             }
@@ -1281,18 +1971,17 @@
             showLoading(true);
             
             globalFilters.timescale = document.getElementById('global-filter-timescale').value;
-            
-            const ownerSelect = document.getElementById('global-filter-owner');
-            const submittedbySelect = document.getElementById('global-filter-submittedby');
-            const serviceSelect = document.getElementById('global-filter-service');
-            const statusSelect = document.getElementById('global-filter-status');
-            const activityEngineerSelect = document.getElementById('global-filter-activityengineer');
-            
-            globalFilters.owner = Array.from(ownerSelect.selectedOptions).map(opt => opt.value).filter(v => v !== '');
-            globalFilters.submittedby = Array.from(submittedbySelect.selectedOptions).map(opt => opt.value).filter(v => v !== '');
-            globalFilters.service = Array.from(serviceSelect.selectedOptions).map(opt => opt.value).filter(v => v !== '');
-            globalFilters.status = Array.from(statusSelect.selectedOptions).map(opt => opt.value).filter(v => v !== '');
-            globalFilters.activityEngineer = Array.from(activityEngineerSelect.selectedOptions).map(opt => opt.value).filter(v => v !== '');
+            globalFilters.owner     = document.getElementById('global-filter-owner').value ? [document.getElementById('global-filter-owner').value] : [];
+            globalFilters.submittedby = document.getElementById('global-filter-submittedby').value ? [document.getElementById('global-filter-submittedby').value] : [];
+            globalFilters.service   = document.getElementById('global-filter-service').value ? [document.getElementById('global-filter-service').value] : [];
+            globalFilters.status    = document.getElementById('global-filter-status').value ? [document.getElementById('global-filter-status').value] : [];
+            globalFilters.activityEngineer = document.getElementById('global-filter-activityengineer').value ? [document.getElementById('global-filter-activityengineer').value] : [];
+
+            // Update FAB indicator
+            const fab = document.getElementById('filter-toggle-fab');
+            const hasFilters = globalFilters.timescale !== 'all' || globalFilters.owner.length || globalFilters.submittedby.length || globalFilters.service.length || globalFilters.status.length || globalFilters.activityEngineer.length;
+            if (hasFilters) fab.classList.add('has-filters');
+            else fab.classList.remove('has-filters');
 
             // Apply timescale filter first
             filteredData = applyTimescaleFilter(processedData, globalFilters.timescale);
@@ -1352,7 +2041,8 @@
             if (filterKey === 'timescale') {
                 document.getElementById('global-filter-timescale').value = 'all';
             } else {
-                document.getElementById(`global-filter-${filterKey}`).value = '';
+                const el = document.getElementById(`global-filter-${filterKey}`);
+                if (el) el.value = '';
             }
             updateGlobalFilters();
         }
@@ -1361,15 +2051,13 @@
             document.getElementById('global-filter-timescale').value = 'all';
             ['global-filter-owner', 'global-filter-submittedby', 'global-filter-service', 
              'global-filter-status', 'global-filter-activityengineer'].forEach(id => {
-                const select = document.getElementById(id);
-                for (let i = 0; i < select.options.length; i++) {
-                    select.options[i].selected = false;
-                }
+                document.getElementById(id).value = '';
             });
             
             globalFilters = { owner: [], submittedby: [], service: [], status: [], activityEngineer: [], timescale: 'all' };
             filteredData = [...processedData];
             
+            document.getElementById('filter-toggle-fab').classList.remove('has-filters');
             updateActiveFiltersDisplay();
             updateDashboard();
         }
@@ -1381,6 +2069,18 @@
             const effortDetailPane = document.getElementById('view-effort-detail');
             if (effortDetailPane && effortDetailPane.classList.contains('active')) {
                 renderDetailedEffortAnalyses();
+            }
+            const dailyReviewPane = document.getElementById('view-daily-review');
+            if (dailyReviewPane && dailyReviewPane.classList.contains('active')) {
+                renderDailyEffortReview();
+            }
+            const monthlyReviewPane = document.getElementById('view-monthly-review');
+            if (monthlyReviewPane && monthlyReviewPane.classList.contains('active')) {
+                renderMonthlyEffortReview();
+            }
+            const supportCategoryPane = document.getElementById('view-support-category');
+            if (supportCategoryPane && supportCategoryPane.classList.contains('active')) {
+                renderSupportCategoryEffort();
             }
         }
 
@@ -2055,10 +2755,554 @@
             });
         }
 
+        // =====================================================
+        // SIDEBAR & FILTER PANEL TOGGLE
+        // =====================================================
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        function toggleFilterPanel() {
+            const panel = document.getElementById('filter-side-panel');
+            const overlay = document.getElementById('filter-panel-overlay');
+            panel.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        function switchSection(targetId, title, icon) {
+            // Trigger the hidden Bootstrap tab
+            const tabBtn = document.getElementById(targetId + '-tab');
+            if (tabBtn) {
+                const tab = new bootstrap.Tab(tabBtn);
+                tab.show();
+            }
+            // Update section banner
+            const bannerTitle = document.getElementById('currentSectionTitle');
+            if (bannerTitle) bannerTitle.innerHTML = `<i class="bi ${icon} me-2"></i>${title}`;
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+            const map = {
+                'view-effort-stats': 'sb-effort-stats',
+                'view-effort-detail': 'sb-effort-detail',
+                'view-daily-review': 'sb-daily-review',
+                'view-monthly-review': 'sb-monthly-review',
+                'view-support-category': 'sb-support-category'
+            };
+            if (map[targetId]) {
+                const el = document.getElementById(map[targetId]);
+                if (el) el.classList.add('active');
+            }
+            // Close sidebar
+            toggleSidebar();
+        }
+
         function showLoading(show) {
             const spinner = document.getElementById('loadingSpinner');
             if (show) spinner.classList.add('active');
             else spinner.classList.remove('active');
+        }
+
+        // =====================================================
+        // DAILY EFFORT REVIEW (new standalone tab - mirrors Daily Effort Tracking)
+        // =====================================================
+        function renderDailyEffortReview() {
+            const TARGET_HOURS = 9;
+            const minToHHMM = (mins) => {
+                const totalMins = Math.round(Number(mins) || 0);
+                const h = Math.floor(totalMins / 60);
+                const m = totalMins % 60;
+                return `${h}:${m.toString().padStart(2,'0')}`;
+            };
+
+            const allDates = new Set();
+            const engineerDateMap = {};
+
+            filteredData.forEach(d => {
+                const eng = (d.activityEngineer || '').trim();
+                const dt = (d.effortDate || '').trim();
+                if (!eng || !dt) return;
+                if (!engineerDateMap[eng]) engineerDateMap[eng] = {};
+                if (!engineerDateMap[eng][dt]) engineerDateMap[eng][dt] = { minutes: 0, incidents: 0 };
+                engineerDateMap[eng][dt].minutes += d.effortMinutes || 0;
+                engineerDateMap[eng][dt].incidents += 1;
+                allDates.add(dt);
+            });
+
+            const dateArray = Array.from(allDates).sort();
+            const engineers = Object.keys(engineerDateMap).sort();
+
+            // Update summary cards
+            let totalMins = 0, totalActivities = 0;
+            filteredData.forEach(d => {
+                if ((d.activityEngineer || '').trim()) {
+                    totalMins += d.effortMinutes || 0;
+                    totalActivities++;
+                }
+            });
+            document.getElementById('drTotalMinutes').textContent = totalMins.toFixed(0);
+            document.getElementById('drTotalHHMM').textContent = minToHHMM(totalMins);
+            document.getElementById('drTotalEngineers').textContent = engineers.length;
+            document.getElementById('drTotalActivities').textContent = totalActivities;
+
+            const periodText = dateArray.length > 0 
+                ? `(${dateArray[0]} to ${dateArray[dateArray.length - 1]})` : '';
+            document.getElementById('dailyReviewPeriod').textContent = periodText;
+
+            const tbody = document.getElementById('dailyReviewBody');
+            if (engineers.length === 0 || dateArray.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="20" class="text-center text-muted py-3">No effort data found.</td></tr>';
+                return;
+            }
+
+            // Build dynamic table header
+            const thead = document.querySelector('#dailyReviewTable thead tr');
+            let headerHtml = '<th style="position: sticky; left: 0; background: white; z-index: 10;">Engineer</th>';
+            dateArray.forEach(date => {
+                headerHtml += `<th class="text-center" style="min-width: 120px;">${date}<br><small class="text-muted">Hrs | Incidents</small></th>`;
+            });
+            headerHtml += '<th class="text-center">Total Hrs</th>';
+            headerHtml += '<th class="text-center">Working Days</th>';
+            headerHtml += '<th class="text-center">Expected Hrs</th>';
+            headerHtml += '<th class="text-center">Avg Hrs/Day</th>';
+            headerHtml += '<th class="text-center">Achievement %</th>';
+            headerHtml += '<th class="text-center">Status</th>';
+            thead.innerHTML = headerHtml;
+
+            window._dailyReviewData = [];
+            let html = '';
+
+            engineers.forEach(eng => {
+                const dateData = engineerDateMap[eng];
+                let totalMinutes = 0, workingDays = 0;
+                let rowHtml = `<td class="fw-bold" style="position: sticky; left: 0; background: white; z-index: 5;"><span class="owner-tag">${eng}</span></td>`;
+
+                dateArray.forEach(date => {
+                    if (dateData[date]) {
+                        const hrs = (dateData[date].minutes / 60).toFixed(2);
+                        const incidents = dateData[date].incidents;
+                        totalMinutes += dateData[date].minutes;
+                        workingDays++;
+                        const dailyAchievement = (parseFloat(hrs) / TARGET_HOURS) * 100;
+                        let cellClass = dailyAchievement >= 100 ? 'table-success' : dailyAchievement >= 80 ? 'table-warning' : 'table-danger';
+                        rowHtml += `<td class="text-center ${cellClass}">${hrs}<br><small class="text-muted">${incidents}</small></td>`;
+                    } else {
+                        rowHtml += `<td class="text-center text-muted">-<br><small>0</small></td>`;
+                    }
+                });
+
+                const totalHours = (totalMinutes / 60).toFixed(2);
+                const expectedHours = workingDays * TARGET_HOURS;
+                const avgHoursPerDay = workingDays > 0 ? (totalMinutes / 60 / workingDays).toFixed(2) : '0.00';
+                const achievement = expectedHours > 0 ? ((parseFloat(totalHours) / expectedHours) * 100).toFixed(2) : '0.00';
+                const achievementNum = parseFloat(achievement);
+
+                let status, statusClass;
+                if (achievementNum >= 100) { status = '✅ Met'; statusClass = 'text-success'; }
+                else if (achievementNum >= 80) { status = '⚠️ Near'; statusClass = 'text-warning'; }
+                else { status = '❌ Below'; statusClass = 'text-danger'; }
+
+                rowHtml += `<td class="text-center fw-bold">${totalHours}</td>`;
+                rowHtml += `<td class="text-center fw-bold">${workingDays}</td>`;
+                rowHtml += `<td class="text-center">${expectedHours}</td>`;
+                rowHtml += `<td class="text-center fw-bold">${avgHoursPerDay}</td>`;
+                rowHtml += `<td class="text-center fw-bold ${statusClass}">${achievement}%</td>`;
+                rowHtml += `<td class="text-center fw-bold">${status}</td>`;
+
+                html += `<tr>${rowHtml}</tr>`;
+
+                const exportRow = { 'Engineer': eng, 'Total Hours': totalHours, 'Working Days': workingDays, 'Expected Hours': expectedHours, 'Avg Hours/Day': avgHoursPerDay, 'Achievement %': achievement, 'Status': status.replace(/[✅⚠️❌]/g, '').trim() };
+                dateArray.forEach(date => {
+                    if (dateData[date]) {
+                        exportRow[date] = `${(dateData[date].minutes / 60).toFixed(2)} hrs (${dateData[date].incidents} incidents)`;
+                    } else { exportRow[date] = '-'; }
+                });
+                window._dailyReviewData.push(exportRow);
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        function exportDailyReviewToExcel() {
+            const data = window._dailyReviewData || [];
+            if (!data.length) { alert('No data to export.'); return; }
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Daily Effort Review');
+            XLSX.writeFile(wb, 'Daily_Effort_Review.xlsx');
+        }
+
+        // =====================================================
+        // MONTHLY EFFORT REVIEW (new standalone tab - mirrors Monthly Effort Tracking)
+        // =====================================================
+        function renderMonthlyEffortReview() {
+            const HOURS_PER_DAY = 9;
+
+            const minToHHMM = (mins) => {
+                const totalMins = Math.round(Number(mins) || 0);
+                const h = Math.floor(totalMins / 60);
+                const m = totalMins % 60;
+                return `${h}:${m.toString().padStart(2,'0')}`;
+            };
+
+            const isWeekend = (dateStr) => {
+                const d = new Date(dateStr);
+                if (isNaN(d.getTime())) return false;
+                const day = d.getDay();
+                return day === 0 || day === 6; // 0=Sun, 6=Sat
+            };
+
+            const getDayName = (dateStr) => {
+                const d = new Date(dateStr);
+                return isNaN(d.getTime()) ? '' : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+            };
+
+            // ─────────────────────────────────────────────────────────
+            // STEP 1: Determine data period from Column R (effortDate)
+            // ─────────────────────────────────────────────────────────
+            const allDatesRaw = filteredData
+                .map(d => (d.effortDate || '').trim())
+                .filter(d => d !== '');
+
+            const allDateObjects = allDatesRaw
+                .map(d => new Date(d))
+                .filter(d => !isNaN(d.getTime()));
+
+            if (allDateObjects.length === 0) {
+                document.getElementById('monthlyReviewBody').innerHTML =
+                    '<tr><td colspan="10" class="text-center text-muted py-3">No valid effort dates found.</td></tr>';
+                return;
+            }
+
+            const periodStart = new Date(Math.min(...allDateObjects));
+            const periodEnd   = new Date(Math.max(...allDateObjects));
+
+            // ─────────────────────────────────────────────────────────
+            // STEP 2: Count Mon–Fri working days in the period
+            // ─────────────────────────────────────────────────────────
+            function countWorkingDays(startDate, endDate) {
+                let count = 0;
+                const cur = new Date(startDate);
+                cur.setHours(0, 0, 0, 0);
+                const end = new Date(endDate);
+                end.setHours(0, 0, 0, 0);
+                while (cur <= end) {
+                    const day = cur.getDay();
+                    if (day !== 0 && day !== 6) count++;
+                    cur.setDate(cur.getDate() + 1);
+                }
+                return count;
+            }
+
+            const periodWorkingDays = countWorkingDays(periodStart, periodEnd);
+
+            const fmtDate = (d) => d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+            const periodText = `(${fmtDate(periodStart)} → ${fmtDate(periodEnd)} | ${periodWorkingDays} weekdays)`;
+            document.getElementById('monthlyReviewPeriod').textContent = periodText;
+
+            // ─────────────────────────────────────────────────────────
+            // STEP 3: Aggregate per engineer — track ALL dates
+            //         and separately flag weekday vs weekend dates
+            // ─────────────────────────────────────────────────────────
+            const engineerMap = {};
+
+            filteredData.forEach(d => {
+                const eng = (d.activityEngineer || '').trim();
+                if (!eng) return;
+                if (!engineerMap[eng]) engineerMap[eng] = {
+                    totalMinutes: 0,
+                    weekdayDates: new Set(),   // Mon–Fri dates
+                    weekendDates: new Set()    // Sat–Sun dates
+                };
+                engineerMap[eng].totalMinutes += d.effortMinutes || 0;
+                const dt = (d.effortDate || '').trim();
+                if (dt) {
+                    if (isWeekend(dt)) {
+                        engineerMap[eng].weekendDates.add(dt);
+                    } else {
+                        engineerMap[eng].weekdayDates.add(dt);
+                    }
+                }
+            });
+
+            const engineers = Object.keys(engineerMap).sort();
+
+            // ─────────────────────────────────────────────────────────
+            // STEP 4: Update summary cards
+            // ─────────────────────────────────────────────────────────
+            let totalMins = 0, totalActivities = 0;
+            filteredData.forEach(d => {
+                if ((d.activityEngineer || '').trim()) {
+                    totalMins += d.effortMinutes || 0;
+                    totalActivities++;
+                }
+            });
+            document.getElementById('mrTotalMinutes').textContent = totalMins.toFixed(0);
+            document.getElementById('mrTotalHHMM').textContent = minToHHMM(totalMins);
+            document.getElementById('mrTotalEngineers').textContent = engineers.length;
+            document.getElementById('mrTotalActivities').textContent = totalActivities;
+
+            const tbody = document.getElementById('monthlyReviewBody');
+
+            if (engineers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-3">No effort data found.</td></tr>';
+                return;
+            }
+
+            // ─────────────────────────────────────────────────────────
+            // STEP 5: Build table rows
+            // ─────────────────────────────────────────────────────────
+            window._monthlyReviewData = [];
+            let html = '';
+
+            engineers.forEach(eng => {
+                const stats = engineerMap[eng];
+
+                const weekdayWorked  = stats.weekdayDates.size;
+                const weekendWorked  = stats.weekendDates.size;
+                const totalWorked    = weekdayWorked + weekendWorked;
+                const leaveDays      = Math.max(0, periodWorkingDays - weekdayWorked);
+                const totalHours     = (stats.totalMinutes / 60).toFixed(2);
+                // Expected hours based on weekday-only days (standard working days)
+                const expectedHours  = (weekdayWorked * HOURS_PER_DAY).toFixed(2);
+                const productivity   = parseFloat(expectedHours) > 0
+                    ? ((parseFloat(totalHours) / parseFloat(expectedHours)) * 100).toFixed(2)
+                    : '0.00';
+                const avgHrsPerDay   = totalWorked > 0
+                    ? (parseFloat(totalHours) / totalWorked).toFixed(2)
+                    : '0.00';
+
+                const prodNum = parseFloat(productivity);
+                const rowClass  = prodNum >= 100 ? 'table-success' : prodNum >= 80 ? 'table-warning' : 'table-danger';
+                const prodClass = prodNum >= 100 ? 'text-success'  : prodNum >= 80 ? 'text-warning'  : 'text-danger';
+
+                // Build weekend tooltip — show which Sat/Sun dates
+                const weekendList = Array.from(stats.weekendDates)
+                    .sort()
+                    .map(dt => `${dt} (${getDayName(dt)})`)
+                    .join(', ');
+
+                const weekendCell = weekendWorked > 0
+                    ? `<span style="background:#FFF3CD;color:#856404;border:1px solid #FFDA6A;padding:2px 8px;border-radius:12px;font-size:0.65rem;font-weight:700;cursor:default;white-space:nowrap;"
+                          title="Weekend dates: ${weekendList}">
+                          🟡 ${weekendWorked} day${weekendWorked > 1 ? 's' : ''} (Sat/Sun)
+                       </span>`
+                    : `<span style="color:#aaa;font-size:0.75rem;">—</span>`;
+
+                // Engineer name — add weekend indicator badge if applicable
+                const engNameCell = weekendWorked > 0
+                    ? `<span class="owner-tag">${eng}</span>
+                       <span style="background:#FF8C00;color:white;padding:1px 6px;border-radius:8px;font-size:0.6rem;font-weight:700;margin-left:4px;vertical-align:middle;" title="Worked on weekends">⚡ WE</span>`
+                    : `<span class="owner-tag">${eng}</span>`;
+
+                html += `<tr class="${rowClass}">
+                    <td class="fw-bold">${engNameCell}</td>
+                    <td class="text-center fw-bold">${totalHours}</td>
+                    <td class="text-center">${stats.totalMinutes.toFixed(0)}</td>
+                    <td class="text-center">${periodWorkingDays}</td>
+                    <td class="text-center fw-bold">${weekdayWorked}</td>
+                    <td class="text-center">${weekendCell}</td>
+                    <td class="text-center ${leaveDays > 0 ? 'text-danger fw-bold' : 'text-success fw-bold'}">${leaveDays}</td>
+                    <td class="text-center">${expectedHours}</td>
+                    <td class="text-center fw-bold ${prodClass}">${productivity}%</td>
+                    <td class="text-center fw-bold" style="color:var(--primary-color);">${avgHrsPerDay}</td>
+                </tr>`;
+
+                window._monthlyReviewData.push({
+                    'Engineer'                      : eng,
+                    'Total Hrs'                     : totalHours,
+                    'Total Mins'                    : stats.totalMinutes.toFixed(0),
+                    'Period Working Days (Mon-Fri)'  : periodWorkingDays,
+                    'Weekday Worked Days'            : weekdayWorked,
+                    'Weekend Worked Days (Sat/Sun)'  : weekendWorked,
+                    'Weekend Dates'                  : weekendList || '—',
+                    'Leave / Absent Days'            : leaveDays,
+                    'Expected Hrs (Weekdays × 9)'   : expectedHours,
+                    'Productivity %'                 : productivity + '%',
+                    'Avg Hrs/Day (All Days)'         : avgHrsPerDay
+                });
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        function exportMonthlyReviewToExcel() {
+            const data = window._monthlyReviewData || [];
+            if (!data.length) { alert('No data to export.'); return; }
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Monthly Effort Review');
+            XLSX.writeFile(wb, 'Monthly_Effort_Review.xlsx');
+        }
+
+        // =====================================================
+        // SUPPORT CATEGORY EFFORT (new standalone tab)
+        // =====================================================
+        function renderSupportCategoryEffort() {
+            const minToHHMM = (mins) => {
+                const totalMins = Math.round(Number(mins) || 0);
+                const h = Math.floor(totalMins / 60);
+                const m = totalMins % 60;
+                return `${h}:${m.toString().padStart(2,'0')}`;
+            };
+
+            // Group by Service > Support Category > Feature > Sub Feature
+            const groupMap = {};
+            let grandTotalMins = 0;
+            let grandTotalTickets = 0;
+
+            filteredData.forEach(d => {
+                const service = (d.service || '(No Service)').trim();
+                const supportCat = (d.supportCategory || '(No Category)').trim();
+                const feature = (d.feature || '(No Feature)').trim();
+                const subFeature = (d.subFeature || '(No Sub Feature)').trim();
+                const key = `${service}|||${supportCat}|||${feature}|||${subFeature}`;
+
+                if (!groupMap[key]) {
+                    groupMap[key] = { service, supportCat, feature, subFeature, tickets: 0, totalMinutes: 0 };
+                }
+                groupMap[key].tickets++;
+                groupMap[key].totalMinutes += d.effortMinutes || 0;
+                grandTotalMins += d.effortMinutes || 0;
+                grandTotalTickets++;
+            });
+
+            // Sort by total minutes desc
+            const groups = Object.values(groupMap).sort((a, b) => b.totalMinutes - a.totalMinutes);
+
+            const uniqueCategories = new Set(groups.map(g => g.supportCat)).size;
+
+            // Update summary cards
+            document.getElementById('scTotalTickets').textContent = grandTotalTickets;
+            document.getElementById('scTotalMinutes').textContent = grandTotalMins.toFixed(0);
+            document.getElementById('scTotalHHMM').textContent = minToHHMM(grandTotalMins);
+            document.getElementById('scUniqueCategories').textContent = uniqueCategories;
+
+            const tbody = document.getElementById('supportCategoryBody');
+            if (groups.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-3">No support category data found.</td></tr>';
+                // Clear charts
+                ['supportCategoryBarChart', 'supportCategoryPieChart'].forEach(id => {
+                    if (effortCharts[id]) { effortCharts[id].destroy(); delete effortCharts[id]; }
+                });
+                return;
+            }
+
+            // Build table rows
+            window._supportCategoryData = [];
+            let html = '';
+            const palette = ['#4A90E2','#50C878','#FFB347','#FFA07A','#FF6B6B','#5B9AE0','#5CB85C','#FF8C42','#9B59B6','#1ABC9C','#E74C3C','#F39C12'];
+
+            groups.forEach((g, i) => {
+                const avgMins = g.tickets > 0 ? (g.totalMinutes / g.tickets).toFixed(1) : '0.0';
+                const pct = grandTotalMins > 0 ? ((g.totalMinutes / grandTotalMins) * 100).toFixed(1) : '0.0';
+                const color = palette[i % palette.length];
+
+                html += `<tr>
+                    <td><span style="background:${color}22;color:${color};border:1px solid ${color};padding:3px 10px;border-radius:20px;font-weight:600;font-size:0.75rem;">${g.service}</span></td>
+                    <td class="fw-bold">${g.supportCat}</td>
+                    <td>${g.feature}</td>
+                    <td class="text-muted">${g.subFeature}</td>
+                    <td class="text-center fw-bold">${g.tickets}</td>
+                    <td class="text-center fw-bold">${g.totalMinutes.toFixed(0)}</td>
+                    <td class="text-center fw-bold" style="color: var(--primary-color);">${minToHHMM(g.totalMinutes)}</td>
+                    <td class="text-center">${avgMins}</td>
+                    <td class="text-center">
+                        <div class="d-flex align-items-center gap-1">
+                            <div class="score-bar flex-grow-1">
+                                <div class="score-bar-fill" style="width:${Math.min(parseFloat(pct),100)}%;background:${color};"></div>
+                            </div>
+                            <span class="small fw-bold" style="color:${color};">${pct}%</span>
+                        </div>
+                    </td>
+                </tr>`;
+
+                window._supportCategoryData.push({
+                    'Service': g.service, 'Support Category': g.supportCat,
+                    'Feature': g.feature, 'Sub Feature': g.subFeature,
+                    'Total Tickets': g.tickets, 'Total Effort (Mins)': g.totalMinutes.toFixed(0),
+                    'Total Effort (HH:MM)': minToHHMM(g.totalMinutes),
+                    'Avg Mins / Ticket': avgMins, '% of Total Effort': pct + '%'
+                });
+            });
+
+            tbody.innerHTML = html;
+
+            // Build charts using Support Category as the grouping dimension
+            const catMap = {};
+            groups.forEach(g => {
+                if (!catMap[g.supportCat]) catMap[g.supportCat] = 0;
+                catMap[g.supportCat] += g.totalMinutes;
+            });
+            const catLabels = Object.keys(catMap).sort((a,b) => catMap[b] - catMap[a]);
+            const catValues = catLabels.map(c => catMap[c].toFixed(1));
+            const catColors = catLabels.map((_, i) => palette[i % palette.length]);
+
+            // Bar Chart
+            if (effortCharts['supportCategoryBarChart']) effortCharts['supportCategoryBarChart'].destroy();
+            effortCharts['supportCategoryBarChart'] = new Chart(document.getElementById('supportCategoryBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: catLabels,
+                    datasets: [{
+                        label: 'Total Effort (Minutes)',
+                        data: catValues,
+                        backgroundColor: catColors.map(c => c + 'CC'),
+                        borderColor: catColors,
+                        borderWidth: 2,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#E6F3FF' }, title: { display: true, text: 'Minutes' } },
+                        x: { ticks: { maxRotation: 45 } }
+                    }
+                }
+            });
+
+            // Pie Chart
+            if (effortCharts['supportCategoryPieChart']) effortCharts['supportCategoryPieChart'].destroy();
+            const totalCatMins = catValues.reduce((s, v) => s + parseFloat(v), 0);
+            effortCharts['supportCategoryPieChart'] = new Chart(document.getElementById('supportCategoryPieChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: catLabels,
+                    datasets: [{
+                        data: catValues,
+                        backgroundColor: catColors.map(c => c + 'DD'),
+                        borderColor: '#fff',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { font: { size: 11, weight: '600' } } },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => {
+                                    const pct = totalCatMins > 0 ? ((ctx.parsed / totalCatMins) * 100).toFixed(1) : 0;
+                                    return ` ${ctx.label}: ${ctx.parsed} min (${pct}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function exportSupportCategoryToExcel() {
+            const data = window._supportCategoryData || [];
+            if (!data.length) { alert('No data to export.'); return; }
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Support Category Effort');
+            XLSX.writeFile(wb, 'Support_Category_Effort.xlsx');
         }
 
         function processData() {
@@ -2072,7 +3316,8 @@
                 originalFilteredData = [...processedData];
                 document.getElementById('upload-section').style.display = 'none';
                 document.getElementById('dashboard-section').style.display = 'block';
-                document.getElementById('total-cases').textContent = `${processedData.length} Cases Loaded`;
+                document.getElementById('total-cases').textContent = `${processedData.length} Cases`;
+                document.getElementById('date-range-banner').style.display = 'flex';
                 detectDateRange();
                 updateDashboard();
                 showLoading(false);
