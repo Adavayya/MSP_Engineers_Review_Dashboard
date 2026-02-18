@@ -945,6 +945,12 @@
                         <i class="bi bi-graph-up-arrow me-2"></i>Open Cases Analyses
                     </button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="view-highpriority-tab" data-bs-toggle="tab" data-bs-target="#view-highpriority" type="button" role="tab">
+                        <i class="bi bi-exclamation-triangle-fill me-2" style="color:#FF3B5C;"></i>High Priority Cases
+                        <span class="badge bg-danger ms-1" id="hp-badge-count" style="font-size:0.65rem;">0</span>
+                    </button>
+                </li>
             </ul>
 
             <div class="tab-content view-content" id="mainViewTabsContent">
@@ -1557,6 +1563,108 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- High Priority Cases Section -->
+                <div class="tab-pane fade" id="view-highpriority" role="tabpanel">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                            <div>
+                                <h4 style="color: var(--primary-color); font-weight:700; margin-bottom:4px;">
+                                    <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>High Priority Cases
+                                </h4>
+                                <p class="text-muted small mb-0">
+                                    Semantic title intelligence — understands <i>what the ticket describes</i> (broken automations, missing records, pipeline failures, core feature unavailability) not just surface words — combined with operational risk signals. Auto-runs on upload. Only <b>Critical</b> and <b>High</b> shown. 
+                                </p>
+                            </div>
+                            <div class="d-flex gap-2 align-items-center">
+                                <button class="btn btn-sm btn-success" onclick="exportHighPriorityToExcel()">
+                                    <i class="bi bi-download me-1"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="row g-2 mb-3" id="hp-summary-cards">
+                        <div class="col-6 col-md-3">
+                            <div class="kpi-card" style="border-left-color: #FF3B5C;">
+                                <div class="kpi-title">🚨 Critical Priority</div>
+                                <div class="kpi-value text-danger" id="hp-critical-count">—</div>
+                                <div class="kpi-recommendation">Core feature broken · Showstopper · System down · Data at risk</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="kpi-card" style="border-left-color: #FF9F00;">
+                                <div class="kpi-title">⚠️ High Priority</div>
+                                <div class="kpi-value" style="color:#FF9F00;" id="hp-high-count">—</div>
+                                <div class="kpi-recommendation">Significant impact · Degraded functionality · Action needed today</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="kpi-card" style="border-left-color: var(--accent-color);">
+                                <div class="kpi-title">📋 Total Analysed</div>
+                                <div class="kpi-value" style="color:var(--accent-color);" id="hp-total-count">—</div>
+                                <div class="kpi-recommendation">Tickets scored in current filter</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="kpi-card" style="border-left-color: var(--primary-color);">
+                                <div class="kpi-title">🎯 Focus Score</div>
+                                <div style="font-size:0.85rem; font-weight:700; margin:8px 0; color:var(--primary-color);" id="hp-focus-pct">—</div>
+                                <div class="kpi-recommendation" id="hp-focus-sub">% of tickets needing immediate attention</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- How it works legend 
+                    <div class="alert mb-3" style="background:#F8FAFF; border:1px solid #e0e6ed; border-radius:10px; font-size:0.82rem; padding:14px 16px;">
+                        <strong><i class="bi bi-cpu me-1" style="color:var(--primary-color);"></i>How This Works — Two-Layer Semantic Intelligence:</strong>
+                        <div class="row mt-2 g-2">
+                            <div class="col-md-6">
+                                <div style="background:rgba(95,37,159,0.05); border-radius:8px; padding:10px; border-left:3px solid var(--primary-color);">
+                                    <b>Layer 1 — Semantic Title Analysis (0–60 pts)</b><br>
+                                    <span style="color:#6B7280;">Understands <i>what the ticket describes</i>, not just what words appear. Detects: automation failures, missing generated artifacts, broken pipelines, core feature unavailability, data integrity issues, system-wide outages. Example: <i>"Auto-Generated Tickets Without Incident ID"</i> → automation pipeline broken, IDs not generating → Critical (55 pts). <i>"Request for Verification"</i> framing is ignored — the <i>described problem</i> is assessed.</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div style="background:rgba(255,59,92,0.04); border-radius:8px; padding:10px; border-left:3px solid #FF3B5C;">
+                                    <b>Layer 2 — Operational Risk Signals (0–40 pts)</b><br>
+                                    <span style="color:#6B7280;">SLA Violated (+15) · Aging >25 Days (+10) · Email Response Missed (+8) · EDOC Breached (+8) · Subsequent SLA Breach (+5) · Follow-up Missed (+5) · Idle >3 Days (+5) · Aging >15 Days (+4)</span><br><br>
+                                    <b style="color:#FF3B5C;">🚨 Critical ≥ 65 pts &nbsp;&nbsp;|&nbsp;&nbsp; ⚠️ High ≥ 35 pts</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- Filter bar for HP -->
+                    <div class="d-flex gap-2 mb-3 flex-wrap align-items-center">
+                        <label class="small fw-bold mb-0">Show:</label>
+                        <select class="form-select form-select-sm" id="hp-filter-priority" style="width:auto;" onchange="renderHighPriorityCases()">
+                            <option value="all">Critical + High</option>
+                            <option value="critical">Critical Only</option>
+                            <option value="high">High Only</option>
+                        </select>
+                        <label class="small fw-bold mb-0 ms-2">Owner:</label>
+                        <select class="form-select form-select-sm" id="hp-filter-owner" style="width:auto;" onchange="renderHighPriorityCases()">
+                            <option value="">All Owners</option>
+                        </select>
+                        <label class="small fw-bold mb-0 ms-2">Top:</label>
+                        <select class="form-select form-select-sm" id="hp-filter-topn" style="width:auto;" onchange="renderHighPriorityCases()">
+                            <option value="20">Top 20</option>
+                            <option value="50">Top 50</option>
+                            <option value="100">Top 100</option>
+                            <option value="0">All</option>
+                        </select>
+                    </div>
+
+                    <div id="hp-cases-container">
+                        <div class="text-center py-5" style="color:#9CA3AF;">
+                            <i class="bi bi-cloud-upload" style="font-size:2rem; opacity:0.4;"></i>
+                            <div class="mt-2 small">Upload and process data to see High Priority Cases</div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -1853,6 +1961,19 @@
                     // Render charts when tab is shown
                     if (filteredData.length > 0) {
                         renderOpenCasesAnalyses();
+                    }
+                });
+            }
+
+            // Add event listener for High Priority Cases tab
+            const hpTab = document.getElementById('view-highpriority-tab');
+            if (hpTab) {
+                hpTab.addEventListener('shown.bs.tab', function () {
+                    if (filteredData.length > 0) {
+                        // Reset owner dropdown so renderHighPriorityCases repopulates it
+                        const ownerSel = document.getElementById('hp-filter-owner');
+                        if (ownerSel) ownerSel.innerHTML = '<option value="">All Owners</option>';
+                        renderHighPriorityCases();
                     }
                 });
             }
@@ -2169,6 +2290,23 @@
             if (openCasesTab && openCasesTab.classList.contains('active')) {
                 renderOpenCasesAnalyses();
             }
+
+            // Update High Priority Cases if that tab is currently visible
+            const hpTab2 = document.getElementById('view-highpriority');
+            if (hpTab2 && hpTab2.classList.contains('active')) {
+                // Reset owner dropdown
+                const ownerSel = document.getElementById('hp-filter-owner');
+                if (ownerSel) {
+                    ownerSel.innerHTML = '<option value="">All Owners</option>';
+                    const owners = [...new Set(filteredData.map(d => d.owner).filter(Boolean))].sort();
+                    owners.forEach(o => {
+                        const opt = document.createElement('option');
+                        opt.value = o; opt.textContent = o;
+                        ownerSel.appendChild(opt);
+                    });
+                }
+                renderHighPriorityCases();
+            }
             
             showLoading(false);
         }
@@ -2230,6 +2368,22 @@
             if (openCasesTab && openCasesTab.classList.contains('active')) {
                 renderOpenCasesAnalyses();
             }
+
+            // Update High Priority Cases if that tab is currently visible
+            const hpTabClear = document.getElementById('view-highpriority');
+            if (hpTabClear && hpTabClear.classList.contains('active')) {
+                const ownerSel = document.getElementById('hp-filter-owner');
+                if (ownerSel) {
+                    ownerSel.innerHTML = '<option value="">All Owners</option>';
+                    const owners = [...new Set(filteredData.map(d => d.owner).filter(Boolean))].sort();
+                    owners.forEach(o => {
+                        const opt = document.createElement('option');
+                        opt.value = o; opt.textContent = o;
+                        ownerSel.appendChild(opt);
+                    });
+                }
+                renderHighPriorityCases();
+            }
         }
 
         function updateOwnerFilter(owner) {
@@ -2271,6 +2425,16 @@
         function updateDashboard() {
             renderKPIDashboard();
             renderDetailedDashboard();
+            // HP analysis runs automatically — no API needed, instant client-side scoring
+            buildHighPriorityData();
+            const hpTab = document.getElementById('view-highpriority');
+            if (hpTab && hpTab.classList.contains('active')) {
+                renderHighPriorityCases();
+            } else {
+                const critCount = (highPriorityData || []).filter(d => d._priority.tier === 'critical').length;
+                const el = document.getElementById('hp-badge-count');
+                if (el) el.textContent = critCount;
+            }
         }
 
         function renderKPIDashboard() {
@@ -3931,6 +4095,490 @@
                 }
             });
         }
+
+        // ==========================================
+        // HIGH PRIORITY CASES — SEMANTIC TITLE INTELLIGENCE ENGINE
+        // ==========================================
+        // No API calls. Runs entirely client-side automatically after upload.
+        // Understands WHAT a ticket describes — not what words appear.
+        // Key insight: "Auto-Generated Tickets Without Incident ID – Request for
+        // Verification" is CRITICAL because the described problem is an automation
+        // pipeline failure producing missing records. The phrasing ("request",
+        // "verification") is irrelevant — the described situation is the signal.
+        // ==========================================
+
+        let highPriorityData = [];
+
+        // ── SEMANTIC PATTERN LIBRARY ────────────────────────────────────
+        // Each pattern is a described SITUATION, not a keyword hit.
+        // A pattern matches when the title describes that situation.
+        // Multiple patterns compose — a title can match several.
+        //
+        // Structure: { score, tier, label, reasoning, test(titleLower) }
+        //   test() returns true if the title describes this situation.
+        //   Uses multi-token presence, negation-aware logic, and
+        //   structural combinations — not single-word matching.
+        // ───────────────────────────────────────────────────────────────
+
+        const HP_SEMANTIC_PATTERNS = [
+
+            // ── CATEGORY A: Automation & Generation Failures (55–60 pts) ──
+            // The system was supposed to generate/create something automatically and didn't.
+            {
+                score: 58, tier: 'critical', label: 'Automation Failure — Missing Generated Artifact',
+                reasoning: 'Automated process is failing to generate expected records/IDs',
+                test: t => {
+                    const hasAuto = /auto[- ]?gen|automat|auto[- ]?creat|auto[- ]?ticket|auto[- ]?incident|auto[- ]?record|scheduled|trigger/.test(t);
+                    const hasMissing = /without|missing|no |not generat|not creat|not found|absent|blank|empty|null|undefined|fail/.test(t);
+                    return hasAuto && hasMissing;
+                }
+            },
+            {
+                score: 56, tier: 'critical', label: 'Missing System-Generated ID / Record',
+                reasoning: 'System identifiers or records that should be auto-created are absent',
+                test: t => {
+                    const hasID = /incident id|ticket id|case id|record id|reference id|ref id|without id|no id|missing id|id missing|id not|id absent/.test(t);
+                    const hasProblem = /missing|without|not|no |absent|blank|fail|generat|creat/.test(t);
+                    return hasID && hasProblem;
+                }
+            },
+            {
+                score: 55, tier: 'critical', label: 'Pipeline / Workflow Automation Not Triggering',
+                reasoning: 'Automated pipeline or trigger-based workflow has stopped functioning',
+                test: t => {
+                    const hasPipeline = /pipeline|workflow|trigger|orchestrat|process|job|queue|sync|integrat/.test(t);
+                    const hasFail = /not trigger|not run|not execut|not start|not process|fail|stop|stuck|broken|down|not work|issue|problem/.test(t);
+                    return hasPipeline && hasFail;
+                }
+            },
+
+            // ── CATEGORY B: Core Feature / Product Completely Non-Functional (52–58 pts) ──
+            {
+                score: 58, tier: 'critical', label: 'Core Feature Completely Down',
+                reasoning: 'A primary product feature is completely unavailable or broken',
+                test: t => /not work|not function|complet(ely)? (down|broken|fail)|total(ly)? fail|completely (unavail|broken|not)|unable to (access|use|open|load|login|log in)|cannot (access|use|open|load|login|log in)/.test(t)
+            },
+            {
+                score: 57, tier: 'critical', label: 'System / Service Outage',
+                reasoning: 'System or service is fully down or experiencing an outage',
+                test: t => /outage|service (down|unavail|off)|system (down|fail|crash|unavail)|site down|portal down|down for all|complete(ly)? down/.test(t)
+            },
+            {
+                score: 55, tier: 'critical', label: 'Production Environment Non-Functional',
+                reasoning: 'Production environment is affected — direct customer impact',
+                test: t => /\bprod(uction)?\b.*(down|fail|error|break|issue|problem|not work|unavail|crash)|(down|fail|error|break|issue|problem|not work|unavail|crash).*\bprod(uction)?\b/.test(t)
+            },
+            {
+                score: 54, tier: 'critical', label: 'Application Crash / Unresponsive',
+                reasoning: 'Application is crashing or completely unresponsive',
+                test: t => /crash|hung|hang(ing)?|unresponsive|freeze|froze|not respond|stops respond|application (down|fail|crash|error)/.test(t)
+            },
+
+            // ── CATEGORY C: Data Integrity & Loss (52–57 pts) ──
+            {
+                score: 57, tier: 'critical', label: 'Data Loss / Corruption',
+                reasoning: 'Customer data may be lost, corrupted, or compromised',
+                test: t => /data loss|data corrupt|data (missing|lost|deleted|wrong|incorrect)|corrupt(ed)? data|record(s)? (lost|missing|deleted|corrupt)|loss of data/.test(t)
+            },
+            {
+                score: 55, tier: 'critical', label: 'Missing / Disappeared Records',
+                reasoning: 'Records or data that should exist are missing from the system',
+                test: t => {
+                    const hasRecords = /record|ticket|case|entry|entries|data|document|file|invoice|order|transaction|log/.test(t);
+                    const hasMissing = /missing|disappear|gone|not (found|showing|appear|visible|display)|vanish|deleted|lost|no longer/.test(t);
+                    return hasRecords && hasMissing;
+                }
+            },
+            {
+                score: 52, tier: 'critical', label: 'Incorrect / Duplicate Data Being Generated',
+                reasoning: 'System is generating wrong, duplicate, or corrupted data',
+                test: t => /(duplicate|duplicat|wrong|incorrect|invalid|corrupt) (data|record|entry|ticket|case|id|value|field)|(data|record|entry|ticket|case|id|value|field) (duplicat|wrong|incorrect|invalid|corrupt)/.test(t)
+            },
+
+            // ── CATEGORY D: Security & Access Compliance (50–57 pts) ──
+            {
+                score: 57, tier: 'critical', label: 'Security Breach / Vulnerability',
+                reasoning: 'Security incident, breach, or critical vulnerability reported',
+                test: t => /security (breach|incident|vulnerab|issue|alert|threat|risk|bug|hole|flaw)|breach|unauthori[sz]ed (access|login|entry)|data breach|hack|exploit|phish|malware|ransomware/.test(t)
+            },
+            {
+                score: 50, tier: 'critical', label: 'Complete Access Loss — Multiple Users / All Users',
+                reasoning: 'Multiple or all users are completely locked out of the system',
+                test: t => {
+                    const hasMany = /all user|multiple user|everyone|team|group|department|organisation|organization|entire|whole|all (staff|employee|member)/.test(t);
+                    const hasLock = /cannot (access|login|log in|connect)|unable to (access|login|log in|connect)|access (denied|blocked|lost|fail)|login (fail|issue|problem|error|not work)|locked out|no access/.test(t);
+                    return hasMany && hasLock;
+                }
+            },
+
+            // ── CATEGORY E: Integration & Sync Failures (48–54 pts) ──
+            {
+                score: 54, tier: 'critical', label: 'Critical Integration / API Completely Down',
+                reasoning: 'Key system integration or API is completely non-functional',
+                test: t => {
+                    const hasInteg = /integrat|api |sync|connect(ion|or|ivity)|webhook|feed|interface|middleware|third.party|external system/.test(t);
+                    const hasDown = /down|fail|broken|not work|not respond|not connect|error|unavail|stopped|complet/.test(t);
+                    return hasInteg && hasDown;
+                }
+            },
+            {
+                score: 50, tier: 'critical', label: 'Data Not Syncing Between Systems',
+                reasoning: 'Data synchronisation between systems has stopped completely',
+                test: t => {
+                    const hasSync = /sync|synchron|replicate|mirror|push|pull|transfer|export|import/.test(t);
+                    const hasFail = /not sync|fail(ing)? to sync|stopped sync|sync (fail|error|issue|broken|not work)|not (transfer|replicate|mirror|push|pull)/.test(t);
+                    return hasSync && hasFail;
+                }
+            },
+
+            // ── CATEGORY F: High Impact — Degraded / Partial Failure (38–49 pts) ──
+            {
+                score: 48, tier: 'high', label: 'Recurring / Repeated Failures',
+                reasoning: 'Issue is happening repeatedly — indicates systemic problem',
+                test: t => /recurring|repeat(ed|ing)|intermittent|sporadic|happen(ing)? again|keep(s)? (fail|happen|occur|break)|multiple time|again and again|frequent(ly)?/.test(t)
+            },
+            {
+                score: 46, tier: 'high', label: 'Performance Severely Degraded',
+                reasoning: 'System performance is severely impacting usability',
+                test: t => /(extreme|very|highly|severe|significant|major|critical) (slow|lag|delay|latency|timeout|hang)|(slow|lag|delay|latency|timeout|hang).*(issue|problem|error|degraded|extreme|severe|major)|(response time|load time|performance).*(slow|degraded|high|bad|poor|unacceptable)/.test(t)
+            },
+            {
+                score: 45, tier: 'high', label: 'Feature / Function Not Working for Specific Scenario',
+                reasoning: 'A specific but important feature path is broken',
+                test: t => {
+                    const hasBroken = /not work|not function|fail|broken|error|issue|problem|bug/.test(t);
+                    const hasFeature = /feature|function|button|option|menu|page|screen|form|report|dashboard|module|component|field|tab|section|step|process|action|workflow/.test(t);
+                    return hasBroken && hasFeature;
+                }
+            },
+            {
+                score: 44, tier: 'high', label: 'Email / Notification System Failure',
+                reasoning: 'Email or notification delivery is failing — communication breakdown',
+                test: t => {
+                    const hasComms = /email|notif|alert|message|sms|communicat|mail/.test(t);
+                    const hasFail = /not (send|deliver|receiv|trigger|work|arriv)|fail|missing|not sent|undelivered|bounce|not receiv/.test(t);
+                    return hasComms && hasFail;
+                }
+            },
+            {
+                score: 43, tier: 'high', label: 'Login / Authentication Failure',
+                reasoning: 'User(s) cannot authenticate — access to product blocked',
+                test: t => /(login|log in|sign in|signin|sso|authentication|auth|mfa|2fa|otp|password).*(fail|error|issue|problem|not work|incorrect|invalid|broken|stuck|loop|redirect)|cannot (login|log in|sign in|access|authenticate)|unable to (login|log in|sign in|access|authenticate)/.test(t)
+            },
+            {
+                score: 42, tier: 'high', label: 'Report / Data Export Not Generating',
+                reasoning: 'Reports or data exports are failing to generate — analytics blocked',
+                test: t => {
+                    const hasReport = /report|export|download|extract|csv|excel|pdf|statement|invoice/.test(t);
+                    const hasFail = /not (generat|creat|run|work|download|export|load|show)|fail|error|blank|empty|missing|broken/.test(t);
+                    return hasReport && hasFail;
+                }
+            },
+            {
+                score: 40, tier: 'high', label: 'Payment / Transaction Processing Issue',
+                reasoning: 'Payment or transaction functionality is affected',
+                test: t => {
+                    const hasPay = /payment|transaction|billing|invoice|charge|refund|settlement|payout|transfer|wallet|fund/.test(t);
+                    const hasFail = /fail|error|not (process|work|complet|go through)|stuck|pending|decline|reject|issue|problem/.test(t);
+                    return hasPay && hasFail;
+                }
+            },
+            {
+                score: 40, tier: 'high', label: 'Data Discrepancy / Mismatch',
+                reasoning: 'Data values do not match what is expected — reliability concern',
+                test: t => /mismatch|discrepanc|inconsisten|not match|differ|wrong (data|value|amount|count|number|record)|incorrect (data|value|amount|count|number|record)|data (wrong|incorrect|differ|not match)/.test(t)
+            },
+            {
+                score: 38, tier: 'high', label: 'Configuration Applied but Not Taking Effect',
+                reasoning: 'Changes made are not being applied — system not behaving as configured',
+                test: t => {
+                    const hasConfig = /config|setting|setup|rule|policy|permiss|role|mapping|parameter/.test(t);
+                    const hasNoEffect = /not (apply|work|effect|reflect|save|update|take effect|show)|not taking effect|not applied|not reflected|not saved/.test(t);
+                    return hasConfig && hasNoEffect;
+                }
+            },
+            {
+                score: 38, tier: 'high', label: 'Stuck / Pending / Blocked State',
+                reasoning: 'Cases or transactions are stuck in a state they should have exited',
+                test: t => /(stuck|stall|hang|block|frozen|pending|not (progress|move|proceed|advance|complet)).*(case|ticket|record|order|request|transaction|job|process|queue|workflow)|(case|ticket|record|order|request|transaction|job|process|queue|workflow).*(stuck|stall|hang|block|frozen|pending|not (progress|move|proceed|advance|complet))/.test(t)
+            },
+            {
+                score: 38, tier: 'high', label: 'Escalation / SLA Breach Pattern',
+                reasoning: 'Escalation or repeated SLA breach indicating systemic failure',
+                test: t => /escalat|sla (breach|violat|miss)|breach(ed|ing)|miss(ed|ing) sla|priority escalat|management escalat/.test(t)
+            },
+
+            // ── CATEGORY G: Verification of Confirmed Problem (38–45 pts) ──
+            // Titles phrased as "request for verification" of a named problem.
+            // The problem described is what matters — not the polite framing.
+            {
+                score: 45, tier: 'high', label: 'Verification of Reported System Problem',
+                reasoning: 'Customer has identified a specific system problem and needs confirmation — the described problem is the priority signal',
+                test: t => {
+                    // Has a request/verification framing...
+                    const hasVerifyFrame = /verif|confirm|check|investigat|look into|request for|need (to|your)/.test(t);
+                    // ...AND describes a concrete system problem
+                    const hasProblem = /without|missing|fail|not (work|generat|creat|function|appear|show)|error|issue|broken|incorrect|wrong|no /.test(t);
+                    // ...AND mentions a system/feature
+                    const hasSystem = /ticket|incident|case|record|id|system|feature|product|module|pipeline|automat|generat|sapphire|platform|portal|app|service/.test(t);
+                    return hasVerifyFrame && hasProblem && hasSystem;
+                }
+            }
+        ];
+
+        // ── SEMANTIC TITLE SCORER ──────────────────────────────────────
+        // Runs all patterns against the title, picks highest-scoring match,
+        // but also adds a small bonus for multiple pattern matches (compound issues).
+        function semanticScoreTitle(title) {
+            if (!title || title === 'No Title') {
+                return { aiScore: 0, tier: 'below', reasoning: 'No title available', matchedPatterns: [] };
+            }
+            const t = title.toLowerCase()
+                .replace(/['']/g, "'")
+                .replace(/[–—]/g, '-')
+                .replace(/[^\w\s\-'.]/g, ' ')
+                .replace(/\s+/g, ' ');
+
+            const matched = HP_SEMANTIC_PATTERNS.filter(p => p.test(t));
+
+            if (!matched.length) {
+                return { aiScore: 0, tier: 'below', reasoning: 'Routine/informational ticket — no severity patterns detected', matchedPatterns: [] };
+            }
+
+            // Primary score = highest matched pattern
+            const primary = matched.reduce((best, p) => p.score > best.score ? p : best, matched[0]);
+            // Compound bonus: each additional distinct pattern match adds up to 5 pts
+            const compoundBonus = Math.min((matched.length - 1) * 3, 5);
+            const aiScore = Math.min(primary.score + compoundBonus, 60);
+
+            // Tier derived from final aiScore
+            const tier = aiScore >= 50 ? 'critical' : 'high';
+
+            const extraLabels = matched
+                .filter(p => p !== primary)
+                .map(p => p.label)
+                .slice(0, 2)
+                .join('; ');
+
+            const reasoning = extraLabels
+                ? `${primary.reasoning}${extraLabels ? ` + ${extraLabels}` : ''}`
+                : primary.reasoning;
+
+            return { aiScore, tier, reasoning, matchedPatterns: matched.map(p => p.label) };
+        }
+
+        // ── LAYER 2: OPERATIONAL RISK SCORE (max 40 pts) ──────────────
+        function computeOperationalScore(d) {
+            let score = 0;
+            const signals = [];
+            if (d.isSlaViolated)                               { score += 15; signals.push({ label: 'SLA Violated',           pts: 15, col: 'danger'  }); }
+            if (d.isOldest25)                                  { score += 10; signals.push({ label: 'Aging >25 Days',         pts: 10, col: 'danger'  }); }
+            if (d.emailCompliance === 'Email Response Missed') { score += 8;  signals.push({ label: 'Email Response Missed',  pts: 8,  col: 'danger'  }); }
+            if (d.isEdocBreached)                              { score += 8;  signals.push({ label: 'EDOC Breached',          pts: 8,  col: 'danger'  }); }
+            if (d.isSubsequentSLABreach)                       { score += 5;  signals.push({ label: 'Subsequent SLA Breach',  pts: 5,  col: 'danger'  }); }
+            if (d.isFollowUpMissed)                            { score += 5;  signals.push({ label: 'Follow-up Missed',       pts: 5,  col: 'warning' }); }
+            if (d.isIdle3)                                     { score += 5;  signals.push({ label: 'Idle >3 Days',           pts: 5,  col: 'danger'  }); }
+            if (d.isAging15Violated)                           { score += 4;  signals.push({ label: 'Aging >15 Days',         pts: 4,  col: 'warning' }); }
+            if (d.isSubsequentResponseMissed)                  { score += 3;  signals.push({ label: 'Subsequent Resp Missed', pts: 3,  col: 'warning' }); }
+            return { score: Math.min(score, 40), signals };
+        }
+
+        // ── COMBINE BOTH LAYERS ────────────────────────────────────────
+        function computeFinalPriority(d) {
+            const semantic = semanticScoreTitle(d.title);
+            const ops      = computeOperationalScore(d);
+            const total    = Math.min(semantic.aiScore + ops.score, 100);
+
+            // Tier: semantic score is the primary driver.
+            // Operational signals can elevate borderline cases.
+            let tier;
+            if      (semantic.aiScore >= 50 || total >= 65) tier = 'critical';
+            else if (semantic.aiScore >= 30 || total >= 35) tier = 'high';
+            else                                             tier = 'below';
+
+            const tierColor  = tier === 'critical' ? '#FF3B5C' : '#FF9F00';
+            const tierBg     = tier === 'critical' ? 'rgba(255,59,92,0.05)' : 'rgba(255,159,0,0.05)';
+            const tierBorder = tier === 'critical' ? '#FF3B5C' : '#FF9F00';
+
+            const semanticSignal = semantic.aiScore > 0
+                ? [{ label: semantic.reasoning, pts: semantic.aiScore, col: semantic.aiScore >= 50 ? 'danger' : 'warning' }]
+                : [];
+
+            return { total, aiScore: semantic.aiScore, tier, tierColor, tierBg, tierBorder,
+                     reasoning: semantic.reasoning, ops, semanticSignal, matchedPatterns: semantic.matchedPatterns };
+        }
+
+        // ── BUILD SORTED LIST ──────────────────────────────────────────
+        function buildHighPriorityData() {
+            highPriorityData = filteredData
+                .map(d => ({ ...d, _priority: computeFinalPriority(d) }))
+                .filter(d => d._priority.tier === 'critical' || d._priority.tier === 'high')
+                .sort((a, b) => b._priority.total - a._priority.total);
+
+            const critCount = highPriorityData.filter(d => d._priority.tier === 'critical').length;
+            const el = document.getElementById('hp-badge-count');
+            if (el) el.textContent = critCount;
+        }
+
+        // ── RENDER TABLE ───────────────────────────────────────────────
+        function renderHighPriorityCases() {
+            buildHighPriorityData();
+
+            const priorityFilter = document.getElementById('hp-filter-priority')?.value || 'all';
+            const ownerFilter    = document.getElementById('hp-filter-owner')?.value    || '';
+            const topN           = parseInt(document.getElementById('hp-filter-topn')?.value || '20');
+
+            let data = [...highPriorityData];
+            if (priorityFilter === 'critical') data = data.filter(d => d._priority.tier === 'critical');
+            else if (priorityFilter === 'high') data = data.filter(d => d._priority.tier === 'high');
+            if (ownerFilter) data = data.filter(d => d.owner === ownerFilter);
+            if (topN > 0) data = data.slice(0, topN);
+
+            // Update summary cards
+            const critCount = highPriorityData.filter(d => d._priority.tier === 'critical').length;
+            const highCount = highPriorityData.filter(d => d._priority.tier === 'high').length;
+            const focusPct  = filteredData.length > 0
+                ? ((critCount + highCount) / filteredData.length * 100).toFixed(1)
+                : '0';
+
+            const elC = document.getElementById('hp-critical-count');
+            const elH = document.getElementById('hp-high-count');
+            const elT = document.getElementById('hp-total-count');
+            const elF = document.getElementById('hp-focus-pct');
+            const elFS = document.getElementById('hp-focus-sub');
+            if (elC) elC.textContent = critCount;
+            if (elH) elH.textContent = highCount;
+            if (elT) elT.textContent = filteredData.length;
+            if (elF) elF.textContent = focusPct + '%';
+            if (elFS) elFS.textContent = `${critCount + highCount} of ${filteredData.length} tickets need attention`;
+
+            // Populate owner dropdown
+            const ownerSel = document.getElementById('hp-filter-owner');
+            if (ownerSel && ownerSel.options.length <= 1) {
+                [...new Set(highPriorityData.map(d => d.owner).filter(Boolean))].sort().forEach(o => {
+                    const opt = document.createElement('option');
+                    opt.value = o; opt.textContent = o;
+                    ownerSel.appendChild(opt);
+                });
+            }
+
+            if (!data.length) {
+                document.getElementById('hp-cases-container').innerHTML =
+                    '<div class="alert alert-success"><i class="bi bi-check-circle me-2"></i>No Critical or High priority cases found in the current filter — great news!</div>';
+                return;
+            }
+
+            const rows = data.map((d, idx) => {
+                const p = d._priority;
+
+                // Split score bar: semantic (solid) + ops (translucent)
+                const semPct = (p.aiScore / 100) * 100;
+                const opsPct = (p.ops.score / 100) * 100;
+                const scoreBar = `
+                    <div style="min-width:150px;">
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <div style="flex:1; background:#f0f0f0; border-radius:4px; height:10px; overflow:hidden; position:relative;">
+                                <div style="position:absolute; left:0; width:${semPct}%; height:10px; background:${p.tierColor}; opacity:0.95;"></div>
+                                <div style="position:absolute; left:${semPct}%; width:${opsPct}%; height:10px; background:${p.tierColor}; opacity:0.35;"></div>
+                            </div>
+                            <b style="color:${p.tierColor}; font-size:0.88rem; min-width:26px;">${p.total}</b>
+                        </div>
+                        <div style="font-size:0.6rem; color:#9CA3AF; margin-top:2px;">
+                            Semantic: <b style="color:${p.tierColor};">${p.aiScore}</b> &nbsp;+&nbsp; Ops: <b>${p.ops.score}</b>
+                        </div>
+                    </div>`;
+
+                // All signals: semantic reasoning first, then operational
+                const allSignals = [...p.semanticSignal, ...p.ops.signals];
+                const signalBadges = allSignals.map(s =>
+                    `<span class="badge me-1 mb-1" style="font-size:0.61rem; padding:3px 8px; font-weight:600; white-space:normal; text-align:left; line-height:1.3;
+                        background:${s.col==='danger'?'rgba(255,59,92,0.1)':'rgba(255,159,0,0.1)'};
+                        color:${s.col==='danger'?'#FF3B5C':'#E08000'};
+                        border:1px solid ${s.col==='danger'?'rgba(255,59,92,0.18)':'rgba(255,159,0,0.25)'};">
+                        ${s.label} <span style="opacity:0.6; font-size:0.58rem;">(+${s.pts})</span>
+                    </span>`
+                ).join('');
+
+                const tierBadge = p.tier === 'critical'
+                    ? `<span style="display:inline-flex; align-items:center; background:rgba(255,59,92,0.1); color:#FF3B5C; border:1px solid rgba(255,59,92,0.22); border-radius:8px; padding:4px 10px; font-size:0.72rem; font-weight:700; white-space:nowrap;">🚨 CRITICAL</span>`
+                    : `<span style="display:inline-flex; align-items:center; background:rgba(255,159,0,0.1); color:#E08000; border:1px solid rgba(255,159,0,0.22); border-radius:8px; padding:4px 10px; font-size:0.72rem; font-weight:700; white-space:nowrap;">⚠️ HIGH</span>`;
+
+                return `
+                <tr style="background:${p.tierBg};">
+                    <td style="border-left:4px solid ${p.tierBorder}; font-weight:800; text-align:center; font-size:0.75rem; color:${p.tierColor}; padding:10px 6px; white-space:nowrap;">#${idx+1}</td>
+                    <td style="font-size:0.78rem; font-weight:700; white-space:nowrap; padding:10px 6px;">${d.incidentId}</td>
+                    <td style="padding:10px 8px; max-width:290px;">
+                        <div style="font-weight:600; font-size:0.81rem; line-height:1.35; margin-bottom:3px;">${d.title}</div>
+                        <div style="font-size:0.68rem; color:#9CA3AF;">${d.submittedBy || ''}</div>
+                    </td>
+                    <td style="padding:10px 6px;">${tierBadge}</td>
+                    <td style="padding:10px 8px;">${scoreBar}</td>
+                    <td style="padding:10px 8px; max-width:340px;">${signalBadges}</td>
+                    <td style="padding:10px 6px;"><span class="owner-tag" style="font-size:0.7rem;">${d.owner}</span></td>
+                    <td style="font-size:0.75rem; white-space:nowrap; padding:10px 6px;">${d.agingDays}d</td>
+                    <td style="font-size:0.72rem; padding:10px 6px; color:#6B7280;">${d.service || ''}</td>
+                </tr>`;
+            }).join('');
+
+            document.getElementById('hp-cases-container').innerHTML = `
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-0" style="border-collapse:separate; border-spacing:0 3px;">
+                        <thead>
+                            <tr style="background:linear-gradient(135deg,var(--primary-color),#7B3FD9); color:white;">
+                                <th style="font-size:0.7rem; padding:10px 6px; white-space:nowrap;">#</th>
+                                <th style="font-size:0.7rem; padding:10px 6px; white-space:nowrap;">Ticket ID</th>
+                                <th style="font-size:0.7rem; padding:10px 8px;">Title / Submitter</th>
+                                <th style="font-size:0.7rem; padding:10px 6px; white-space:nowrap;">Tier</th>
+                                <th style="font-size:0.7rem; padding:10px 8px; white-space:nowrap;">Score (Sem + Ops)</th>
+                                <th style="font-size:0.7rem; padding:10px 8px;">Semantic Reason + Operational Signals</th>
+                                <th style="font-size:0.7rem; padding:10px 6px; white-space:nowrap;">Owner</th>
+                                <th style="font-size:0.7rem; padding:10px 6px; white-space:nowrap;">Aging</th>
+                                <th style="font-size:0.7rem; padding:10px 6px;">Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                    <div class="text-muted small text-end mt-2 pe-1">Showing ${data.length} case(s) · Critical + High only · Auto-scored on upload</div>
+                </div>`;
+        }
+
+        // ── EXPORT ─────────────────────────────────────────────────────
+        function exportHighPriorityToExcel() {
+            if (!highPriorityData.length) {
+                alert('No high priority data to export. Upload data first.');
+                return;
+            }
+            const rows = highPriorityData.map((d, idx) => ({
+                'Rank':                    idx + 1,
+                'Ticket ID':               d.incidentId,
+                'Title':                   d.title,
+                'Priority Tier':           d._priority.tier.toUpperCase(),
+                'Total Score (0–100)':     d._priority.total,
+                'Semantic Score (0–60)':   d._priority.aiScore,
+                'Ops Risk Score (0–40)':   d._priority.ops.score,
+                'Semantic Reasoning':      d._priority.reasoning,
+                'Matched Patterns':        (d._priority.matchedPatterns || []).join(' | '),
+                'Owner':                   d.owner,
+                'Submitted By':            d.submittedBy,
+                'Service Type':            d.service,
+                'Status':                  d.currentStatus,
+                'Aging Days':              d.agingDays,
+                'SLA Violated':            d.isSlaViolated            ? 'Yes' : 'No',
+                'Aging >15 Days':          d.isAging15Violated         ? 'Yes' : 'No',
+                'Aging >25 Days':          d.isOldest25                ? 'Yes' : 'No',
+                'Follow-up Missed':        d.isFollowUpMissed          ? 'Yes' : 'No',
+                'Email Response Missed':   d.emailCompliance === 'Email Response Missed' ? 'Yes' : 'No',
+                'EDOC Breached':           d.isEdocBreached             ? 'Yes' : 'No',
+                'Idle >3 Days':            d.isIdle3                   ? 'Yes' : 'No',
+                'Subsequent SLA Breach':   d.isSubsequentSLABreach     ? 'Yes' : 'No',
+                'Operational Signals':     d._priority.ops.signals.map(s => `${s.label}(+${s.pts})`).join('; ')
+            }));
+            const ws = XLSX.utils.json_to_sheet(rows);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'High Priority Cases');
+            XLSX.writeFile(wb, 'High_Priority_Cases.xlsx');
+        }
+
     </script>
 </body>
 </html>
