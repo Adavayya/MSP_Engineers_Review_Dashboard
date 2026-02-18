@@ -868,6 +868,139 @@
             color: white;
             transform: translateY(-2px);
         }
+
+        /* =========================================================
+           MULTI-SELECT DROPDOWN WIDGET
+        ========================================================= */
+        .ms-dropdown {
+            position: relative;
+            width: 100%;
+        }
+        .ms-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            user-select: none;
+            min-height: 31px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            color: #2C3E50;
+        }
+        .ms-trigger:hover { border-color: var(--primary-color); }
+        .ms-trigger.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
+        }
+        .ms-trigger .ms-label {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 6px;
+            font-size: 0.78rem;
+        }
+        .ms-trigger .ms-arrow {
+            font-size: 0.65rem;
+            color: #6c757d;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+        .ms-trigger.active .ms-arrow { transform: rotate(180deg); }
+        .ms-trigger .ms-badge {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 10px;
+            padding: 1px 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            margin-right: 5px;
+            flex-shrink: 0;
+        }
+        .ms-panel {
+            display: none;
+            position: absolute;
+            top: calc(100% + 3px);
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            box-shadow: 0 6px 20px rgba(74,144,226,0.18);
+            z-index: 2000;
+            max-height: 220px;
+            overflow: hidden;
+            flex-direction: column;
+        }
+        .ms-panel.open { display: flex; }
+        .ms-search {
+            padding: 6px 8px;
+            border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+        .ms-search input {
+            width: 100%;
+            border: 1px solid #cbd5e0;
+            border-radius: 5px;
+            padding: 3px 7px;
+            font-size: 0.75rem;
+            outline: none;
+        }
+        .ms-search input:focus { border-color: var(--primary-color); }
+        .ms-actions {
+            display: flex;
+            gap: 4px;
+            padding: 4px 8px;
+            border-bottom: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+        .ms-actions button {
+            font-size: 0.65rem;
+            padding: 2px 7px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e0;
+            background: white;
+            cursor: pointer;
+            color: #4A5568;
+            transition: all 0.15s;
+        }
+        .ms-actions button:hover { background: var(--light-blue); border-color: var(--primary-color); color: var(--primary-color); }
+        .ms-list {
+            overflow-y: auto;
+            flex: 1;
+            padding: 4px 0;
+        }
+        .ms-item {
+            display: flex;
+            align-items: center;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            transition: background 0.1s;
+            gap: 7px;
+            color: #2C3E50;
+        }
+        .ms-item:hover { background: var(--light-blue); }
+        .ms-item input[type="checkbox"] {
+            width: 13px;
+            height: 13px;
+            accent-color: var(--primary-color);
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .ms-item label {
+            cursor: pointer;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+        }
+        .ms-empty { padding: 8px 10px; font-size: 0.75rem; color: #a0aec0; text-align: center; }
     </style>
 </head>
 <body>
@@ -977,7 +1110,7 @@
                     <button class="sidebar-close" onclick="toggleSidebar()"><i class="bi bi-x-lg"></i></button>
                 </div>
                 <div class="sidebar-content">
-                    <div class="nav-section-title"><i class="bi bi-bar-chart-line me-1"></i>Menu</div>
+                    <div class="nav-section-title"><i class="bi bi-bar-chart-line me-1"></i>SECTIONS</div>
                     <div class="nav flex-column">
                         <a class="nav-link active" id="sb-effort-stats" onclick="switchSection('view-effort-stats','Effort Stats Analyses','bi-table')">
                             <i class="bi bi-table"></i><span class="nav-link-text">Effort Stats Analyses</span>
@@ -1034,15 +1167,37 @@
                     </div>
                     <div class="mb-3">
                         <label class="filter-label">Owner</label>
-                        <select class="form-select form-select-sm" id="global-filter-owner">
-                            <option value="">All Owners</option>
-                        </select>
+                        <div class="ms-dropdown" id="ms-owner">
+                            <div class="ms-trigger" onclick="toggleMsPanel('ms-owner')">
+                                <span class="ms-label" id="ms-owner-label">All Owners</span>
+                                <i class="bi bi-chevron-down ms-arrow"></i>
+                            </div>
+                            <div class="ms-panel" id="ms-owner-panel">
+                                <div class="ms-search"><input type="text" placeholder="Search owners…" oninput="filterMsList('ms-owner', this.value)"></div>
+                                <div class="ms-actions">
+                                    <button onclick="selectAllMs('ms-owner')">Select All</button>
+                                    <button onclick="clearMs('ms-owner')">Clear</button>
+                                </div>
+                                <div class="ms-list" id="ms-owner-list"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="filter-label">Submitted By</label>
-                        <select class="form-select form-select-sm" id="global-filter-submittedby">
-                            <option value="">All Submitted By</option>
-                        </select>
+                        <div class="ms-dropdown" id="ms-submittedby">
+                            <div class="ms-trigger" onclick="toggleMsPanel('ms-submittedby')">
+                                <span class="ms-label" id="ms-submittedby-label">All Submitted By</span>
+                                <i class="bi bi-chevron-down ms-arrow"></i>
+                            </div>
+                            <div class="ms-panel" id="ms-submittedby-panel">
+                                <div class="ms-search"><input type="text" placeholder="Search accounts…" oninput="filterMsList('ms-submittedby', this.value)"></div>
+                                <div class="ms-actions">
+                                    <button onclick="selectAllMs('ms-submittedby')">Select All</button>
+                                    <button onclick="clearMs('ms-submittedby')">Clear</button>
+                                </div>
+                                <div class="ms-list" id="ms-submittedby-list"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="filter-label">Service Type</label>
@@ -1052,15 +1207,37 @@
                     </div>
                     <div class="mb-3">
                         <label class="filter-label">Status</label>
-                        <select class="form-select form-select-sm" id="global-filter-status">
-                            <option value="">All Statuses</option>
-                        </select>
+                        <div class="ms-dropdown" id="ms-status">
+                            <div class="ms-trigger" onclick="toggleMsPanel('ms-status')">
+                                <span class="ms-label" id="ms-status-label">All Statuses</span>
+                                <i class="bi bi-chevron-down ms-arrow"></i>
+                            </div>
+                            <div class="ms-panel" id="ms-status-panel">
+                                <div class="ms-search"><input type="text" placeholder="Search status…" oninput="filterMsList('ms-status', this.value)"></div>
+                                <div class="ms-actions">
+                                    <button onclick="selectAllMs('ms-status')">Select All</button>
+                                    <button onclick="clearMs('ms-status')">Clear</button>
+                                </div>
+                                <div class="ms-list" id="ms-status-list"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="filter-label">Activity Engineer</label>
-                        <select class="form-select form-select-sm" id="global-filter-activityengineer">
-                            <option value="">All Engineers</option>
-                        </select>
+                        <div class="ms-dropdown" id="ms-activityengineer">
+                            <div class="ms-trigger" onclick="toggleMsPanel('ms-activityengineer')">
+                                <span class="ms-label" id="ms-activityengineer-label">All Engineers</span>
+                                <i class="bi bi-chevron-down ms-arrow"></i>
+                            </div>
+                            <div class="ms-panel" id="ms-activityengineer-panel">
+                                <div class="ms-search"><input type="text" placeholder="Search engineers…" oninput="filterMsList('ms-activityengineer', this.value)"></div>
+                                <div class="ms-actions">
+                                    <button onclick="selectAllMs('ms-activityengineer')">Select All</button>
+                                    <button onclick="clearMs('ms-activityengineer')">Clear</button>
+                                </div>
+                                <div class="ms-list" id="ms-activityengineer-list"></div>
+                            </div>
+                        </div>
                     </div>
                     <hr class="my-3">
                     <div class="d-flex flex-column gap-2 mb-3">
@@ -2498,9 +2675,8 @@
                 });
             }
 
-            // Filter listeners (now single-select dropdowns in side panel)
-            ['global-filter-timescale','global-filter-service','global-filter-owner',
-             'global-filter-status','global-filter-activityengineer','global-filter-submittedby']
+            // Filter listeners – timescale & service remain single-select; others are multi-select (handled via onMsChange)
+            ['global-filter-timescale', 'global-filter-service']
             .forEach(id => document.getElementById(id).addEventListener('change', updateGlobalFilters));
             
             // Tab change listeners (for lazy rendering when switching via sidebar)
@@ -2776,44 +2952,160 @@
         function populateFilterDropdowns() {
             const getUniqueValues = (key) => [...new Set(processedData.map(d => d[key]).filter(Boolean).sort())];
 
-            const dropdowns = {
-                'global-filter-owner': { values: getUniqueValues('owner'), label: 'All Owners' },
-                'global-filter-submittedby': { values: getUniqueValues('submittedBy'), label: 'All Submitted By' },
-                'global-filter-service': { values: getUniqueValues('service'), label: 'All Service Types' },
-                'global-filter-status': { values: getUniqueValues('currentStatus'), label: 'All Statuses' },
-                'global-filter-activityengineer': { values: getUniqueValues('activityEngineer'), label: 'All Engineers' }
-            };
+            // Multi-select dropdowns
+            const msConfigs = [
+                { id: 'ms-owner',            values: getUniqueValues('owner'),           defaultLabel: 'All Owners' },
+                { id: 'ms-submittedby',      values: getUniqueValues('submittedBy'),      defaultLabel: 'All Submitted By' },
+                { id: 'ms-status',           values: getUniqueValues('currentStatus'),    defaultLabel: 'All Statuses' },
+                { id: 'ms-activityengineer', values: getUniqueValues('activityEngineer'), defaultLabel: 'All Engineers' }
+            ];
+            msConfigs.forEach(cfg => buildMsList(cfg.id, cfg.values, cfg.defaultLabel));
 
-            for (const id in dropdowns) {
-                const select = document.getElementById(id);
-                if (select) {
-                    select.innerHTML = `<option value="">${dropdowns[id].label}</option>`;
-                    dropdowns[id].values.forEach(value => {
-                        if (value) select.innerHTML += `<option value="${value}">${value}</option>`;
-                    });
+            // Single-select: Service Type (unchanged)
+            const serviceSelect = document.getElementById('global-filter-service');
+            if (serviceSelect) {
+                serviceSelect.innerHTML = '<option value="">All Service Types</option>';
+                getUniqueValues('service').forEach(v => {
+                    if (v) serviceSelect.innerHTML += `<option value="${v}">${v}</option>`;
+                });
+            }
+        }
+
+        // ── Multi-select widget helpers ──────────────────────────────────────
+        const _msData = {}; // stores { values, defaultLabel } per widget id
+
+        function buildMsList(id, values, defaultLabel) {
+            _msData[id] = { values, defaultLabel };
+            const list = document.getElementById(id + '-list');
+            if (!list) return;
+            list.innerHTML = values.length
+                ? values.map(v => `
+                    <div class="ms-item">
+                        <input type="checkbox" id="ms-chk-${id}-${CSS.escape(v)}" value="${v}" onchange="onMsChange('${id}')">
+                        <label for="ms-chk-${id}-${CSS.escape(v)}" title="${v}">${v}</label>
+                    </div>`).join('')
+                : '<div class="ms-empty">No options available</div>';
+        }
+
+        function toggleMsPanel(id) {
+            const panel = document.getElementById(id + '-panel');
+            const trigger = document.querySelector(`#${id} .ms-trigger`);
+            if (!panel) return;
+            const isOpen = panel.classList.contains('open');
+            // Close all open panels first
+            document.querySelectorAll('.ms-panel.open').forEach(p => {
+                p.classList.remove('open');
+                const t = p.closest('.ms-dropdown')?.querySelector('.ms-trigger');
+                if (t) t.classList.remove('active');
+            });
+            if (!isOpen) {
+                panel.classList.add('open');
+                if (trigger) trigger.classList.add('active');
+            }
+        }
+
+        function filterMsList(id, query) {
+            const list = document.getElementById(id + '-list');
+            if (!list) return;
+            const q = query.toLowerCase();
+            list.querySelectorAll('.ms-item').forEach(item => {
+                const label = item.querySelector('label');
+                item.style.display = label && label.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+        }
+
+        function selectAllMs(id) {
+            const list = document.getElementById(id + '-list');
+            if (!list) return;
+            list.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.checked = true; });
+            onMsChange(id);
+        }
+
+        function clearMs(id) {
+            const list = document.getElementById(id + '-list');
+            if (!list) return;
+            list.querySelectorAll('input[type="checkbox"]').forEach(cb => { cb.checked = false; });
+            onMsChange(id);
+        }
+
+        function onMsChange(id) {
+            updateMsLabel(id);
+            updateGlobalFilters();
+        }
+
+        function updateMsLabel(id) {
+            const list = document.getElementById(id + '-list');
+            const label = document.getElementById(id + '-label');
+            const trigger = document.querySelector(`#${id} .ms-trigger`);
+            if (!list || !label) return;
+            const checked = [...list.querySelectorAll('input[type="checkbox"]:checked')].map(cb => cb.value);
+            const defaultLabel = (_msData[id] || {}).defaultLabel || 'All';
+            // Remove existing badge if any
+            const existingBadge = trigger ? trigger.querySelector('.ms-badge') : null;
+            if (existingBadge) existingBadge.remove();
+            if (checked.length === 0) {
+                label.textContent = defaultLabel;
+            } else {
+                label.textContent = checked.length === 1 ? checked[0] : `${checked.length} selected`;
+                if (trigger) {
+                    const badge = document.createElement('span');
+                    badge.className = 'ms-badge';
+                    badge.textContent = checked.length;
+                    trigger.insertBefore(badge, label);
                 }
             }
         }
 
+        function getMsValues(id) {
+            const list = document.getElementById(id + '-list');
+            if (!list) return [];
+            return [...list.querySelectorAll('input[type="checkbox"]:checked')].map(cb => cb.value);
+        }
+
+        function resetMs(id) {
+            clearMs(id);
+            // Update label without triggering filter (used by clearAllFilters)
+            const list = document.getElementById(id + '-list');
+            const label = document.getElementById(id + '-label');
+            const trigger = document.querySelector(`#${id} .ms-trigger`);
+            if (label) label.textContent = (_msData[id] || {}).defaultLabel || 'All';
+            if (trigger) { const b = trigger.querySelector('.ms-badge'); if (b) b.remove(); }
+        }
+
+        // Close any open ms-panel when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.ms-dropdown')) {
+                document.querySelectorAll('.ms-panel.open').forEach(p => {
+                    p.classList.remove('open');
+                    const t = p.closest('.ms-dropdown')?.querySelector('.ms-trigger');
+                    if (t) t.classList.remove('active');
+                });
+            }
+        });
+        // ────────────────────────────────────────────────────────────────────
+
         function updateGlobalFilters() {
             showLoading(true);
-            
-            globalFilters.timescale = document.getElementById('global-filter-timescale').value;
-            globalFilters.owner     = document.getElementById('global-filter-owner').value ? [document.getElementById('global-filter-owner').value] : [];
-            globalFilters.submittedby = document.getElementById('global-filter-submittedby').value ? [document.getElementById('global-filter-submittedby').value] : [];
-            globalFilters.service   = document.getElementById('global-filter-service').value ? [document.getElementById('global-filter-service').value] : [];
-            globalFilters.status    = document.getElementById('global-filter-status').value ? [document.getElementById('global-filter-status').value] : [];
-            globalFilters.activityEngineer = document.getElementById('global-filter-activityengineer').value ? [document.getElementById('global-filter-activityengineer').value] : [];
+
+            globalFilters.timescale        = document.getElementById('global-filter-timescale').value;
+            globalFilters.owner            = getMsValues('ms-owner');
+            globalFilters.submittedby      = getMsValues('ms-submittedby');
+            globalFilters.status           = getMsValues('ms-status');
+            globalFilters.activityEngineer = getMsValues('ms-activityengineer');
+            globalFilters.service          = document.getElementById('global-filter-service').value
+                                             ? [document.getElementById('global-filter-service').value] : [];
 
             // Update FAB indicator
             const fab = document.getElementById('filter-toggle-fab');
-            const hasFilters = globalFilters.timescale !== 'all' || globalFilters.owner.length || globalFilters.submittedby.length || globalFilters.service.length || globalFilters.status.length || globalFilters.activityEngineer.length;
+            const hasFilters = globalFilters.timescale !== 'all' || globalFilters.owner.length ||
+                               globalFilters.submittedby.length || globalFilters.service.length ||
+                               globalFilters.status.length || globalFilters.activityEngineer.length;
             if (hasFilters) fab.classList.add('has-filters');
             else fab.classList.remove('has-filters');
 
             // Apply timescale filter first
             filteredData = applyTimescaleFilter(processedData, globalFilters.timescale);
-            
+
             // Apply other filters
             filteredData = filteredData.filter(d => {
                 if (globalFilters.owner.length > 0 && !globalFilters.owner.includes(d.owner)) return false;
@@ -2826,7 +3118,7 @@
 
             updateActiveFiltersDisplay();
             updateDashboard();
-            
+
             showLoading(false);
         }
 
@@ -2868,23 +3160,25 @@
         function removeFilter(filterKey) {
             if (filterKey === 'timescale') {
                 document.getElementById('global-filter-timescale').value = 'all';
-            } else {
-                const el = document.getElementById(`global-filter-${filterKey}`);
+            } else if (filterKey === 'service') {
+                const el = document.getElementById('global-filter-service');
                 if (el) el.value = '';
+            } else {
+                // multi-select widgets: filterKey matches ms-widget id suffix
+                const msId = 'ms-' + filterKey;
+                resetMs(msId);
             }
             updateGlobalFilters();
         }
 
         function clearAllFilters() {
             document.getElementById('global-filter-timescale').value = 'all';
-            ['global-filter-owner', 'global-filter-submittedby', 'global-filter-service', 
-             'global-filter-status', 'global-filter-activityengineer'].forEach(id => {
-                document.getElementById(id).value = '';
-            });
-            
+            document.getElementById('global-filter-service').value = '';
+            ['ms-owner', 'ms-submittedby', 'ms-status', 'ms-activityengineer'].forEach(id => resetMs(id));
+
             globalFilters = { owner: [], submittedby: [], service: [], status: [], activityEngineer: [], timescale: 'all' };
             filteredData = [...processedData];
-            
+
             document.getElementById('filter-toggle-fab').classList.remove('has-filters');
             updateActiveFiltersDisplay();
             updateDashboard();
