@@ -994,6 +994,15 @@
                         <a class="nav-link" id="sb-support-category" onclick="switchSection('view-support-category','Support Category Effort','bi-tags')">
                             <i class="bi bi-tags"></i><span class="nav-link-text">Support Category Effort</span>
                         </a>
+                        <a class="nav-link" id="sb-effort-summary" onclick="switchSection('view-effort-summary','Effort Summary','bi-clipboard-data')">
+                            <i class="bi bi-clipboard-data"></i><span class="nav-link-text">Effort Summary</span>
+                        </a>
+                        <a class="nav-link" id="sb-comments-review" onclick="switchSection('view-comments-review','Comments Review','bi-chat-text')">
+                            <i class="bi bi-chat-text"></i><span class="nav-link-text">Comments Review</span>
+                        </a>
+                        <a class="nav-link" id="sb-productivity-insights" onclick="switchSection('view-productivity-insights','Productivity Insights','bi-graph-up')">
+                            <i class="bi bi-graph-up"></i><span class="nav-link-text">Productivity Insights</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1107,6 +1116,9 @@
                     <li class="nav-item"><button class="nav-link" id="view-daily-review-tab" data-bs-toggle="tab" data-bs-target="#view-daily-review" type="button">Daily Effort Review</button></li>
                     <li class="nav-item"><button class="nav-link" id="view-monthly-review-tab" data-bs-toggle="tab" data-bs-target="#view-monthly-review" type="button">Monthly Effort Review</button></li>
                     <li class="nav-item"><button class="nav-link" id="view-support-category-tab" data-bs-toggle="tab" data-bs-target="#view-support-category" type="button">Support Category Effort</button></li>
+                    <li class="nav-item"><button class="nav-link" id="view-effort-summary-tab" data-bs-toggle="tab" data-bs-target="#view-effort-summary" type="button">Effort Summary</button></li>
+                    <li class="nav-item"><button class="nav-link" id="view-comments-review-tab" data-bs-toggle="tab" data-bs-target="#view-comments-review" type="button">Comments Review</button></li>
+                    <li class="nav-item"><button class="nav-link" id="view-productivity-insights-tab" data-bs-toggle="tab" data-bs-target="#view-productivity-insights" type="button">Productivity Insights</button></li>
                 </ul>
                 <!-- Effort Stats Analyses Tab -->
                 <div class="tab-pane fade show active" id="view-effort-stats" role="tabpanel">
@@ -1544,6 +1556,682 @@
                     </div>
                 </div>
 
+
+                <!-- Effort Summary Tab -->
+                <div class="tab-pane fade" id="view-effort-summary" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h5 class="mb-1" style="color: var(--primary-color);">Effort Summary</h5>
+                            <small class="text-muted fst-italic">"Where time is spent, who is contributing, and how we can improve efficiency."</small>
+                        </div>
+                        <button class="btn btn-sm btn-excel" onclick="exportEffortSummaryToExcel()">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export to Excel
+                        </button>
+                    </div>
+
+                    <!-- EFFORT SUMMARY Section -->
+                    <div class="mb-4">
+                        <div class="kpi-section-title"><i class="bi bi-stopwatch me-2"></i>Effort Summary — Total, Engineer-wise & SR vs INC Split</div>
+
+                        <!-- KPI Cards Row 1 -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-3">
+                                <div class="metric-card card">
+                                    <div class="card-body">
+                                        <div class="metric-value" id="es-totalHHMM">0:00</div>
+                                        <div class="metric-label">Total Effort Logged (HH:MM)</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="metric-card card">
+                                    <div class="card-body">
+                                        <div class="metric-value" style="color:var(--secondary-color);" id="es-totalMins">0</div>
+                                        <div class="metric-label">Total Minutes</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="metric-card card">
+                                    <div class="card-body">
+                                        <div class="metric-value" style="color:var(--accent-color);" id="es-totalTickets">0</div>
+                                        <div class="metric-label">Total Tickets</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="metric-card card">
+                                    <div class="card-body">
+                                        <div class="metric-value" style="color:var(--warning-color);" id="es-totalEngineers">0</div>
+                                        <div class="metric-label">Engineers Active</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Engineer-wise Effort + SR vs INC Charts -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-lg-5">
+                                <div class="card">
+                                    <div class="card-header bg-light py-2">
+                                        <h6 class="mb-0" style="color:var(--primary-color);">Engineer-wise Effort (HH:MM)</h6>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <canvas id="es-engineerBarChart" height="220"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card">
+                                    <div class="card-header bg-light py-2">
+                                        <h6 class="mb-0" style="color:var(--primary-color);">SR vs INC Effort Split</h6>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <canvas id="es-srIncPieChart" height="220"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="card h-100">
+                                    <div class="card-header bg-light py-2">
+                                        <h6 class="mb-0" style="color:var(--primary-color);">SR vs INC Breakdown</h6>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <div class="d-flex flex-column gap-3" id="es-srIncCards">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Engineer-wise Table -->
+                        <div class="card mb-3">
+                            <div class="card-header bg-light py-2">
+                                <h6 class="mb-0" style="color:var(--primary-color);">Engineer-wise Individual Contribution</h6>
+                            </div>
+                            <div class="card-body p-2">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered scorecard-table" id="es-engineerTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Engineer</th>
+                                                <th>Tickets</th>
+                                                <th>Total Mins</th>
+                                                <th>Total HH:MM</th>
+                                                <th>SR Tickets</th>
+                                                <th>SR Mins</th>
+                                                <th>INC Tickets</th>
+                                                <th>INC Mins</th>
+                                                <th>% Contribution</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="es-engineerBody">
+                                            <tr><td colspan="9" class="text-center text-muted py-3">No data available.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PRODUCTIVITY INSIGHTS Section -->
+                    <div class="mb-4">
+                        <div class="kpi-section-title"><i class="bi bi-lightning me-2"></i>Productivity Insights — Avg Effort, High Effort Tickets & Repeat Drivers</div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <div class="metric-card card">
+                                    <div class="card-body">
+                                        <div class="metric-value" id="es-avgMinsPerTicket">0</div>
+                                        <div class="metric-label">Avg Effort per Ticket (Mins)</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="metric-card card">
+                                    <div class="card-body">
+                                        <div class="metric-value" style="color:var(--danger-color);" id="es-highEffortCount">0</div>
+                                        <div class="metric-label">High Effort Tickets (&gt;120 mins)</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="metric-card card">
+                                    <div class="card-body">
+                                        <div class="metric-value" style="color:var(--warning-color);" id="es-repeatDrivers">0</div>
+                                        <div class="metric-label">Repeat Effort Drivers</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- High Effort Tickets Table -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-lg-7">
+                                <div class="card">
+                                    <div class="card-header bg-light py-2 d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0" style="color:var(--primary-color);">High Effort Tickets <small class="text-muted">(Cases &gt;120 mins)</small></h6>
+                                    </div>
+                                    <div class="card-body p-2">
+                                        <div class="table-responsive" style="max-height:300px;overflow-y:auto;">
+                                            <table class="table table-sm table-bordered scorecard-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Ticket ID</th>
+                                                        <th>Title</th>
+                                                        <th>Engineer</th>
+                                                        <th>Mins</th>
+                                                        <th>HH:MM</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="es-highEffortBody">
+                                                    <tr><td colspan="5" class="text-center text-muted py-3">No data.</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="card h-100">
+                                    <div class="card-header bg-light py-2">
+                                        <h6 class="mb-0" style="color:var(--primary-color);">Repeat Effort Drivers <small class="text-muted">(Multi-session Tickets)</small></h6>
+                                    </div>
+                                    <div class="card-body p-2">
+                                        <div class="table-responsive" style="max-height:300px;overflow-y:auto;">
+                                            <table class="table table-sm table-bordered scorecard-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Ticket ID</th>
+                                                        <th>Sessions</th>
+                                                        <th>Total Mins</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="es-repeatBody">
+                                                    <tr><td colspan="3" class="text-center text-muted py-3">No data.</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TREND & OPTIMIZATION Section -->
+                    <div class="mb-4">
+                        <div class="kpi-section-title"><i class="bi bi-graph-up-arrow me-2"></i>Trend & Optimization — Daily/Monthly Trend, Automation Opportunities & Efficiency Plan</div>
+
+                        <!-- Daily Trend Chart -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-lg-7">
+                                <div class="card">
+                                    <div class="card-header bg-light py-2">
+                                        <h6 class="mb-0" style="color:var(--primary-color);">Daily Effort Trend (Minutes)</h6>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <canvas id="es-dailyTrendChart" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="card">
+                                    <div class="card-header bg-light py-2">
+                                        <h6 class="mb-0" style="color:var(--primary-color);">Monthly Effort Trend (Minutes)</h6>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <canvas id="es-monthlyTrendChart" height="200"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Automation Opportunities -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-header bg-light py-2">
+                                        <h6 class="mb-0" style="color:var(--primary-color);">Automation Opportunities <small class="text-muted">(Top effort-consuming categories)</small></h6>
+                                    </div>
+                                    <div class="card-body p-2">
+                                        <div class="table-responsive" style="max-height:280px;overflow-y:auto;">
+                                            <table class="table table-sm table-bordered scorecard-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Support Category</th>
+                                                        <th>Feature</th>
+                                                        <th>Tickets</th>
+                                                        <th>Total Mins</th>
+                                                        <th>Automation Priority</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="es-automationBody">
+                                                    <tr><td colspan="5" class="text-center text-muted py-3">No data.</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="card">
+                                    <div class="card-header bg-light py-2">
+                                        <h6 class="mb-0" style="color:var(--primary-color);">Efficiency Improvement Plan</h6>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <div id="es-efficiencyPlan" class="d-flex flex-column gap-2">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comments Review Tab -->
+                <!-- Comments Review Tab -->
+                <div class="tab-pane fade" id="view-comments-review" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h5 class="mb-1" style="color: var(--primary-color);">Comments Review</h5>
+                            <small class="text-muted fst-italic">Deep insights on PS Team Effort Details — Comments (Column V)</small>
+                        </div>
+                        <button class="btn btn-sm btn-excel" onclick="exportCommentsReviewToExcel()">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export to Excel
+                        </button>
+                    </div>
+
+                    <!-- KPI Summary Cards (5 cards) -->
+                    <div class="row g-3 mb-4">
+                        <div class="col">
+                            <div class="metric-card card"><div class="card-body">
+                                <div class="metric-value" id="cr-totalEntries">0</div>
+                                <div class="metric-label">Total Entries</div>
+                            </div></div>
+                        </div>
+                        <div class="col">
+                            <div class="metric-card card"><div class="card-body">
+                                <div class="metric-value" style="color:var(--secondary-color);" id="cr-withComments">0</div>
+                                <div class="metric-label">With Comments</div>
+                            </div></div>
+                        </div>
+                        <div class="col">
+                            <div class="metric-card card"><div class="card-body">
+                                <div class="metric-value" style="color:var(--warning-color);" id="cr-withoutComments">0</div>
+                                <div class="metric-label">Without Comments</div>
+                            </div></div>
+                        </div>
+                        <div class="col">
+                            <div class="metric-card card"><div class="card-body">
+                                <div class="metric-value" style="color:var(--primary-color);" id="cr-commentsPct">0%</div>
+                                <div class="metric-label">Comment Fill Rate</div>
+                            </div></div>
+                        </div>
+                        <div class="col">
+                            <div class="metric-card card"><div class="card-body">
+                                <div class="metric-value" style="color:#9B59B6;" id="cr-distinctCount">0</div>
+                                <div class="metric-label">Distinct Comments</div>
+                            </div></div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row 1: Pie + Engineer Stacked Bar -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header bg-light py-2">
+                                    <h6 class="mb-0" style="color:var(--primary-color);">Fill Rate Distribution</h6>
+                                </div>
+                                <div class="card-body p-3"><canvas id="cr-commentsPieChart" height="220"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header bg-light py-2">
+                                    <h6 class="mb-0" style="color:var(--primary-color);">Engineer-wise Comment Fill Rate</h6>
+                                </div>
+                                <div class="card-body p-3"><canvas id="cr-engineerCommentChart" height="220"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row 2: Investigation Type Breakdown -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header bg-light py-2">
+                                    <h6 class="mb-0" style="color:var(--primary-color);">Investigation Type — Comment Fill Rate Breakdown</h6>
+                                </div>
+                                <div class="card-body p-3"><canvas id="cr-invTypeChart" height="180"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Engineer Summary Table -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light py-2">
+                            <h6 class="mb-0" style="color:var(--primary-color);">Engineer-wise Comments Summary</h6>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered scorecard-table">
+                                    <thead><tr>
+                                        <th>Engineer</th><th>Total Entries</th><th>With Comments</th>
+                                        <th>Without Comments</th><th>Fill Rate %</th>
+                                        <th>Total Mins</th><th>Mins With</th><th>Mins Without</th><th>Status</th>
+                                    </tr></thead>
+                                    <tbody id="cr-engineerBody">
+                                        <tr><td colspan="9" class="text-center text-muted py-3">No data available.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Distinct Comments Table -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light py-2">
+                            <h6 class="mb-0" style="color:var(--primary-color);">Distinct Comments Analysis <small class="text-muted">(Unique comment texts & frequency)</small></h6>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="table-responsive" style="max-height:300px;overflow-y:auto;">
+                                <table class="table table-sm table-bordered scorecard-table">
+                                    <thead><tr>
+                                        <th>#</th><th>Comment Text</th><th>Frequency</th><th>% of Comments</th><th>Type</th>
+                                    </tr></thead>
+                                    <tbody id="cr-distinctBody">
+                                        <tr><td colspan="5" class="text-center text-muted py-3">No data.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Full Detail Table -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light py-2 d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0" style="color:var(--primary-color);">All Effort Entries with Comments (Column V)</h6>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input type="text" id="cr-commentSearch" class="form-control form-control-sm" placeholder="Search..." style="width:180px;" oninput="filterCommentsTable()">
+                                <select id="cr-commentFilter" class="form-select form-select-sm" style="width:160px;" onchange="filterCommentsTable()">
+                                    <option value="all">All Entries</option>
+                                    <option value="with">With Comments</option>
+                                    <option value="without">Without Comments</option>
+                                    <option value="detailed">Detailed Comments</option>
+                                    <option value="brief">Brief Comments</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="table-responsive" style="max-height:450px;overflow-y:auto;">
+                                <table class="table table-sm table-bordered scorecard-table">
+                                    <thead><tr>
+                                        <th>#</th><th>Ticket ID</th><th>Engineer</th><th>Date</th>
+                                        <th>Investigation Type</th><th>Mins</th><th>Comments (Col V)</th><th>Status</th>
+                                    </tr></thead>
+                                    <tbody id="cr-detailBody">
+                                        <tr><td colspan="8" class="text-center text-muted py-3">No data available.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Productivity Insights Tab -->
+                <div class="tab-pane fade" id="view-productivity-insights" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h5 class="mb-1" style="color: var(--primary-color);">Productivity Insights</h5>
+                            <small class="text-muted fst-italic">Comprehensive analysis of effort efficiency, trends, and optimization opportunities</small>
+                        </div>
+                        <button class="btn btn-sm btn-excel" onclick="exportProductivityInsightsToExcel()">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export to Excel
+                        </button>
+                    </div>
+
+                    <!-- ── What is Productivity Insights? 
+                    <div class="card mb-4" style="border-left:4px solid #4A90E2;background:linear-gradient(135deg,#EBF4FF,#F0FFF4);">
+                        <div class="card-body p-3">
+                            <div class="d-flex align-items-start gap-3">
+                                <div style="font-size:2rem;line-height:1;">📊</div>
+                                <div>
+                                    <div style="font-weight:800;font-size:0.95rem;color:#2C3E50;margin-bottom:6px;">What is Productivity Insights?</div>
+                                    <div style="font-size:0.78rem;color:#4A5568;line-height:1.6;">
+                                        This section measures <strong>how efficiently your PS engineering team invests time and cost</strong> across support tickets.
+                                        It analyses effort in minutes, translates that into <strong>Indian Rupees (₹) cost</strong> using your configured hourly rate,
+                                        highlights bottlenecks, and suggests concrete actions for improvement.
+                                    </div>
+                                    <div class="row g-2 mt-2">
+                                        <div class="col-md-4">
+                                            <div style="background:#fff;border-radius:8px;padding:8px 12px;border:1px solid #BEE3F8;">
+                                                <div style="font-weight:700;font-size:0.7rem;color:#4A90E2;text-transform:uppercase;margin-bottom:3px;">⏱ Avg Effort / Ticket</div>
+                                                <div style="font-size:0.72rem;color:#555;">Average minutes (and ₹ cost) spent per unique support ticket across all engineers. Lower = more efficient.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div style="background:#fff;border-radius:8px;padding:8px 12px;border:1px solid #C6F6D5;">
+                                                <div style="font-weight:700;font-size:0.7rem;color:#38A169;text-transform:uppercase;margin-bottom:3px;">🔴 High Effort Tickets</div>
+                                                <div style="font-size:0.72rem;color:#555;">Tickets where total time spent exceeded the configured threshold (default 120 mins). These are cases needing review or automation.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div style="background:#fff;border-radius:8px;padding:8px 12px;border:1px solid #FED7AA;">
+                                                <div style="font-weight:700;font-size:0.7rem;color:#DD6B20;text-transform:uppercase;margin-bottom:3px;">🔁 Repeat Effort Drivers</div>
+                                                <div style="font-size:0.72rem;color:#555;">Tickets that required more than one effort session — indicating recurring issues, missing runbooks, or incomplete first-time resolution.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div style="background:#fff;border-radius:8px;padding:8px 12px;border:1px solid #E9D8FD;">
+                                                <div style="font-weight:700;font-size:0.7rem;color:#805AD5;text-transform:uppercase;margin-bottom:3px;">📈 Daily / Monthly Trend</div>
+                                                <div style="font-size:0.72rem;color:#555;">How effort (in minutes) flows across dates and months. Spikes indicate crunch periods; dips may signal leaves or low-activity windows.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div style="background:#fff;border-radius:8px;padding:8px 12px;border:1px solid #B2F5EA;">
+                                                <div style="font-weight:700;font-size:0.7rem;color:#319795;text-transform:uppercase;margin-bottom:3px;">🤖 Automation Opportunities</div>
+                                                <div style="font-size:0.72rem;color:#555;">Top support categories consuming the most effort + cost. Automating these areas (scripts, runbooks, self-service) directly reduces ₹ spend.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div style="background:#fff;border-radius:8px;padding:8px 12px;border:1px solid #FEB2B2;">
+                                                <div style="font-weight:700;font-size:0.7rem;color:#C53030;text-transform:uppercase;margin-bottom:3px;">🎯 Efficiency Score</div>
+                                                <div style="font-size:0.72rem;color:#555;">Actual effort ÷ expected effort (engineers × working days × 540 mins/day). 100% = fully utilised. Below 80% = underutilised or data gaps.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div style="background:#fff;border-radius:8px;padding:8px 12px;border:1px solid #C6F6D5;">
+                                                <div style="font-weight:700;font-size:0.7rem;color:#276749;text-transform:uppercase;margin-bottom:3px;">💰 Cost Calculation</div>
+                                                <div style="font-size:0.72rem;color:#555;">Cost = (Total Minutes ÷ 60) × Hourly Rate (₹). Set your team's blended hourly rate in the configuration box below. Default: ₹500/hr.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div style="background:#fff;border-radius:8px;padding:8px 12px;border:1px solid #BEE3F8;">
+                                                <div style="font-weight:700;font-size:0.7rem;color:#2B6CB0;text-transform:uppercase;margin-bottom:3px;">📋 Efficiency Plan</div>
+                                                <div style="font-size:0.72rem;color:#555;">AI-generated action items based on your actual data patterns — identifies what to automate, review, or optimise to reduce cost and effort.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div style="background:#fff;border-radius:8px;padding:8px 12px;border:1px solid #FED7AA;">
+                                                <div style="font-weight:700;font-size:0.7rem;color:#C05621;text-transform:uppercase;margin-bottom:3px;">🖱️ Drill-Down</div>
+                                                <div style="font-size:0.72rem;color:#555;">All table rows are clickable. Click any engineer, ticket, category, date, or month to open a detailed modal showing every individual effort entry.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- KPI Row -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-2">
+                            <div class="metric-card card"><div class="card-body text-center">
+                                <div class="metric-value" id="pi-avgMinsTicket">0</div>
+                                <div class="metric-label">Avg Mins / Ticket</div>
+                            </div></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="metric-card card"><div class="card-body text-center">
+                                <div class="metric-value" style="color:var(--secondary-color);" id="pi-avgCostTicket">₹0</div>
+                                <div class="metric-label">Avg Cost / Ticket</div>
+                            </div></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="metric-card card"><div class="card-body text-center">
+                                <div class="metric-value" style="color:var(--danger-color);" id="pi-highEffortCount">0</div>
+                                <div class="metric-label">High Effort Tickets</div>
+                            </div></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="metric-card card"><div class="card-body text-center">
+                                <div class="metric-value" style="color:var(--warning-color);" id="pi-repeatCount">0</div>
+                                <div class="metric-label">Repeat Effort Drivers</div>
+                            </div></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="metric-card card"><div class="card-body text-center">
+                                <div class="metric-value" style="color:#9B59B6;" id="pi-totalCost">₹0</div>
+                                <div class="metric-label">Total Effort Cost</div>
+                            </div></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="metric-card card"><div class="card-body text-center">
+                                <div class="metric-value" style="color:#1ABC9C;" id="pi-efficiencyScore">0%</div>
+                                <div class="metric-label">Efficiency Score</div>
+                            </div></div>
+                        </div>
+                    </div>
+
+                    <!-- Cost Config -->
+                    <div class="card mb-4" style="border-left:4px solid var(--primary-color);background:var(--light-blue);">
+                        <div class="card-body py-2 px-3">
+                            <div class="d-flex align-items-center gap-4 flex-wrap">
+                                <span style="font-size:0.75rem;font-weight:700;color:var(--primary-color);"><i class="bi bi-gear me-1"></i>Cost Configuration</span>
+                                <div class="d-flex align-items-center gap-2">
+                                    <label style="font-size:0.7rem;font-weight:600;">Hourly Rate (₹ INR):</label>
+                                    <input type="number" id="pi-hourlyRate" value="500" min="1" max="50000" style="width:80px;" class="form-control form-control-sm" oninput="renderProductivityInsights()">
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <label style="font-size:0.7rem;font-weight:600;">High Effort Threshold (mins):</label>
+                                    <input type="number" id="pi-threshold" value="120" min="30" max="480" style="width:80px;" class="form-control form-control-sm" oninput="renderProductivityInsights()">
+                                </div>
+                                <small class="text-muted fst-italic">Adjust to reflect your team's cost model</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Avg Effort per Ticket + Cost Table -->
+                    <div class="kpi-section-title"><i class="bi bi-stopwatch me-2"></i>Average Effort per Ticket — Time & Cost Analysis</div>
+                    <div class="card mb-4">
+                        <div class="card-body p-2">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered scorecard-table">
+                                    <thead><tr>
+                                        <th>Engineer</th><th>Unique Tickets</th><th>Total Mins</th>
+                                        <th>Avg Mins / Ticket</th><th>Avg HH:MM / Ticket</th>
+                                        <th>Hourly Rate (₹)</th><th>Avg Cost / Ticket (₹)</th><th>Total Cost (₹)</th>
+                                    </tr></thead>
+                                    <tbody id="pi-avgEffortBody">
+                                        <tr><td colspan="8" class="text-center text-muted py-3">No data.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- High Effort + Repeat side by side -->
+                    <div class="kpi-section-title"><i class="bi bi-exclamation-triangle me-2"></i>High Effort Tickets & Repeat Effort Drivers</div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-7">
+                            <div class="card">
+                                <div class="card-header bg-light py-2">
+                                    <h6 class="mb-0" style="color:var(--primary-color);">High Effort Tickets <small class="text-muted" id="pi-heThresholdLabel">(>120 mins)</small></h6>
+                                </div>
+                                <div class="card-body p-2">
+                                    <div class="table-responsive" style="max-height:280px;overflow-y:auto;">
+                                        <table class="table table-sm table-bordered scorecard-table">
+                                            <thead><tr><th>Ticket ID</th><th>Title</th><th>Engineer</th><th>Sessions</th><th>Total Mins</th><th>Cost</th></tr></thead>
+                                            <tbody id="pi-highEffortBody"><tr><td colspan="6" class="text-center text-muted py-3">No data.</td></tr></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="card">
+                                <div class="card-header bg-light py-2">
+                                    <h6 class="mb-0" style="color:var(--primary-color);">Repeat Effort Drivers <small class="text-muted">(Multi-session)</small></h6>
+                                </div>
+                                <div class="card-body p-2">
+                                    <div class="table-responsive" style="max-height:280px;overflow-y:auto;">
+                                        <table class="table table-sm table-bordered scorecard-table">
+                                            <thead><tr><th>Ticket ID</th><th>Sessions</th><th>Total Mins</th><th>Cost</th></tr></thead>
+                                            <tbody id="pi-repeatBody"><tr><td colspan="4" class="text-center text-muted py-3">No data.</td></tr></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily + Monthly Trend Charts -->
+                    <div class="kpi-section-title"><i class="bi bi-graph-up me-2"></i>Daily & Monthly Effort Trend</div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-7">
+                            <div class="card">
+                                <div class="card-header bg-light py-2">
+                                    <h6 class="mb-0" style="color:var(--primary-color);">Daily Effort Trend (Minutes)</h6>
+                                </div>
+                                <div class="card-body p-3"><canvas id="pi-dailyTrendChart" height="200"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="card">
+                                <div class="card-header bg-light py-2">
+                                    <h6 class="mb-0" style="color:var(--primary-color);">Monthly Effort Trend</h6>
+                                </div>
+                                <div class="card-body p-3"><canvas id="pi-monthlyTrendChart" height="200"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Automation + Efficiency Plan -->
+                    <div class="kpi-section-title"><i class="bi bi-lightning me-2"></i>Automation Opportunities & Efficiency Improvement Plan</div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-light py-2">
+                                    <h6 class="mb-0" style="color:var(--primary-color);">Automation Opportunities <small class="text-muted">(Top effort consumers)</small></h6>
+                                </div>
+                                <div class="card-body p-2">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered scorecard-table">
+                                            <thead><tr>
+                                                <th>Support Category</th><th>Feature</th><th>Tickets</th>
+                                                <th>Total Mins</th><th>Est. Cost</th><th>Priority</th>
+                                            </tr></thead>
+                                            <tbody id="pi-automationBody"><tr><td colspan="6" class="text-center text-muted py-3">No data.</td></tr></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-light py-2">
+                                    <h6 class="mb-0" style="color:var(--primary-color);">Efficiency Improvement Plan</h6>
+                                </div>
+                                <div class="card-body p-3">
+                                    <div id="pi-efficiencyPlan" class="d-flex flex-column gap-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </div><!-- /.main-content.dashboard-container -->
     </div><!-- /#dashboard-section -->
@@ -1696,6 +2384,15 @@
             });
             document.getElementById('view-support-category-tab').addEventListener('shown.bs.tab', function() {
                 if (filteredData.length > 0) renderSupportCategoryEffort();
+            });
+            document.getElementById('view-effort-summary-tab').addEventListener('shown.bs.tab', function() {
+                if (filteredData.length > 0) renderEffortSummary();
+            });
+            document.getElementById('view-comments-review-tab').addEventListener('shown.bs.tab', function() {
+                if (filteredData.length > 0) renderCommentsReview();
+            });
+            document.getElementById('view-productivity-insights-tab').addEventListener('shown.bs.tab', function() {
+                if (filteredData.length > 0) renderProductivityInsights();
             });
         }
 
@@ -2082,6 +2779,18 @@
             if (supportCategoryPane && supportCategoryPane.classList.contains('active')) {
                 renderSupportCategoryEffort();
             }
+            const effortSummaryPane = document.getElementById('view-effort-summary');
+            if (effortSummaryPane && effortSummaryPane.classList.contains('active')) {
+                renderEffortSummary();
+            }
+            const commentsReviewPane = document.getElementById('view-comments-review');
+            if (commentsReviewPane && commentsReviewPane.classList.contains('active')) {
+                renderCommentsReview();
+            const productivityPane = document.getElementById('view-productivity-insights');
+            if (productivityPane && productivityPane.classList.contains('active')) {
+                renderProductivityInsights();
+            }
+            }
         }
 
         // #2 - Effort Stats Analyses with updated column headers and spacing
@@ -2132,59 +2841,54 @@
             window._effortEngineerMap = engineerMap;
         }
 
+
+        // =====================================================
+        // UNIVERSAL DRILL-DOWN (all sections use this)
+        // =====================================================
+        function showDrillDown(title, rows) {
+            drillDownTitleForExport = title;
+            document.getElementById('drillDownTitle').textContent = title;
+            document.getElementById('drillDownCount').textContent = rows.length + ' Records';
+
+            document.getElementById('drillDownHeader').innerHTML =
+                '<th>RequestID</th><th>Title</th><th>Submitted by</th><th>Status</th>' +
+                '<th>Owner</th><th>Service</th><th>Support Category</th><th>Feature</th>' +
+                '<th>Sub Feature</th><th>Effort Date</th><th>Investigation Type</th>' +
+                '<th>Time Spent (Mins)</th><th>Comments</th>';
+
+            drillDownExportData = rows.map(d => ({
+                'RequestID': d.incidentId, 'Title': d.title, 'Submitted by': d.submittedBy,
+                'Status': d.currentStatus, 'Owner': d.owner, 'Service': d.service,
+                'Support Category': d.supportCategory, 'Feature': d.feature,
+                'Sub Feature': d.subFeature, 'Effort Date': d.effortDate,
+                'Investigation Type': d.investigationType,
+                'Time Spent (Mins)': d.effortMinutes, 'Comments': d.effortComments
+            }));
+
+            document.getElementById('drillDownBody').innerHTML = rows.length ? rows.map(d =>
+                '<tr>' +
+                '<td class="fw-bold">' + (d.incidentId||'--') + '</td>' +
+                '<td title="' + (d.title||'').replace(/"/g,'&quot;') + '">' + (d.title ? (d.title.length>30?d.title.substring(0,30)+'\u2026':d.title) : '--') + '</td>' +
+                '<td>' + (d.submittedBy||'--') + '</td>' +
+                '<td>' + (d.currentStatus||'--') + '</td>' +
+                '<td><span class="owner-tag">' + (d.owner||'--') + '</span></td>' +
+                '<td>' + (d.service||'--') + '</td>' +
+                '<td>' + (d.supportCategory||'--') + '</td>' +
+                '<td>' + (d.feature||'--') + '</td>' +
+                '<td>' + (d.subFeature||'--') + '</td>' +
+                '<td>' + (d.effortDate||'--') + '</td>' +
+                '<td>' + (d.investigationType||'--') + '</td>' +
+                '<td class="fw-bold" style="color:var(--primary-color);">' + (d.effortMinutes||0) + '</td>' +
+                '<td class="text-muted" style="max-width:200px;white-space:normal;">' + (d.effortComments||'--') + '</td>' +
+                '</tr>'
+            ).join('') : '<tr><td colspan="13" class="text-center text-muted py-3">No records found.</td></tr>';
+
+            new bootstrap.Modal(document.getElementById('drillDownModal')).show();
+        }
+
         function drillDownEffortEngineer(engineer) {
             const rows = filteredData.filter(d => (d.activityEngineer || '').trim() === (engineer || '').trim());
-            
-            drillDownTitleForExport = 'Effort Details – ' + engineer;
-            
-            document.getElementById('drillDownTitle').textContent = drillDownTitleForExport;
-            document.getElementById('drillDownCount').textContent = rows.length + ' Records';
-            
-            document.getElementById('drillDownHeader').innerHTML = `
-                <th>RequestID</th>
-                <th>Title</th>
-                <th>Submitted by</th>
-                <th>Status</th>
-                <th>Owner</th>
-                <th>Service</th>
-                <th>Effort Date</th>
-                <th>Investigation Type</th>
-                <th>Time Spent (Mins)</th>
-                <th>Comments</th>
-            `;
-            
-            drillDownExportData = rows.map(d => ({
-                'RequestID': d.incidentId,
-                'Title': d.title,
-                'Submitted by': d.submittedBy,
-                'Status': d.currentStatus,
-                'Owner': d.owner,
-                'Service': d.service,
-                'Effort Date': d.effortDate,
-                'Investigation Type': d.investigationType,
-                'Time Spent (Mins)': d.effortMinutes,
-                'Comments': d.effortComments
-            }));
-            
-            let rowsHtml = '';
-            rows.forEach(d => {
-                rowsHtml += '<tr>' +
-                    '<td class="fw-bold">' + (d.incidentId || '--') + '</td>' +
-                    '<td title="' + (d.title || '').replace(/"/g, '&quot;') + '">' + (d.title ? (d.title.length > 30 ? d.title.substring(0, 30) + '…' : d.title) : '--') + '</td>' +
-                    '<td>' + (d.submittedBy || '--') + '</td>' +
-                    '<td>' + (d.currentStatus || '--') + '</td>' +
-                    '<td><span class="owner-tag">' + (d.owner || '--') + '</span></td>' +
-                    '<td>' + (d.service || '--') + '</td>' +
-                    '<td>' + (d.effortDate || '--') + '</td>' +
-                    '<td>' + (d.investigationType || '--') + '</td>' +
-                    '<td class="fw-bold" style="color: var(--primary-color);">' + (d.effortMinutes || 0) + '</td>' +
-                    '<td class="text-muted" style="max-width:200px;white-space:normal;">' + (d.effortComments || '--') + '</td>' +
-                '</tr>';
-            });
-            
-            document.getElementById('drillDownBody').innerHTML = rowsHtml || '<tr><td colspan="10" class="text-center text-muted py-3">No records found.</td></tr>';
-            
-            new bootstrap.Modal(document.getElementById('drillDownModal')).show();
+            showDrillDown('Effort Details – ' + engineer, rows);
         }
 
         function renderOwnerScorecard() {
@@ -2358,6 +3062,12 @@
                                 title: { display: true, text: 'Minutes' }
                             },
                             x: { ticks: { maxRotation: 45 } }
+                        },
+                        onClick: (evt, els) => {
+                            if (els.length) {
+                                const eng = engineers[els[0].index];
+                                showDrillDown('Detailed Effort – ' + eng, filteredData.filter(d => (d.activityEngineer||'').trim()===eng));
+                            }
                         }
                     }
                 });
@@ -2389,6 +3099,12 @@
                                         return ` ${ctx.label}: ${ctx.parsed} min (${pct}%)`;
                                     }
                                 }
+                            }
+                        },
+                        onClick: (evt, els) => {
+                            if (els.length) {
+                                const eng = engineers[els[0].index];
+                                showDrillDown('Detailed Effort – ' + eng, filteredData.filter(d => (d.activityEngineer||'').trim()===eng));
                             }
                         }
                     }
@@ -2451,7 +3167,7 @@
                 else if (prodNum >= 80) rowClass = 'table-warning';
                 else if (prodNum < 80) rowClass = 'table-danger';
                 
-                html += `<tr class="${rowClass}">
+                html += `<tr class="${rowClass}" style="cursor:pointer;" onclick="drillDownByEngineer(this)" data-eng="${eng.replace(/"/g,'&quot;')}" data-title="Monthly Tracking">
                     <td class="fw-bold"><span class="owner-tag">${eng}</span></td>
                     <td class="text-center fw-bold">${totalHours}</td>
                     <td class="text-center">${WORKING_DAYS_PER_MONTH}</td>
@@ -2598,7 +3314,7 @@
                 rowHtml += `<td class="text-center fw-bold ${statusClass}">${achievement}%</td>`;
                 rowHtml += `<td class="text-center fw-bold">${status}</td>`;
                 
-                html += `<tr>${rowHtml}</tr>`;
+                html += `<tr style="cursor:pointer;" onclick="drillDownByEngineer(this)" data-eng="${eng.replace(/"/g,'&quot;')}" data-title="Daily Tracking"> ${rowHtml}</tr>`;
                 
                 // Store for export
                 const exportRow = {
@@ -2789,7 +3505,10 @@
                 'view-effort-detail': 'sb-effort-detail',
                 'view-daily-review': 'sb-daily-review',
                 'view-monthly-review': 'sb-monthly-review',
-                'view-support-category': 'sb-support-category'
+                'view-support-category': 'sb-support-category',
+                'view-effort-summary': 'sb-effort-summary',
+                'view-comments-review': 'sb-comments-review',
+                'view-productivity-insights': 'sb-productivity-insights'
             };
             if (map[targetId]) {
                 const el = document.getElementById(map[targetId]);
@@ -2911,7 +3630,7 @@
                 rowHtml += `<td class="text-center fw-bold ${statusClass}">${achievement}%</td>`;
                 rowHtml += `<td class="text-center fw-bold">${status}</td>`;
 
-                html += `<tr>${rowHtml}</tr>`;
+                html += `<tr style="cursor:pointer;" onclick="drillDownByEngineer(this)" data-eng="${eng.replace(/"/g,'&quot;')}" data-title="Daily Review"> ${rowHtml}</tr>`;
 
                 const exportRow = { 'Engineer': eng, 'Total Hours': totalHours, 'Working Days': workingDays, 'Expected Hours': expectedHours, 'Avg Hours/Day': avgHoursPerDay, 'Achievement %': achievement, 'Status': status.replace(/[✅⚠️❌]/g, '').trim() };
                 dateArray.forEach(date => {
@@ -3097,7 +3816,7 @@
                        <span style="background:#FF8C00;color:white;padding:1px 6px;border-radius:8px;font-size:0.6rem;font-weight:700;margin-left:4px;vertical-align:middle;" title="Worked on weekends">⚡ WE</span>`
                     : `<span class="owner-tag">${eng}</span>`;
 
-                html += `<tr class="${rowClass}">
+                html += `<tr class="${rowClass}" style="cursor:pointer;" onclick="drillDownByEngineer(this)" data-eng="${eng.replace(/"/g,'&quot;')}" data-title="Monthly Review">
                     <td class="fw-bold">${engNameCell}</td>
                     <td class="text-center fw-bold">${totalHours}</td>
                     <td class="text-center">${stats.totalMinutes.toFixed(0)}</td>
@@ -3200,7 +3919,8 @@
                 const pct = grandTotalMins > 0 ? ((g.totalMinutes / grandTotalMins) * 100).toFixed(1) : '0.0';
                 const color = palette[i % palette.length];
 
-                html += `<tr>
+                const scKey = g.service + '|||' + g.supportCat + '|||' + g.feature + '|||' + g.subFeature;
+                html += `<tr style="cursor:pointer;" onclick="drillDownSupportCategory(this)" data-sckey="${scKey.replace(/"/g,'&quot;')}" title="Click to drill down">
                     <td><span style="background:${color}22;color:${color};border:1px solid ${color};padding:3px 10px;border-radius:20px;font-weight:600;font-size:0.75rem;">${g.service}</span></td>
                     <td class="fw-bold">${g.supportCat}</td>
                     <td>${g.feature}</td>
@@ -3261,6 +3981,13 @@
                     scales: {
                         y: { beginAtZero: true, grid: { color: '#E6F3FF' }, title: { display: true, text: 'Minutes' } },
                         x: { ticks: { maxRotation: 45 } }
+                    },
+                    onClick: (evt, els) => {
+                        if (els.length) {
+                            const cat = catLabels[els[0].index];
+                            const rows = filteredData.filter(d => (d.supportCategory||'').trim() === cat);
+                            showDrillDown('Support Category: ' + cat, rows);
+                        }
                     }
                 }
             });
@@ -3296,6 +4023,33 @@
             });
         }
 
+
+        function drillDownBySupportCategory(el) {
+            const cat = (el && el.getAttribute ? el.getAttribute('data-cat') : el) || '';
+            const rows = filteredData.filter(d => (d.supportCategory||'').trim() === cat);
+            showDrillDown('Support Category: ' + cat, rows);
+        }
+
+        function drillDownByEngineer(el) {
+            const eng = (el.getAttribute ? el.getAttribute('data-eng') : el) || '';
+            const titlePrefix = (el.getAttribute ? el.getAttribute('data-title') : 'Effort') || 'Effort';
+            const rows = filteredData.filter(d => (d.activityEngineer||'').trim() === eng);
+            showDrillDown(titlePrefix + ' – ' + eng, rows);
+        }
+
+        function drillDownSupportCategory(el) {
+            const key = (el && el.getAttribute ? el.getAttribute('data-sckey') : el) || '';
+            const parts = key.split('|||');
+            const service = parts[0] || '', cat = parts[1] || '', feature = parts[2] || '', sub = parts[3] || '';
+            const rows = filteredData.filter(d =>
+                (d.service||'').trim() === service &&
+                (d.supportCategory||'').trim() === cat &&
+                (d.feature||'').trim() === feature &&
+                (d.subFeature||'').trim() === sub
+            );
+            showDrillDown('Support Category: ' + cat + ' > ' + feature, rows);
+        }
+
         function exportSupportCategoryToExcel() {
             const data = window._supportCategoryData || [];
             if (!data.length) { alert('No data to export.'); return; }
@@ -3303,6 +4057,799 @@
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'Support Category Effort');
             XLSX.writeFile(wb, 'Support_Category_Effort.xlsx');
+        }
+
+
+        // =====================================================
+        // EFFORT SUMMARY TAB
+        // =====================================================
+        function renderEffortSummary() {
+            const minToHHMM = (mins) => {
+                const t = Math.round(Number(mins) || 0);
+                return Math.floor(t/60) + ':' + String(t%60).padStart(2,'0');
+            };
+
+            // ---------- Aggregate data ----------
+            const engineerMap = {};
+            const ticketMap = {};   // incidentId -> { sessions, totalMins, engineer, title }
+            const dateMap = {};     // date -> totalMins
+            const monthMap = {};    // YYYY-MM -> totalMins
+            const categoryMap = {}; // supportCategory|feature -> { tickets, totalMins }
+            let grandMins = 0;
+            let srMins = 0, srTickets = 0, incMins = 0, incTickets = 0;
+
+            filteredData.forEach(d => {
+                const eng = (d.activityEngineer || 'Unknown').trim();
+                const mins = d.effortMinutes || 0;
+                grandMins += mins;
+
+                // Engineer map
+                if (!engineerMap[eng]) engineerMap[eng] = { tickets: new Set(), totalMins: 0, srMins: 0, srTickets: 0, incMins: 0, incTickets: 0 };
+                engineerMap[eng].totalMins += mins;
+                engineerMap[eng].tickets.add(d.incidentId);
+
+                // SR vs INC detection — based on "Service" column value
+                const isSR = /service\s*request/i.test(d.service);
+                if (isSR) {
+                    srMins += mins; srTickets++;
+                    engineerMap[eng].srMins += mins; engineerMap[eng].srTickets++;
+                } else {
+                    incMins += mins; incTickets++;
+                    engineerMap[eng].incMins += mins; engineerMap[eng].incTickets++;
+                }
+
+                // Ticket map (for high effort + repeat)
+                if (!ticketMap[d.incidentId]) ticketMap[d.incidentId] = { sessions: 0, totalMins: 0, engineer: eng, title: d.title };
+                ticketMap[d.incidentId].sessions++;
+                ticketMap[d.incidentId].totalMins += mins;
+
+                // Date map
+                const dt = (d.effortDate || '').trim();
+                if (dt) {
+                    if (!dateMap[dt]) dateMap[dt] = 0;
+                    dateMap[dt] += mins;
+                    const ym = dt.substring(0,7);
+                    if (!monthMap[ym]) monthMap[ym] = 0;
+                    monthMap[ym] += mins;
+                }
+
+                // Category map
+                const catKey = (d.supportCategory || 'Unknown') + '|||' + (d.feature || 'N/A');
+                if (!categoryMap[catKey]) categoryMap[catKey] = { supportCategory: d.supportCategory || 'Unknown', feature: d.feature || 'N/A', tickets: new Set(), totalMins: 0 };
+                categoryMap[catKey].tickets.add(d.incidentId);
+                categoryMap[catKey].totalMins += mins;
+            });
+
+            const engineers = Object.keys(engineerMap).sort();
+            const uniqueTickets = Object.keys(ticketMap);
+            const totalTickets = uniqueTickets.length;
+            const avgMins = totalTickets > 0 ? (grandMins / totalTickets) : 0;
+            const HIGH_EFFORT_THRESHOLD = 120;
+
+            // ---------- KPI Cards ----------
+            document.getElementById('es-totalHHMM').textContent = minToHHMM(grandMins);
+            document.getElementById('es-totalMins').textContent = grandMins.toFixed(0);
+            document.getElementById('es-totalTickets').textContent = totalTickets;
+            document.getElementById('es-totalEngineers').textContent = engineers.length;
+            document.getElementById('es-avgMinsPerTicket').textContent = avgMins.toFixed(1);
+
+            const highEffortTickets = uniqueTickets.filter(id => ticketMap[id].totalMins > HIGH_EFFORT_THRESHOLD);
+            document.getElementById('es-highEffortCount').textContent = highEffortTickets.length;
+
+            const repeatTickets = uniqueTickets.filter(id => ticketMap[id].sessions > 1);
+            document.getElementById('es-repeatDrivers').textContent = repeatTickets.length;
+
+            // ---------- Engineer-wise Bar Chart ----------
+            const palette = ['#4A90E2','#50C878','#FFB347','#FFA07A','#FF6B6B','#5B9AE0','#5CB85C','#FF8C42','#9B59B6','#1ABC9C'];
+            const eLabels = engineers;
+            const eValues = engineers.map(e => (engineerMap[e].totalMins / 60).toFixed(2));
+            const eColors = engineers.map((_, i) => palette[i % palette.length]);
+
+            if (effortCharts['es-engineerBarChart']) effortCharts['es-engineerBarChart'].destroy();
+            const ebCtx = document.getElementById('es-engineerBarChart');
+            if (ebCtx) {
+                effortCharts['es-engineerBarChart'] = new Chart(ebCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: eLabels,
+                        datasets: [{ label: 'Hours', data: eValues, backgroundColor: eColors.map(c=>c+'CC'), borderColor: eColors, borderWidth: 2, borderRadius: 6 }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, title: { display: true, text: 'Hours' } }, x: { ticks: { maxRotation: 45 } } }
+                    }
+                });
+            }
+
+            // ---------- SR vs INC Pie ----------
+            const srIncLabels = ['SR (Service Request)', 'INC (Incident)'];
+            const srIncValues = [srMins, incMins];
+            const srIncColors = ['#4A90E2', '#FF6B6B'];
+            if (effortCharts['es-srIncPieChart']) effortCharts['es-srIncPieChart'].destroy();
+            const piCtx = document.getElementById('es-srIncPieChart');
+            if (piCtx) {
+                effortCharts['es-srIncPieChart'] = new Chart(piCtx, {
+                    type: 'doughnut',
+                    data: { labels: srIncLabels, datasets: [{ data: srIncValues, backgroundColor: srIncColors.map(c=>c+'DD'), borderColor: '#fff', borderWidth: 3 }] },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom' },
+                            tooltip: { callbacks: { label: ctx => { const pct = grandMins>0?((ctx.parsed/grandMins)*100).toFixed(1):0; return ctx.label+': '+minToHHMM(ctx.parsed)+' ('+pct+'%)'; } } }
+                        }
+                    }
+                });
+            }
+
+            // ---------- SR vs INC Cards ----------
+            const srIncCardsEl = document.getElementById('es-srIncCards');
+            if (srIncCardsEl) {
+                const srPct = grandMins>0?((srMins/grandMins)*100).toFixed(1):0;
+                const incPct = grandMins>0?((incMins/grandMins)*100).toFixed(1):0;
+                srIncCardsEl.innerHTML = `
+                    <div style="background:#E5F0FF;border-left:4px solid #4A90E2;border-radius:8px;padding:12px;">
+                        <div style="font-size:0.65rem;font-weight:700;color:#4A90E2;text-transform:uppercase;">SR — Service Request</div>
+                        <div style="font-size:1.4rem;font-weight:800;color:#4A90E2;"> ${minToHHMM(srMins)}</div>
+                        <div style="font-size:0.75rem;color:#555;">${srPct}% of total effort</div>
+                    </div>
+                    <div style="background:#FFE5E5;border-left:4px solid #FF6B6B;border-radius:8px;padding:12px;">
+                        <div style="font-size:0.65rem;font-weight:700;color:#FF6B6B;text-transform:uppercase;">INC — Incident</div>
+                        <div style="font-size:1.4rem;font-weight:800;color:#FF6B6B;"> ${minToHHMM(incMins)}</div>
+                        <div style="font-size:0.75rem;color:#555;">${incPct}% of total effort</div>
+                    </div>
+                `;
+            }
+
+            // ---------- Engineer Table ----------
+            const esEngBody = document.getElementById('es-engineerBody');
+            window._effortSummaryData = [];
+            if (engineers.length === 0) {
+                esEngBody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-3">No data.</td></tr>';
+            } else {
+                esEngBody.innerHTML = engineers.map((eng, i) => {
+                    const s = engineerMap[eng];
+                    const pct = grandMins>0?((s.totalMins/grandMins)*100).toFixed(1):0;
+                    const color = palette[i%palette.length];
+                    window._effortSummaryData.push({ Engineer: eng, Tickets: s.tickets.size, 'Total Mins': s.totalMins.toFixed(0), 'Total HH:MM': minToHHMM(s.totalMins), 'SR Tickets': s.srTickets, 'SR Mins': s.srMins.toFixed(0), 'INC Tickets': s.incTickets, 'INC Mins': s.incMins.toFixed(0), '% Contribution': pct+'%' });
+                    return `<tr style="cursor:pointer;" onclick="drillDownByEngineer(this)" data-eng="${eng.replace(/"/g,'&quot;')}" data-title="Effort Summary">
+                        <td><span style="background:${color}22;color:${color};border:1px solid ${color};padding:3px 10px;border-radius:20px;font-weight:600;font-size:0.75rem;">${eng}</span></td>
+                        <td class="text-center fw-bold">${s.tickets.size}</td>
+                        <td class="text-center">${s.totalMins.toFixed(0)}</td>
+                        <td class="text-center fw-bold" style="color:var(--primary-color);">${minToHHMM(s.totalMins)}</td>
+                        <td class="text-center">${s.srTickets}</td>
+                        <td class="text-center">${s.srMins.toFixed(0)}</td>
+                        <td class="text-center">${s.incTickets}</td>
+                        <td class="text-center">${s.incMins.toFixed(0)}</td>
+                        <td class="text-center">
+                            <div class="d-flex align-items-center gap-1">
+                                <div class="score-bar flex-grow-1"><div class="score-bar-fill" style="width:${Math.min(parseFloat(pct),100)}%;background:${color};"></div></div>
+                                <span class="small fw-bold" style="color:${color};">${pct}%</span>
+                            </div>
+                        </td>
+                    </tr>`;
+                }).join('');
+            }
+
+            // ---------- High Effort Tickets ----------
+            const highRows = highEffortTickets.map(id => ({ id, ...ticketMap[id] })).sort((a,b)=>b.totalMins-a.totalMins);
+            const heBody = document.getElementById('es-highEffortBody');
+            window._highEffortExport = highRows.map(t => ({ 'Ticket ID': t.id, 'Title': t.title||'', 'Engineer': t.engineer, 'Sessions': t.sessions, 'Total Mins': t.totalMins.toFixed(0) }));
+            if (heBody) {
+                heBody.innerHTML = highRows.length ? highRows.map(t => `<tr style="cursor:pointer;" onclick="showDrillDown('High Effort: '+t.id, filteredData.filter(d=>d.incidentId===t.id))">
+                    <td class="fw-bold" style="color:var(--danger-color);">${t.id}</td>
+                    <td title="${t.title}">${t.title&&t.title.length>35?t.title.substring(0,35)+'…':t.title||'--'}</td>
+                    <td>${t.engineer}</td>
+                    <td class="text-center fw-bold" style="color:var(--danger-color);">${t.totalMins.toFixed(0)}</td>
+                    <td class="text-center fw-bold">${minToHHMM(t.totalMins)}</td>
+                </tr>`).join('') : '<tr><td colspan="5" class="text-center text-muted py-3">No high-effort tickets found.</td></tr>';
+            }
+
+            // ---------- Repeat Effort Drivers ----------
+            const repeatRows = repeatTickets.map(id => ({ id, ...ticketMap[id] })).sort((a,b)=>b.sessions-a.sessions).slice(0,15);
+            const repBody = document.getElementById('es-repeatBody');
+            window._repeatEffortExport = repeatRows.map(t => ({ 'Ticket ID': t.id, 'Title': t.title||'', 'Engineer': t.engineer, 'Sessions': t.sessions, 'Total Mins': t.totalMins.toFixed(0) }));
+            if (repBody) {
+                repBody.innerHTML = repeatRows.length ? repeatRows.map(t => `<tr>
+                    <td class="fw-bold">${t.id}</td>
+                    <td class="text-center fw-bold" style="color:var(--warning-color);">${t.sessions}</td>
+                    <td class="text-center fw-bold">${t.totalMins.toFixed(0)}</td>
+                </tr>`).join('') : '<tr><td colspan="3" class="text-center text-muted py-3">No repeat tickets found.</td></tr>';
+            }
+
+            // ---------- Daily Trend Chart ----------
+            const sortedDates = Object.keys(dateMap).sort();
+            if (effortCharts['es-dailyTrendChart']) effortCharts['es-dailyTrendChart'].destroy();
+            window._dailyTrendExport = sortedDates.map(d => ({ 'Date': d, 'Total Minutes': dateMap[d].toFixed(0), 'Total Hours': (dateMap[d]/60).toFixed(2) }));
+            const dtCtx = document.getElementById('es-dailyTrendChart');
+            if (dtCtx && sortedDates.length) {
+                effortCharts['es-dailyTrendChart'] = new Chart(dtCtx, {
+                    type: 'line',
+                    data: {
+                        labels: sortedDates,
+                        datasets: [{ label: 'Minutes', data: sortedDates.map(d=>dateMap[d].toFixed(1)), borderColor: '#4A90E2', backgroundColor: '#4A90E222', fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#4A90E2' }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, title: { display: true, text: 'Minutes' } }, x: { ticks: { maxRotation: 45 } } }
+                    }
+                });
+            }
+
+            // ---------- Monthly Trend Chart ----------
+            const sortedMonths = Object.keys(monthMap).sort();
+            if (effortCharts['es-monthlyTrendChart']) effortCharts['es-monthlyTrendChart'].destroy();
+            window._monthlyTrendExport = sortedMonths.map(m => ({ 'Month': m, 'Total Minutes': monthMap[m].toFixed(0), 'Total Hours': (monthMap[m]/60).toFixed(2) }));
+            const mtCtx = document.getElementById('es-monthlyTrendChart');
+            if (mtCtx && sortedMonths.length) {
+                effortCharts['es-monthlyTrendChart'] = new Chart(mtCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: sortedMonths,
+                        datasets: [{ label: 'Minutes', data: sortedMonths.map(m=>monthMap[m].toFixed(1)), backgroundColor: '#50C87888', borderColor: '#50C878', borderWidth: 2, borderRadius: 6 }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, title: { display: true, text: 'Minutes' } } }
+                    }
+                });
+            }
+
+            // ---------- Automation Opportunities ----------
+            const catEntries = Object.values(categoryMap).sort((a,b)=>b.totalMins-a.totalMins).slice(0,10);
+            const autoBody = document.getElementById('es-automationBody');
+            window._automationExport = catEntries.map((c,i) => ({ 'Support Category': c.supportCategory, 'Feature': c.feature, 'Unique Tickets': c.tickets.size, 'Total Mins': c.totalMins.toFixed(0), 'Priority': i<3?'High':i<6?'Medium':'Low' }));
+            if (autoBody) {
+                autoBody.innerHTML = catEntries.length ? catEntries.map((c, i) => {
+                    let priority, pClass;
+                    if (i < 3) { priority = '🔴 High'; pClass = 'text-danger fw-bold'; }
+                    else if (i < 6) { priority = '🟠 Medium'; pClass = 'text-warning fw-bold'; }
+                    else { priority = '🟢 Low'; pClass = 'text-success fw-bold'; }
+                    return `<tr>
+                        <td class="fw-bold">${c.supportCategory}</td>
+                        <td>${c.feature}</td>
+                        <td class="text-center fw-bold">${c.tickets.size}</td>
+                        <td class="text-center fw-bold">${c.totalMins.toFixed(0)}</td>
+                        <td class="${pClass}">${priority}</td>
+                    </tr>`;
+                }).join('') : '<tr><td colspan="5" class="text-center text-muted py-3">No data.</td></tr>';
+            }
+
+            // ---------- Efficiency Improvement Plan ----------
+            const planEl = document.getElementById('es-efficiencyPlan');
+            if (planEl) {
+                const topCat = catEntries[0];
+                const topEng = engineers.length > 0 ? engineers.reduce((a,b) => engineerMap[a].totalMins > engineerMap[b].totalMins ? a : b, engineers[0]) : null;
+                const actions = [];
+                if (topCat) actions.push({ icon: '🤖', title: 'Automate repetitive tasks', desc: `'${topCat.supportCategory} > ${topCat.feature}' accounts for highest effort (${topCat.totalMins.toFixed(0)} mins across ${topCat.tickets.size} tickets). Evaluate scripting or template-based resolution.`, color: '#4A90E2' });
+                if (highRows.length > 0) actions.push({ icon: '⏱️', title: 'Review high-effort cases', desc: `${highRows.length} ticket(s) exceeded ${HIGH_EFFORT_THRESHOLD} mins. Perform root cause analysis and establish best-practice runbooks.`, color: '#FF6B6B' });
+                if (repeatTickets.length > 0) actions.push({ icon: '🔁', title: 'Address repeat effort drivers', desc: `${repeatTickets.length} ticket(s) required multiple sessions. Consider proactive monitoring or self-service documentation.`, color: '#FFB347' });
+                if (avgMins > 60) actions.push({ icon: '📉', title: 'Reduce average effort per ticket', desc: `Current avg is ${avgMins.toFixed(1)} mins. Target <60 mins by leveraging knowledge base and peer collaboration.`, color: '#50C878' });
+                actions.push({ icon: '📊', title: 'Balance engineer workload', desc: 'Review engineer-wise contribution to identify over/under utilization and redistribute tasks for optimal efficiency.', color: '#9B59B6' });
+                
+                planEl.innerHTML = actions.map(a => `
+                    <div style="border-left:4px solid ${a.color};background:${a.color}11;border-radius:8px;padding:10px 14px;">
+                        <div style="font-weight:700;font-size:0.8rem;color:${a.color};">${a.icon} ${a.title}</div>
+                        <div style="font-size:0.75rem;color:#4A5568;margin-top:4px;">${a.desc}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function exportEffortSummaryToExcel() {
+            const wb = XLSX.utils.book_new();
+
+            // Sheet 1: Engineer Contribution
+            const engData = window._effortSummaryData || [];
+            if (engData.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(engData), 'Engineer Contribution');
+
+            // Sheet 2: High Effort Tickets  
+            const heData = (window._highEffortExport || []);
+            if (heData.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(heData), 'High Effort Tickets');
+
+            // Sheet 3: Repeat Effort Drivers
+            const repData = (window._repeatEffortExport || []);
+            if (repData.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(repData), 'Repeat Drivers');
+
+            // Sheet 4: Daily Trend
+            const dailyData = (window._dailyTrendExport || []);
+            if (dailyData.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(dailyData), 'Daily Trend');
+
+            // Sheet 5: Monthly Trend
+            const monthlyData = (window._monthlyTrendExport || []);
+            if (monthlyData.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(monthlyData), 'Monthly Trend');
+
+            // Sheet 6: Automation Opportunities
+            const autoData = (window._automationExport || []);
+            if (autoData.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(autoData), 'Automation Opportunities');
+
+            if (wb.SheetNames.length === 0) { alert('No data to export.'); return; }
+            XLSX.writeFile(wb, 'Effort_Summary_Complete.xlsx');
+        }
+
+
+        // =====================================================
+        // COMMENTS REVIEW TAB  — Enhanced
+        // =====================================================
+        function isBlankComment(c) {
+            if (!c) return true;
+            const s = c.toString().trim();
+            return s === '' || s === '--' || s === '-';
+        }
+        window._commentsDetailData = [];
+
+        function renderCommentsReview() {
+            const minToHHMM = (mins) => {
+                const t = Math.round(Number(mins) || 0);
+                return Math.floor(t/60) + ':' + String(t%60).padStart(2,'0');
+            };
+            const palette = ['#4A90E2','#50C878','#FFB347','#FFA07A','#FF6B6B','#5B9AE0','#5CB85C','#FF8C42','#9B59B6','#1ABC9C'];
+
+            const engineerMap = {};
+            const distinctComments = {};   // normalised comment text -> count
+            const investigationCommentMap = {}; // invType -> {withC, withoutC}
+            let totalEntries = 0, withComments = 0, withoutComments = 0;
+            window._commentsDetailData = [];
+
+            filteredData.forEach((d, idx) => {
+                const eng = (d.activityEngineer || 'Unknown').trim();
+                const hasComment = !isBlankComment(d.effortComments);
+                const rawComment = (d.effortComments || '').toString().trim();
+                const normComment = rawComment.toLowerCase().replace(/[\s]+/g,' ');
+                totalEntries++;
+                if (hasComment) {
+                    withComments++;
+                    if (!distinctComments[normComment]) distinctComments[normComment] = { display: rawComment, count: 0 };
+                    distinctComments[normComment].count++;
+                } else {
+                    withoutComments++;
+                }
+
+                // Investigation type breakdown
+                const invType = (d.investigationType || 'Unknown').trim();
+                if (!investigationCommentMap[invType]) investigationCommentMap[invType] = { withC: 0, withoutC: 0, totalMins: 0 };
+                if (hasComment) investigationCommentMap[invType].withC++;
+                else investigationCommentMap[invType].withoutC++;
+                investigationCommentMap[invType].totalMins += d.effortMinutes || 0;
+
+                if (!engineerMap[eng]) engineerMap[eng] = { total: 0, withC: 0, withoutC: 0, totalMins: 0, minsWithC: 0, minsWithoutC: 0 };
+                engineerMap[eng].total++;
+                engineerMap[eng].totalMins += d.effortMinutes || 0;
+                if (hasComment) { engineerMap[eng].withC++; engineerMap[eng].minsWithC += d.effortMinutes || 0; }
+                else { engineerMap[eng].withoutC++; engineerMap[eng].minsWithoutC += d.effortMinutes || 0; }
+
+                window._commentsDetailData.push({
+                    '#': idx + 1,
+                    'Ticket ID': d.incidentId,
+                    'Engineer': eng,
+                    'Effort Date': d.effortDate,
+                    'Investigation Type': d.investigationType,
+                    'Mins': d.effortMinutes || 0,
+                    'Comments (Col V)': d.effortComments || '',
+                    '_hasComment': hasComment
+                });
+            });
+
+            const engineers = Object.keys(engineerMap).sort();
+            const fillRate = totalEntries > 0 ? ((withComments / totalEntries) * 100).toFixed(1) : '0.0';
+
+            // KPI Cards
+            document.getElementById('cr-totalEntries').textContent = totalEntries;
+            document.getElementById('cr-withComments').textContent = withComments;
+            document.getElementById('cr-withoutComments').textContent = withoutComments;
+            document.getElementById('cr-commentsPct').textContent = fillRate + '%';
+
+            // Distinct comment count card
+            const distinctCount = Object.keys(distinctComments).length;
+            const crDistinctEl = document.getElementById('cr-distinctCount');
+            if (crDistinctEl) crDistinctEl.textContent = distinctCount;
+
+            // Pie Chart
+            if (effortCharts['cr-commentsPieChart']) effortCharts['cr-commentsPieChart'].destroy();
+            const pieCtx = document.getElementById('cr-commentsPieChart');
+            if (pieCtx) {
+                effortCharts['cr-commentsPieChart'] = new Chart(pieCtx, {
+                    type: 'doughnut',
+                    data: { labels: ['With Comments', 'Without Comments'],
+                        datasets: [{ data: [withComments, withoutComments], backgroundColor: ['#50C878DD', '#FF6B6BDD'], borderColor: '#fff', borderWidth: 3 }] },
+                    options: { responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' },
+                            tooltip: { callbacks: { label: ctx => { const pct = totalEntries>0?((ctx.parsed/totalEntries)*100).toFixed(1):0; return ctx.label+': '+ctx.parsed+' ('+pct+'%)'; } } } }
+                    }
+                });
+            }
+
+            // Engineer Stacked Bar
+            if (effortCharts['cr-engineerCommentChart']) effortCharts['cr-engineerCommentChart'].destroy();
+            const barCtx = document.getElementById('cr-engineerCommentChart');
+            if (barCtx && engineers.length) {
+                effortCharts['cr-engineerCommentChart'] = new Chart(barCtx, {
+                    type: 'bar',
+                    data: { labels: engineers, datasets: [
+                        { label: 'With Comments', data: engineers.map(e=>engineerMap[e].withC), backgroundColor: '#50C878BB', borderColor: '#50C878', borderWidth: 2, borderRadius: 4 },
+                        { label: 'Without Comments', data: engineers.map(e=>engineerMap[e].withoutC), backgroundColor: '#FF6B6BBB', borderColor: '#FF6B6B', borderWidth: 2, borderRadius: 4 }
+                    ]},
+                    options: { responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' } },
+                        scales: { x: { stacked: true, ticks: { maxRotation: 45 } }, y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Entries' } } }
+                    }
+                });
+            }
+
+            // Investigation Type Breakdown chart
+            const invTypes = Object.keys(investigationCommentMap).sort();
+            if (effortCharts['cr-invTypeChart']) effortCharts['cr-invTypeChart'].destroy();
+            const invCtx = document.getElementById('cr-invTypeChart');
+            if (invCtx && invTypes.length) {
+                effortCharts['cr-invTypeChart'] = new Chart(invCtx, {
+                    type: 'bar',
+                    data: { labels: invTypes, datasets: [
+                        { label: 'With Comments', data: invTypes.map(t=>investigationCommentMap[t].withC), backgroundColor: '#4A90E2BB', borderColor: '#4A90E2', borderWidth: 2, borderRadius: 4 },
+                        { label: 'Without Comments', data: invTypes.map(t=>investigationCommentMap[t].withoutC), backgroundColor: '#FFB347BB', borderColor: '#FFB347', borderWidth: 2, borderRadius: 4 }
+                    ]},
+                    options: { responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' } },
+                        scales: { x: { stacked: true, ticks: { maxRotation: 45 } }, y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Entries' } } }
+                    }
+                });
+            }
+
+            // Engineer summary table
+            const engBody = document.getElementById('cr-engineerBody');
+            if (engBody) {
+                engBody.innerHTML = engineers.length ? engineers.map((eng, i) => {
+                    const s = engineerMap[eng];
+                    const rate = s.total>0?((s.withC/s.total)*100).toFixed(1):'0.0';
+                    const rateNum = parseFloat(rate);
+                    const statusClass = rateNum>=80?'score-green':rateNum>=50?'score-amber':'score-red';
+                    const statusText = rateNum>=80?'✅ Good':rateNum>=50?'⚠️ Partial':'❌ Low';
+                    const color = palette[i%palette.length];
+                    const barColor = rateNum>=80?'#50C878':rateNum>=50?'#FFB347':'#FF6B6B';
+                    return `<tr style="cursor:pointer;" onclick="drillDownByEngineer(this)" data-eng="${eng.replace(/"/g,'&quot;')}" data-title="Effort Summary">
+                        <td><span style="background:${color}22;color:${color};border:1px solid ${color};padding:3px 10px;border-radius:20px;font-weight:600;font-size:0.75rem;">${eng}</span></td>
+                        <td class="text-center fw-bold">${s.total}</td>
+                        <td class="text-center fw-bold" style="color:#50C878;">${s.withC}</td>
+                        <td class="text-center fw-bold" style="color:#FF6B6B;">${s.withoutC}</td>
+                        <td><div class="d-flex align-items-center gap-1"><div class="score-bar flex-grow-1"><div class="score-bar-fill" style="width:${Math.min(rateNum,100)}%;background:${barColor};"></div></div><span class="small fw-bold" style="color:${barColor};">${rate}%</span></div></td>
+                        <td class="text-center fw-bold">${s.totalMins.toFixed(0)}</td>
+                        <td class="text-center" style="color:#50C878;">${s.minsWithC.toFixed(0)}</td>
+                        <td class="text-center" style="color:#FF6B6B;">${s.minsWithoutC.toFixed(0)}</td>
+                        <td class="${statusClass} text-center">${statusText}</td>
+                    </tr>`;
+                }).join('') : '<tr><td colspan="9" class="text-center text-muted py-3">No data available.</td></tr>';
+            }
+
+            // Distinct Comments Table
+            const distBody = document.getElementById('cr-distinctBody');
+            if (distBody) {
+                const distArr = Object.entries(distinctComments)
+                    .sort((a,b) => b[1].count - a[1].count);
+                distBody.innerHTML = distArr.length ? distArr.map(([ , v], i) => {
+                    const pct = withComments>0?((v.count/withComments)*100).toFixed(1):0;
+                    const isDetailed = v.display.length > 20;
+                    return `<tr>
+                        <td class="text-center text-muted">${i+1}</td>
+                        <td style="max-width:400px;white-space:normal;">${v.display}</td>
+                        <td class="text-center fw-bold">${v.count}</td>
+                        <td class="text-center">${pct}%</td>
+                        <td class="text-center"><span class="badge" style="background:${isDetailed?'#E5F0FF':'#FFF4E5'};color:${isDetailed?'#4A90E2':'#FFB347'};border:1px solid ${isDetailed?'#4A90E2':'#FFB347'};font-size:0.65rem;">${isDetailed?'📝 Detailed':'📌 Brief'}</span></td>
+                    </tr>`;
+                }).join('') : '<tr><td colspan="5" class="text-center text-muted py-3">No comments found.</td></tr>';
+            }
+
+            renderCommentsDetailTable();
+        }
+
+        function renderCommentsDetailTable() {
+            const search = (document.getElementById('cr-commentSearch') || {}).value || '';
+            const filter = (document.getElementById('cr-commentFilter') || {}).value || 'all';
+            const searchLower = search.toLowerCase();
+
+            let rows = window._commentsDetailData || [];
+            if (filter === 'with') rows = rows.filter(r => r._hasComment);
+            else if (filter === 'without') rows = rows.filter(r => !r._hasComment);
+            else if (filter === 'detailed') rows = rows.filter(r => r._hasComment && (r['Comments (Col V)']||'').toString().length > 20);
+            else if (filter === 'brief') rows = rows.filter(r => r._hasComment && (r['Comments (Col V)']||'').toString().length <= 20);
+            if (searchLower) rows = rows.filter(r =>
+                (r['Ticket ID']||'').toLowerCase().includes(searchLower) ||
+                (r['Engineer']||'').toLowerCase().includes(searchLower) ||
+                (r['Comments (Col V)']||'').toLowerCase().includes(searchLower) ||
+                (r['Investigation Type']||'').toLowerCase().includes(searchLower)
+            );
+
+            const tbody = document.getElementById('cr-detailBody');
+            if (!tbody) return;
+            if (rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-3">No records found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rows.map((r, i) => {
+                const comment = r['Comments (Col V)'];
+                const hasC = r._hasComment;
+                const commentDisplay = hasC
+                    ? `<span style="color:#2E7D32;">${comment.length > 60 ? comment.substring(0,60)+'…' : comment}</span>`
+                    : '<span class="text-muted fst-italic">— No comment —</span>';
+                const statusBadge = hasC
+                    ? '<span class="badge" style="background:#50C87822;color:#2E7D32;border:1px solid #50C878;font-size:0.65rem;">✅ Filled</span>'
+                    : '<span class="badge" style="background:#FF6B6B22;color:#C62828;border:1px solid #FF6B6B;font-size:0.65rem;">❌ Missing</span>';
+                return `<tr style="background:${hasC ? 'white' : '#FFF5F5'};">
+                    <td class="text-center text-muted">${i+1}</td>
+                    <td class="fw-bold" style="color:var(--primary-color);">${r['Ticket ID']||'--'}</td>
+                    <td>${r['Engineer']||'--'}</td>
+                    <td>${r['Effort Date']||'--'}</td>
+                    <td>${r['Investigation Type']||'--'}</td>
+                    <td class="text-center fw-bold">${r['Mins']||0}</td>
+                    <td style="max-width:220px;white-space:normal;">${commentDisplay}</td>
+                    <td class="text-center">${statusBadge}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function filterCommentsTable() {
+            renderCommentsDetailTable();
+        }
+
+        function exportCommentsReviewToExcel() {
+            const raw = window._commentsDetailData || [];
+            if (!raw.length) { alert('No data to export.'); return; }
+            const exportData = raw.map(r => ({
+                'Ticket ID': r['Ticket ID'],
+                'Engineer': r['Engineer'],
+                'Effort Date': r['Effort Date'],
+                'Investigation Type': r['Investigation Type'],
+                'Mins': r['Mins'],
+                'Comments (Col V)': r['Comments (Col V)'],
+                'Comment Status': r._hasComment ? 'Filled' : 'Missing'
+            }));
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Comments Review');
+            XLSX.writeFile(wb, 'Comments_Review.xlsx');
+        }
+
+
+        // Indian Rupee formatter — adds ₹ sign + Indian comma grouping (e.g. 1,00,000)
+        function formatINR(amount) {
+            const n = Math.round(Number(amount) || 0);
+            if (n < 0) return '-' + formatINR(-n);
+            const s = n.toString();
+            if (s.length <= 3) return s;
+            // Indian system: last 3 digits, then groups of 2
+            const last3 = s.slice(-3);
+            const rest = s.slice(0, -3);
+            const grouped = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+            return grouped + ',' + last3;
+        }
+
+        // =====================================================
+        // PRODUCTIVITY INSIGHTS TAB
+        // =====================================================
+        function renderProductivityInsights() {
+            const minToHHMM = (mins) => {
+                const t = Math.round(Number(mins)||0);
+                return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');
+            };
+            const hourlyRate = parseFloat((document.getElementById('pi-hourlyRate')||{value:'500'}).value) || 50;
+            const HIGH_THRESHOLD = parseInt((document.getElementById('pi-threshold')||{value:'120'}).value) || 120;
+            const costPerMin = hourlyRate / 60;
+            const palette = ['#4A90E2','#50C878','#FFB347','#FFA07A','#FF6B6B','#5B9AE0','#5CB85C','#FF8C42','#9B59B6','#1ABC9C'];
+
+            // Update threshold label
+            const thEl = document.getElementById('pi-heThresholdLabel');
+            if (thEl) thEl.textContent = '(>' + HIGH_THRESHOLD + ' mins)';
+
+            // Aggregate data
+            const engineerMap = {};
+            const ticketMap = {};
+            const dateMap = {};
+            const monthMap = {};
+            const categoryMap = {};
+            let grandMins = 0, grandTickets = new Set();
+
+            filteredData.forEach(d => {
+                const eng = (d.activityEngineer||'Unknown').trim();
+                const mins = d.effortMinutes || 0;
+                grandMins += mins;
+                grandTickets.add(d.incidentId);
+
+                if (!engineerMap[eng]) engineerMap[eng] = { tickets: new Set(), totalMins: 0 };
+                engineerMap[eng].totalMins += mins;
+                engineerMap[eng].tickets.add(d.incidentId);
+
+                if (!ticketMap[d.incidentId]) ticketMap[d.incidentId] = { sessions:0, totalMins:0, engineer:eng, title:d.title };
+                ticketMap[d.incidentId].sessions++;
+                ticketMap[d.incidentId].totalMins += mins;
+
+                const dt = (d.effortDate||'').trim();
+                if (dt) {
+                    if (!dateMap[dt]) dateMap[dt] = 0;
+                    dateMap[dt] += mins;
+                    const ym = dt.substring(0,7);
+                    if (!monthMap[ym]) monthMap[ym] = 0;
+                    monthMap[ym] += mins;
+                }
+
+                const catKey = (d.supportCategory||'Unknown')+'|||'+(d.feature||'N/A');
+                if (!categoryMap[catKey]) categoryMap[catKey] = { cat: d.supportCategory||'Unknown', feat: d.feature||'N/A', tickets: new Set(), totalMins:0 };
+                categoryMap[catKey].tickets.add(d.incidentId);
+                categoryMap[catKey].totalMins += mins;
+            });
+
+            const engineers = Object.keys(engineerMap).sort();
+            const totalUniqueTickets = grandTickets.size;
+            const avgMins = totalUniqueTickets > 0 ? grandMins / totalUniqueTickets : 0;
+            const avgCost = avgMins * costPerMin;
+            const totalCost = grandMins * costPerMin;
+            const uniqueTicketArr = Object.keys(ticketMap);
+            const highEffort = uniqueTicketArr.filter(id => ticketMap[id].totalMins > HIGH_THRESHOLD);
+            const repeatTickets = uniqueTicketArr.filter(id => ticketMap[id].sessions > 1);
+
+            // Target: 540 mins/day. Efficiency = actual / expected. Cap at 100 for display
+            const totalDays = new Set(filteredData.map(d=>d.effortDate).filter(Boolean)).size || 1;
+            const expectedTotal = totalDays * 540 * engineers.length;
+            const efficiencyScore = expectedTotal > 0 ? Math.min(100, (grandMins/expectedTotal)*100).toFixed(1) : '0.0';
+
+            // KPI Cards
+            document.getElementById('pi-avgMinsTicket').textContent = avgMins.toFixed(1);
+            document.getElementById('pi-avgCostTicket').textContent = '₹' + formatINR(avgCost);
+            document.getElementById('pi-highEffortCount').textContent = highEffort.length;
+            document.getElementById('pi-repeatCount').textContent = repeatTickets.length;
+            document.getElementById('pi-totalCost').textContent = '₹' + formatINR(totalCost);
+            document.getElementById('pi-efficiencyScore').textContent = efficiencyScore + '%';
+
+            // Avg Effort per Ticket table
+            window._piAvgData = [];
+            const avgBody = document.getElementById('pi-avgEffortBody');
+            if (avgBody) {
+                avgBody.innerHTML = engineers.map((eng,i) => {
+                    const s = engineerMap[eng];
+                    const tix = s.tickets.size || 1;
+                    const avgM = s.totalMins / tix;
+                    const cost = s.totalMins * costPerMin;
+                    const avgC = cost / tix;
+                    const color = palette[i%palette.length];
+                    window._piAvgData.push({ 'Engineer':eng, 'Unique Tickets':tix, 'Total Mins':s.totalMins.toFixed(0), 'Avg Mins/Ticket':avgM.toFixed(1), 'Avg HH:MM/Ticket':minToHHMM(avgM), 'Hourly Rate (₹)':'₹'+hourlyRate, 'Avg Cost/Ticket (₹)':'₹'+formatINR(avgC), 'Total Cost (₹)':'₹'+formatINR(cost) });
+                    return `<tr style="cursor:pointer;" onclick="drillDownByEngineer(this)" data-eng="${eng.replace(/"/g,'&quot;')}" data-title="Productivity">
+                        <td><span style="background:${color}22;color:${color};border:1px solid ${color};padding:3px 10px;border-radius:20px;font-weight:600;font-size:0.75rem;">${eng}</span></td>
+                        <td class="text-center fw-bold">${tix}</td>
+                        <td class="text-center">${s.totalMins.toFixed(0)}</td>
+                        <td class="text-center fw-bold" style="color:var(--primary-color);">${avgM.toFixed(1)}</td>
+                        <td class="text-center fw-bold">${minToHHMM(avgM)}</td>
+                        <td class="text-center">₹${hourlyRate}/hr</td>
+                        <td class="text-center fw-bold" style="color:var(--secondary-color);">₹${formatINR(avgC)}</td>
+                        <td class="text-center fw-bold" style="color:var(--warning-color);">₹${formatINR(cost)}</td>
+                    </tr>`;
+                }).join('') || '<tr><td colspan="8" class="text-center text-muted py-3">No data.</td></tr>';
+            }
+
+            // High Effort Tickets table
+            window._piHighEffortData = [];
+            const heBody = document.getElementById('pi-highEffortBody');
+            const heRows = highEffort.map(id=>({id,...ticketMap[id]})).sort((a,b)=>b.totalMins-a.totalMins);
+            if (heBody) {
+                heBody.innerHTML = heRows.length ? heRows.map(t => {
+                    const cost = t.totalMins * costPerMin;
+                    window._piHighEffortData.push({'Ticket ID':t.id,'Title':t.title||'','Engineer':t.engineer,'Sessions':t.sessions,'Total Mins':t.totalMins.toFixed(0),'Cost (₹)':'₹'+formatINR(cost)});
+                    return `<tr style="cursor:pointer;" onclick="showDrillDown('High Effort: '+t.id, filteredData.filter(d=>d.incidentId===t.id))">
+                        <td class="fw-bold" style="color:var(--danger-color);">${t.id}</td>
+                        <td title="${t.title||''}">${t.title?(t.title.length>30?t.title.substring(0,30)+'…':t.title):'--'}</td>
+                        <td>${t.engineer}</td>
+                        <td class="text-center fw-bold" style="color:var(--warning-color);">${t.sessions}</td>
+                        <td class="text-center fw-bold" style="color:var(--danger-color);">${t.totalMins.toFixed(0)}</td>
+                        <td class="text-center fw-bold">₹${formatINR(cost)}</td>
+                    </tr>`;
+                }).join('') : '<tr><td colspan="6" class="text-center text-muted py-3">No high-effort tickets.</td></tr>';
+            }
+
+            // Repeat Effort Drivers
+            window._piRepeatData = [];
+            const repBody = document.getElementById('pi-repeatBody');
+            const repRows = repeatTickets.map(id=>({id,...ticketMap[id]})).sort((a,b)=>b.sessions-a.sessions).slice(0,20);
+            if (repBody) {
+                repBody.innerHTML = repRows.length ? repRows.map(t => {
+                    const cost = t.totalMins * costPerMin;
+                    window._piRepeatData.push({'Ticket ID':t.id,'Sessions':t.sessions,'Total Mins':t.totalMins.toFixed(0),'Cost (₹)':'₹'+formatINR(cost)});
+                    return `<tr style="cursor:pointer;" onclick="showDrillDown('Repeat: '+t.id, filteredData.filter(d=>d.incidentId===t.id))">
+                        <td class="fw-bold">${t.id}</td>
+                        <td class="text-center fw-bold" style="color:var(--warning-color);">${t.sessions}</td>
+                        <td class="text-center fw-bold">${t.totalMins.toFixed(0)}</td>
+                        <td class="text-center fw-bold">₹${formatINR(cost)}</td>
+                    </tr>`;
+                }).join('') : '<tr><td colspan="4" class="text-center text-muted py-3">No repeat tickets.</td></tr>';
+            }
+
+            // Daily Trend Chart
+            const sortedDates = Object.keys(dateMap).sort();
+            window._piDailyData = sortedDates.map(d=>({'Date':d,'Minutes':dateMap[d].toFixed(0),'Hours':(dateMap[d]/60).toFixed(2),'Cost (₹)':'₹'+formatINR(dateMap[d]*costPerMin)}));
+            if (effortCharts['pi-dailyTrendChart']) effortCharts['pi-dailyTrendChart'].destroy();
+            const dtCtx = document.getElementById('pi-dailyTrendChart');
+            if (dtCtx && sortedDates.length) {
+                effortCharts['pi-dailyTrendChart'] = new Chart(dtCtx, {
+                    type: 'line',
+                    data: { labels: sortedDates, datasets: [{
+                        label: 'Minutes', data: sortedDates.map(d=>dateMap[d].toFixed(1)),
+                        borderColor: '#4A90E2', backgroundColor: '#4A90E222', fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#4A90E2'
+                    }]},
+                    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+                        scales:{y:{beginAtZero:true,title:{display:true,text:'Minutes'}},x:{ticks:{maxRotation:45}}},
+                        onClick:(evt,els)=>{ if(els.length){ const d=sortedDates[els[0].index]; showDrillDown('Daily Effort: '+d, filteredData.filter(r=>(r.effortDate||'').trim()===d)); } }
+                    }
+                });
+            }
+
+            // Monthly Trend Chart
+            const sortedMonths = Object.keys(monthMap).sort();
+            window._piMonthlyData = sortedMonths.map(m=>({'Month':m,'Minutes':monthMap[m].toFixed(0),'Hours':(monthMap[m]/60).toFixed(2),'Cost (₹)':'₹'+formatINR(monthMap[m]*costPerMin)}));
+            if (effortCharts['pi-monthlyTrendChart']) effortCharts['pi-monthlyTrendChart'].destroy();
+            const mtCtx = document.getElementById('pi-monthlyTrendChart');
+            if (mtCtx && sortedMonths.length) {
+                effortCharts['pi-monthlyTrendChart'] = new Chart(mtCtx, {
+                    type: 'bar',
+                    data: { labels: sortedMonths, datasets: [{
+                        label: 'Minutes', data: sortedMonths.map(m=>monthMap[m].toFixed(1)),
+                        backgroundColor: '#50C87888', borderColor: '#50C878', borderWidth: 2, borderRadius: 6
+                    }]},
+                    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+                        scales:{y:{beginAtZero:true,title:{display:true,text:'Minutes'}}},
+                        onClick:(evt,els)=>{ if(els.length){ const m=sortedMonths[els[0].index]; showDrillDown('Monthly Effort: '+m, filteredData.filter(r=>(r.effortDate||'').trim().substring(0,7)===m)); } }
+                    }
+                });
+            }
+
+            // Automation Opportunities table
+            const catEntries = Object.values(categoryMap).sort((a,b)=>b.totalMins-a.totalMins).slice(0,10);
+            window._piAutoData = [];
+            const autoBody = document.getElementById('pi-automationBody');
+            if (autoBody) {
+                autoBody.innerHTML = catEntries.length ? catEntries.map((c,i)=>{
+                    let pri, pClass;
+                    if(i<3){pri='🔴 High';pClass='text-danger fw-bold';}
+                    else if(i<6){pri='🟠 Medium';pClass='text-warning fw-bold';}
+                    else{pri='🟢 Low';pClass='text-success fw-bold';}
+                    const cost = c.totalMins * costPerMin;
+                    window._piAutoData.push({'Support Category':c.cat,'Feature':c.feat,'Unique Tickets':c.tickets.size,'Total Mins':c.totalMins.toFixed(0),'Est. Cost (₹)':'₹'+formatINR(cost),'Priority':pri.replace(/[🔴🟠🟢]/g,'').trim()});
+                    return `<tr style="cursor:pointer;" onclick="drillDownBySupportCategory(this)" data-cat="${c.cat.replace(/"/g,'&quot;')}" title="Click to drill down">
+                        <td class="fw-bold">${c.cat}</td><td>${c.feat}</td>
+                        <td class="text-center fw-bold">${c.tickets.size}</td>
+                        <td class="text-center fw-bold">${c.totalMins.toFixed(0)}</td>
+                        <td class="text-center fw-bold">₹${formatINR(cost)}</td>
+                        <td class="${pClass}">${pri}</td>
+                    </tr>`;
+                }).join('') : '<tr><td colspan="6" class="text-center text-muted py-3">No data.</td></tr>';
+            }
+
+            // Efficiency Improvement Plan
+            const planEl = document.getElementById('pi-efficiencyPlan');
+            if (planEl) {
+                const topCat = catEntries[0];
+                const actions = [];
+                if(topCat) actions.push({icon:'🤖',title:'Automate top effort consumer',desc:`"${topCat.cat} > ${topCat.feat}" drives ${topCat.totalMins.toFixed(0)} mins (${topCat.tickets.size} tickets, est. ₹${formatINR(topCat.totalMins*costPerMin)}). Evaluate scripting and runbook automation.`,color:'#4A90E2'});
+                if(highEffort.length) actions.push({icon:'⏱️',title:'Review high-effort cases',desc:`${highEffort.length} ticket(s) exceeded ${HIGH_THRESHOLD} mins. Review root cause and create resolution templates. Potential savings: ₹${formatINR(highEffort.reduce((s,id)=>s+ticketMap[id].totalMins,0)*costPerMin)}.`,color:'#FF6B6B'});
+                if(repeatTickets.length) actions.push({icon:'🔁',title:'Resolve repeat effort drivers',desc:`${repeatTickets.length} ticket(s) needed multiple sessions. Invest in self-service docs and proactive monitoring.`,color:'#FFB347'});
+                if(avgMins>60) actions.push({icon:'📉',title:'Reduce avg effort per ticket',desc:`Current avg ${avgMins.toFixed(1)} mins (cost ₹${formatINR(avgCost)}). Target <60 mins via knowledge base and peer review.`,color:'#50C878'});
+                actions.push({icon:'📊',title:'Balance engineer workload',desc:`Efficiency score: ${efficiencyScore}%. Review utilisation across ${engineers.length} engineer(s) and redistribute tasks for optimal output.`,color:'#9B59B6'});
+                actions.push({icon:'💰',title:'Track effort cost ROI',desc:`Total effort investment: ₹${formatINR(totalCost)} (${(grandMins/60).toFixed(1)} hrs). Benchmark quarterly to track improvement.`,color:'#1ABC9C'});
+                planEl.innerHTML = actions.map(a=>`
+                    <div style="border-left:4px solid ${a.color};background:${a.color}11;border-radius:8px;padding:10px 14px;">
+                        <div style="font-weight:700;font-size:0.8rem;color:${a.color};">${a.icon} ${a.title}</div>
+                        <div style="font-size:0.75rem;color:#4A5568;margin-top:4px;">${a.desc}</div>
+                    </div>`).join('');
+            }
+        }
+
+        function exportProductivityInsightsToExcel() {
+            const wb = XLSX.utils.book_new();
+            if (window._piAvgData&&window._piAvgData.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._piAvgData), 'Avg Effort per Ticket');
+            if (window._piHighEffortData&&window._piHighEffortData.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._piHighEffortData), 'High Effort Tickets');
+            if (window._piRepeatData&&window._piRepeatData.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._piRepeatData), 'Repeat Drivers');
+            if (window._piDailyData&&window._piDailyData.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._piDailyData), 'Daily Trend');
+            if (window._piMonthlyData&&window._piMonthlyData.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._piMonthlyData), 'Monthly Trend');
+            if (window._piAutoData&&window._piAutoData.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._piAutoData), 'Automation Opportunities');
+            if (wb.SheetNames.length===0){alert('No data to export.');return;}
+            XLSX.writeFile(wb,'Productivity_Insights.xlsx');
         }
 
         function processData() {
