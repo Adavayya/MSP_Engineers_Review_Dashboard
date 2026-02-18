@@ -64,7 +64,7 @@
             position: fixed;
             left: -320px;
             top: 0;
-            width: 250px;
+            width: 300px;
             height: 100vh;
             background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
             border-right: 3px solid var(--primary-color);
@@ -977,7 +977,7 @@
                     <button class="sidebar-close" onclick="toggleSidebar()"><i class="bi bi-x-lg"></i></button>
                 </div>
                 <div class="sidebar-content">
-                    <div class="nav-section-title"><i class="bi bi-bar-chart-line me-1"></i>SECTIONS</div>
+                    <div class="nav-section-title"><i class="bi bi-bar-chart-line me-1"></i>Menu</div>
                     <div class="nav flex-column">
                         <a class="nav-link active" id="sb-effort-stats" onclick="switchSection('view-effort-stats','Effort Stats Analyses','bi-table')">
                             <i class="bi bi-table"></i><span class="nav-link-text">Effort Stats Analyses</span>
@@ -991,8 +991,8 @@
                         <a class="nav-link" id="sb-monthly-review" onclick="switchSection('view-monthly-review','Monthly Effort Review','bi-calendar-month')">
                             <i class="bi bi-calendar-month"></i><span class="nav-link-text">Monthly Effort Review</span>
                         </a>
-                        <a class="nav-link" id="sb-support-category" onclick="switchSection('view-support-category','Support Category Effort','bi-tags')">
-                            <i class="bi bi-tags"></i><span class="nav-link-text">Support Category Effort</span>
+                        <a class="nav-link" id="sb-support-category" onclick="switchSection('view-support-category','Accounts, Category and Features Efforts','bi-tags')">
+                            <i class="bi bi-tags"></i><span class="nav-link-text">Accounts, Category and Features Efforts</span>
                         </a>
                         <a class="nav-link" id="sb-effort-summary" onclick="switchSection('view-effort-summary','Effort Summary','bi-clipboard-data')">
                             <i class="bi bi-clipboard-data"></i><span class="nav-link-text">Effort Summary</span>
@@ -1064,12 +1064,6 @@
                     </div>
                     <hr class="my-3">
                     <div class="d-flex flex-column gap-2 mb-3">
-                        <button class="btn btn-sm btn-excel w-100" onclick="exportFullData()">
-                            <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
-                        </button>
-                        <button class="btn btn-sm btn-pdf w-100" id="download-pdf-btn">
-                            <i class="bi bi-file-pdf me-1"></i> Export PDF
-                        </button>
                         <button class="btn btn-sm btn-outline-secondary w-100" id="clear-filters-btn">
                             <i class="bi bi-x-circle me-1"></i>Clear All Filters
                         </button>
@@ -1097,9 +1091,15 @@
                         <span id="data-range-type">All Records</span>
                     </div>
                 </div>
-                <div class="d-flex gap-2 align-items-center">
+                <div class="d-flex gap-2 align-items-center flex-wrap">
                     <span id="total-cases" class="badge" style="background: linear-gradient(135deg, var(--primary-color), #5B9AE0); color: white; padding: 6px 14px; border-radius: 20px; font-weight: 600;">0 Cases</span>
                     <span id="last-updated" class="small text-muted"></span>
+                    <button class="btn btn-sm btn-excel" onclick="exportFullDashboard()" title="Export complete dashboard data to Excel (all tabs)">
+                        <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
+                    </button>
+                    <button class="btn btn-sm btn-pdf" id="download-pdf-btn" title="Export full dashboard to PDF">
+                        <i class="bi bi-file-pdf me-1"></i> Export PDF
+                    </button>
                 </div>
             </div>
 
@@ -1115,7 +1115,7 @@
                     <li class="nav-item"><button class="nav-link" id="view-effort-detail-tab" data-bs-toggle="tab" data-bs-target="#view-effort-detail" type="button">Detailed Effort Analyses</button></li>
                     <li class="nav-item"><button class="nav-link" id="view-daily-review-tab" data-bs-toggle="tab" data-bs-target="#view-daily-review" type="button">Daily Effort Review</button></li>
                     <li class="nav-item"><button class="nav-link" id="view-monthly-review-tab" data-bs-toggle="tab" data-bs-target="#view-monthly-review" type="button">Monthly Effort Review</button></li>
-                    <li class="nav-item"><button class="nav-link" id="view-support-category-tab" data-bs-toggle="tab" data-bs-target="#view-support-category" type="button">Support Category Effort</button></li>
+                    <li class="nav-item"><button class="nav-link" id="view-support-category-tab" data-bs-toggle="tab" data-bs-target="#view-support-category" type="button">Accounts, Category and Features Efforts</button></li>
                     <li class="nav-item"><button class="nav-link" id="view-effort-summary-tab" data-bs-toggle="tab" data-bs-target="#view-effort-summary" type="button">Effort Summary</button></li>
                     <li class="nav-item"><button class="nav-link" id="view-comments-review-tab" data-bs-toggle="tab" data-bs-target="#view-comments-review" type="button">Comments Review</button></li>
                     <li class="nav-item"><button class="nav-link" id="view-productivity-insights-tab" data-bs-toggle="tab" data-bs-target="#view-productivity-insights" type="button">Productivity Insights</button></li>
@@ -1457,10 +1457,10 @@
                     </div>
                 </div>
 
-                <!-- Support Category Effort Tab -->
+                <!-- Accounts, Category and Features Efforts Tab -->
                 <div class="tab-pane fade" id="view-support-category" role="tabpanel">
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="mb-0" style="color: var(--primary-color);">Support Category Effort</h5>
+                        <h5 class="mb-0" style="color: var(--primary-color);">Accounts, Category and Features Efforts</h5>
                         <button class="btn btn-sm btn-excel" onclick="exportSupportCategoryToExcel()">
                             <i class="bi bi-file-earmark-excel me-1"></i> Export to Excel
                         </button>
@@ -1550,6 +1550,137 @@
                                     <tbody id="supportCategoryBody">
                                         <tr><td colspan="9" class="text-center text-muted py-3">No data available.</td></tr>
                                     </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===================== ACCOUNT EFFORT SECTION ===================== -->
+                    <hr style="border-color: var(--primary-color); border-width: 2px; margin: 30px 0 20px;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0" style="color: var(--primary-color);"><i class="bi bi-building me-2"></i>Account Effort Analysis</h5>
+                        <button class="btn btn-sm btn-excel" onclick="exportAccountEffortToExcel()">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Export Accounts to Excel
+                        </button>
+                    </div>
+
+                    <!-- Account Summary KPI Cards -->
+                    <div class="row g-3 mb-4" id="acct-kpiCards">
+                        <div class="col-md-3">
+                            <div class="metric-card card"><div class="card-body text-center">
+                                <div class="metric-value" id="acctTotalAccounts">0</div>
+                                <div class="metric-label">Total Accounts</div>
+                            </div></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card"><div class="card-body text-center">
+                                <div class="metric-value" style="color:var(--secondary-color);" id="acctTopN">50</div>
+                                <div class="metric-label">Top Effort Accounts</div>
+                            </div></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card"><div class="card-body text-center">
+                                <div class="metric-value" style="color:var(--warning-color);" id="acctBottomN">50</div>
+                                <div class="metric-label">Low Effort Accounts</div>
+                            </div></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="metric-card card"><div class="card-body text-center">
+                                <div class="metric-value" style="color:var(--danger-color);" id="acctTotalMins">0</div>
+                                <div class="metric-label">Total Effort (Mins)</div>
+                            </div></div>
+                        </div>
+                    </div>
+
+                    <!-- TOP 50 / BOTTOM 50 Accounts -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-light py-2 d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0" style="color:var(--danger-color);"><i class="bi bi-graph-up-arrow me-1"></i>🔴 Top 50 Accounts — Highest Effort</h6>
+                                </div>
+                                <div class="card-body p-2">
+                                    <div class="table-responsive" style="max-height:500px;overflow-y:auto;">
+                                        <table class="table table-sm table-bordered scorecard-table" id="acctTop50Table">
+                                            <thead><tr>
+                                                <th>#</th><th>Account (Submitted By)</th>
+                                                <th>Total Tickets</th><th>Total Mins</th><th>HH:MM</th><th>INC</th><th>SR</th><th>% Effort</th>
+                                            </tr></thead>
+                                            <tbody id="acctTop50Body"><tr><td colspan="8" class="text-center text-muted py-3">No data available.</td></tr></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-header bg-light py-2 d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0" style="color:var(--secondary-color);"><i class="bi bi-graph-down-arrow me-1"></i>🟢 Bottom 50 Accounts — Lowest Effort</h6>
+                                </div>
+                                <div class="card-body p-2">
+                                    <div class="table-responsive" style="max-height:500px;overflow-y:auto;">
+                                        <table class="table table-sm table-bordered scorecard-table" id="acctBottom50Table">
+                                            <thead><tr>
+                                                <th>#</th><th>Account (Submitted By)</th>
+                                                <th>Total Tickets</th><th>Total Mins</th><th>HH:MM</th><th>INC</th><th>SR</th><th>% Effort</th>
+                                            </tr></thead>
+                                            <tbody id="acctBottom50Body"><tr><td colspan="8" class="text-center text-muted py-3">No data available.</td></tr></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account vs Support Category / Feature / Sub Feature -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light py-2">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <h6 class="mb-0" style="color:var(--primary-color);"><i class="bi bi-intersect me-1"></i>Account vs Category / Feature / Sub Feature</h6>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <label class="filter-label mb-0">View by:</label>
+                                    <select class="form-select form-select-sm" id="acctVsDimension" onchange="renderAccountVsDimension()" style="width:auto;">
+                                        <option value="category">Support Category (Col H)</option>
+                                        <option value="feature">Feature (Col I)</option>
+                                        <option value="subfeature">Sub Feature (Col J)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="table-responsive" style="max-height:500px;overflow-y:auto;overflow-x:auto;">
+                                <table class="table table-sm table-bordered scorecard-table" id="acctVsDimTable">
+                                    <thead id="acctVsDimHead"><tr><th>Account</th><th>Dimension</th><th>Total Tickets</th><th>Total Mins</th><th>HH:MM</th><th>% of Account Effort</th></tr></thead>
+                                    <tbody id="acctVsDimBody"><tr><td colspan="6" class="text-center text-muted py-3">No data available.</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account vs INC / SR -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light py-2">
+                            <h6 class="mb-0" style="color:var(--primary-color);"><i class="bi bi-ticket-detailed me-1"></i>Account INC vs SR Analysis</h6>
+                        </div>
+                        <div class="card-body p-2">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <canvas id="acctIncVsSrChart" height="250"></canvas>
+                                </div>
+                                <div class="col-md-6">
+                                    <canvas id="acctIncVsSrBarChart" height="250"></canvas>
+                                </div>
+                            </div>
+                            <div class="table-responsive" style="max-height:450px;overflow-y:auto;">
+                                <table class="table table-sm table-bordered scorecard-table" id="acctIncVsSrTable">
+                                    <thead><tr>
+                                        <th>Account (Submitted By)</th>
+                                        <th>INC Tickets</th><th>INC Mins</th><th>INC HH:MM</th>
+                                        <th>SR Tickets</th><th>SR Mins</th><th>SR HH:MM</th>
+                                        <th>Total Tickets</th><th>Total Mins</th>
+                                        <th>INC %</th><th>SR %</th>
+                                    </tr></thead>
+                                    <tbody id="acctIncVsSrBody"><tr><td colspan="11" class="text-center text-muted py-3">No data available.</td></tr></tbody>
                                 </table>
                             </div>
                         </div>
@@ -3394,77 +3525,160 @@
             XLSX.writeFile(wb, 'DrillDown_Export.xlsx');
         }
 
-        // #4 - Global Excel export function restored
-        function exportFullData() {
+        // Complete multi-sheet dashboard Excel export
+        function exportFullDashboard() {
             if (!filteredData || filteredData.length === 0) {
-                alert('No filtered data to export.');
+                alert('No data to export. Please load data first.');
                 return;
             }
-            
-            const exportData = filteredData.map(d => ({
-                'Incident ID': d.incidentId,
-                'Title': d.title,
-                'Owner': d.owner,
-                'Submitted By': d.submittedBy,
-                'Status': d.currentStatus,
-                'Service': d.service,
-                'Activity Engineer': d.activityEngineer,
-                'Effort Date': d.effortDate,
-                'Effort Minutes': d.effortMinutes,
-                'Investigation Type': d.investigationType,
-                'Comments': d.effortComments
-            }));
-            
-            const ws = XLSX.utils.json_to_sheet(exportData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Filtered Data');
-            XLSX.writeFile(wb, `MSP_Filtered_Data_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+            showLoading(true);
+            setTimeout(() => {
+                try {
+                    const wb = XLSX.utils.book_new();
+
+                    // Sheet 1: Raw Filtered Data (complete dump of all filtered rows)
+                    const rawExport = filteredData.map(d => ({
+                        'Incident ID':       d.incidentId,
+                        'Title':             d.title,
+                        'Owner':             d.owner,
+                        'Submitted By':      d.submittedBy,
+                        'Status':            d.currentStatus,
+                        'Service':           d.service,
+                        'Support Category':  d.supportCategory,
+                        'Feature':           d.feature,
+                        'Sub Feature':       d.subFeature,
+                        'Activity Engineer': d.activityEngineer,
+                        'Effort Date':       d.effortDate,
+                        'Effort Minutes':    d.effortMinutes,
+                        'Investigation Type':d.investigationType,
+                        'Comments':          d.effortComments
+                    }));
+                    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rawExport), 'Raw Data');
+
+                    // Sheet 2: Effort Stats
+                    if (window._effortStatsData && window._effortStatsData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._effortStatsData), 'Effort Stats');
+
+                    // Sheet 3: Team Scorecard
+                    if (window._teamScorecardData && window._teamScorecardData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._teamScorecardData), 'Team Scorecard');
+
+                    // Sheet 4: Monthly Effort Tracking
+                    if (window._monthlyEffortData && window._monthlyEffortData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._monthlyEffortData), 'Monthly Effort');
+
+                    // Sheet 5: Daily Effort Tracking
+                    if (window._dailyEffortData && window._dailyEffortData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._dailyEffortData), 'Daily Effort');
+
+                    // Sheet 6: Monthly Review
+                    if (window._monthlyReviewData && window._monthlyReviewData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._monthlyReviewData), 'Monthly Review');
+
+                    // Sheet 7: Support Category Effort
+                    if (window._supportCategoryData && window._supportCategoryData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._supportCategoryData), 'Support Category');
+
+                    // Sheet 8: All Accounts
+                    if (window._acctEffortData && window._acctEffortData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._acctEffortData), 'All Accounts');
+
+                    // Sheet 9: Accounts vs Dimension
+                    if (window._acctVsDimData && window._acctVsDimData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._acctVsDimData), 'Accts vs Dimension');
+
+                    // Sheet 10: Accounts INC vs SR
+                    if (window._acctIncVsSrData && window._acctIncVsSrData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._acctIncVsSrData), 'Accts INC vs SR');
+
+                    // Sheet 11: Effort Summary (Engineer)
+                    if (window._effortSummaryData && window._effortSummaryData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._effortSummaryData), 'Effort Summary');
+
+                    // Sheet 12: Productivity Insights (avg / high effort / repeat)
+                    if (window._piAvgData && window._piAvgData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._piAvgData), 'PI Avg Effort');
+                    if (window._piHighEffortData && window._piHighEffortData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._piHighEffortData), 'PI High Effort');
+                    if (window._piAutoData && window._piAutoData.length)
+                        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(window._piAutoData), 'PI Automation');
+
+                    if (wb.SheetNames.length === 0) { alert('No dashboard data available to export yet.'); showLoading(false); return; }
+
+                    XLSX.writeFile(wb, `MSP_Dashboard_Full_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+                } catch(e) {
+                    console.error('Export error:', e);
+                    alert('Export failed: ' + e.message);
+                }
+                showLoading(false);
+            }, 100);
         }
+
+        // Keep old exportFullData as alias (used nowhere now but safe to keep)
+        function exportFullData() { exportFullDashboard(); }
 
         function downloadDashboardPDF() {
             showLoading(true);
-            
-            const element = document.getElementById('view-effort-stats');
-            const clone = element.cloneNode(true);
-            
-            clone.style.position = 'absolute';
-            clone.style.left = '-9999px';
-            clone.style.top = '0';
-            clone.style.width = element.offsetWidth + 'px';
-            clone.style.backgroundColor = 'white';
-            clone.style.padding = '25px';
-            document.body.appendChild(clone);
-            
-            html2canvas(clone, { scale: 2, useCORS: true, backgroundColor: '#ffffff' }).then(canvas => {
-                document.body.removeChild(clone);
-                
+
+            // Capture the full main content area (all visible + non-visible tabs)
+            const element = document.getElementById('mainViewTabsContent');
+            if (!element) { showLoading(false); alert('Nothing to capture.'); return; }
+
+            // Temporarily make all tab panes visible for full capture
+            const allPanes = element.querySelectorAll('.tab-pane');
+            const originalStyles = [];
+            allPanes.forEach(p => {
+                originalStyles.push({ display: p.style.display, opacity: p.style.opacity, visibility: p.style.visibility });
+                p.style.display = 'block';
+                p.style.opacity = '1';
+                p.style.visibility = 'visible';
+            });
+
+            html2canvas(element, { scale: 1.5, useCORS: true, backgroundColor: '#ffffff', scrollY: -window.scrollY }).then(canvas => {
+                // Restore original pane display
+                allPanes.forEach((p, i) => {
+                    p.style.display = originalStyles[i].display;
+                    p.style.opacity = originalStyles[i].opacity;
+                    p.style.visibility = originalStyles[i].visibility;
+                });
+
                 const imgData = canvas.toDataURL('image/png');
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('landscape', 'mm', 'a4');
-                
-                const imgWidth = 280;
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                
-                pdf.setFontSize(16);
+                const pageWidth = 287;
+                const pageHeight = 200;
+                const imgW = pageWidth;
+                const imgH = canvas.height * imgW / canvas.width;
+                let heightLeft = imgH;
+                let position = 10;
+
+                // Header on first page
+                pdf.setFontSize(14);
                 pdf.setTextColor(74, 144, 226);
-                pdf.text('MSP Support Engineers - Effort Dashboard', 15, 15);
-                pdf.setFontSize(9);
+                pdf.text('MSP Support Engineers - Effort Tracking Dashboard', 10, 8);
+                pdf.setFontSize(8);
                 pdf.setTextColor(44, 62, 80);
-                pdf.text(`Generated on: ${new Date().toLocaleString()}`, 15, 22);
-                pdf.text(`Showing ${filteredData.length} of ${processedData.length} records`, 15, 27);
-                
-                if (globalFilters.timescale !== 'all') {
-                    const timescaleLabel = document.getElementById('global-filter-timescale').options[
-                        document.getElementById('global-filter-timescale').selectedIndex
-                    ].text;
-                    pdf.text(`Timescale: ${timescaleLabel}`, 15, 32);
+                pdf.text(`Generated: ${new Date().toLocaleString()} | Records: ${filteredData.length} of ${processedData.length}`, 10, 13);
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgW, imgH);
+                heightLeft -= (pageHeight - position);
+
+                while (heightLeft > 0) {
+                    position = -(imgH - heightLeft) - (pdf.internal.pageSize.getHeight() - 10);
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgW, imgH);
+                    heightLeft -= pageHeight;
                 }
-                
-                pdf.addImage(imgData, 'PNG', 10, 37, imgWidth, imgHeight);
+
                 pdf.save(`MSP_Effort_Dashboard_${new Date().toLocaleDateString().replace(/\//g,'-')}.pdf`);
-                
                 showLoading(false);
             }).catch(error => {
+                // Restore original pane display on error
+                allPanes.forEach((p, i) => {
+                    p.style.display = originalStyles[i].display;
+                    p.style.opacity = originalStyles[i].opacity;
+                    p.style.visibility = originalStyles[i].visibility;
+                });
                 console.error('PDF Error:', error);
                 alert('Error generating PDF. Please try again.');
                 showLoading(false);
@@ -4021,6 +4235,9 @@
                     }
                 }
             });
+
+            // Render the new Account Effort Analysis sub-section
+            renderAccountEffortAnalysis();
         }
 
 
@@ -4059,9 +4276,237 @@
             XLSX.writeFile(wb, 'Support_Category_Effort.xlsx');
         }
 
-
         // =====================================================
-        // EFFORT SUMMARY TAB
+        // ACCOUNT EFFORT ANALYSIS (part of Accounts, Category and Features Efforts)
+        // =====================================================
+        function renderAccountEffortAnalysis() {
+            const minToHHMM = (mins) => {
+                const t = Math.round(Number(mins) || 0);
+                return Math.floor(t/60) + ':' + String(t%60).padStart(2,'0');
+            };
+            const palette = ['#4A90E2','#50C878','#FFB347','#FFA07A','#FF6B6B','#5B9AE0','#5CB85C','#FF8C42','#9B59B6','#1ABC9C','#E74C3C','#F39C12'];
+
+            // Build account map from submittedBy (column C)
+            const acctMap = {};
+            let grandMins = 0;
+            filteredData.forEach(d => {
+                const acct = (d.submittedBy || 'Unknown').trim();
+                const mins = d.effortMinutes || 0;
+                // Use same detection logic as Effort Summary: SR = service field contains "service request", else INC
+                const isSR = /service\s*request/i.test(d.service || '');
+                grandMins += mins;
+                if (!acctMap[acct]) {
+                    acctMap[acct] = { acct, totalMins: 0, tickets: new Set(), incTickets: 0, incMins: 0, srTickets: 0, srMins: 0 };
+                }
+                acctMap[acct].totalMins += mins;
+                acctMap[acct].tickets.add(d.incidentId);
+                if (isSR) { acctMap[acct].srTickets++; acctMap[acct].srMins += mins; }
+                else       { acctMap[acct].incTickets++; acctMap[acct].incMins += mins; }
+            });
+
+            const allAccounts = Object.values(acctMap).sort((a,b) => b.totalMins - a.totalMins);
+            const totalAccounts = allAccounts.length;
+
+            // Update KPI cards
+            document.getElementById('acctTotalAccounts').textContent = totalAccounts;
+            document.getElementById('acctTopN').textContent = Math.min(50, totalAccounts);
+            document.getElementById('acctBottomN').textContent = Math.min(50, totalAccounts);
+            document.getElementById('acctTotalMins').textContent = grandMins.toFixed(0);
+
+            // Store for export
+            window._acctEffortData = allAccounts.map((a,i) => ({
+                'Rank': i+1, 'Account (Submitted By)': a.acct,
+                'Total Tickets': a.tickets.size, 'Total Mins': a.totalMins.toFixed(0),
+                'HH:MM': minToHHMM(a.totalMins), 'INC Tickets': a.incTickets,
+                'INC Mins': a.incMins.toFixed(0), 'SR Tickets': a.srTickets,
+                'SR Mins': a.srMins.toFixed(0),
+                '% of Total Effort': grandMins > 0 ? ((a.totalMins/grandMins)*100).toFixed(1)+'%' : '0%'
+            }));
+
+            // Top 50
+            const top50 = allAccounts.slice(0, 50);
+            const bottom50 = allAccounts.length <= 50 ? allAccounts.slice().reverse().slice(0, 50)
+                           : allAccounts.slice(-50).reverse();
+
+            const buildRow = (a, rank, isTop) => {
+                const pct = grandMins > 0 ? ((a.totalMins/grandMins)*100).toFixed(1) : '0.0';
+                const color = isTop ? '#FF6B6B' : '#50C878';
+                const bgColor = isTop ? '#FFF0F0' : '#F0FFF4';
+                return `<tr style="cursor:pointer;" onclick="showDrillDown('Account: ${a.acct.replace(/'/g,"\\'")}', filteredData.filter(d=>(d.submittedBy||'').trim()==='${a.acct.replace(/'/g,"\\'")}'))">
+                    <td class="text-center fw-bold" style="color:${color};">${rank}</td>
+                    <td class="fw-bold" style="color:#2C3E50;">${a.acct}</td>
+                    <td class="text-center fw-bold">${a.tickets.size}</td>
+                    <td class="text-center fw-bold" style="color:${color};">${a.totalMins.toFixed(0)}</td>
+                    <td class="text-center" style="color:var(--primary-color);font-weight:600;">${minToHHMM(a.totalMins)}</td>
+                    <td class="text-center" style="color:var(--danger-color);">${a.incTickets}</td>
+                    <td class="text-center" style="color:var(--secondary-color);">${a.srTickets}</td>
+                    <td class="text-center">
+                        <div class="d-flex align-items-center gap-1">
+                            <div class="score-bar flex-grow-1"><div class="score-bar-fill" style="width:${Math.min(parseFloat(pct),100)}%;background:${color};"></div></div>
+                            <span class="small fw-bold" style="color:${color};">${pct}%</span>
+                        </div>
+                    </td>
+                </tr>`;
+            };
+
+            const top50Body = document.getElementById('acctTop50Body');
+            if (top50Body) {
+                top50Body.innerHTML = top50.length ? top50.map((a,i) => buildRow(a, i+1, true)).join('')
+                    : '<tr><td colspan="8" class="text-center text-muted py-3">No data.</td></tr>';
+            }
+            const bottom50Body = document.getElementById('acctBottom50Body');
+            if (bottom50Body) {
+                bottom50Body.innerHTML = bottom50.length ? bottom50.map((a,i) => buildRow(a, allAccounts.length - i, false)).join('')
+                    : '<tr><td colspan="8" class="text-center text-muted py-3">No data.</td></tr>';
+            }
+
+            // Store account map globally for dimension view
+            window._acctMap = acctMap;
+            window._acctGrandMins = grandMins;
+
+            // Render dimension table (default: category)
+            renderAccountVsDimension();
+
+            // INC vs SR table + chart
+            renderAccountIncVsSr(allAccounts, grandMins, minToHHMM, palette);
+        }
+
+        function renderAccountVsDimension() {
+            const minToHHMM = (mins) => {
+                const t = Math.round(Number(mins) || 0);
+                return Math.floor(t/60) + ':' + String(t%60).padStart(2,'0');
+            };
+            const dim = (document.getElementById('acctVsDimension') || {}).value || 'category';
+            const dimKey = dim === 'category' ? 'supportCategory' : dim === 'feature' ? 'feature' : 'subFeature';
+            const dimLabel = dim === 'category' ? 'Support Category' : dim === 'feature' ? 'Feature' : 'Sub Feature';
+
+            // Build acct -> dimension -> {tickets, mins}
+            const acctDimMap = {};
+            let acctTotals = {};
+            filteredData.forEach(d => {
+                const acct = (d.submittedBy || 'Unknown').trim();
+                const dimVal = (d[dimKey] || '(None)').trim();
+                const mins = d.effortMinutes || 0;
+                if (!acctDimMap[acct]) acctDimMap[acct] = {};
+                if (!acctDimMap[acct][dimVal]) acctDimMap[acct][dimVal] = { tickets: 0, totalMins: 0 };
+                acctDimMap[acct][dimVal].tickets++;
+                acctDimMap[acct][dimVal].totalMins += mins;
+                acctTotals[acct] = (acctTotals[acct] || 0) + mins;
+            });
+
+            // Sort accounts by total mins desc
+            const sortedAccts = Object.keys(acctTotals).sort((a,b) => acctTotals[b] - acctTotals[a]);
+
+            const head = document.getElementById('acctVsDimHead');
+            const tbody = document.getElementById('acctVsDimBody');
+            if (head) head.innerHTML = `<tr><th>Account</th><th>${dimLabel}</th><th>Total Tickets</th><th>Total Mins</th><th>HH:MM</th><th>% of Account Effort</th></tr>`;
+
+            let html = '';
+            const palette = ['#4A90E2','#50C878','#FFB347','#FFA07A','#FF6B6B','#5B9AE0','#5CB85C','#FF8C42','#9B59B6','#1ABC9C','#E74C3C','#F39C12'];
+            window._acctVsDimData = [];
+            sortedAccts.forEach((acct, ai) => {
+                const dims = acctDimMap[acct];
+                const sortedDims = Object.keys(dims).sort((a,b) => dims[b].totalMins - dims[a].totalMins);
+                const acctTotal = acctTotals[acct];
+                sortedDims.forEach((dv, di) => {
+                    const d = dims[dv];
+                    const pct = acctTotal > 0 ? ((d.totalMins / acctTotal) * 100).toFixed(1) : '0.0';
+                    const color = palette[ai % palette.length];
+                    html += `<tr style="cursor:pointer;" onclick="showDrillDown('${acct} > ${dv}', filteredData.filter(row=>(row.submittedBy||'').trim()==='${acct.replace(/'/g,"\\'")}' && (row['${dimKey}']||'').trim()==='${dv.replace(/'/g,"\\'")}'))">
+                        ${di === 0 ? `<td class="fw-bold" rowspan="${sortedDims.length}" style="vertical-align:middle;background:${color}11;border-left:3px solid ${color};">${acct}</td>` : ''}
+                        <td>${dv}</td>
+                        <td class="text-center">${d.tickets}</td>
+                        <td class="text-center fw-bold">${d.totalMins.toFixed(0)}</td>
+                        <td class="text-center" style="color:var(--primary-color);">${minToHHMM(d.totalMins)}</td>
+                        <td class="text-center">
+                            <div class="d-flex align-items-center gap-1">
+                                <div class="score-bar flex-grow-1"><div class="score-bar-fill" style="width:${Math.min(parseFloat(pct),100)}%;background:${color};"></div></div>
+                                <span class="small fw-bold" style="color:${color};">${pct}%</span>
+                            </div>
+                        </td>
+                    </tr>`;
+                    window._acctVsDimData.push({ 'Account': acct, [dimLabel]: dv, 'Tickets': d.tickets, 'Total Mins': d.totalMins.toFixed(0), 'HH:MM': minToHHMM(d.totalMins), '% of Account Effort': pct+'%' });
+                });
+            });
+            if (tbody) tbody.innerHTML = html || '<tr><td colspan="6" class="text-center text-muted py-3">No data.</td></tr>';
+        }
+
+        function renderAccountIncVsSr(allAccounts, grandMins, minToHHMM, palette) {
+            // INC vs SR Table
+            const tbody = document.getElementById('acctIncVsSrBody');
+            window._acctIncVsSrData = [];
+            if (tbody) {
+                tbody.innerHTML = allAccounts.length ? allAccounts.map((a,i) => {
+                    const total = a.incMins + a.srMins;
+                    const incPct = total > 0 ? ((a.incMins/total)*100).toFixed(1) : '0.0';
+                    const srPct  = total > 0 ? ((a.srMins/total)*100).toFixed(1) : '0.0';
+                    window._acctIncVsSrData.push({'Account': a.acct,'INC Tickets': a.incTickets,'INC Mins': a.incMins.toFixed(0),'INC HH:MM': minToHHMM(a.incMins),'SR Tickets': a.srTickets,'SR Mins': a.srMins.toFixed(0),'SR HH:MM': minToHHMM(a.srMins),'Total Tickets': a.tickets.size,'Total Mins': a.totalMins.toFixed(0),'INC %': incPct+'%','SR %': srPct+'%'});
+                    return `<tr style="cursor:pointer;" onclick="showDrillDown('INC/SR for: ${a.acct.replace(/'/g,"\\'")}', filteredData.filter(d=>(d.submittedBy||'').trim()==='${a.acct.replace(/'/g,"\\'")}'))">
+                        <td class="fw-bold">${a.acct}</td>
+                        <td class="text-center" style="color:var(--danger-color);font-weight:700;">${a.incTickets}</td>
+                        <td class="text-center">${a.incMins.toFixed(0)}</td>
+                        <td class="text-center" style="color:var(--danger-color);">${minToHHMM(a.incMins)}</td>
+                        <td class="text-center" style="color:var(--secondary-color);font-weight:700;">${a.srTickets}</td>
+                        <td class="text-center">${a.srMins.toFixed(0)}</td>
+                        <td class="text-center" style="color:var(--secondary-color);">${minToHHMM(a.srMins)}</td>
+                        <td class="text-center fw-bold">${a.tickets.size}</td>
+                        <td class="text-center fw-bold">${a.totalMins.toFixed(0)}</td>
+                        <td class="text-center">${incPct}%</td>
+                        <td class="text-center">${srPct}%</td>
+                    </tr>`;
+                }).join('') : '<tr><td colspan="11" class="text-center text-muted py-3">No data.</td></tr>';
+            }
+
+            // Top 10 accounts for charts
+            const top10 = allAccounts.slice(0, 10);
+            const labels = top10.map(a => a.acct.length > 20 ? a.acct.substring(0,20)+'…' : a.acct);
+
+            // Doughnut: INC vs SR total mins
+            const totalInc = allAccounts.reduce((s,a) => s+a.incMins, 0);
+            const totalSr  = allAccounts.reduce((s,a) => s+a.srMins, 0);
+            if (effortCharts['acctIncVsSrChart']) effortCharts['acctIncVsSrChart'].destroy();
+            const pieCtx = document.getElementById('acctIncVsSrChart');
+            if (pieCtx) {
+                effortCharts['acctIncVsSrChart'] = new Chart(pieCtx, {
+                    type: 'doughnut',
+                    data: { labels: ['INC (Incident)', 'SR (Service Request)'], datasets: [{ data: [totalInc.toFixed(1), totalSr.toFixed(1)], backgroundColor: ['#FF6B6B', '#50C878'], borderColor:'#fff', borderWidth:3 }] },
+                    options: { responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'INC vs SR — Total Effort (Mins)', font: { size: 12, weight: '700' } },
+                            tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${minToHHMM(ctx.parsed)} mins` } }
+                        }
+                    }
+                });
+            }
+
+            // Bar chart: top 10 accounts INC vs SR
+            if (effortCharts['acctIncVsSrBarChart']) effortCharts['acctIncVsSrBarChart'].destroy();
+            const barCtx = document.getElementById('acctIncVsSrBarChart');
+            if (barCtx && top10.length) {
+                effortCharts['acctIncVsSrBarChart'] = new Chart(barCtx, {
+                    type: 'bar',
+                    data: { labels, datasets: [
+                        { label: 'INC Mins', data: top10.map(a => a.incMins.toFixed(1)), backgroundColor: '#FF6B6BAA', borderColor: '#FF6B6B', borderWidth: 2, borderRadius: 4 },
+                        { label: 'SR Mins',  data: top10.map(a => a.srMins.toFixed(1)),  backgroundColor: '#50C87888', borderColor: '#50C878', borderWidth: 2, borderRadius: 4 }
+                    ]},
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, title: { display: true, text: 'Top 10 Accounts — INC vs SR Effort', font: { size: 12, weight: '700' } } },
+                        scales: { x: { ticks: { maxRotation: 30 } }, y: { beginAtZero: true, title: { display: true, text: 'Minutes' } } },
+                        onClick: (evt, els) => { if (els.length) { const a = top10[els[0].index]; showDrillDown('Account INC/SR: '+a.acct, filteredData.filter(d => (d.submittedBy||'').trim() === a.acct)); } }
+                    }
+                });
+            }
+        }
+
+        function exportAccountEffortToExcel() {
+            const wb = XLSX.utils.book_new();
+            const d1 = window._acctEffortData || [];
+            if (d1.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(d1), 'All Accounts');
+            const d2 = window._acctVsDimData || [];
+            if (d2.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(d2), 'Accounts vs Dimension');
+            const d3 = window._acctIncVsSrData || [];
+            if (d3.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(d3), 'Accounts INC vs SR');
+            if (wb.SheetNames.length === 0) { alert('No account data to export.'); return; }
+            XLSX.writeFile(wb, 'Account_Effort_Analysis.xlsx');
+        }
         // =====================================================
         function renderEffortSummary() {
             const minToHHMM = (mins) => {
