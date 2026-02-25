@@ -1065,7 +1065,6 @@
                                     <select class="form-select form-select-sm mb-3" id="repository-file-select">
                                         <option value="">-- Select an Excel file --</option>
                                         <option value="MSPEffort/MSPSupportEffortDetailedSummary_Jan2026.xlsx">Support Effort Detailed Summary_Jan2026</option>
-										<option value="MSPEffort/MSPSupportEffortDetailedSummary_Feb-2026-24.xlsx">Support Effort Detailed Summary_Feb-2026-24th</option>
                                         
                                         <!-- Add more files as needed with MSPEffort/ prefix -->
                                     </select>
@@ -1620,9 +1619,9 @@
                                             <th>Period Working Days</th>
                                             <th>Weekday Worked</th>
                                             <th>Weekend Worked</th>
-                                            <th>Leave / Absent Days</th>
+                                            <th>Total Leaves</th>
                                             <th>Expected Hrs (Weekdays × 9)</th>
-                                            <th>Productivity %</th>
+                                            <th>Effort Efficiency %</th>
                                             <th>Avg Hrs/Day</th>
                                         </tr>
                                     </thead>
@@ -2918,11 +2917,11 @@
                 
                 switch(timescale) {
                     case 'today': return diffDays === 0;
-                    case 'last1': return diffDays >= 0 && diffDays <= 1;
-                    case 'last2': return diffDays >= 0 && diffDays <= 2;
-                    case 'last3': return diffDays >= 0 && diffDays <= 3;
-                    case 'last4': return diffDays >= 0 && diffDays <= 4;
-                    case 'last5': return diffDays >= 0 && diffDays <= 5;
+                    case 'last1': return diffDays === 1;
+                    case 'last2': return diffDays >= 1 && diffDays <= 2;
+                    case 'last3': return diffDays >= 1 && diffDays <= 3;
+                    case 'last4': return diffDays >= 1 && diffDays <= 4;
+                    case 'last5': return diffDays >= 1 && diffDays <= 5;
                     case 'currentweek': {
                         const startOfWeek = new Date(today);
                         startOfWeek.setDate(today.getDate() - today.getDay());
@@ -4208,7 +4207,7 @@
             const periodEnd   = new Date(Math.max(...allDateObjects));
 
             // ─────────────────────────────────────────────────────────
-            // STEP 2: Count Mon–Fri working days in the period
+            // STEP 2: Count Mon–Fri working days — driven by timescale
             // ─────────────────────────────────────────────────────────
             function countWorkingDays(startDate, endDate) {
                 let count = 0;
@@ -4224,10 +4223,83 @@
                 return count;
             }
 
-            const periodWorkingDays = countWorkingDays(periodStart, periodEnd);
+            // Determine the canonical period window from the selected timescale
+            function getTimescalePeriodBounds() {
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                const ts = (globalFilters && globalFilters.timescale) ? globalFilters.timescale : 'all';
+
+                switch (ts) {
+                    case 'today': {
+                        return { start: new Date(now), end: new Date(now) };
+                    }
+                    case 'last1': {
+                        // Last 1 day = yesterday only
+                        const end1 = new Date(now); end1.setDate(now.getDate() - 1);
+                        return { start: new Date(end1), end: end1 };
+                    }
+                    case 'last2': {
+                        // Last 2 days = day-before-yesterday → yesterday
+                        const end2 = new Date(now); end2.setDate(now.getDate() - 1);
+                        const start2 = new Date(now); start2.setDate(now.getDate() - 2);
+                        return { start: start2, end: end2 };
+                    }
+                    case 'last3': {
+                        const end3 = new Date(now); end3.setDate(now.getDate() - 1);
+                        const start3 = new Date(now); start3.setDate(now.getDate() - 3);
+                        return { start: start3, end: end3 };
+                    }
+                    case 'last4': {
+                        const end4 = new Date(now); end4.setDate(now.getDate() - 1);
+                        const start4 = new Date(now); start4.setDate(now.getDate() - 4);
+                        return { start: start4, end: end4 };
+                    }
+                    case 'last5': {
+                        const end5 = new Date(now); end5.setDate(now.getDate() - 1);
+                        const start5 = new Date(now); start5.setDate(now.getDate() - 5);
+                        return { start: start5, end: end5 };
+                    }
+                    case 'currentweek': {
+                        // Mon–today (week starts Monday)
+                        const dayOfWeek = now.getDay(); // 0=Sun,1=Mon,...,6=Sat
+                        const daysFromMon = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
+                        const mon = new Date(now);
+                        mon.setDate(now.getDate() - daysFromMon);
+                        return { start: mon, end: new Date(now) };
+                    }
+                    case 'lastweek': {
+                        // Full Mon–Fri of last week
+                        const dayOfWeek = now.getDay();
+                        const daysFromMon = (dayOfWeek === 0) ? 6 : dayOfWeek - 1;
+                        const thisMon = new Date(now);
+                        thisMon.setDate(now.getDate() - daysFromMon);
+                        const lastMon = new Date(thisMon);
+                        lastMon.setDate(thisMon.getDate() - 7);
+                        const lastFri = new Date(lastMon);
+                        lastFri.setDate(lastMon.getDate() + 4);
+                        return { start: lastMon, end: lastFri };
+                    }
+                    case 'currentmonth': {
+                        const start = new Date(now.getFullYear(), now.getMonth(), 1);
+                        return { start: start, end: new Date(now) };
+                    }
+                    case 'lastmonth': {
+                        const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                        const end   = new Date(now.getFullYear(), now.getMonth(), 0); // last day of prev month
+                        return { start: start, end: end };
+                    }
+                    default: {
+                        // 'all' — fall back to data-derived range
+                        return { start: new Date(periodStart), end: new Date(periodEnd) };
+                    }
+                }
+            }
+
+            const tsBounds = getTimescalePeriodBounds();
+            const periodWorkingDays = countWorkingDays(tsBounds.start, tsBounds.end);
 
             const fmtDate = (d) => d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
-            const periodText = `(${fmtDate(periodStart)} → ${fmtDate(periodEnd)} | ${periodWorkingDays} weekdays)`;
+            const periodText = `(${fmtDate(tsBounds.start)} → ${fmtDate(tsBounds.end)} | ${periodWorkingDays} weekdays)`;
             document.getElementById('monthlyReviewPeriod').textContent = periodText;
 
             // ─────────────────────────────────────────────────────────
@@ -4291,18 +4363,25 @@
                 const weekdayWorked  = stats.weekdayDates.size;
                 const weekendWorked  = stats.weekendDates.size;
                 const totalWorked    = weekdayWorked + weekendWorked;
-                const leaveDays      = Math.max(0, periodWorkingDays - weekdayWorked);
                 const totalHours     = (stats.totalMinutes / 60).toFixed(2);
-                // Expected hours based on weekday-only days (standard working days)
-                const expectedHours  = (weekdayWorked * HOURS_PER_DAY).toFixed(2);
-                const productivity   = parseFloat(expectedHours) > 0
-                    ? ((parseFloat(totalHours) / parseFloat(expectedHours)) * 100).toFixed(2)
+                // Weekday Worked defaults to periodWorkingDays (reduces when leaves are entered)
+                const initWeekdayWorked = periodWorkingDays;
+                // Expected hours based on period working days (standard working days)
+                const expectedHours  = (initWeekdayWorked * HOURS_PER_DAY).toFixed(2);
+
+                // TotalLeaves defaults to 0 (user-editable per row)
+                // effectiveDays = initWeekdayWorked + weekendWorked - TotalLeaves
+                const effectiveDays  = initWeekdayWorked + weekendWorked; // leaves=0 at initial render
+                // Effort Efficiency % = TotalHrs / effectiveDays * 9  (avg hrs per effective day expressed vs 9-hr day)
+                const effortEff      = effectiveDays > 0
+                    ? (parseFloat(totalHours) / effectiveDays * HOURS_PER_DAY).toFixed(2)
                     : '0.00';
-                const avgHrsPerDay   = totalWorked > 0
-                    ? (parseFloat(totalHours) / totalWorked).toFixed(2)
+                // Avg Hrs/Day = TotalHrs / effectiveDays
+                const avgHrsPerDay   = effectiveDays > 0
+                    ? (parseFloat(totalHours) / effectiveDays).toFixed(2)
                     : '0.00';
 
-                const prodNum = parseFloat(productivity);
+                const prodNum = parseFloat(effortEff);
                 const rowClass  = prodNum >= 100 ? 'table-success' : prodNum >= 80 ? 'table-warning' : 'table-danger';
                 const prodClass = prodNum >= 100 ? 'text-success'  : prodNum >= 80 ? 'text-warning'  : 'text-danger';
 
@@ -4325,17 +4404,29 @@
                        <span style="background:#FF8C00;color:white;padding:1px 6px;border-radius:8px;font-size:0.6rem;font-weight:700;margin-left:4px;vertical-align:middle;" title="Worked on weekends">⚡ WE</span>`
                     : `<span class="owner-tag">${eng}</span>`;
 
-                html += `<tr class="${rowClass}" style="cursor:pointer;" onclick="drillDownByEngineer(this)" data-eng="${eng.replace(/"/g,'&quot;')}" data-title="Monthly Review">
-                    <td class="fw-bold">${engNameCell}</td>
+                const engKey = eng.replace(/"/g,'&quot;');
+
+                html += `<tr class="${rowClass}" data-eng="${engKey}" data-title="Monthly Review"
+                             data-totalhours="${totalHours}" data-totalmins="${stats.totalMinutes.toFixed(0)}"
+                             data-weekdayworked="${weekdayWorked}" data-weekendworked="${weekendWorked}"
+                             data-periodworkingdays="${periodWorkingDays}"
+                             data-expectedhours="${expectedHours}" data-prodclass="${prodClass}" data-rowclass="${rowClass}">
+                    <td class="fw-bold" style="cursor:pointer;" onclick="drillDownByEngineer(this.parentElement)">${engNameCell}</td>
                     <td class="text-center fw-bold">${totalHours}</td>
                     <td class="text-center">${stats.totalMinutes.toFixed(0)}</td>
                     <td class="text-center">${periodWorkingDays}</td>
-                    <td class="text-center fw-bold">${weekdayWorked}</td>
+                    <td class="text-center fw-bold mr-weekdayWorked">${initWeekdayWorked}</td>
                     <td class="text-center">${weekendCell}</td>
-                    <td class="text-center ${leaveDays > 0 ? 'text-danger fw-bold' : 'text-success fw-bold'}">${leaveDays}</td>
-                    <td class="text-center">${expectedHours}</td>
-                    <td class="text-center fw-bold ${prodClass}">${productivity}%</td>
-                    <td class="text-center fw-bold" style="color:var(--primary-color);">${avgHrsPerDay}</td>
+                    <td class="text-center">
+                        <input type="number" min="0" value="0"
+                            style="width:60px;text-align:center;border:1px solid #ccc;border-radius:4px;padding:2px 4px;font-size:0.8rem;"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');recalcMonthlyRow(this)"
+                            onkeypress="return event.charCode>=48 && event.charCode<=57"
+                            title="Enter total leave days">
+                    </td>
+                    <td class="text-center mr-expectedHrs">${expectedHours}</td>
+                    <td class="text-center fw-bold mr-effortEff ${prodClass}">${effortEff}%</td>
+                    <td class="text-center fw-bold mr-avgHrs" style="color:var(--primary-color);">${avgHrsPerDay}</td>
                 </tr>`;
 
                 window._monthlyReviewData.push({
@@ -4343,17 +4434,67 @@
                     'Total Hrs'                     : totalHours,
                     'Total Mins'                    : stats.totalMinutes.toFixed(0),
                     'Period Working Days (Mon-Fri)'  : periodWorkingDays,
-                    'Weekday Worked Days'            : weekdayWorked,
+                    'Weekday Worked Days'            : initWeekdayWorked,
                     'Weekend Worked Days (Sat/Sun)'  : weekendWorked,
                     'Weekend Dates'                  : weekendList || '—',
-                    'Leave / Absent Days'            : leaveDays,
+                    'Total Leaves'                   : 0,
                     'Expected Hrs (Weekdays × 9)'   : expectedHours,
-                    'Productivity %'                 : productivity + '%',
+                    'Effort Efficiency %'            : effortEff + '%',
                     'Avg Hrs/Day (All Days)'         : avgHrsPerDay
                 });
             });
 
             tbody.innerHTML = html;
+        }
+
+        function recalcMonthlyRow(input) {
+            var row           = input.closest('tr');
+            var totalHours    = parseFloat(row.dataset.totalhours) || 0;
+            var periodWorkingDays = parseInt(row.dataset.periodworkingdays) || parseInt(row.dataset.weekdayworked) || 0;
+            var weekendWorked = parseInt(row.dataset.weekendworked) || 0;
+            var HRS           = 9;
+            var totalLeaves   = input.value === '' ? 0 : parseInt(input.value, 10);
+            if (isNaN(totalLeaves) || totalLeaves < 0) totalLeaves = 0;
+
+            // Weekday Worked = Period Working Days - leaves (min 0)
+            var adjWeekday    = Math.max(0, periodWorkingDays - totalLeaves);
+
+            // Expected Hrs = adjusted weekday * 9
+            var expectedHrs   = (adjWeekday * HRS).toFixed(2);
+
+            // Effective days = (periodWorkingDays + weekendWorked) - totalLeaves  (min 0)
+            var effectiveDays = Math.max(0, (periodWorkingDays + weekendWorked) - totalLeaves);
+
+            // Effort Efficiency % = TotalHrs / effectiveDays expressed vs 9hr day
+            var effortEff     = effectiveDays > 0
+                ? (totalHours / effectiveDays * HRS).toFixed(2)
+                : '0.00';
+
+            // Avg Hrs/Day = TotalHrs / effectiveDays
+            var avgHrs        = effectiveDays > 0
+                ? (totalHours / effectiveDays).toFixed(2)
+                : '0.00';
+
+            var prodNum       = parseFloat(effortEff);
+            var prodClass     = prodNum >= 100 ? 'text-success' : prodNum >= 80 ? 'text-warning' : 'text-danger';
+            var newRowClass   = prodNum >= 100 ? 'table-success' : prodNum >= 80 ? 'table-warning' : 'table-danger';
+
+            row.className = newRowClass;
+
+            var wdCell = row.querySelector('.mr-weekdayWorked');
+            if (wdCell) wdCell.textContent = adjWeekday;
+
+            var exCell = row.querySelector('.mr-expectedHrs');
+            if (exCell) exCell.textContent = expectedHrs;
+
+            var effCell = row.querySelector('.mr-effortEff');
+            if (effCell) {
+                effCell.textContent = effortEff + '%';
+                effCell.className = 'text-center fw-bold mr-effortEff ' + prodClass;
+            }
+
+            var avgCell = row.querySelector('.mr-avgHrs');
+            if (avgCell) avgCell.textContent = avgHrs;
         }
 
         function exportMonthlyReviewToExcel() {
