@@ -1398,7 +1398,7 @@
         }
         
         .compliance-trend-chart {
-            height: 120px;
+            height: 200px;
             margin-top: 15px;
         }
         
@@ -2714,7 +2714,7 @@
                                                 <span class="kpi-status-tag bg-on-track" id="kpi-fcr-tag">ON TRACK</span>
                                                 <div class="kpi-title">First Contact Resolution</div>
                                                 <div class="kpi-value" id="kpi-fcr">0</div>
-                                                <div class="kpi-recommendation" id="kpi-fcr-rec">Cases resolved within 2 days.</div>
+                                                <div class="kpi-recommendation" id="kpi-fcr-rec">Cases resolved within 24 hours (FCR).</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -4229,7 +4229,17 @@
                 { key: 'submittedBy', label: 'SubmittedBy' },
                 { key: 'service', label: 'Service Type' },
                 { key: 'currentStatus', label: 'Status' },
-                { key: 'agingDays', label: 'Resolution Time (Days)' },
+                { key: 'fcrResolutionTime', label: 'Resolution Time (<=24 Hrs)' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'fcrMissed': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'service', label: 'Service Type' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'fcrResolutionTime', label: 'Resolution Time (<=24 Hrs)' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'incLess15': [
@@ -4696,6 +4706,18 @@
                 const isClosed = row[colMap.currentStatus] === 'Close' || 
                                 row[colMap.currentStatus] === 'Resolve - Pending User Confirmation';
                 
+                // Determine FCR: status is 'Close' or 'Resolved - Pending User Confirmation'
+                // AND the difference between Resolve Time (Col T) and Submission Time (Col S) is <= 1 day (24 hours)
+                const fcrStatus = row[colMap.currentStatus] === 'Close' ||
+                                  row[colMap.currentStatus] === 'Resolved - Pending User Confirmation';
+                let isFCR = false;
+                if (fcrStatus && isDateValid(submissionTime) && isDateValid(resolveTime)) {
+                    const subDate = new Date(submissionTime);
+                    const resDate = new Date(resolveTime);
+                    const diffDays = (resDate - subDate) / (1000 * 60 * 60 * 24);
+                    isFCR = diffDays <= 1;
+                }
+
                 // Parse submission date for monthly analysis
                 const submissionDate = isDateValid(submissionTime) ? new Date(submissionTime) : new Date();
                 const monthYear = `${submissionDate.getMonth()+1}-${submissionDate.getFullYear()}`;
@@ -4719,6 +4741,10 @@
                     submissionDate: submissionDate,
                     monthYear: monthYear,
                     isClosed: isClosed,
+                    isFCR: isFCR,
+                    fcrResolutionTime: (isDateValid(submissionTime) && isDateValid(resolveTime))
+                        ? ((new Date(resolveTime) - new Date(submissionTime)) / (1000 * 60 * 60)).toFixed(2)
+                        : 'N/A',
                     resolveTime: resolveTime,
                     correspondingInternalTicket: correspondingInternalTicket,
                     supportCategory: row[colMap.supportCategory] || 'Uncategorized',
@@ -5311,7 +5337,7 @@
             const edocBreach = filteredData.filter(d => d.isSR && d.isEdocBreached).length;
 
             // Section 4: Closure Aging
-            const fcr = filteredData.filter(d => d.isClosed && d.agingDays < 2).length;
+            const fcr = filteredData.filter(d => d.isFCR).length;
             const incLess15 = filteredData.filter(d => d.isClosed && d.isINC && d.agingDays < 15).length;
             const incMore15 = filteredData.filter(d => d.isClosed && d.isINC && d.agingDays >= 15).length;
             const srLess15 = filteredData.filter(d => d.isClosed && d.isSR && d.agingDays < 15).length;
@@ -5378,8 +5404,8 @@
             updateCard('kpi-cpe-calls', cpeCalls, cpeCallsRec);
 
             // Section 4 recommendations
-            let fcrRec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `First Contact Resolution: ${fcr} cases resolved within 2 days.` };
-            if (fcr === 0 && totalClosed > 0) fcrRec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: 'No cases resolved within 2 days. Review resolution process.' };
+            let fcrRec = { status: 'ON TRACK', tag: 'bg-on-track', rec: `First Contact Resolution: ${fcr} cases resolved within 24 hours.` };
+            if (fcr === 0 && totalClosed > 0) fcrRec = { status: 'NEEDS ATTENTION', tag: 'bg-needs-attention', rec: 'No cases resolved within 24 hours. Review resolution process.' };
 
             let incLess15Rec = { status: 'METRIC', tag: 'bg-metric', rec: `Closed INC cases aged <15 days: ${incLess15}` };
             let incMore15Rec = { status: 'METRIC', tag: 'bg-metric', rec: `Closed INC cases aged >15 days: ${incMore15}` };
@@ -5450,7 +5476,7 @@
                     counts[d.owner].closed++;
                     if(d.isSR) counts[d.owner].closedSR++;
                     if(d.isINC) counts[d.owner].closedINC++;
-                    if(d.agingDays < 2) counts[d.owner].fcr++;
+                    if(d.isFCR) counts[d.owner].fcr++;
                     if(d.subsequentSLABreachCount > 0) counts[d.owner].subsequentSLA++;
                 } else {
                     counts[d.owner].open++;
@@ -5568,7 +5594,10 @@
                     
                 // Section 4
                 case 'fcr':
-                    drillDownData = filteredData.filter(d => d.isClosed && d.agingDays < 2);
+                    drillDownData = filteredData.filter(d => d.isFCR);
+                    break;
+                case 'fcrMissed':
+                    drillDownData = filteredData.filter(d => d.isClosed && !d.isFCR);
                     break;
                 case 'incLess15':
                     drillDownData = filteredData.filter(d => d.isClosed && d.isINC && d.agingDays < 15);
@@ -5678,6 +5707,12 @@
                         // Make Incident ID bold
                         if (col.key === 'incidentId') {
                             cellClass = 'fw-bold';
+                        } else if (col.key === 'fcrResolutionTime') {
+                            const hrs = parseFloat(value);
+                            if (!isNaN(hrs)) {
+                                if (hrs <= 24) cellClass = 'text-success fw-bold';
+                                else cellClass = 'text-danger fw-bold';
+                            }
                         } else if (col.key === 'agingDays' || col.key === 'agingRoundoff') {
                             const agingValue = parseInt(value) || 0;
                             if (agingValue > 25) cellClass = 'text-danger fw-bold';
@@ -5719,7 +5754,7 @@
             const closedCases = filteredData.filter(d => d.isClosed).length;
             const slaViolatedCount = filteredData.filter(d => d.isSlaViolated).length;
             const overallSlaRate = totalCases > 0 ? ((totalCases - slaViolatedCount) / totalCases * 100).toFixed(1) : 100.0;
-            const fcrCount = filteredData.filter(d => d.isClosed && d.agingDays < 2).length;
+            const fcrCount = filteredData.filter(d => d.isFCR).length;
             const fcrRate = closedCases > 0 ? (fcrCount / closedCases * 100).toFixed(1) : 0;
             const cpeCalls = filteredData.filter(d => {
                 const ticket = d.correspondingInternalTicket;
@@ -5833,7 +5868,7 @@
                 if(d.isClosed) {
                     customerStats[d.submittedBy].closed++;
                     customerStats[d.submittedBy].tat247Values.push(parseFloat(d.tat247) || 0);
-                    if(d.agingDays < 2) customerStats[d.submittedBy].fcr++;
+                    if(d.isFCR) customerStats[d.submittedBy].fcr++;
                 }
                 if(d.isSlaViolated) customerStats[d.submittedBy].slaViolated++;
                 
@@ -5885,7 +5920,7 @@
                 engineerStats[d.owner].tat247Values.push(parseFloat(d.tat247) || 0);
                 if(d.isClosed) {
                     engineerStats[d.owner].closed++;
-                    if(d.agingDays < 2) engineerStats[d.owner].fcr++;
+                    if(d.isFCR) engineerStats[d.owner].fcr++;
                     if(d.subsequentSLABreachCount > 0) engineerStats[d.owner].subsequentSLA++;
                 }
                 if(d.isSlaViolated) engineerStats[d.owner].slaViolated++;
@@ -6062,7 +6097,7 @@
                 
                 // Detailed counts for drilldown
                 slaViolated: currentData.filter(d => d.isSlaViolated).length,
-                fcrMissed: currentData.filter(d => d.isClosed && d.agingDays >= 2).length,
+                fcrMissed: currentData.filter(d => d.isClosed && !d.isFCR).length,
                 agingViolated: currentData.filter(d => d.isAging15Violated).length,
                 emailViolated: currentData.filter(d => d.emailCompliance && (d.emailCompliance.includes('Missed') || d.emailCompliance.includes('No Followup'))).length,
                 followupMissed: currentData.filter(d => d.isFollowUpMissed).length,
@@ -6090,7 +6125,7 @@
         
         function calculateFCRRate(data) {
             const closedCases = data.filter(d => d.isClosed);
-            const fcrCases = closedCases.filter(d => d.agingDays < 2);
+            const fcrCases = closedCases.filter(d => d.isFCR);
             return closedCases.length > 0 ? (fcrCases.length / closedCases.length * 100).toFixed(1) : 100;
         }
         
@@ -6180,6 +6215,7 @@
                         edocBreached: 0,
                         subsequentSLAMissed: 0,
                         closedCases: 0,
+                        fcrCompliant: 0,
                         loggedCases: 0,
                         actuallyClosedCases: 0,
                         incLess15: 0,
@@ -6194,6 +6230,7 @@
                 
                 if (d.isClosed) {
                     monthlyData[monthKey].closedCases++;
+                    if (d.isFCR) monthlyData[monthKey].fcrCompliant++;
                     if (d.currentStatus === 'Close' || d.currentStatus === 'Resolve - Pending User Confirmation') {
                         monthlyData[monthKey].actuallyClosedCases++;
                     }
@@ -6214,7 +6251,7 @@
                 }
                 
                 if (d.isSlaViolated) monthlyData[monthKey].slaViolated++;
-                if (d.isClosed && d.agingDays >= 2) monthlyData[monthKey].fcrMissed++;
+                if (d.isClosed && !d.isFCR) monthlyData[monthKey].fcrMissed++;
                 if (d.isAging15Violated) monthlyData[monthKey].agingViolated++;
                 if (d.emailCompliance && (d.emailCompliance.includes('Missed') || d.emailCompliance.includes('No Followup'))) {
                     monthlyData[monthKey].emailViolated++;
@@ -6257,7 +6294,7 @@
             const fcrRates = months.map(m => {
                 const data = monthlyBreakdownData[m];
                 return data.closedCases > 0 ? 
-                    ((data.closedCases - data.fcrMissed) / data.closedCases * 100).toFixed(1) : 100;
+                    (data.fcrCompliant / data.closedCases * 100).toFixed(1) : 100;
             });
             
             // Issue #5: Calculate aging rates based on new formula
@@ -6293,10 +6330,11 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: false,
-                            min: 80,
+                            beginAtZero: true,
+                            min: 0,
                             max: 100,
                             ticks: {
+                                stepSize: 10,
                                 callback: function(value) {
                                     return value + '%';
                                 }
@@ -6331,10 +6369,11 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: false,
-                            min: 80,
+                            beginAtZero: true,
+                            min: 0,
                             max: 100,
                             ticks: {
+                                stepSize: 10,
                                 callback: function(value) {
                                     return value + '%';
                                 }
@@ -6369,10 +6408,11 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: {
-                            beginAtZero: false,
-                            min: 80,
+                            beginAtZero: true,
+                            min: 0,
                             max: 100,
                             ticks: {
+                                stepSize: 10,
                                 callback: function(value) {
                                     return value + '%';
                                 }
@@ -6398,7 +6438,12 @@
                 ...Object.keys(window.monthlyDataClosed || {})
             ]);
             
-            const months = Array.from(allMonths).sort((a, b) => {
+            // Filter to only months that have at least one logged case
+            // This prevents showing future/current empty months like March when no tickets submitted yet
+            const months = Array.from(allMonths).filter(m => {
+                const logged = monthlyBreakdownData[m]?.loggedCases || 0;
+                return logged > 0;
+            }).sort((a, b) => {
                 const [aMonth, aYear] = a.split('-').map(Number);
                 const [bMonth, bYear] = b.split('-').map(Number);
                 if (aYear !== bYear) return aYear - bYear;
@@ -6584,7 +6629,7 @@
                 <div class="drilldown-item" onclick="openComplianceDrillDown('fcr')">
                     <div class="drilldown-item-title">FCR Missed</div>
                     <div class="drilldown-item-value">${metrics.fcrMissed}</div>
-                    <div class="drilldown-item-desc">Cases not resolved within 2 days</div>
+                    <div class="drilldown-item-desc">Cases not resolved within 24 hours</div>
                 </div>
                 <div class="drilldown-item" onclick="openComplianceDrillDown('aging')">
                     <div class="drilldown-item-title">Aging >15 Days</div>
@@ -6684,7 +6729,7 @@
                     title = 'SLA Compliance Issues';
                     break;
                 case 'fcr':
-                    drillDownKey = 'fcr';
+                    drillDownKey = 'fcrMissed';
                     title = 'First Contact Resolution Missed';
                     break;
                 case 'aging':
@@ -7018,7 +7063,7 @@
                             monthlyDataClosed[monthKey] = { closedCases: 0, fcrCompliant: 0 };
                         }
                         monthlyDataClosed[monthKey].closedCases++;
-                        if (d.agingDays < 2) monthlyDataClosed[monthKey].fcrCompliant++;
+                        if (d.isFCR) monthlyDataClosed[monthKey].fcrCompliant++;
                     }
                 }
             });
@@ -7051,8 +7096,11 @@
                 stats.total++;
                 stats.loggedCases = monthlyDataLogged[monthKey]?.loggedCases || 0;
                 stats.cpeLogged = monthlyDataLogged[monthKey]?.cpeLogged || 0;
-                stats.closedCases = monthlyDataClosed[monthKey]?.closedCases || 0;
-                stats.fcrCompliant = monthlyDataClosed[monthKey]?.fcrCompliant || 0;
+                // Track closedCases and fcrCompliant by submission month (consistent with compliance trend charts)
+                if (d.isClosed) {
+                    stats.closedCases++;
+                    if (d.isFCR) stats.fcrCompliant++;
+                }
                 
                 if (d.isSlaViolated) stats.slaViolated++;
                 if (d.isClosed && d.subsequentSLABreachCount > 0) stats.subsequentSLA++;
@@ -7079,8 +7127,8 @@
                 }
             });
             
-            // Sort months chronologically
-            const months = Object.keys(monthlyStats).sort((a, b) => {
+            // Sort months chronologically, excluding months with no logged cases
+            const months = Object.keys(monthlyStats).filter(m => (monthlyStats[m]?.loggedCases || 0) > 0).sort((a, b) => {
                 const [aMonth, aYear] = a.split('-').map(Number);
                 const [bMonth, bYear] = b.split('-').map(Number);
                 if (aYear !== bYear) return aYear - bYear;
@@ -8182,7 +8230,7 @@
                 const stats = customerStats[customer];
                 const slaCompliance = stats.total > 0 ? (((stats.total - stats.slaViolated) / stats.total) * 100).toFixed(1) : 100;
                 const avgResolutionTime = stats.total > 0 ? (stats.totalAgingDays / stats.total).toFixed(1) : 0;
-                const fcrRate = stats.closed > 0 ? ((filteredData.filter(d => d.submittedBy === customer && d.isClosed && d.agingDays < 2).length / stats.closed) * 100).toFixed(1) : 0;
+                const fcrRate = stats.closed > 0 ? ((filteredData.filter(d => d.submittedBy === customer && d.isFCR).length / stats.closed) * 100).toFixed(1) : 0;
                 
                 return {
                     'Submitted By': customer,
@@ -8220,7 +8268,7 @@
                 engineerStats[d.owner].totalAgingDays += parseFloat(d.agingDays) || 0;
                 if(d.isClosed) {
                     engineerStats[d.owner].closed++;
-                    if(d.agingDays < 2) engineerStats[d.owner].fcr++;
+                    if(d.isFCR) engineerStats[d.owner].fcr++;
                     if(d.subsequentSLABreachCount > 0) engineerStats[d.owner].subsequentSLA++;
                 }
                 if(d.isSlaViolated) engineerStats[d.owner].slaViolated++;
