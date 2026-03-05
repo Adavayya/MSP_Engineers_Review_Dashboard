@@ -12,808 +12,871 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
+        /* ═══════════════════════════════════════════════
+           MODERN PREMIUM LIGHT DESIGN SYSTEM
+           Palette: Rich Indigo + Vivid Cyan + Coral + Mint
+           Inspired by: Linear, Stripe, Vercel dashboards
+        ═══════════════════════════════════════════════ */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
         :root {
-            --primary-color: #5F259F; /* PhonePe Purple */
-            --secondary-color: #3D7FFF; /* PhonePe Blue */
-            --accent-color: #00D4AA; /* PhonePe Teal */
-            --warning-color: #FF9F00;
-            --danger-color: #FF3B5C;
-            --light-gray: #F5F7FF;
-            --dark-gray: #6B7280;
-            --success-color: #00B894;
+            /* Brand Core */
+            --primary:         #5B4FE9;   /* Rich Indigo */
+            --primary-dark:    #3D31C8;
+            --primary-light:   #7B72EE;
+            --primary-soft:    #EEF0FF;   /* Very light indigo tint */
+
+            --secondary:       #06B6D4;   /* Vivid Cyan */
+            --secondary-soft:  #E0F9FF;
+
+            --accent:          #10B981;   /* Emerald Green */
+            --accent-soft:     #D1FAE5;
+
+            /* Status */
+            --danger:          #EF4444;
+            --danger-soft:     #FEF2F2;
+            --danger-mid:      #FECACA;
+
+            --warning:         #F59E0B;
+            --warning-soft:    #FFFBEB;
+            --warning-mid:     #FDE68A;
+
+            --success:         #10B981;
+            --success-soft:    #D1FAE5;
+
+            --info:            #06B6D4;
+            --info-soft:       #E0F9FF;
+
+            /* Surfaces */
+            --bg-body:         #F4F6FD;   /* Slightly blue-tinted off-white */
+            --bg-white:        #FFFFFF;
+            --bg-surface:      #F8FAFF;
+            --bg-card:         #FFFFFF;
+
+            /* Borders */
+            --border:          #E2E8F8;
+            --border-strong:   #C7D2F0;
+
+            /* Text */
+            --text-primary:    #0F172A;
+            --text-secondary:  #475569;
+            --text-muted:      #94A3B8;
+
+            /* Shadows */
+            --shadow-xs:  0 1px 3px rgba(91,79,233,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-sm:  0 4px 12px rgba(91,79,233,0.08), 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-md:  0 8px 24px rgba(91,79,233,0.10), 0 4px 8px rgba(0,0,0,0.04);
+            --shadow-lg:  0 16px 40px rgba(91,79,233,0.12), 0 8px 16px rgba(0,0,0,0.05);
+            --shadow-glow: 0 0 0 3px rgba(91,79,233,0.15);
+
+            /* Legacy aliases */
+            --primary-color:   var(--primary);
+            --secondary-color: var(--secondary);
+            --accent-color:    var(--accent);
+            --warning-color:   var(--warning);
+            --danger-color:    var(--danger);
+            --light-gray:      var(--bg-surface);
+            --dark-gray:       var(--text-secondary);
+            --success-color:   var(--success);
         }
-        
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #F8FAFF 0%, #F0F4FF 100%);
+
+        /* ── Base ─────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-body);
+            background-image:
+                radial-gradient(ellipse 80% 50% at 20% -10%, rgba(91,79,233,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 110%, rgba(6,182,212,0.05) 0%, transparent 60%);
             min-height: 100vh;
-            font-size: 0.9rem;
+            font-size: 0.875rem;
+            color: var(--text-primary);
         }
-        
+
+        /* ── Scrollbar ────────────────────────────── */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-light); }
+
+        /* ── Navbar ───────────────────────────────── */
+        .navbar {
+            background: linear-gradient(135deg, #3D31C8 0%, #5B4FE9 50%, #7B72EE 100%) !important;
+            border-bottom: none;
+            padding: 12px 24px;
+            box-shadow: 0 4px 24px rgba(91,79,233,0.35), 0 1px 0 rgba(255,255,255,0.1);
+        }
+
         .navbar-brand {
-            font-weight: 700;
-            font-size: 1.1rem;
-            letter-spacing: -0.3px;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: -0.4px;
+            color: white !important;
         }
-        
-        .card { 
-            border: none; 
-            border-radius: 12px; 
-            box-shadow: 0 6px 16px rgba(95, 37, 159, 0.08); 
-            margin-bottom: 12px; 
-            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+        /* ── Container ────────────────────────────── */
+        .container-fluid { padding: 0 20px; }
+
+        /* ── Cards ────────────────────────────────── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 14px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             overflow: hidden;
         }
-        
-        .card:hover { 
-            transform: translateY(-4px); 
-            box-shadow: 0 12px 24px rgba(95, 37, 159, 0.12);
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-strong);
         }
-        
-        .global-filters { 
-            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%); 
-            padding: 16px; 
-            border-radius: 12px; 
-            margin-bottom: 20px; 
-            border-left: 5px solid var(--primary-color); 
-            box-shadow: 0 4px 12px rgba(95, 37, 159, 0.06);
-            border-top: 1px solid rgba(0,0,0,0.03);
+
+        /* ── Global Filters ───────────────────────── */
+        .global-filters {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
         }
-        
-        .main-view-tabs .nav-link { 
-            font-size: 0.95rem; 
+
+        .global-filters h6 { color: var(--text-primary); font-weight: 700; }
+
+        /* ── Main Tabs ────────────────────────────── */
+        .main-view-tabs .nav-link {
+            font-size: 0.85rem;
             font-weight: 600;
-            color: #6B7280; 
-            margin-right: 6px; 
-            border-radius: 10px 10px 0 0; 
-            padding: 10px 16px;
-            background-color: #f1f3f5;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-        
-        .main-view-tabs .nav-link:hover {
-            background-color: #e9ecef;
-            color: var(--primary-color);
-        }
-        
-        .main-view-tabs .nav-link.active { 
-            background: linear-gradient(135deg, var(--primary-color), #7B3FD9); 
-            color: white; 
+            color: var(--text-secondary);
+            margin-right: 4px;
+            border-radius: 12px 12px 0 0;
+            padding: 10px 20px;
+            background: #EEF0FF;
+            border: 1px solid var(--border);
             border-bottom: none;
-            box-shadow: 0 4px 8px rgba(95, 37, 159, 0.15);
+            transition: all 0.2s;
         }
-        
-        .view-content { 
-            border: 1px solid #e0e6ed; 
-            border-top: none; 
-            background: white; 
-            padding: 20px; 
-            border-radius: 0 0 12px 12px; 
+
+        .main-view-tabs .nav-link:hover {
+            background: #E4E7FF;
+            color: var(--primary);
+            border-color: var(--border-strong);
+        }
+
+        .main-view-tabs .nav-link.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 16px rgba(91,79,233,0.35);
+        }
+
+        /* ── View Content ─────────────────────────── */
+        .view-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 16px 16px;
+            padding: 20px;
             min-height: 600px;
-            box-shadow: 0 4px 12px rgba(95, 37, 159, 0.04);
+            box-shadow: var(--shadow-sm);
         }
-        
-        .kpi-section-title { 
-            font-size: 0.7rem; 
-            font-weight: 700; 
-            color: var(--primary-color); 
-            border-bottom: 2px solid var(--light-gray); 
-            padding-bottom: 6px; 
-            margin-bottom: 10px; 
-            margin-top: 12px; 
+
+        /* ── KPI Section Title ────────────────────── */
+        .kpi-section-title {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary-soft);
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+            margin-top: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 1px;
         }
-        
-        .kpi-card { 
-            background: white; 
-            border-radius: 10px; 
-            box-shadow: 0 5px 12px rgba(95, 37, 159, 0.06); 
-            padding: 16px; 
-            border-left: 5px solid var(--primary-color); 
-            cursor: pointer; 
-            height: 100%; 
+
+        /* ── KPI Cards ────────────────────────────── */
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            border-radius: 14px;
+            box-shadow: var(--shadow-xs);
+            padding: 16px;
+            cursor: pointer;
+            height: 100%;
             transition: all 0.25s ease;
             position: relative;
             overflow: hidden;
         }
-        
+
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 80px; height: 80px;
+            background: radial-gradient(circle, rgba(91,79,233,0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
         .kpi-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            transform: scaleX(0);
-            transition: transform 0.25s ease;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            border-radius: 0 0 3px 3px;
         }
-        
-        .kpi-card:hover::before {
-            transform: scaleX(1);
+
+        .kpi-card:hover::before { opacity: 1; }
+        .kpi-card:hover {
+            background: var(--primary-soft);
+            border-color: var(--border-strong);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
         }
-        
-        .kpi-card:hover { 
-            background-color: #F8FAFF; 
-            transform: translateY(-6px); 
-            box-shadow: 0 12px 24px rgba(95, 37, 159, 0.12); 
+
+        .kpi-title {
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            line-height: 1.3;
+            letter-spacing: 0.6px;
         }
-        
-        .kpi-title { 
-            font-size: 0.65rem; 
-            color: var(--dark-gray); 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            margin-bottom: 4px; 
-            opacity: 0.9; 
-            line-height: 1.2;
-            letter-spacing: 0.4px;
-        }
-        
-        .kpi-value { 
-            font-size: 1.8rem; 
-            font-weight: 800; 
-            color: var(--primary-color); 
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin: 6px 0;
             line-height: 1;
         }
-        
-        .kpi-status-tag { 
-            font-size: 0.6rem; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            padding: 3px 8px; 
-            border-radius: 16px; 
+
+        .kpi-status-tag {
+            font-size: 0.58rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 3px 9px;
+            border-radius: 20px;
             margin-bottom: 6px;
             display: inline-block;
-            letter-spacing: 0.4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            letter-spacing: 0.6px;
+            box-shadow: var(--shadow-xs);
         }
-        
+
         .kpi-recommendation {
-            font-size: 0.75rem;
+            font-size: 0.71rem;
             font-weight: 500;
             margin-top: 8px;
-            opacity: 0.85;
-            line-height: 1.3;
-            color: var(--dark-gray);
-            border-top: 1px solid #f5f5f5;
+            line-height: 1.4;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
             padding-top: 8px;
         }
-        
-        .bg-urgent { background: linear-gradient(135deg, #FF3B5C, #FF6B8B); color: white; }
-        .bg-action-needed, .bg-monitor { background: linear-gradient(135deg, #FF9F00, #FFB74D); color: white; }
-        .bg-good { background: linear-gradient(135deg, var(--accent-color), #00E6B8); color: white; }
-        .bg-info-tag { background: linear-gradient(135deg, var(--secondary-color), #5D9CFF); color: white; }
-        
-        .accordion-item { 
-            margin-bottom: 12px; 
-            border-radius: 10px; 
-            border: none; 
-            box-shadow: 0 3px 8px rgba(95, 37, 159, 0.04); 
+
+        /* ── Status Tag Colors ────────────────────── */
+        .bg-urgent        { background: linear-gradient(135deg, #EF4444, #F87171); color: #fff; }
+        .bg-action-needed { background: linear-gradient(135deg, #F59E0B, #FCD34D); color: #431407; }
+        .bg-monitor       { background: linear-gradient(135deg, #F59E0B, #FCD34D); color: #431407; }
+        .bg-good          { background: linear-gradient(135deg, #10B981, #34D399); color: #fff; }
+        .bg-info-tag      { background: linear-gradient(135deg, #06B6D4, #22D3EE); color: #fff; }
+
+        /* ── Accordion ────────────────────────────── */
+        .accordion-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border) !important;
+            border-radius: 14px !important;
+            margin-bottom: 10px;
             overflow: hidden;
+            box-shadow: var(--shadow-xs);
         }
-        
-        /* RAG colors for accordion headers based on status */
-        .accordion-item.good .accordion-button {
-            background-color: rgba(0, 212, 170, 0.1);
-            border-left: 4px solid var(--accent-color);
+
+        .accordion-item.good    .accordion-button { background: linear-gradient(135deg, #ECFDF5, #D1FAE5); border-left: 4px solid var(--accent);   }
+        .accordion-item.warning .accordion-button { background: linear-gradient(135deg, #FFFBEB, #FEF3C7); border-left: 4px solid var(--warning);  }
+        .accordion-item.danger  .accordion-button { background: linear-gradient(135deg, #FEF2F2, #FECACA); border-left: 4px solid var(--danger);   }
+        .accordion-item.info    .accordion-button { background: linear-gradient(135deg, #F0FDFF, #CFFAFE); border-left: 4px solid var(--secondary); }
+
+        .accordion-header { border-radius: 14px 14px 0 0; }
+
+        .accordion-button {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 18px;
+            letter-spacing: -0.1px;
         }
-        
-        .accordion-item.warning .accordion-button {
-            background-color: rgba(255, 159, 0, 0.1);
-            border-left: 4px solid var(--warning-color);
+
+        .accordion-button:not(.collapsed) {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(91,79,233,0.3);
         }
-        
-        .accordion-item.danger .accordion-button {
-            background-color: rgba(255, 59, 92, 0.1);
-            border-left: 4px solid var(--danger-color);
+
+        .accordion-button:not(.collapsed)::after { filter: invert(1) brightness(3); }
+
+        .accordion-button:focus {
+            box-shadow: var(--shadow-glow);
+            border-color: var(--primary);
         }
-        
-        .accordion-item.info .accordion-button {
-            background-color: rgba(61, 127, 255, 0.1);
-            border-left: 4px solid var(--secondary-color);
-        }
-        
-        .accordion-header { border-radius: 10px 10px 0 0; }
-        
-        .accordion-button { 
-            font-size: 0.95rem; 
-            font-weight: 600; 
-            color: var(--primary-color); 
-            background-color: #F8FAFF; 
-            border-bottom: 1px solid #e9ecef; 
-            padding: 14px 16px;
-        }
-        
-        .accordion-button:not(.collapsed) { 
-            background: linear-gradient(135deg, var(--primary-color), #7B3FD9); 
-            color: white; 
-            box-shadow: inset 0 -1px 0 rgba(0,0,0,.125); 
-        }
-        
-        .accordion-button:focus { 
-            box-shadow: none; 
-            border-color: var(--primary-color);
-        }
-        
-        .accordion-body { padding: 16px; }
-        
-        .scorecard-table th { 
-            background: linear-gradient(135deg, var(--primary-color), #7B3FD9); 
-            color: white; 
-            border: none; 
-            font-size: 0.7rem; 
-            vertical-align: middle; 
-            padding: 10px 6px; 
-            font-weight: 600;
+
+        .accordion-body { background: #FAFBFF; padding: 16px; }
+
+        /* ── Scorecard Table ──────────────────────── */
+        .scorecard-table th {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            border: none;
+            font-size: 0.68rem;
+            vertical-align: middle;
+            padding: 11px 7px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
+            letter-spacing: 0.5px;
             position: sticky;
             top: 0;
             z-index: 10;
             white-space: nowrap;
         }
-        
-        .scorecard-table td { 
-            font-size: 0.75rem; 
-            padding: 10px 6px; 
+
+        .scorecard-table td {
+            font-size: 0.74rem;
+            padding: 10px 7px;
             vertical-align: middle;
-            border-bottom: 1px solid #f5f5f5;
+            border-bottom: 1px solid var(--border);
             white-space: nowrap;
+            color: var(--text-primary);
         }
-        
-        .critical-cell { 
-            background-color: rgba(255, 59, 92, 0.1); 
-            color: #FF3B5C; 
+
+        .scorecard-table tbody tr:hover td { background: var(--primary-soft) !important; }
+
+        .critical-cell {
+            background: var(--danger-soft) !important;
+            color: var(--danger);
             font-weight: 700;
-            border-left: 3px solid #FF3B5C;
+            border-left: 3px solid var(--danger);
             font-size: 0.72rem;
         }
-        
-        .high-cell { 
-            background-color: rgba(255, 159, 0, 0.1); 
-            color: #FF9F00; 
-            border-left: 3px solid #FF9F00;
+
+        .high-cell {
+            background: var(--warning-soft) !important;
+            color: #92400E;
+            border-left: 3px solid var(--warning);
             font-size: 0.72rem;
         }
-        
-        .success-cell { 
-            background-color: rgba(0, 212, 170, 0.1); 
-            color: var(--accent-color); 
-            border-left: 3px solid var(--accent-color);
+
+        .success-cell {
+            background: var(--success-soft) !important;
+            color: #065F46;
+            border-left: 3px solid var(--accent);
             font-size: 0.72rem;
         }
-        
-        .compliance-gauge { 
-            height: 8px; 
-            border-radius: 4px; 
-            background-color: #f5f5f5;
+
+        .compliance-gauge {
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border);
             overflow: hidden;
         }
-        
-        .metric-card { 
-            border: none; 
-            border-radius: 12px; 
-            box-shadow: 0 6px 16px rgba(95, 37, 159, 0.06); 
-            background: white;
+
+        /* ── Metric Cards (Detailed View) ─────────── */
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
             transition: all 0.25s;
             position: relative;
             overflow: hidden;
         }
-        
+
         .metric-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
         }
-        
+
         .metric-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(95, 37, 159, 0.1);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-strong);
         }
-        
-        .metric-card .card-body { 
-            text-align: center; 
-            padding: 24px 12px;
-        }
-        
-        .metric-value { 
-            font-size: 2.2rem; 
-            font-weight: 800; 
-            color: var(--primary-color); 
+
+        .metric-card .card-body { text-align: center; padding: 24px 12px; }
+
+        .metric-value {
+            font-size: 2.4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             line-height: 1;
             margin-bottom: 8px;
         }
-        
-        .metric-label { 
-            font-size: 0.8rem; 
-            color: var(--dark-gray); 
-            text-transform: uppercase; 
-            letter-spacing: 0.8px; 
-            font-weight: 600;
-        }
-        
-        .detailed-case-table th { 
-            background-color: #F8FAFF; 
-            font-weight: 600;
-            color: var(--primary-color);
-            text-transform: uppercase;
+
+        .metric-label {
             font-size: 0.75rem;
-            letter-spacing: 0.4px;
-            white-space: nowrap;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
         }
-        
+
+        /* ── Detail Tables ────────────────────────── */
+        .detailed-case-table th {
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            border-bottom: 2px solid var(--border-strong);
+        }
+
         .detailed-case-table td {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             padding: 10px 8px;
             vertical-align: middle;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border);
         }
-        
-        .owner-tag { 
-            background: linear-gradient(135deg, #E8E6FF, #D6D1FF); 
-            padding: 3px 10px; 
-            border-radius: 16px; 
-            font-size: 0.8rem; 
-            font-weight: 600;
-            color: var(--primary-color);
+
+        .owner-tag {
+            background: linear-gradient(135deg, var(--primary-soft), #E4E7FF);
+            border: 1px solid var(--border-strong);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary-dark);
             display: inline-block;
             white-space: nowrap;
         }
-        
+
+        /* ── Upload Area ──────────────────────────── */
         .upload-area {
-            text-align: center; 
-            border: 2px dashed #D1D5FF; 
-            padding: 30px; 
+            text-align: center;
+            border: 2px dashed var(--border-strong);
+            padding: 40px 30px;
             cursor: pointer;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #F8FAFF 0%, #F0F4FF 100%);
-            transition: all 0.25s;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--bg-surface) 0%, #EEF0FF 100%);
+            transition: all 0.3s;
         }
-        
+
         .upload-area:hover {
-            border-color: var(--secondary-color);
-            background: linear-gradient(135deg, #F0F7FF 0%, #E8F1FF 100%);
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #EEF0FF 0%, #E4E7FF 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(61, 127, 255, 0.12);
+            box-shadow: var(--shadow-md);
         }
-        
+
         .upload-area.dragover {
-            border-color: var(--accent-color);
-            background: linear-gradient(135deg, #E8F7F0 0%, #D4F0E4 100%);
+            border-color: var(--accent);
+            background: linear-gradient(135deg, var(--accent-soft), #ECFDF5);
         }
-        
+
+        /* ── Buttons ──────────────────────────────── */
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), #7B3FD9);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             border: none;
-            font-weight: 600;
+            font-weight: 700;
             padding: 8px 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.85rem;
+            color: white;
+            box-shadow: 0 4px 14px rgba(91,79,233,0.3);
+            transition: all 0.2s;
         }
-        
+
         .btn-primary:hover {
-            background: linear-gradient(135deg, #7B3FD9, var(--primary-color));
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(95, 37, 159, 0.15);
+            box-shadow: 0 6px 20px rgba(91,79,233,0.4);
+            color: white;
         }
-        
+
         .btn-success {
-            background: linear-gradient(135deg, var(--accent-color), #00E6B8);
+            background: linear-gradient(135deg, var(--accent), #34D399);
             border: none;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 4px 14px rgba(16,185,129,0.25);
+            transition: all 0.2s;
         }
-        
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669, var(--accent));
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16,185,129,0.35);
+        }
+
+        .btn-outline-secondary {
+            border-color: var(--border-strong);
+            color: var(--text-secondary);
+            background: #ffffff;
+            font-weight: 600;
+        }
+        .btn-outline-secondary:hover {
+            background: var(--primary-soft);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-outline-danger {
+            border-color: var(--danger-mid);
+            color: var(--danger);
+            background: #ffffff;
+            font-weight: 600;
+        }
+        .btn-outline-danger:hover {
+            background: var(--danger-soft);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        /* ── Filter Tags ──────────────────────────── */
         .filter-badge {
-            background: linear-gradient(135deg, var(--secondary-color), #5D9CFF);
+            background: linear-gradient(135deg, var(--secondary), #22D3EE);
             color: white;
             padding: 3px 10px;
-            border-radius: 16px;
+            border-radius: 20px;
             font-size: 0.7rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-right: 4px;
             display: inline-flex;
             align-items: center;
         }
-        
-        .tab-content {
-            background: white;
-            border-radius: 0 0 12px 12px;
-            border: 1px solid #e0e6ed;
-            border-top: none;
-            padding: 20px;
-        }
-        
-        .nav-tabs {
-            border-bottom: 2px solid #e0e6ed;
-        }
-        
-        .nav-tabs .nav-link {
-            border: none;
-            border-radius: 8px 8px 0 0;
-            margin-right: 4px;
-            font-weight: 500;
-            color: var(--dark-gray);
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-        }
-        
-        .nav-tabs .nav-link:hover {
-            color: var(--primary-color);
-            background-color: #F8FAFF;
-        }
-        
-        .nav-tabs .nav-link.active {
-            color: var(--primary-color);
-            background-color: white;
-            border-bottom: 3px solid var(--primary-color);
-            font-weight: 600;
-        }
-        
-        .modal-header {
-            background: linear-gradient(135deg, var(--primary-color), #7B3FD9);
-            color: white;
-            border-radius: 12px 12px 0 0;
-            padding: 16px;
-        }
-        
-        .progress-bar {
-            border-radius: 4px;
-        }
-        
-        .table-hover tbody tr:hover {
-            background-color: #F8FAFF;
-            cursor: pointer;
-        }
-        
-        .badge {
-            font-weight: 600;
-            padding: 5px 10px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-        }
-        
-        .form-select, .form-control {
-            border-radius: 8px;
-            border: 1px solid #D1D5FF;
-            padding: 8px 10px;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-        }
-        
-        .form-select:focus, .form-control:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.2rem rgba(95, 37, 159, 0.12);
-        }
-        
-        .alert {
-            border-radius: 10px;
-            border: none;
-            box-shadow: 0 4px 8px rgba(95, 37, 159, 0.04);
-            font-size: 0.85rem;
-        }
-        
-        .loading-spinner {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255,255,255,0.95);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        
-        .loading-spinner.active {
-            display: flex;
-        }
-        
-        .spinner-border {
-            width: 2.5rem;
-            height: 2.5rem;
-            color: var(--primary-color);
-        }
-        
+
         .filter-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
             margin-top: 8px;
             padding: 10px;
-            background-color: #F8FAFF;
-            border-radius: 8px;
+            background: var(--primary-soft);
+            border-radius: 10px;
+            border: 1px solid var(--border-strong);
         }
-        
+
         .filter-tag {
-            background: linear-gradient(135deg, var(--secondary-color), #5D9CFF);
-            color: white;
+            background: linear-gradient(135deg, var(--primary-soft), #E4E7FF);
+            border: 1px solid var(--border-strong);
+            color: var(--primary-dark);
             padding: 4px 12px;
-            border-radius: 16px;
-            font-size: 0.8rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            box-shadow: 0 2px 4px rgba(61, 127, 255, 0.15);
+            font-weight: 600;
         }
-        
+
         .filter-tag .close {
-            color: white;
-            opacity: 0.8;
+            color: var(--primary);
+            opacity: 0.7;
             cursor: pointer;
             margin-left: 6px;
             font-weight: bold;
             font-size: 1rem;
         }
-        
-        .filter-tag .close:hover {
-            opacity: 1;
+        .filter-tag .close:hover { opacity: 1; }
+
+        /* ── Inner Nav Tabs ───────────────────────── */
+        .tab-content {
+            background: var(--bg-surface);
+            border-radius: 0 0 14px 14px;
+            border: 1px solid var(--border);
+            border-top: none;
+            padding: 20px;
         }
-        
+
+        .nav-tabs { border-bottom: 2px solid var(--border); }
+
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 10px 10px 0 0;
+            margin-right: 3px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            font-size: 0.82rem;
+            transition: all 0.2s;
+            background: transparent;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary);
+            background: var(--primary-soft);
+            border-bottom: 3px solid var(--primary);
+            font-weight: 700;
+        }
+
+        /* ── Modals ───────────────────────────────── */
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            border-bottom: none;
+            border-radius: 18px 18px 0 0;
+            padding: 16px 20px;
+        }
+
+        .modal-title { color: white; font-weight: 700; }
+        .btn-close { filter: invert(1) brightness(3); }
+
+        /* ── Progress Bars ────────────────────────── */
+        .progress { background: var(--border); border-radius: 4px; }
+        .progress-bar { border-radius: 4px; }
+        .progress-bar.bg-danger  { background: linear-gradient(90deg, var(--danger), #F87171) !important; }
+        .progress-bar.bg-warning { background: linear-gradient(90deg, var(--warning), #FCD34D) !important; }
+        .progress-bar.bg-success { background: linear-gradient(90deg, var(--accent), #34D399) !important; }
+
+        /* ── Alerts ───────────────────────────────── */
+        .alert { border-radius: 12px; border: none; font-size: 0.82rem; font-weight: 500; }
+        .alert-success  { background: var(--success-soft);  color: #065F46; border: 1px solid #A7F3D0; }
+        .alert-danger   { background: var(--danger-soft);   color: #991B1B; border: 1px solid var(--danger-mid); }
+        .alert-warning  { background: var(--warning-soft);  color: #92400E; border: 1px solid var(--warning-mid); }
+        .alert-info     { background: var(--info-soft);     color: #155E75; border: 1px solid #A5F3FC; }
+
+        /* ── Forms ────────────────────────────────── */
+        .form-select, .form-control {
+            background: #ffffff;
+            border: 1.5px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 0.82rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .form-select:focus, .form-control:focus {
+            border-color: var(--primary);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .form-label { color: var(--text-secondary); font-weight: 600; font-size: 0.8rem; }
+
+        /* ── Badges ───────────────────────────────── */
+        .badge { font-weight: 700; padding: 5px 10px; border-radius: 10px; font-size: 0.75rem; }
+        .bg-secondary { background: #E2E8F0 !important; color: var(--text-secondary); }
+
+        /* ── Tables ───────────────────────────────── */
+        .table { color: var(--text-primary); --bs-table-striped-bg: #FAFBFF; --bs-table-hover-bg: var(--primary-soft); }
+        .table-bordered { border-color: var(--border); }
+        .table-bordered > :not(caption) > * > * { border-color: var(--border); }
+        .table-hover tbody tr:hover { background: var(--primary-soft); cursor: pointer; }
+
+        /* ── Drilldown Table ──────────────────────── */
         .drilldown-table th {
-            background: linear-gradient(135deg, var(--primary-color), #7B3FD9);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
             color: white;
-            font-size: 0.75rem;
-            padding: 10px 8px;
+            font-size: 0.72rem;
+            padding: 11px 8px;
             white-space: nowrap;
+            font-weight: 700;
+            border: none;
         }
-        
+
         .drilldown-table td {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             padding: 10px 8px;
             vertical-align: middle;
+            color: var(--text-primary);
+            border-color: var(--border);
         }
-        
-        .drilldown-table {
-            font-size: 0.85rem;
+
+        /* ── Loading Spinner ──────────────────────── */
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(244,246,253,0.92);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(4px);
         }
-        
-        .compact-view {
-            font-size: 0.8rem;
-        }
-        
-        .compact-view .table th,
-        .compact-view .table td {
-            padding: 8px 6px;
-        }
-        
-        .compact-view .btn-sm {
-            padding: 3px 8px;
-            font-size: 0.75rem;
-        }
-        
-        /* Grid View Styles */
+
+        .loading-spinner.active { display: flex; }
+        .spinner-border { width: 2.5rem; height: 2.5rem; color: var(--primary) !important; }
+
+        /* ── Grid / Case Cards ────────────────────── */
         .grid-view-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
+            gap: 14px;
+            margin-top: 16px;
         }
-        
+
         .case-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(95, 37, 159, 0.06);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
             padding: 16px;
-            border-left: 4px solid var(--primary-color);
+            border-left: 4px solid var(--primary);
             transition: all 0.2s;
             height: 100%;
         }
-        
+
         .case-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(95, 37, 159, 0.12);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-strong);
         }
-        
-        .case-card.critical {
-            border-left-color: var(--danger-color);
-        }
-        
-        .case-card.warning {
-            border-left-color: var(--warning-color);
-        }
-        
-        .case-card.success {
-            border-left-color: var(--success-color);
-        }
-        
-        .case-id {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 4px;
-        }
-        
-        .case-title {
-            font-size: 0.85rem;
-            color: var(--dark-gray);
-            margin-bottom: 10px;
-            line-height: 1.3;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .case-meta {
-            font-size: 0.75rem;
-            color: #6B7280;
-            margin-bottom: 8px;
-        }
-        
-        .case-meta-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 4px;
-        }
-        
-        .case-meta-item i {
-            margin-right: 6px;
-            width: 14px;
-            color: var(--primary-color);
-        }
-        
-        .case-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 10px;
-        }
-        
-        .case-tag {
-            font-size: 0.65rem;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-        
-        .case-tag.urgent {
-            background-color: rgba(255, 59, 92, 0.12);
-            color: #FF3B5C;
-        }
-        
-        .case-tag.warning {
-            background-color: rgba(255, 159, 0, 0.12);
-            color: #FF9F00;
-        }
-        
-        .case-tag.info {
-            background-color: rgba(61, 127, 255, 0.12);
-            color: var(--secondary-color);
-        }
-        
-        .case-tag.success {
-            background-color: rgba(0, 212, 170, 0.12);
-            color: var(--accent-color);
-        }
-        
-        .view-toggle {
-            display: flex;
-            gap: 8px;
-            margin-left: auto;
-        }
-        
+
+        .case-card.critical  { border-left-color: var(--danger); }
+        .case-card.warning   { border-left-color: var(--warning); }
+        .case-card.success   { border-left-color: var(--accent); }
+
+        .case-id    { font-size: 0.88rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+        .case-title { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.35;
+                      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .case-meta  { font-size: 0.73rem; color: var(--text-muted); margin-bottom: 8px; }
+        .case-meta-item { display: flex; align-items: center; margin-bottom: 4px; }
+        .case-meta-item i { margin-right: 6px; width: 14px; color: var(--primary); }
+
+        .case-tags  { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+        .case-tag   { font-size: 0.63rem; padding: 2px 8px; border-radius: 12px; font-weight: 700; }
+        .case-tag.urgent  { background: var(--danger-soft);   color: var(--danger); }
+        .case-tag.warning { background: var(--warning-soft);  color: #92400E; }
+        .case-tag.info    { background: var(--info-soft);     color: #155E75; }
+        .case-tag.success { background: var(--success-soft);  color: #065F46; }
+
+        /* ── View Toggle ──────────────────────────── */
+        .view-toggle { display: flex; gap: 6px; margin-left: auto; }
+
         .view-toggle-btn {
-            background: #f1f3f5;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 5px 10px;
+            background: #ffffff;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            padding: 5px 12px;
             font-size: 0.8rem;
-            color: #6B7280;
+            color: var(--text-secondary);
+            font-weight: 600;
             transition: all 0.2s;
         }
-        
-        .view-toggle-btn:hover, .view-toggle-btn.active {
-            background: var(--primary-color);
+
+        .view-toggle-btn:hover,
+        .view-toggle-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
-            border-color: var(--primary-color);
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(91,79,233,0.3);
         }
-        
-        .truncate-text {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 200px;
-        }
-        
-        /* PDF Download Button */
+
+        /* ── PDF Button ───────────────────────────── */
         .pdf-download-btn {
-            background: linear-gradient(135deg, #DC3545, #C82333);
+            background: linear-gradient(135deg, #EF4444, #F87171);
             border: none;
             color: white;
-            font-weight: 600;
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 7px 18px;
+            border-radius: 10px;
+            font-size: 0.82rem;
             display: inline-flex;
             align-items: center;
             gap: 5px;
             margin-left: 10px;
+            box-shadow: 0 4px 14px rgba(239,68,68,0.25);
+            transition: all 0.2s;
         }
-        
+
         .pdf-download-btn:hover {
-            background: linear-gradient(135deg, #C82333, #DC3545);
+            background: linear-gradient(135deg, #DC2626, #EF4444);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(220, 53, 69, 0.15);
+            box-shadow: 0 6px 20px rgba(239,68,68,0.35);
             color: white;
         }
-        
-        /* Tab export buttons */
+
+        /* ── Tab Export Btn ───────────────────────── */
         .tab-export-btn {
-            background: linear-gradient(135deg, var(--accent-color), #00E6B8);
+            background: linear-gradient(135deg, var(--accent), #34D399);
             border: none;
             color: white;
-            font-weight: 600;
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.72rem;
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            margin-left: 10px;
+            margin-left: 8px;
+            transition: all 0.2s;
         }
-        
+
         .tab-export-btn:hover {
-            background: linear-gradient(135deg, #00E6B8, var(--accent-color));
+            background: linear-gradient(135deg, #059669, var(--accent));
             color: white;
         }
-        
+
+        /* ── Filter Section (inner) ───────────────── */
+        .filter-section {
+            background: var(--bg-surface) !important;
+            border: 1.5px solid var(--border) !important;
+            border-radius: 12px;
+        }
+
+        /* ── Compact ──────────────────────────────── */
+        .truncate-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+        .compact-view { font-size: 0.78rem; }
+        .compact-view .table th, .compact-view .table td { padding: 8px 6px; }
+        .compact-view .btn-sm { padding: 3px 8px; font-size: 0.72rem; }
+
+        /* ── Responsive ───────────────────────────── */
         @media (max-width: 1400px) {
-            .scorecard-table th,
-            .scorecard-table td {
-                font-size: 0.68rem;
-                padding: 8px 4px;
-            }
-            
-            .kpi-value {
-                font-size: 1.6rem;
-            }
-            
-            .metric-value {
-                font-size: 2rem;
-            }
+            .scorecard-table th, .scorecard-table td { font-size: 0.65rem; padding: 8px 4px; }
+            .kpi-value    { font-size: 1.7rem; }
+            .metric-value { font-size: 2rem; }
         }
-        
+
         @media (max-width: 1200px) {
-            .grid-view-container {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-            
-            .scorecard-table th,
-            .scorecard-table td {
-                font-size: 0.65rem;
-            }
+            .grid-view-container { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+            .scorecard-table th, .scorecard-table td { font-size: 0.62rem; }
         }
-        
+
         @media (max-width: 768px) {
-            .grid-view-container {
-                grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
-            }
-            
-            .global-filters .col-md-2 {
-                margin-bottom: 10px;
-            }
-            
-            .view-content {
-                padding: 15px;
-            }
-            
-            .accordion-body {
-                padding: 12px;
-            }
+            .grid-view-container { grid-template-columns: 1fr; }
+            .main-view-tabs .nav-link { font-size: 0.78rem; padding: 8px 10px; }
+            .kpi-value { font-size: 1.5rem; }
+            .accordion-body { padding: 12px; }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark shadow" style="background: linear-gradient(135deg, var(--primary-color), #7B3FD9);">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow" >
         <div class="container-fluid">
             <div class="logo-container d-flex align-items-center">
                 <img src="https://framerusercontent.com/images/H68MYj3xIX7Xtb1HiwUah4O7xo.png?scale-down-to=512" alt="Logo" style="height: 30px;" class="me-3">
@@ -1067,53 +1130,53 @@
                                 <div class="accordion-body">
 
                                     <!-- Sub-section: Follow-up Date -->
-                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6B7280;border-bottom:1px dashed #e5e7eb;padding-bottom:4px;margin-bottom:8px;">
-                                        <i class="bi bi-calendar-check me-1" style="color:var(--primary-color);"></i> Follow-up Date
+                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);border-bottom:1px dashed var(--border);padding-bottom:4px;margin-bottom:8px;">
+                                        <i class="bi bi-calendar-check me-1" style="color:var(--primary);"></i> Follow-up Date
                                     </div>
                                     <div class="row g-2 mb-3">
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-followup-card" style="border-left-color:#FF3B5C;">
+                                            <div class="kpi-card" id="kpi-followup-card" style="border-left-color:#EF4444;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-followup-tag">GOOD</span>
-                                                <div class="kpi-title">Follow-up Date Missed <span style="font-size:0.58rem;background:rgba(255,59,92,0.12);color:#FF3B5C;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
+                                                <div class="kpi-title">Follow-up Date Missed <span style="font-size:0.58rem;background:rgba(239,68,68,0.1);color:#DC2626;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
                                                 <div class="kpi-value" id="kpi-followup">0</div>
                                                 <div class="kpi-recommendation" id="kpi-followup-rec">All cases have a valid, upcoming follow-up date.</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-followup-today-card" style="border-left-color:#FF9F00;">
-                                                <span class="kpi-status-tag" id="kpi-followup-today-tag" style="background:linear-gradient(135deg,#FF9F00,#FFB74D);color:white;">PROACTIVE</span>
-                                                <div class="kpi-title">Follow-up Due Today <span style="font-size:0.58rem;background:rgba(255,159,0,0.12);color:#FF9F00;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
-                                                <div class="kpi-value" id="kpi-followup-today" style="color:#FF9F00;">0</div>
+                                            <div class="kpi-card" id="kpi-followup-today-card" style="border-left-color:#F59E0B;">
+                                                <span class="kpi-status-tag" id="kpi-followup-today-tag" style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#431407;">PROACTIVE</span>
+                                                <div class="kpi-title">Follow-up Due Today <span style="font-size:0.58rem;background:rgba(245,158,11,0.12);color:#B45309;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
+                                                <div class="kpi-value" id="kpi-followup-today" style="color:#D97706;">0</div>
                                                 <div class="kpi-recommendation" id="kpi-followup-today-rec">No follow-ups due today.</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-followup-tomorrow-card" style="border-left-color:#3D7FFF;">
+                                            <div class="kpi-card" id="kpi-followup-tomorrow-card" style="border-left-color:#06B6D4;">
                                                 <span class="kpi-status-tag bg-info-tag" id="kpi-followup-tomorrow-tag">PROACTIVE</span>
-                                                <div class="kpi-title">Follow-up Due Tomorrow <span style="font-size:0.58rem;background:rgba(61,127,255,0.12);color:#3D7FFF;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
-                                                <div class="kpi-value" id="kpi-followup-tomorrow" style="color:#3D7FFF;">0</div>
+                                                <div class="kpi-title">Follow-up Due Tomorrow <span style="font-size:0.58rem;background:rgba(6,182,212,0.12);color:#0891B2;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
+                                                <div class="kpi-value" id="kpi-followup-tomorrow" style="color:#0891B2;">0</div>
                                                 <div class="kpi-recommendation" id="kpi-followup-tomorrow-rec">No follow-ups due tomorrow.</div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- Sub-section: Email Compliance -->
-                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6B7280;border-bottom:1px dashed #e5e7eb;padding-bottom:4px;margin-bottom:8px;">
-                                        <i class="bi bi-envelope me-1" style="color:var(--primary-color);"></i> Email Compliance
+                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);border-bottom:1px dashed var(--border);padding-bottom:4px;margin-bottom:8px;">
+                                        <i class="bi bi-envelope me-1" style="color:var(--primary);"></i> Email Compliance
                                     </div>
                                     <div class="row g-2">
                                         <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-email-followup-card" style="border-left-color:#FF9F00;">
+                                            <div class="kpi-card" id="kpi-email-followup-card" style="border-left-color:#F59E0B;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-email-followup-tag">GOOD</span>
-                                                <div class="kpi-title">Email F/Up Missed <span style="font-size:0.58rem;background:rgba(255,59,92,0.12);color:#FF3B5C;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
+                                                <div class="kpi-title">Email F/Up Missed <span style="font-size:0.58rem;background:rgba(239,68,68,0.1);color:#DC2626;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
                                                 <div class="kpi-value" id="kpi-email-followup">0</div>
                                                 <div class="kpi-recommendation" id="kpi-email-followup-rec">All email follow-ups are compliant.</div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-email-resp-card" style="border-left-color:#FF3B5C;">
+                                            <div class="kpi-card" id="kpi-email-resp-card" style="border-left-color:#EF4444;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-email-resp-tag">GOOD</span>
-                                                <div class="kpi-title">Email Resp Missed <span style="font-size:0.58rem;background:rgba(255,59,92,0.12);color:#FF3B5C;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
+                                                <div class="kpi-title">Email Resp Missed <span style="font-size:0.58rem;background:rgba(239,68,68,0.1);color:#DC2626;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
                                                 <div class="kpi-value" id="kpi-email-resp">0</div>
                                                 <div class="kpi-recommendation" id="kpi-email-resp-rec">No missed client responses reported.</div>
                                             </div>
@@ -1134,45 +1197,45 @@
                                 <div class="accordion-body">
 
                                     <!-- Sub-section: Subsequent Response -->
-                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6B7280;border-bottom:1px dashed #e5e7eb;padding-bottom:4px;margin-bottom:8px;">
-                                        <i class="bi bi-reply-all me-1" style="color:var(--primary-color);"></i> Subsequent Response (INC)
+                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);border-bottom:1px dashed var(--border);padding-bottom:4px;margin-bottom:8px;">
+                                        <i class="bi bi-reply-all me-1" style="color:var(--primary);"></i> Subsequent Response (INC)
                                     </div>
                                     <div class="row g-2 mb-3">
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-sub-resp-card" style="border-left-color:#FF3B5C;">
+                                            <div class="kpi-card" id="kpi-sub-resp-card" style="border-left-color:#EF4444;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-sub-resp-tag">GOOD</span>
-                                                <div class="kpi-title">Subsequent Resp Missed <span style="font-size:0.58rem;background:rgba(255,59,92,0.12);color:#FF3B5C;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
+                                                <div class="kpi-title">Subsequent Resp Missed <span style="font-size:0.58rem;background:rgba(239,68,68,0.1);color:#DC2626;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
                                                 <div class="kpi-value" id="kpi-sub-resp">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sub-resp-rec">All subsequent response dates are met or tracked.</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-sub-resp-today-card" style="border-left-color:#FF9F00;">
-                                                <span class="kpi-status-tag" id="kpi-sub-resp-today-tag" style="background:linear-gradient(135deg,#FF9F00,#FFB74D);color:white;">PROACTIVE</span>
-                                                <div class="kpi-title">Subseq. Resp Due Today <span style="font-size:0.58rem;background:rgba(255,159,0,0.12);color:#FF9F00;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
-                                                <div class="kpi-value" id="kpi-sub-resp-today" style="color:#FF9F00;">0</div>
+                                            <div class="kpi-card" id="kpi-sub-resp-today-card" style="border-left-color:#F59E0B;">
+                                                <span class="kpi-status-tag" id="kpi-sub-resp-today-tag" style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#431407;">PROACTIVE</span>
+                                                <div class="kpi-title">Subseq. Resp Due Today <span style="font-size:0.58rem;background:rgba(245,158,11,0.12);color:#B45309;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
+                                                <div class="kpi-value" id="kpi-sub-resp-today" style="color:#D97706;">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sub-resp-today-rec">No subsequent responses due today.</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-sub-resp-tomorrow-card" style="border-left-color:#3D7FFF;">
+                                            <div class="kpi-card" id="kpi-sub-resp-tomorrow-card" style="border-left-color:#06B6D4;">
                                                 <span class="kpi-status-tag bg-info-tag" id="kpi-sub-resp-tomorrow-tag">PROACTIVE</span>
-                                                <div class="kpi-title">Subseq. Resp Due Tomorrow <span style="font-size:0.58rem;background:rgba(61,127,255,0.12);color:#3D7FFF;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
-                                                <div class="kpi-value" id="kpi-sub-resp-tomorrow" style="color:#3D7FFF;">0</div>
+                                                <div class="kpi-title">Subseq. Resp Due Tomorrow <span style="font-size:0.58rem;background:rgba(6,182,212,0.12);color:#0891B2;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
+                                                <div class="kpi-value" id="kpi-sub-resp-tomorrow" style="color:#0891B2;">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sub-resp-tomorrow-rec">No subsequent responses due tomorrow.</div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- Sub-section: Subsequent SLA -->
-                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6B7280;border-bottom:1px dashed #e5e7eb;padding-bottom:4px;margin-bottom:8px;">
-                                        <i class="bi bi-shield-exclamation me-1" style="color:var(--primary-color);"></i> Subsequent SLA
+                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);border-bottom:1px dashed var(--border);padding-bottom:4px;margin-bottom:8px;">
+                                        <i class="bi bi-shield-exclamation me-1" style="color:var(--primary);"></i> Subsequent SLA
                                     </div>
                                     <div class="row g-2">
                                         <div class="col-md-12">
-                                            <div class="kpi-card" id="kpi-sub-sla-card" style="border-left-color:#FF3B5C;">
+                                            <div class="kpi-card" id="kpi-sub-sla-card" style="border-left-color:#EF4444;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-sub-sla-tag">GOOD</span>
-                                                <div class="kpi-title">Subsequent SLA Miss <span style="font-size:0.58rem;background:rgba(255,59,92,0.12);color:#FF3B5C;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Breached</span></div>
+                                                <div class="kpi-title">Subsequent SLA Miss <span style="font-size:0.58rem;background:rgba(239,68,68,0.1);color:#DC2626;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Breached</span></div>
                                                 <div class="kpi-value" id="kpi-sub-sla">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sub-sla-rec">No cases have breached the subsequent SLA threshold.</div>
                                             </div>
@@ -1193,12 +1256,12 @@
                                 <div class="accordion-body">
 
                                     <!-- Sub-section: Idle Cases -->
-                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6B7280;border-bottom:1px dashed #e5e7eb;padding-bottom:4px;margin-bottom:8px;">
-                                        <i class="bi bi-hourglass me-1" style="color:var(--primary-color);"></i> Idle Cases
+                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);border-bottom:1px dashed var(--border);padding-bottom:4px;margin-bottom:8px;">
+                                        <i class="bi bi-hourglass me-1" style="color:var(--primary);"></i> Idle Cases
                                     </div>
                                     <div class="row g-2 mb-3">
                                         <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-idle-3-card" style="border-left-color:#FF3B5C;">
+                                            <div class="kpi-card" id="kpi-idle-3-card" style="border-left-color:#EF4444;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-idle-3-tag">GOOD</span>
                                                 <div class="kpi-title">Idle > 2 Days</div>
                                                 <div class="kpi-value" id="kpi-idle-3">0</div>
@@ -1208,31 +1271,31 @@
                                     </div>
 
                                     <!-- Sub-section: EDOC (SR Expected Date of Closure) -->
-                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6B7280;border-bottom:1px dashed #e5e7eb;padding-bottom:4px;margin-bottom:8px;">
-                                        <i class="bi bi-calendar-x me-1" style="color:var(--primary-color);"></i> SR EDOC (Expected Date of Closure)
+                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);border-bottom:1px dashed var(--border);padding-bottom:4px;margin-bottom:8px;">
+                                        <i class="bi bi-calendar-x me-1" style="color:var(--primary);"></i> SR EDOC (Expected Date of Closure)
                                     </div>
                                     <div class="row g-2">
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-edoc-card" style="border-left-color:#FF3B5C;">
+                                            <div class="kpi-card" id="kpi-edoc-card" style="border-left-color:#EF4444;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-edoc-tag">GOOD</span>
-                                                <div class="kpi-title">SR EDOC Breach <span style="font-size:0.58rem;background:rgba(255,59,92,0.12);color:#FF3B5C;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
+                                                <div class="kpi-title">SR EDOC Breach <span style="font-size:0.58rem;background:rgba(239,68,68,0.1);color:#DC2626;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
                                                 <div class="kpi-value" id="kpi-edoc">0</div>
                                                 <div class="kpi-recommendation" id="kpi-edoc-rec">No SR cases have breached their Expected Date of Closure.</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-edoc-today-card" style="border-left-color:#FF9F00;">
-                                                <span class="kpi-status-tag" id="kpi-edoc-today-tag" style="background:linear-gradient(135deg,#FF9F00,#FFB74D);color:white;">PROACTIVE</span>
-                                                <div class="kpi-title">EDOC Due Today <span style="font-size:0.58rem;background:rgba(255,159,0,0.12);color:#FF9F00;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
-                                                <div class="kpi-value" id="kpi-edoc-today" style="color:#FF9F00;">0</div>
+                                            <div class="kpi-card" id="kpi-edoc-today-card" style="border-left-color:#F59E0B;">
+                                                <span class="kpi-status-tag" id="kpi-edoc-today-tag" style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#431407;">PROACTIVE</span>
+                                                <div class="kpi-title">EDOC Due Today <span style="font-size:0.58rem;background:rgba(245,158,11,0.12);color:#B45309;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
+                                                <div class="kpi-value" id="kpi-edoc-today" style="color:#D97706;">0</div>
                                                 <div class="kpi-recommendation" id="kpi-edoc-today-rec">No SR EDOCs closing today.</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-edoc-tomorrow-card" style="border-left-color:#3D7FFF;">
+                                            <div class="kpi-card" id="kpi-edoc-tomorrow-card" style="border-left-color:#06B6D4;">
                                                 <span class="kpi-status-tag bg-info-tag" id="kpi-edoc-tomorrow-tag">PROACTIVE</span>
-                                                <div class="kpi-title">EDOC Due Tomorrow <span style="font-size:0.58rem;background:rgba(61,127,255,0.12);color:#3D7FFF;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
-                                                <div class="kpi-value" id="kpi-edoc-tomorrow" style="color:#3D7FFF;">0</div>
+                                                <div class="kpi-title">EDOC Due Tomorrow <span style="font-size:0.58rem;background:rgba(6,182,212,0.12);color:#0891B2;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
+                                                <div class="kpi-value" id="kpi-edoc-tomorrow" style="color:#0891B2;">0</div>
                                                 <div class="kpi-recommendation" id="kpi-edoc-tomorrow-rec">No SR EDOCs closing tomorrow.</div>
                                             </div>
                                         </div>
@@ -1509,7 +1572,7 @@
                         
                         <!-- Account Wise Analyses -->
                         <div class="card mb-4">
-                            <div class="card-header" style="background: linear-gradient(135deg, var(--primary-color), #7B3FD9); color: white;">
+                            <div class="card-header" style="background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white;">
                                 <h5 class="mb-0"><i class="bi bi-building me-2"></i>Account Wise Analyses</h5>
                             </div>
                             <div class="card-body">
@@ -1683,7 +1746,7 @@
                         <div class="col-6 col-md-3">
                             <div class="kpi-card" style="border-left-color: #FF9F00;">
                                 <div class="kpi-title">⚠️ High Priority</div>
-                                <div class="kpi-value" style="color:#FF9F00;" id="hp-high-count">—</div>
+                                <div class="kpi-value" style="color:#D97706;" id="hp-high-count">—</div>
                                 <div class="kpi-recommendation">Significant impact · Degraded functionality · Action needed today</div>
                             </div>
                         </div>
@@ -1697,15 +1760,15 @@
                         <div class="col-6 col-md-3">
                             <div class="kpi-card" style="border-left-color: var(--primary-color);">
                                 <div class="kpi-title">🎯 Focus Score</div>
-                                <div style="font-size:0.85rem; font-weight:700; margin:8px 0; color:var(--primary-color);" id="hp-focus-pct">—</div>
+                                <div style="font-size:0.85rem; font-weight:700; margin:8px 0; color:var(--primary);" id="hp-focus-pct">—</div>
                                 <div class="kpi-recommendation" id="hp-focus-sub">% of tickets needing immediate attention</div>
                             </div>
                         </div>
                     </div>
 
                     <!-- How it works legend 
-                    <div class="alert mb-3" style="background:#F8FAFF; border:1px solid #e0e6ed; border-radius:10px; font-size:0.82rem; padding:14px 16px;">
-                        <strong><i class="bi bi-cpu me-1" style="color:var(--primary-color);"></i>How This Works — Two-Layer Semantic Intelligence:</strong>
+                    <div class="alert mb-3" style="background:var(--primary-soft); border:1px solid var(--border-strong); border-radius:10px; font-size:0.82rem; padding:14px 16px;">
+                        <strong><i class="bi bi-cpu me-1" style="color:var(--primary);"></i>How This Works — Two-Layer Semantic Intelligence:</strong>
                         <div class="row mt-2 g-2">
                             <div class="col-md-6">
                                 <div style="background:rgba(95,37,159,0.05); border-radius:8px; padding:10px; border-left:3px solid var(--primary-color);">
@@ -1714,10 +1777,10 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div style="background:rgba(255,59,92,0.04); border-radius:8px; padding:10px; border-left:3px solid #FF3B5C;">
+                                <div style="background:rgba(239,68,68,0.06); border-radius:8px; padding:10px; border-left:3px solid #EF4444;">
                                     <b>Layer 2 — Operational Risk Signals (0–40 pts)</b><br>
                                     <span style="color:#6B7280;">SLA Violated (+15) · Aging >25 Days (+10) · Email Response Missed (+8) · EDOC Breached (+8) · Subsequent SLA Breach (+5) · Follow-up Missed (+5) · Idle >3 Days (+5) · Aging >15 Days (+4)</span><br><br>
-                                    <b style="color:#FF3B5C;">🚨 Critical ≥ 65 pts &nbsp;&nbsp;|&nbsp;&nbsp; ⚠️ High ≥ 35 pts</b>
+                                    <b style="color:#DC2626;">🚨 Critical ≥ 65 pts &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:#B45309;">⚠️ High ≥ 35 pts</span></b>
                                 </div>
                             </div>
                         </div>
@@ -1770,7 +1833,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="badge" style="background: linear-gradient(135deg, var(--primary-color), #7B3FD9); font-size: 0.9rem;" id="drillDownCount">0 Cases</span>
+                        <span class="badge" style="background: linear-gradient(135deg, var(--primary-dark), var(--primary)); font-size: 0.9rem;" id="drillDownCount">0 Cases</span>
                         <button class="btn btn-sm btn-success" onclick="exportDrillDownToExcel()">
                             <i class="bi bi-download me-1"></i> Export List
                         </button>
@@ -3116,7 +3179,7 @@
                 statusCounts[d.currentStatus] = (statusCounts[d.currentStatus] || 0) + 1;
             });
             
-            const statusColors = ['#5F259F', '#3D7FFF', '#00D4AA', '#FF9F00', '#FF3B5C', '#9B46C9', '#2CD5C4'];
+            const statusColors = ['#5B4FE9', '#06B6D4', '#10B981', '#F59E0B', '#EF4444', '#7B72EE', '#34D399'];
             charts.statusChart = new Chart(document.getElementById('statusChart'), {
                 type: 'doughnut',
                 data: {
@@ -3125,7 +3188,7 @@
                         data: Object.values(statusCounts),
                         backgroundColor: statusColors.slice(0, Object.keys(statusCounts).length),
                         borderWidth: 1,
-                        borderColor: '#fff'
+                        borderColor: '#ffffff'
                     }]
                 },
                 options: {
@@ -3158,8 +3221,8 @@
                     datasets: [{
                         label: 'Number of Cases',
                         data: Object.values(aCounts),
-                        backgroundColor: ['#00D4AA', '#3D7FFF', '#FF9F00', '#FF3B5C'],
-                        borderColor: ['#00D4AA', '#3D7FFF', '#FF9F00', '#FF3B5C'],
+                        backgroundColor: ['#10B981', '#5B4FE9', '#F59E0B', '#EF4444'],
+                        borderColor: ['#10B981', '#5B4FE9', '#F59E0B', '#EF4444'],
                         borderWidth: 1
                     }]
                 },
@@ -3201,16 +3264,16 @@
                         {
                             label: 'SLA Violation Rate (%)',
                             data: violationRates,
-                            backgroundColor: 'rgba(255, 59, 92, 0.7)',
-                            borderColor: 'rgba(255, 59, 92, 1)',
+                            backgroundColor: 'rgba(239,68,68,0.75)',
+                            borderColor: 'rgba(239,68,68,1)',
                             borderWidth: 1,
                             yAxisID: 'y1',
                         },
                         {
                             label: 'Aging > 15 Days Count',
                             data: aging15Counts,
-                            backgroundColor: 'rgba(255, 159, 0, 0.7)',
-                            borderColor: 'rgba(255, 159, 0, 1)',
+                            backgroundColor: 'rgba(245,158,11,0.75)',
+                            borderColor: 'rgba(245,158,11,1)',
                             borderWidth: 1,
                             yAxisID: 'y2',
                         }
@@ -4079,8 +4142,8 @@
                 accounts,
                 accounts.map(a => accountData[a].totalCases),
                 'Total Cases by Account',
-                'rgba(95, 37, 159, 1)',
-                'rgba(95, 37, 159, 0.1)'
+                'rgba(91,79,233,1)',
+                'rgba(91,79,233,0.12)'
             );
 
             // Chart 2: SLA Compliance
@@ -4179,8 +4242,8 @@
                 engineers,
                 engineers.map(e => engineerData[e].totalCases),
                 'Total Cases by Engineer',
-                'rgba(61, 127, 255, 1)',
-                'rgba(61, 127, 255, 0.1)'
+                'rgba(6,182,212,1)',
+                'rgba(6,182,212,0.12)'
             );
 
             // Chart 2: SLA Compliance
@@ -4645,9 +4708,9 @@
             else if (semantic.aiScore >= 30 || total >= 35) tier = 'high';
             else                                             tier = 'below';
 
-            const tierColor  = tier === 'critical' ? '#FF3B5C' : '#FF9F00';
-            const tierBg     = tier === 'critical' ? 'rgba(255,59,92,0.05)' : 'rgba(255,159,0,0.05)';
-            const tierBorder = tier === 'critical' ? '#FF3B5C' : '#FF9F00';
+            const tierColor  = tier === 'critical' ? '#EF4444' : '#F59E0B';
+            const tierBg     = tier === 'critical' ? 'rgba(239,68,68,0.06)' : 'rgba(245,158,11,0.06)';
+            const tierBorder = tier === 'critical' ? '#EF4444' : '#F59E0B';
 
             const semanticSignal = semantic.aiScore > 0
                 ? [{ label: semantic.reasoning, pts: semantic.aiScore, col: semantic.aiScore >= 50 ? 'danger' : 'warning' }]
@@ -4741,16 +4804,16 @@
                 const allSignals = [...p.semanticSignal, ...p.ops.signals];
                 const signalBadges = allSignals.map(s =>
                     `<span class="badge me-1 mb-1" style="font-size:0.61rem; padding:3px 8px; font-weight:600; white-space:normal; text-align:left; line-height:1.3;
-                        background:${s.col==='danger'?'rgba(255,59,92,0.1)':'rgba(255,159,0,0.1)'};
-                        color:${s.col==='danger'?'#FF3B5C':'#E08000'};
-                        border:1px solid ${s.col==='danger'?'rgba(255,59,92,0.18)':'rgba(255,159,0,0.25)'};">
+                        background:${s.col==='danger'?'rgba(239,68,68,0.1)':'rgba(245,158,11,0.1)'};
+                        color:${s.col==='danger'?'#DC2626':'#B45309'};
+                        border:1px solid ${s.col==='danger'?'rgba(239,68,68,0.25)':'rgba(245,158,11,0.3)'};">
                         ${s.label} <span style="opacity:0.6; font-size:0.58rem;">(+${s.pts})</span>
                     </span>`
                 ).join('');
 
                 const tierBadge = p.tier === 'critical'
-                    ? `<span style="display:inline-flex; align-items:center; background:rgba(255,59,92,0.1); color:#FF3B5C; border:1px solid rgba(255,59,92,0.22); border-radius:8px; padding:4px 10px; font-size:0.72rem; font-weight:700; white-space:nowrap;">🚨 CRITICAL</span>`
-                    : `<span style="display:inline-flex; align-items:center; background:rgba(255,159,0,0.1); color:#E08000; border:1px solid rgba(255,159,0,0.22); border-radius:8px; padding:4px 10px; font-size:0.72rem; font-weight:700; white-space:nowrap;">⚠️ HIGH</span>`;
+                    ? `<span style="display:inline-flex; align-items:center; background:rgba(239,68,68,0.1); color:#DC2626; border:1px solid rgba(239,68,68,0.25); border-radius:8px; padding:4px 10px; font-size:0.72rem; font-weight:700; white-space:nowrap;">🚨 CRITICAL</span>`
+                    : `<span style="display:inline-flex; align-items:center; background:rgba(245,158,11,0.1); color:#B45309; border:1px solid rgba(245,158,11,0.3); border-radius:8px; padding:4px 10px; font-size:0.72rem; font-weight:700; white-space:nowrap;">⚠️ HIGH</span>`;
 
                 return `
                 <tr style="background:${p.tierBg};">
@@ -4773,7 +4836,7 @@
                 <div class="table-responsive">
                     <table class="table table-sm table-hover mb-0" style="border-collapse:separate; border-spacing:0 3px;">
                         <thead>
-                            <tr style="background:linear-gradient(135deg,var(--primary-color),#7B3FD9); color:white;">
+                            <tr style="background:linear-gradient(135deg,var(--primary-dark),var(--primary)); color:white;">
                                 <th style="font-size:0.7rem; padding:10px 6px; white-space:nowrap;">#</th>
                                 <th style="font-size:0.7rem; padding:10px 6px; white-space:nowrap;">Ticket ID</th>
                                 <th style="font-size:0.7rem; padding:10px 8px;">Title / Submitter</th>
