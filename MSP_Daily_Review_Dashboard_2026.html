@@ -1065,32 +1065,61 @@
                             </h2>
                             <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour">
                                 <div class="accordion-body">
-                                    <div class="row g-2">
+
+                                    <!-- Sub-section: Follow-up Date -->
+                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6B7280;border-bottom:1px dashed #e5e7eb;padding-bottom:4px;margin-bottom:8px;">
+                                        <i class="bi bi-calendar-check me-1" style="color:var(--primary-color);"></i> Follow-up Date
+                                    </div>
+                                    <div class="row g-2 mb-3">
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-followup-card">
+                                            <div class="kpi-card" id="kpi-followup-card" style="border-left-color:#FF3B5C;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-followup-tag">GOOD</span>
-                                                <div class="kpi-title">Follow-up Date Missed</div>
+                                                <div class="kpi-title">Follow-up Date Missed <span style="font-size:0.58rem;background:rgba(255,59,92,0.12);color:#FF3B5C;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
                                                 <div class="kpi-value" id="kpi-followup">0</div>
                                                 <div class="kpi-recommendation" id="kpi-followup-rec">All cases have a valid, upcoming follow-up date.</div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-email-followup-card">
+                                            <div class="kpi-card" id="kpi-followup-today-card" style="border-left-color:#FF9F00;">
+                                                <span class="kpi-status-tag" id="kpi-followup-today-tag" style="background:linear-gradient(135deg,#FF9F00,#FFB74D);color:white;">PROACTIVE</span>
+                                                <div class="kpi-title">Follow-up Due Today <span style="font-size:0.58rem;background:rgba(255,159,0,0.12);color:#FF9F00;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
+                                                <div class="kpi-value" id="kpi-followup-today" style="color:#FF9F00;">0</div>
+                                                <div class="kpi-recommendation" id="kpi-followup-today-rec">No follow-ups due today.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="kpi-card" id="kpi-followup-tomorrow-card" style="border-left-color:#3D7FFF;">
+                                                <span class="kpi-status-tag bg-info-tag" id="kpi-followup-tomorrow-tag">PROACTIVE</span>
+                                                <div class="kpi-title">Follow-up Due Tomorrow <span style="font-size:0.58rem;background:rgba(61,127,255,0.12);color:#3D7FFF;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
+                                                <div class="kpi-value" id="kpi-followup-tomorrow" style="color:#3D7FFF;">0</div>
+                                                <div class="kpi-recommendation" id="kpi-followup-tomorrow-rec">No follow-ups due tomorrow.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sub-section: Email Compliance -->
+                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6B7280;border-bottom:1px dashed #e5e7eb;padding-bottom:4px;margin-bottom:8px;">
+                                        <i class="bi bi-envelope me-1" style="color:var(--primary-color);"></i> Email Compliance
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-md-6">
+                                            <div class="kpi-card" id="kpi-email-followup-card" style="border-left-color:#FF9F00;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-email-followup-tag">GOOD</span>
-                                                <div class="kpi-title">Email F/Up Missed</div>
+                                                <div class="kpi-title">Email F/Up Missed <span style="font-size:0.58rem;background:rgba(255,59,92,0.12);color:#FF3B5C;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
                                                 <div class="kpi-value" id="kpi-email-followup">0</div>
                                                 <div class="kpi-recommendation" id="kpi-email-followup-rec">All email follow-ups are compliant.</div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="kpi-card" id="kpi-email-resp-card">
+                                        <div class="col-md-6">
+                                            <div class="kpi-card" id="kpi-email-resp-card" style="border-left-color:#FF3B5C;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-email-resp-tag">GOOD</span>
-                                                <div class="kpi-title">Email Resp Missed</div>
+                                                <div class="kpi-title">Email Resp Missed <span style="font-size:0.58rem;background:rgba(255,59,92,0.12);color:#FF3B5C;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
                                                 <div class="kpi-value" id="kpi-email-resp">0</div>
                                                 <div class="kpi-recommendation" id="kpi-email-resp-rec">No missed client responses reported.</div>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -1103,24 +1132,53 @@
                             </h2>
                             <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive">
                                 <div class="accordion-body">
-                                    <div class="row g-2">
-                                        <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-sub-resp-card">
+
+                                    <!-- Sub-section: Subsequent Response -->
+                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6B7280;border-bottom:1px dashed #e5e7eb;padding-bottom:4px;margin-bottom:8px;">
+                                        <i class="bi bi-reply-all me-1" style="color:var(--primary-color);"></i> Subsequent Response (INC)
+                                    </div>
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-md-4">
+                                            <div class="kpi-card" id="kpi-sub-resp-card" style="border-left-color:#FF3B5C;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-sub-resp-tag">GOOD</span>
-                                                <div class="kpi-title">Subsequent Resp Missed</div>
+                                                <div class="kpi-title">Subsequent Resp Missed <span style="font-size:0.58rem;background:rgba(255,59,92,0.12);color:#FF3B5C;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
                                                 <div class="kpi-value" id="kpi-sub-resp">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sub-resp-rec">All subsequent response dates are met or tracked.</div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-sub-sla-card">
+                                        <div class="col-md-4">
+                                            <div class="kpi-card" id="kpi-sub-resp-today-card" style="border-left-color:#FF9F00;">
+                                                <span class="kpi-status-tag" id="kpi-sub-resp-today-tag" style="background:linear-gradient(135deg,#FF9F00,#FFB74D);color:white;">PROACTIVE</span>
+                                                <div class="kpi-title">Subseq. Resp Due Today <span style="font-size:0.58rem;background:rgba(255,159,0,0.12);color:#FF9F00;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
+                                                <div class="kpi-value" id="kpi-sub-resp-today" style="color:#FF9F00;">0</div>
+                                                <div class="kpi-recommendation" id="kpi-sub-resp-today-rec">No subsequent responses due today.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="kpi-card" id="kpi-sub-resp-tomorrow-card" style="border-left-color:#3D7FFF;">
+                                                <span class="kpi-status-tag bg-info-tag" id="kpi-sub-resp-tomorrow-tag">PROACTIVE</span>
+                                                <div class="kpi-title">Subseq. Resp Due Tomorrow <span style="font-size:0.58rem;background:rgba(61,127,255,0.12);color:#3D7FFF;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
+                                                <div class="kpi-value" id="kpi-sub-resp-tomorrow" style="color:#3D7FFF;">0</div>
+                                                <div class="kpi-recommendation" id="kpi-sub-resp-tomorrow-rec">No subsequent responses due tomorrow.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sub-section: Subsequent SLA -->
+                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6B7280;border-bottom:1px dashed #e5e7eb;padding-bottom:4px;margin-bottom:8px;">
+                                        <i class="bi bi-shield-exclamation me-1" style="color:var(--primary-color);"></i> Subsequent SLA
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-md-12">
+                                            <div class="kpi-card" id="kpi-sub-sla-card" style="border-left-color:#FF3B5C;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-sub-sla-tag">GOOD</span>
-                                                <div class="kpi-title">Subsequent SLA Miss</div>
+                                                <div class="kpi-title">Subsequent SLA Miss <span style="font-size:0.58rem;background:rgba(255,59,92,0.12);color:#FF3B5C;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Breached</span></div>
                                                 <div class="kpi-value" id="kpi-sub-sla">0</div>
                                                 <div class="kpi-recommendation" id="kpi-sub-sla-rec">No cases have breached the subsequent SLA threshold.</div>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -1133,24 +1191,53 @@
                             </h2>
                             <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix">
                                 <div class="accordion-body">
-                                    <div class="row g-2">
+
+                                    <!-- Sub-section: Idle Cases -->
+                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6B7280;border-bottom:1px dashed #e5e7eb;padding-bottom:4px;margin-bottom:8px;">
+                                        <i class="bi bi-hourglass me-1" style="color:var(--primary-color);"></i> Idle Cases
+                                    </div>
+                                    <div class="row g-2 mb-3">
                                         <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-idle-3-card">
+                                            <div class="kpi-card" id="kpi-idle-3-card" style="border-left-color:#FF3B5C;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-idle-3-tag">GOOD</span>
                                                 <div class="kpi-title">Idle > 2 Days</div>
                                                 <div class="kpi-value" id="kpi-idle-3">0</div>
                                                 <div class="kpi-recommendation" id="kpi-idle-3-rec">No critical cases idle for more than 3 days.</div>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="kpi-card" id="kpi-edoc-card">
+                                    </div>
+
+                                    <!-- Sub-section: EDOC (SR Expected Date of Closure) -->
+                                    <div class="mb-1" style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#6B7280;border-bottom:1px dashed #e5e7eb;padding-bottom:4px;margin-bottom:8px;">
+                                        <i class="bi bi-calendar-x me-1" style="color:var(--primary-color);"></i> SR EDOC (Expected Date of Closure)
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <div class="kpi-card" id="kpi-edoc-card" style="border-left-color:#FF3B5C;">
                                                 <span class="kpi-status-tag bg-good" id="kpi-edoc-tag">GOOD</span>
-                                                <div class="kpi-title">SR EDOC Breach</div>
+                                                <div class="kpi-title">SR EDOC Breach <span style="font-size:0.58rem;background:rgba(255,59,92,0.12);color:#FF3B5C;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
                                                 <div class="kpi-value" id="kpi-edoc">0</div>
                                                 <div class="kpi-recommendation" id="kpi-edoc-rec">No SR cases have breached their Expected Date of Closure.</div>
                                             </div>
                                         </div>
+                                        <div class="col-md-4">
+                                            <div class="kpi-card" id="kpi-edoc-today-card" style="border-left-color:#FF9F00;">
+                                                <span class="kpi-status-tag" id="kpi-edoc-today-tag" style="background:linear-gradient(135deg,#FF9F00,#FFB74D);color:white;">PROACTIVE</span>
+                                                <div class="kpi-title">EDOC Due Today <span style="font-size:0.58rem;background:rgba(255,159,0,0.12);color:#FF9F00;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
+                                                <div class="kpi-value" id="kpi-edoc-today" style="color:#FF9F00;">0</div>
+                                                <div class="kpi-recommendation" id="kpi-edoc-today-rec">No SR EDOCs closing today.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="kpi-card" id="kpi-edoc-tomorrow-card" style="border-left-color:#3D7FFF;">
+                                                <span class="kpi-status-tag bg-info-tag" id="kpi-edoc-tomorrow-tag">PROACTIVE</span>
+                                                <div class="kpi-title">EDOC Due Tomorrow <span style="font-size:0.58rem;background:rgba(61,127,255,0.12);color:#3D7FFF;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
+                                                <div class="kpi-value" id="kpi-edoc-tomorrow" style="color:#3D7FFF;">0</div>
+                                                <div class="kpi-recommendation" id="kpi-edoc-tomorrow-rec">No SR EDOCs closing tomorrow.</div>
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -1769,6 +1856,28 @@
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
+            'followUpDueToday': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'nextFollowUp', label: 'Next Follow-up Date' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'followUpDueTomorrow': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'nextFollowUp', label: 'Next Follow-up Date' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
             'emailNoFollowup': [
                 { key: 'incidentId', label: 'Incident ID' },
                 { key: 'title', label: 'Title' },
@@ -1802,7 +1911,51 @@
                 { key: 'expectedResponseTime', label: 'Expected Response Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
+            'subRespDueToday': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'expectedResponseTime', label: 'Expected Response Time' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'subRespDueTomorrow': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'expectedResponseTime', label: 'Expected Response Time' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
             'edocBreach': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'expectedResolution', label: 'SR EDOC' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'edocDueToday': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'submittedBy', label: 'SubmittedBy' },
+                { key: 'currentStatus', label: 'CurrentStatus' },
+                { key: 'service', label: 'Service' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
+                { key: 'expectedResolution', label: 'SR EDOC' },
+                { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            'edocDueTomorrow': [
                 { key: 'incidentId', label: 'Incident ID' },
                 { key: 'title', label: 'Title' },
                 { key: 'submittedBy', label: 'SubmittedBy' },
@@ -2113,6 +2266,34 @@
                 today.setHours(0, 0, 0, 0);
                 return date <= today;
             };
+
+            const isTodayDate = (dStr) => {
+                if (!isDateValid(dStr)) return false;
+                const date = new Date(dStr);
+                const today = new Date();
+                date.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
+                return date.getTime() === today.getTime();
+            };
+
+            const isTomorrowDate = (dStr) => {
+                if (!isDateValid(dStr)) return false;
+                const date = new Date(dStr);
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                date.setHours(0, 0, 0, 0);
+                tomorrow.setHours(0, 0, 0, 0);
+                return date.getTime() === tomorrow.getTime();
+            };
+
+            const isAlreadyPast = (dStr) => {
+                if (!isDateValid(dStr)) return false;
+                const date = new Date(dStr);
+                const today = new Date();
+                date.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
+                return date < today;
+            };
             
             const findCol = (possibleNames) => {
                 for (const name of possibleNames) {
@@ -2162,14 +2343,22 @@
                 const isINC = service === 'Incident Management';
                 const isSlaViolated = slaViolationStatus === 'Violated';
                 const isAging15Violated = aging15Status === 'Violated';
-                const isFollowUpMissed = (!isDateValid(nextFollowUp) || isPastOrToday(nextFollowUp));
+                // Already missed = date was strictly before today (no valid date also counts as missed)
+                const isFollowUpMissed = (!isDateValid(nextFollowUp) || isAlreadyPast(nextFollowUp));
+                // Due today / tomorrow (proactive)
+                const isFollowUpDueToday    = isTodayDate(nextFollowUp);
+                const isFollowUpDueTomorrow = isTomorrowDate(nextFollowUp);
                 
                 const isSubsequentResponseMissed = isDateValid(expectedResponseTime) && 
-                                                   isPastOrToday(expectedResponseTime) && 
+                                                   isAlreadyPast(expectedResponseTime) && 
                                                    isINC;
+                const isSubsequentResponseDueToday    = isDateValid(expectedResponseTime) && isTodayDate(expectedResponseTime) && isINC;
+                const isSubsequentResponseDueTomorrow = isDateValid(expectedResponseTime) && isTomorrowDate(expectedResponseTime) && isINC;
                 
                 const isSubsequentSLABreach = subsequentSLACount > 0;
-                const isEdocBreached = (isSR && isPastOrToday(srEDOC));
+                const isEdocBreached         = (isSR && isAlreadyPast(srEDOC));
+                const isEdocDueToday         = (isSR && isDateValid(srEDOC) && isTodayDate(srEDOC));
+                const isEdocDueTomorrow      = (isSR && isDateValid(srEDOC) && isTomorrowDate(srEDOC));
                 const isOldest25 = agingDays > 25;
                 const isIdle1 = agingFromLastModified > 0;
                 const isIdle3 = agingFromLastModified > 1;
@@ -2203,9 +2392,15 @@
                     isSlaViolated,
                     isAging15Violated,
                     isFollowUpMissed,
+                    isFollowUpDueToday,
+                    isFollowUpDueTomorrow,
                     isSubsequentResponseMissed,
+                    isSubsequentResponseDueToday,
+                    isSubsequentResponseDueTomorrow,
                     isSubsequentSLABreach,
                     isEdocBreached,
+                    isEdocDueToday,
+                    isEdocDueTomorrow,
                     isOldest25,
                     isIdle1,
                     isIdle3,
@@ -2409,13 +2604,19 @@
                     case 'kpi-aging-15': drillDownKey = 'aging15'; break;
                     case 'kpi-aging-25': drillDownKey = 'oldest25'; break;
                     case 'kpi-followup': drillDownKey = 'followUpMissed'; break;
+                    case 'kpi-followup-today': drillDownKey = 'followUpDueToday'; break;
+                    case 'kpi-followup-tomorrow': drillDownKey = 'followUpDueTomorrow'; break;
                     case 'kpi-email-followup': drillDownKey = 'emailNoFollowup'; break;
                     case 'kpi-email-resp': drillDownKey = 'emailResponseMissed'; break;
                     case 'kpi-sub-resp': drillDownKey = 'subsequentResponseMissed'; break;
+                    case 'kpi-sub-resp-today': drillDownKey = 'subRespDueToday'; break;
+                    case 'kpi-sub-resp-tomorrow': drillDownKey = 'subRespDueTomorrow'; break;
                     case 'kpi-sub-sla': drillDownKey = 'subsequentSLAMiss'; break;
                     case 'kpi-idle-1': drillDownKey = 'idle1'; break;
                     case 'kpi-idle-3': drillDownKey = 'idle3'; break;
                     case 'kpi-edoc': drillDownKey = 'edocBreach'; break;
+                    case 'kpi-edoc-today': drillDownKey = 'edocDueToday'; break;
+                    case 'kpi-edoc-tomorrow': drillDownKey = 'edocDueTomorrow'; break;
                     default: drillDownKey = 'totalOpen';
                 }
                 openDrillDown(drillDownKey, recommendation.status);
@@ -2452,13 +2653,19 @@
                 aging15: filteredData.filter(d => d.isAging15Violated).length,
                 oldest25: filteredData.filter(d => d.isOldest25).length,
                 followUp: filteredData.filter(d => d.isFollowUpMissed).length,
+                followUpToday: filteredData.filter(d => d.isFollowUpDueToday).length,
+                followUpTomorrow: filteredData.filter(d => d.isFollowUpDueTomorrow).length,
                 emailMiss: filteredData.filter(d => d.emailCompliance === 'No Followup').length,
                 respMiss: filteredData.filter(d => d.emailCompliance === 'Email Response Missed').length,
                 subRespMiss: filteredData.filter(d => d.isSubsequentResponseMissed).length,
+                subRespToday: filteredData.filter(d => d.isSubsequentResponseDueToday).length,
+                subRespTomorrow: filteredData.filter(d => d.isSubsequentResponseDueTomorrow).length,
                 subSLAMiss: filteredData.filter(d => d.isSubsequentSLABreach).length,
                 idle1: filteredData.filter(d => d.isIdle1).length,
                 idle3: filteredData.filter(d => d.isIdle3).length,
                 edoc: filteredData.filter(d => d.isEdocBreached).length,
+                edocToday: filteredData.filter(d => d.isEdocDueToday).length,
+                edocTomorrow: filteredData.filter(d => d.isEdocDueTomorrow).length,
             };
 
             const infoRec = { status: 'INFO', tag: 'bg-info-tag', rec: 'Statistical count of active cases.' };
@@ -2481,6 +2688,12 @@
             let fuRec = { status: 'GOOD', tag: 'bg-good', rec: 'All cases have a valid, upcoming follow-up date.' };
             if (m.followUp > 0) fuRec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.followUp} follow-up dates missed. Update immediately.` };
 
+            let fuTodayRec = { status: 'GOOD', tag: 'bg-good', rec: 'No follow-ups due today.' };
+            if (m.followUpToday > 0) fuTodayRec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${m.followUpToday} follow-up(s) due today — action required before end of day.` };
+
+            let fuTomorrowRec = { status: 'INFO', tag: 'bg-info-tag', rec: 'No follow-ups due tomorrow.' };
+            if (m.followUpTomorrow > 0) fuTomorrowRec = { status: 'MONITOR', tag: 'bg-monitor', rec: `${m.followUpTomorrow} follow-up(s) due tomorrow — prepare in advance.` };
+
             let emailFURec = { status: 'GOOD', tag: 'bg-good', rec: 'All email follow-ups are compliant.' };
             if (m.emailMiss > 0) emailFURec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${m.emailMiss} email follow-ups missed. Check last email action.` };
 
@@ -2488,7 +2701,13 @@
             if (m.respMiss > 0) respMissRec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.respMiss} email responses missed. High risk of SLA breach.` };
 
             let subRespRec = { status: 'GOOD', tag: 'bg-good', rec: 'All subsequent response dates are met or tracked.' };
-            if (m.subRespMiss > 0) subRespRec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${m.subRespMiss} Incident Management cases have missed subsequent response dates (including today).` };
+            if (m.subRespMiss > 0) subRespRec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${m.subRespMiss} Incident Management cases have missed subsequent response dates.` };
+
+            let subRespTodayRec = { status: 'GOOD', tag: 'bg-good', rec: 'No subsequent responses due today.' };
+            if (m.subRespToday > 0) subRespTodayRec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${m.subRespToday} INC subsequent response(s) due today — respond before close of business.` };
+
+            let subRespTomorrowRec = { status: 'INFO', tag: 'bg-info-tag', rec: 'No subsequent responses due tomorrow.' };
+            if (m.subRespTomorrow > 0) subRespTomorrowRec = { status: 'MONITOR', tag: 'bg-monitor', rec: `${m.subRespTomorrow} INC subsequent response(s) due tomorrow — plan your responses.` };
 
             let subSLARec = { status: 'GOOD', tag: 'bg-good', rec: 'No cases have breached the subsequent SLA threshold.' };
             if (m.subSLAMiss > 0) subSLARec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.subSLAMiss} subsequent SLA breaches. Root cause analysis needed.` };
@@ -2511,6 +2730,12 @@
             let edocRec = { status: 'GOOD', tag: 'bg-good', rec: 'No SR cases have breached their Expected Date of Closure.' };
             if (m.edoc > 0) edocRec = { status: 'URGENT', tag: 'bg-urgent', rec: `${m.edoc} SR EDOC breaches. These must be resolved or re-scheduled immediately.` };
 
+            let edocTodayRec = { status: 'GOOD', tag: 'bg-good', rec: 'No SR EDOCs closing today.' };
+            if (m.edocToday > 0) edocTodayRec = { status: 'ACTION NEEDED', tag: 'bg-action-needed', rec: `${m.edocToday} SR EDOC(s) closing today — resolve or reschedule before end of day.` };
+
+            let edocTomorrowRec = { status: 'INFO', tag: 'bg-info-tag', rec: 'No SR EDOCs closing tomorrow.' };
+            if (m.edocTomorrow > 0) edocTomorrowRec = { status: 'MONITOR', tag: 'bg-monitor', rec: `${m.edocTomorrow} SR EDOC(s) closing tomorrow — review and plan closure steps.` };
+
             updateCard('kpi-total', m.totalOpen, infoRec);
             updateCard('kpi-sr', m.totalSR, srRec);
             updateCard('kpi-inc', m.totalINC, incRec);
@@ -2522,23 +2747,29 @@
             updateCard('kpi-aging-25', m.oldest25, oldest25Rec);
 
             updateCard('kpi-followup', m.followUp, fuRec);
+            updateCard('kpi-followup-today', m.followUpToday, fuTodayRec);
+            updateCard('kpi-followup-tomorrow', m.followUpTomorrow, fuTomorrowRec);
             updateCard('kpi-email-followup', m.emailMiss, emailFURec);
             updateCard('kpi-email-resp', m.respMiss, respMissRec);
 
             updateCard('kpi-sub-resp', m.subRespMiss, subRespRec);
+            updateCard('kpi-sub-resp-today', m.subRespToday, subRespTodayRec);
+            updateCard('kpi-sub-resp-tomorrow', m.subRespTomorrow, subRespTomorrowRec);
             updateCard('kpi-sub-sla', m.subSLAMiss, subSLARec);
 
             // #1 FIX: Updated to use corrected idle3 and edoc recommendations
             updateCard('kpi-idle-3', m.idle3, idle3Rec);
             updateCard('kpi-edoc', m.edoc, edocRec);
+            updateCard('kpi-edoc-today', m.edocToday, edocTodayRec);
+            updateCard('kpi-edoc-tomorrow', m.edocTomorrow, edocTomorrowRec);
             
             // #1 FIX: Update section RAG status with corrected logic
             updateSectionRAGStatus(1, [infoRec, srRec, incRec]);
             updateSectionRAGStatus(2, [slaSRRec, slaINCRec]);
             updateSectionRAGStatus(3, [aging15Rec, oldest25Rec]);
-            updateSectionRAGStatus(4, [fuRec, emailFURec, respMissRec]);
-            updateSectionRAGStatus(5, [subRespRec, subSLARec]);
-            updateSectionRAGStatus(6, [idle3Rec, edocRec]);
+            updateSectionRAGStatus(4, [fuRec, fuTodayRec, fuTomorrowRec, emailFURec, respMissRec]);
+            updateSectionRAGStatus(5, [subRespRec, subRespTodayRec, subRespTomorrowRec, subSLARec]);
+            updateSectionRAGStatus(6, [idle3Rec, edocRec, edocTodayRec, edocTomorrowRec]);
             
             renderOwnerScorecard();
         }
@@ -2693,6 +2924,12 @@
                 case 'followUpMissed':
                     drillDownData = filteredData.filter(d => d.isFollowUpMissed);
                     break;
+                case 'followUpDueToday':
+                    drillDownData = filteredData.filter(d => d.isFollowUpDueToday);
+                    break;
+                case 'followUpDueTomorrow':
+                    drillDownData = filteredData.filter(d => d.isFollowUpDueTomorrow);
+                    break;
                 case 'emailNoFollowup':
                     drillDownData = filteredData.filter(d => d.emailCompliance === 'No Followup');
                     break;
@@ -2701,6 +2938,12 @@
                     break;
                 case 'subsequentResponseMissed':
                     drillDownData = filteredData.filter(d => d.isSubsequentResponseMissed);
+                    break;
+                case 'subRespDueToday':
+                    drillDownData = filteredData.filter(d => d.isSubsequentResponseDueToday);
+                    break;
+                case 'subRespDueTomorrow':
+                    drillDownData = filteredData.filter(d => d.isSubsequentResponseDueTomorrow);
                     break;
                 case 'subsequentSLAMiss':
                     drillDownData = filteredData.filter(d => d.isSubsequentSLABreach);
@@ -2713,6 +2956,12 @@
                     break;
                 case 'edocBreach':
                     drillDownData = filteredData.filter(d => d.isEdocBreached);
+                    break;
+                case 'edocDueToday':
+                    drillDownData = filteredData.filter(d => d.isEdocDueToday);
+                    break;
+                case 'edocDueTomorrow':
+                    drillDownData = filteredData.filter(d => d.isEdocDueTomorrow);
                     break;
                 default:
                     drillDownData = [];
