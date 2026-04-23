@@ -1114,7 +1114,7 @@
                                 </div>
                             </div>
                             <div>
-                                <button class="btn btn-sm btn-outline-danger" id="clear-filters-btn">
+                                <button class="btn btn-sm btn-outline-danger" id="clear-filters-btn" disabled style="opacity:0.45;cursor:not-allowed;">
                                     <i class="bi bi-x-circle me-1"></i>Clear All
                                 </button>
                                 <button class="btn pdf-download-btn btn-sm" id="download-pdf-btn">
@@ -3427,9 +3427,30 @@
             }
 
             activeFiltersCount.textContent = `${activeFilters.length} filter${activeFilters.length !== 1 ? 's' : ''} active`;
+            // Fix #3: Use mode-aware total so "X of Y" reflects only open (or closed) cases
+            const modeTotal = processedData.length > 0
+                ? (analysisMode === 'open'
+                    ? processedData.filter(d => d.isOpenCase).length
+                    : processedData.filter(d => d.isClosedCase).length)
+                : 0;
             const banner2 = document.getElementById('filtered-cases-count');
-            if(banner2) banner2.textContent = `Showing ${filteredData.length} of ${processedData.length} cases`;
-            if(filteredCasesCount) filteredCasesCount.textContent = `Showing ${filteredData.length} of ${processedData.length} cases`;
+            if(banner2) banner2.textContent = `Showing ${filteredData.length} of ${modeTotal} cases`;
+            if(filteredCasesCount) filteredCasesCount.textContent = `Showing ${filteredData.length} of ${modeTotal} cases`;
+            // Fix #4: Enable/disable Clear All button based on whether any filters are active
+            const clearBtn = document.getElementById('clear-filters-btn');
+            if (clearBtn) {
+                if (activeFilters.length > 0) {
+                    clearBtn.disabled = false;
+                    clearBtn.classList.remove('disabled');
+                    clearBtn.style.opacity = '';
+                    clearBtn.style.cursor = '';
+                } else {
+                    clearBtn.disabled = true;
+                    clearBtn.classList.add('disabled');
+                    clearBtn.style.opacity = '0.45';
+                    clearBtn.style.cursor = 'not-allowed';
+                }
+            }
         }
 
         function removeFilter(filterKey) {
@@ -3443,6 +3464,7 @@
         }
 
         function clearAllFilters() {
+            // Clear hidden select elements
             const clearMulti = (id) => {
                 const el = document.getElementById(id);
                 if (el) Array.from(el.options).forEach(o => o.selected = false);
@@ -3454,18 +3476,34 @@
             document.getElementById('global-filter-sla').value = '';
             const lvlEl = document.getElementById('global-filter-level');
             if (lvlEl) lvlEl.value = '';
-            
+
+            // Fix #2: Also clear smsState so the UI labels/badges reset properly
+            ['owner', 'submittedby', 'status'].forEach(key => {
+                smsState[key].selected.clear();
+                updateSMSTriggerLabel(key);
+                // Re-render the open dropdown options if any are open
+                const dropdown = document.getElementById(`sms-${key}-dropdown`);
+                if (dropdown && dropdown.classList.contains('open')) {
+                    renderSMSOptions(key, '');
+                }
+            });
+
+            // Fix #1: Reset globalFilters including level
             globalFilters.owner = [];
             globalFilters.submittedby = [];
             globalFilters.service = '';
             globalFilters.status = [];
             globalFilters.sla = '';
-            
-            filteredData = [...processedData];
-            
+            globalFilters.level = '';
+
+            // Fix #2: Respect analysisMode when rebuilding filteredData
+            filteredData = processedData.filter(d =>
+                analysisMode === 'open' ? d.isOpenCase : d.isClosedCase
+            );
+
             updateActiveFiltersDisplay();
             updateDashboard();
-            
+
             // Update Open Cases Analyses charts if that tab is currently visible
             const openCasesTab = document.getElementById('view-opencases');
             if (openCasesTab && openCasesTab.classList.contains('active')) {
@@ -4951,7 +4989,7 @@
             const ws = XLSX.utils.json_to_sheet(scorecardData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Scorecard_Export");
-            XLSX.writeFile(wb, `MSP_Scorecard_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+            XLSX.writeFile(wb, `Support_Scorecard_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
         }
 
         function exportDrillDownToExcel() {
@@ -4973,7 +5011,7 @@
             const ws = XLSX.utils.json_to_sheet(filteredData.map(d => d._raw));
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
-            XLSX.writeFile(wb, `MSP_Filtered_Data_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+            XLSX.writeFile(wb, `Support_Filtered_Data_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
         }
 
         // #3 CHANGE: Function to export tab data to Excel
@@ -5003,7 +5041,7 @@
             const ws = XLSX.utils.json_to_sheet(exportData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, `${tabId}_Export`);
-            XLSX.writeFile(wb, `MSP_${tabId}_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+            XLSX.writeFile(wb, `Support_${tabId}_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
         }
 
         // #4 FIX: Enhanced PDF download function that expands all sections before capture
@@ -5171,13 +5209,13 @@
                         pdf.setPage(i);
                         pdf.setFontSize(8);
                         pdf.setTextColor(150, 150, 150);
-                        pdf.text(`Page ${i} of ${totalPages} - Generated by MSP Support Engineers Dashboard`, 
+                        pdf.text(`Page ${i} of ${totalPages} - Generated by Support Engineers Dashboard`, 
                                 pdf.internal.pageSize.width / 2, pdf.internal.pageSize.height - 10, 
                                 { align: 'center' });
                     }
                     
                     // Save the PDF
-                    pdf.save(`MSP_Dashboard_${isDashboardView ? 'Overview' : 'Detailed'}_${new Date().toLocaleDateString().replace(/\//g,'-')}.pdf`);
+                    pdf.save(`Support_Dashboard_${isDashboardView ? 'Overview' : 'Detailed'}_${new Date().toLocaleDateString().replace(/\//g,'-')}.pdf`);
                     
                     showLoading(false);
                 }).catch(error => {
