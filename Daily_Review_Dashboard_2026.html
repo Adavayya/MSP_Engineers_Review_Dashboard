@@ -1526,6 +1526,12 @@
                                             <div class="kpi-value" id="kpi-inc">0</div>
                                             <div class="kpi-recommendation" id="kpi-inc-rec">Breakdown of active Incident Management cases.</div>
                                         </div></div>
+                                        <div class="col-md-3"><div class="kpi-card" id="kpi-l1-action-card" style="border-left-color:#F59E0B;">
+                                            <span class="kpi-status-tag bg-monitor" id="kpi-l1-action-tag">MONITOR</span>
+                                            <div class="kpi-title">⏱ L1 Team Action Items <span style="font-size:0.58rem;background:rgba(245,158,11,0.12);color:#92400E;padding:1px 6px;border-radius:8px;margin-left:4px;">24–36 hrs old</span></div>
+                                            <div class="kpi-value" id="kpi-l1-action" style="color:#F59E0B;">0</div>
+                                            <div class="kpi-recommendation" id="kpi-l1-action-rec">The L1 team should assess the issue/request and decide whether it can be resolved at their level or needs to be escalated to the L2 team.</div>
+                                        </div></div>
                                     </div>
                                     <!-- Closed mode cards (hidden until closed mode active) -->
                                     <div class="row g-2" id="section1-closed-cards" style="display:none;">
@@ -3005,6 +3011,21 @@
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
+            'l1ActionItems': [
+                { key: 'incidentId',             label: 'Record ID' },
+                { key: 'title',                  label: 'Title' },
+                { key: 'owner',                  label: 'Owner' },
+                { key: 'submittedBy',            label: 'Submitted By' },
+                { key: 'creationTimeDisplay',    label: 'Creation Time' },
+                { key: 'currentStatus',          label: 'Current Status' },
+                { key: 'service',                label: 'Service' },
+                { key: 'assignmentLevel',        label: 'Assignment Level' },
+                { key: 'loggedAging',            label: 'Logged Aging' },
+                { key: 'expectedResolution',     label: 'SR EDOC' },
+                { key: 'service',                label: 'SR Service' },
+                { key: 'lastEmailFrom',          label: 'Last Email From' },
+                { key: 'lastEmailSentTimeDisplay', label: 'Last Email Sent Time' }
+            ],
             'closureFollowup': [
                 { key: 'incidentId', label: 'Incident ID' },
                 { key: 'title', label: 'Title' },
@@ -3754,6 +3775,38 @@
                     creationDateDisplay: creationDateObj ? creationDateObj.toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}) : (row[colMap.creationDate] ? row[colMap.creationDate].toString() : ''),
                     modifiedDateDisplay: modifiedDateObj ? modifiedDateObj.toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}) : (row[colMap.modifiedDate] ? row[colMap.modifiedDate].toString() : ''),
                     
+                    isL1ActionItem: (() => {
+                        if (!creationDateObj) return false;
+                        const nowMs  = Date.now();
+                        const ageMs  = nowMs - creationDateObj.getTime();
+                        const h24    = 24 * 3600000;
+                        const h36    = 36 * 3600000; // 24 + 12 hrs
+                        return ageMs >= h24 && ageMs <= h36;
+                    })(),
+                    loggedAging: (() => {
+                        if (!creationDateObj) return '';
+                        const ageMs = Date.now() - creationDateObj.getTime();
+                        const h36   = 36 * 3600000; // 1 day 12 hrs ceiling
+                        if (ageMs > h36) return ''; // beyond window — don't show
+                        const totalMins = Math.floor(ageMs / 60000);
+                        const days  = Math.floor(totalMins / 1440);
+                        const hrs   = Math.floor((totalMins % 1440) / 60);
+                        const mins  = totalMins % 60;
+                        let parts = [];
+                        if (days > 0)  parts.push(days + (days === 1 ? ' Day' : ' Days'));
+                        if (hrs > 0)   parts.push(hrs + (hrs === 1 ? ' Hr' : ' Hrs'));
+                        if (mins > 0 && days === 0) parts.push(mins + ' Min' + (mins !== 1 ? 's' : ''));
+                        return parts.length ? parts.join(' ') : 'Just Now';
+                    })(),
+                    creationTimeDisplay: creationDateObj
+                        ? creationDateObj.toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true})
+                        : (creationDateRaw ? creationDateRaw.toString() : ''),
+                    lastEmailSentTimeDisplay: (() => {
+                        const raw = row[colMap.lastEmailSentTime];
+                        if (!raw) return '';
+                        const d = parseAKDate(raw);
+                        return d ? d.toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}) : raw.toString();
+                    })(),
                     isSR, isINC, isOpenCase, isClosedCase, isNew,
                     isSlaViolated, isAging15Violated,
                     isFollowUpMissed, isFollowUpDueToday, isFollowUpDueTomorrow,
@@ -4194,6 +4247,7 @@
                     case 'kpi-new':      drillDownKey = 'totalNew'; break;
                     case 'kpi-sr':       drillDownKey = 'totalSR'; break;
                     case 'kpi-inc':      drillDownKey = 'totalINC'; break;
+                    case 'kpi-l1-action': drillDownKey = 'l1ActionItems'; break;
                     case 'kpi-sla-sr':   drillDownKey = 'slaSR'; break;
                     case 'kpi-sla-inc':  drillDownKey = 'slaINC'; break;
                     case 'kpi-aging-15': drillDownKey = 'aging15'; break;
@@ -4368,6 +4422,19 @@
 
             // Section 1
             updateCard('kpi-total', m.totalOpen, { status: 'INFO', tag: 'bg-info-tag', rec: `${m.totalOpen} open cases · ${m.totalClosed} closed/pending confirmation.` });
+            // L1 Action Items card
+            const l1Count = filteredData.filter(d => d.isOpenCase && d.isL1ActionItem).length;
+            const l1Card = document.getElementById('kpi-l1-action-card');
+            if (l1Card) {
+                document.getElementById('kpi-l1-action').textContent = l1Count;
+                const l1Tag = document.getElementById('kpi-l1-action-tag');
+                if (l1Tag) { l1Tag.textContent = l1Count > 0 ? 'ACTION' : 'GOOD'; l1Tag.className = 'kpi-status-tag ' + (l1Count > 0 ? 'bg-action-needed' : 'bg-good'); }
+                document.getElementById('kpi-l1-action-rec').textContent = l1Count > 0
+                    ? `${l1Count} case${l1Count > 1 ? 's' : ''} in the 24–36 hr window. The L1 team should assess the issue/request and decide whether it can be resolved at their level or needs to be escalated to the L2 team.`
+                    : 'No cases in the 24–36 hr window. L1 team is on track.';
+                l1Card.style.cursor = 'pointer';
+                l1Card.onclick = () => openDrillDown('l1ActionItems', 'L1 Team Action Items (24–36 hrs)');
+            }
             updateCard('kpi-new', m.totalNew, { status: m.totalNew>0?'ACTION NEEDED':'GOOD', tag: m.totalNew>0?'bg-action-needed':'bg-good', rec: m.totalNew>0?`${m.totalNew} new cases need immediate assignment/acknowledgement.`:'No unacknowledged new cases.' });
             updateCard('kpi-sr', m.totalSR, srRec);
             updateCard('kpi-inc', m.totalINC, incRec);
@@ -4784,6 +4851,9 @@
                     break;
                 case 'edocMissing':
                     drillDownData = filteredData.filter(d => d.isEdocMissing);
+                    break;
+                case 'l1ActionItems':
+                    drillDownData = filteredData.filter(d => d.isOpenCase && d.isL1ActionItem);
                     break;
                 case 'totalSR':
                     drillDownData = filteredData.filter(d => d.isSR);
