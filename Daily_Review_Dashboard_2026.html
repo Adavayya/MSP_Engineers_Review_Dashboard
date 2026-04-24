@@ -1092,142 +1092,377 @@
             Alternatively, right-click the file and open with a browser that allows local CDN access.
         </div>
         <div id="dashboard-section" style="display: none;">
-            
-            <div class="row mb-3">
-                <div class="col-12">
-                    <div class="global-filters">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <div class="d-flex align-items-center gap-3">
-                                <h6 class="mb-0"><i class="bi bi-funnel-fill me-2" style="color: var(--primary-color);"></i>Global Filters</h6>
-                                <!-- Analysis Mode Toggle -->
-                                <div class="d-flex align-items-center gap-1 p-1 rounded-3" style="background:var(--bg-surface);border:1.5px solid var(--border);gap:4px!important;">
-                                    <button id="mode-open-btn" onclick="setAnalysisMode('open')"
-                                        class="btn btn-sm fw-bold px-3 py-1 mode-btn active-mode"
-                                        style="border-radius:8px;font-size:0.8rem;">
-                                        <i class="bi bi-folder2-open me-1"></i>Open Cases View
-                                    </button>
-                                    <button id="mode-closed-btn" onclick="setAnalysisMode('closed')"
-                                        class="btn btn-sm fw-bold px-3 py-1 mode-btn"
-                                        style="border-radius:8px;font-size:0.8rem;background:transparent;border:none;color:var(--text-secondary);">
-                                        <i class="bi bi-check2-circle me-1"></i>Closed Cases View
-                                    </button>
-                                </div>
-                            </div>
-                            <div>
-                                <button class="btn btn-sm btn-outline-danger" id="clear-filters-btn" disabled style="opacity:0.45;cursor:not-allowed;">
-                                    <i class="bi bi-x-circle me-1"></i>Clear All
-                                </button>
-                                <button class="btn pdf-download-btn btn-sm" id="download-pdf-btn">
-                                    <i class="bi bi-file-pdf me-1"></i> Download PDF
-                                </button>
-                            </div>
-                        </div>
-                        <div class="row g-2">
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Owner</label>
-                                <div class="sms-wrapper" id="sms-owner-wrapper">
-                                    <div class="sms-trigger" id="sms-owner-trigger" onclick="toggleSMS('owner')">
-                                        <span class="sms-label" id="sms-owner-label">All Owners</span>
-                                        <span class="sms-count-badge" id="sms-owner-badge" style="display:none;"></span>
-                                        <i class="bi bi-chevron-down sms-chevron"></i>
-                                    </div>
-                                    <div class="sms-dropdown" id="sms-owner-dropdown">
-                                        <div class="sms-search-box"><input type="text" placeholder="Search owners..." id="sms-owner-search" oninput="filterSMSOptions('owner')" /></div>
-                                        <div class="sms-actions">
-                                            <button onclick="selectAllSMS('owner')">Select All</button>
-                                            <span class="sms-sep">|</span>
-                                            <button onclick="clearSMS('owner')">Clear</button>
-                                        </div>
-                                        <div class="sms-options-list" id="sms-owner-list"></div>
-                                    </div>
-                                </div>
-                                <select id="global-filter-owner" multiple style="display:none;"></select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Customer Name</label>
-                                <div class="sms-wrapper" id="sms-submittedby-wrapper">
-                                    <div class="sms-trigger" id="sms-submittedby-trigger" onclick="toggleSMS('submittedby')">
-                                        <span class="sms-label" id="sms-submittedby-label">All Customers</span>
-                                        <span class="sms-count-badge" id="sms-submittedby-badge" style="display:none;"></span>
-                                        <i class="bi bi-chevron-down sms-chevron"></i>
-                                    </div>
-                                    <div class="sms-dropdown" id="sms-submittedby-dropdown">
-                                        <div class="sms-search-box"><input type="text" placeholder="Search customers..." id="sms-submittedby-search" oninput="filterSMSOptions('submittedby')" /></div>
-                                        <div class="sms-actions">
-                                            <button onclick="selectAllSMS('submittedby')">Select All</button>
-                                            <span class="sms-sep">|</span>
-                                            <button onclick="clearSMS('submittedby')">Clear</button>
-                                        </div>
-                                        <div class="sms-options-list" id="sms-submittedby-list"></div>
-                                    </div>
-                                </div>
-                                <select id="global-filter-submittedby" multiple style="display:none;"></select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Service Type</label>
-                                <select class="form-select form-select-sm" id="global-filter-service">
-                                    <option value="">All Service Types</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Status</label>
-                                <div class="sms-wrapper" id="sms-status-wrapper">
-                                    <div class="sms-trigger" id="sms-status-trigger" onclick="toggleSMS('status')">
-                                        <span class="sms-label" id="sms-status-label">All Statuses</span>
-                                        <span class="sms-count-badge" id="sms-status-badge" style="display:none;"></span>
-                                        <i class="bi bi-chevron-down sms-chevron"></i>
-                                    </div>
-                                    <div class="sms-dropdown" id="sms-status-dropdown">
-                                        <div class="sms-search-box"><input type="text" placeholder="Search statuses..." id="sms-status-search" oninput="filterSMSOptions('status')" /></div>
-                                        <div class="sms-actions">
-                                            <button onclick="selectAllSMS('status')">Select All</button>
-                                            <span class="sms-sep">|</span>
-                                            <button onclick="clearSMS('status')">Clear</button>
-                                        </div>
-                                        <div class="sms-options-list" id="sms-status-list"></div>
-                                    </div>
-                                </div>
-                                <select id="global-filter-status" multiple style="display:none;"></select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">Assignment Level</label>
-                                <select class="form-select form-select-sm" id="global-filter-level" onchange="updateGlobalFilters()">
-                                    <option value="">All Levels</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <label class="form-label small fw-bold mb-1">SLA Status</label>
-                                <select class="form-select form-select-sm" id="global-filter-sla" onchange="updateGlobalFilters()">
-                                    <option value="">All SLA Status</option>
-                                    <option value="Violated">SLA Violated</option>
-                                    <option value="Non-Violated">SLA Non-Violated</option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-6 d-flex align-items-end">
-                                <button class="btn btn-sm btn-primary w-100" onclick="exportFullData()">
-                                    <i class="bi bi-download me-1"></i> Export
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="filter-tags" id="active-filters-tags" style="display: none;">
-                            <!-- Active filter tags will appear here -->
-                        </div>
-                        
-                        <div class="mt-2 small text-muted">
-                            <i class="bi bi-info-circle me-1"></i>
-                            <span id="active-filters-count">0 filters active</span>
+
+            <!-- ══════════════════════════════════════════
+                 FLOATING FILTER BUTTON (top-bar inline)
+            ══════════════════════════════════════════ -->
+            <style>
+                /* Floating filter fab */
+                #filter-fab {
+                    position: relative;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 7px;
+                    background: linear-gradient(135deg, #3D31C8, #5B4FE9);
+                    color: #fff;
+                    border: none;
+                    border-radius: 50px;
+                    padding: 7px 18px 7px 14px;
+                    font-size: 0.82rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    box-shadow: 0 4px 16px rgba(91,79,233,0.35);
+                    transition: box-shadow 0.2s, transform 0.15s;
+                    white-space: nowrap;
+                    z-index: 100;
+                }
+                #filter-fab:hover { box-shadow: 0 6px 22px rgba(91,79,233,0.45); transform: translateY(-1px); }
+                #filter-fab.filters-active {
+                    background: linear-gradient(135deg, #1E3A8A, #3D31C8);
+                    animation: fabPulse 2s infinite;
+                }
+                @keyframes fabPulse {
+                    0%,100% { box-shadow: 0 4px 16px rgba(91,79,233,0.35); }
+                    50%      { box-shadow: 0 4px 24px rgba(91,79,233,0.65), 0 0 0 5px rgba(91,79,233,0.15); }
+                }
+                #filter-fab .fab-badge {
+                    background: #EF4444;
+                    color: #fff;
+                    border-radius: 50%;
+                    font-size: 0.62rem;
+                    font-weight: 900;
+                    width: 18px; height: 18px;
+                    display: none;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                }
+                #filter-fab.filters-active .fab-badge { display: inline-flex; }
+
+                /* Slide-in filter drawer */
+                #filter-drawer-overlay {
+                    display: none;
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(15,23,42,0.35);
+                    z-index: 1050;
+                    backdrop-filter: blur(2px);
+                }
+                #filter-drawer-overlay.open { display: block; }
+                #filter-drawer {
+                    position: fixed;
+                    top: 0; right: -520px;
+                    width: min(500px, 96vw);
+                    height: 100vh;
+                    background: #fff;
+                    z-index: 1051;
+                    box-shadow: -8px 0 40px rgba(91,79,233,0.18);
+                    transition: right 0.32s cubic-bezier(0.4,0,0.2,1);
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;
+                }
+                #filter-drawer.open { right: 0; }
+
+                /* Drawer header */
+                .filter-drawer-header {
+                    background: linear-gradient(135deg, #3D31C8 0%, #5B4FE9 60%, #7B72EE 100%);
+                    color: #fff;
+                    padding: 18px 20px 14px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    flex-shrink: 0;
+                }
+                .filter-drawer-header h6 { margin: 0; font-weight: 800; font-size: 1rem; letter-spacing:-0.2px; }
+                .filter-drawer-close {
+                    background: rgba(255,255,255,0.18);
+                    border: none;
+                    color: #fff;
+                    border-radius: 8px;
+                    width: 32px; height: 32px;
+                    font-size: 1.1rem;
+                    cursor: pointer;
+                    display: flex; align-items: center; justify-content: center;
+                    transition: background 0.15s;
+                }
+                .filter-drawer-close:hover { background: rgba(255,255,255,0.32); }
+
+                /* Drawer body */
+                .filter-drawer-body {
+                    flex: 1;
+                    overflow-y: auto;
+                    padding: 20px;
+                }
+                .filter-drawer-body .form-label {
+                    font-size: 0.72rem;
+                    font-weight: 700;
+                    color: var(--text-secondary);
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    margin-bottom: 5px;
+                }
+
+                /* Drawer footer */
+                .filter-drawer-footer {
+                    padding: 14px 20px;
+                    border-top: 1px solid var(--border);
+                    background: var(--bg-surface);
+                    display: flex;
+                    gap: 10px;
+                    flex-shrink: 0;
+                }
+
+                /* Active filter pills in the top bar */
+                #topbar-filter-pills {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 5px;
+                    align-items: center;
+                }
+                .topbar-pill {
+                    background: linear-gradient(135deg, var(--primary-soft), #E4E7FF);
+                    border: 1px solid var(--border-strong);
+                    color: var(--primary-dark);
+                    padding: 3px 10px 3px 10px;
+                    border-radius: 20px;
+                    font-size: 0.72rem;
+                    font-weight: 700;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                    animation: pillIn 0.22s ease;
+                }
+                @keyframes pillIn {
+                    from { opacity:0; transform:scale(0.82); }
+                    to   { opacity:1; transform:scale(1); }
+                }
+                .topbar-pill .pill-close {
+                    color: var(--primary);
+                    opacity: 0.6;
+                    cursor: pointer;
+                    font-size: 0.9rem;
+                    line-height: 1;
+                    margin-left: 2px;
+                }
+                .topbar-pill .pill-close:hover { opacity: 1; }
+
+                /* Reviewing pulse on filter icon when active */
+                #filter-fab.filters-active .fab-icon { animation: iconWiggle 3s ease infinite; }
+                @keyframes iconWiggle {
+                    0%,90%,100% { transform: rotate(0deg); }
+                    92%          { transform: rotate(-15deg); }
+                    96%          { transform: rotate(12deg); }
+                }
+
+                /* Override SMS dropdown z-index inside drawer */
+                #filter-drawer .sms-dropdown { z-index: 2000; }
+
+                /* Mode toggle inside drawer */
+                .drawer-mode-toggle {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    background: var(--bg-surface);
+                    border: 1.5px solid var(--border);
+                    border-radius: 10px;
+                    padding: 4px;
+                    margin-bottom: 18px;
+                }
+                .drawer-mode-toggle button {
+                    flex: 1;
+                    border: none;
+                    border-radius: 7px;
+                    padding: 6px 10px;
+                    font-size: 0.78rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    transition: all 0.18s;
+                    background: transparent;
+                    color: var(--text-secondary);
+                }
+                .drawer-mode-toggle button.active-mode {
+                    background: var(--primary);
+                    color: #fff;
+                    box-shadow: 0 2px 8px rgba(91,79,233,0.28);
+                }
+            </style>
+
+            <!-- Overlay backdrop -->
+            <div id="filter-drawer-overlay" onclick="closeFilterDrawer()"></div>
+
+            <!-- Slide-in Drawer -->
+            <div id="filter-drawer">
+                <div class="filter-drawer-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-funnel-fill" style="font-size:1.1rem;"></i>
+                        <h6>Global Filters</h6>
+                        <span id="drawer-filter-count-badge" style="background:rgba(255,255,255,0.25);color:#fff;border-radius:12px;font-size:0.65rem;font-weight:800;padding:2px 8px;display:none;"></span>
+                    </div>
+                    <button class="filter-drawer-close" onclick="closeFilterDrawer()">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="filter-drawer-body">
+
+                    <!-- Analysis Mode Toggle (inside drawer) -->
+                    <div class="mb-3">
+                        <label class="form-label">Analysis Mode</label>
+                        <div class="drawer-mode-toggle">
+                            <button id="mode-open-btn" onclick="setAnalysisMode('open')" class="mode-btn active-mode">
+                                <i class="bi bi-folder2-open me-1"></i>Open Cases View
+                            </button>
+                            <button id="mode-closed-btn" onclick="setAnalysisMode('closed')" class="mode-btn">
+                                <i class="bi bi-check2-circle me-1"></i>Closed Cases View
+                            </button>
                         </div>
                     </div>
+
+                    <hr style="margin:0 0 16px;border-color:var(--border);">
+
+                    <!-- Filter fields -->
+                    <div class="mb-3">
+                        <label class="form-label">Owner</label>
+                        <div class="sms-wrapper" id="sms-owner-wrapper">
+                            <div class="sms-trigger" id="sms-owner-trigger" onclick="toggleSMS('owner')">
+                                <span class="sms-label" id="sms-owner-label">All Owners</span>
+                                <span class="sms-count-badge" id="sms-owner-badge" style="display:none;"></span>
+                                <i class="bi bi-chevron-down sms-chevron"></i>
+                            </div>
+                            <div class="sms-dropdown" id="sms-owner-dropdown">
+                                <div class="sms-search-box"><input type="text" placeholder="Search owners..." id="sms-owner-search" oninput="filterSMSOptions('owner')" /></div>
+                                <div class="sms-actions">
+                                    <button onclick="selectAllSMS('owner')">Select All</button>
+                                    <span class="sms-sep">|</span>
+                                    <button onclick="clearSMS('owner')">Clear</button>
+                                </div>
+                                <div class="sms-options-list" id="sms-owner-list"></div>
+                            </div>
+                        </div>
+                        <select id="global-filter-owner" multiple style="display:none;"></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Customer Name</label>
+                        <div class="sms-wrapper" id="sms-submittedby-wrapper">
+                            <div class="sms-trigger" id="sms-submittedby-trigger" onclick="toggleSMS('submittedby')">
+                                <span class="sms-label" id="sms-submittedby-label">All Customers</span>
+                                <span class="sms-count-badge" id="sms-submittedby-badge" style="display:none;"></span>
+                                <i class="bi bi-chevron-down sms-chevron"></i>
+                            </div>
+                            <div class="sms-dropdown" id="sms-submittedby-dropdown">
+                                <div class="sms-search-box"><input type="text" placeholder="Search customers..." id="sms-submittedby-search" oninput="filterSMSOptions('submittedby')" /></div>
+                                <div class="sms-actions">
+                                    <button onclick="selectAllSMS('submittedby')">Select All</button>
+                                    <span class="sms-sep">|</span>
+                                    <button onclick="clearSMS('submittedby')">Clear</button>
+                                </div>
+                                <div class="sms-options-list" id="sms-submittedby-list"></div>
+                            </div>
+                        </div>
+                        <select id="global-filter-submittedby" multiple style="display:none;"></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Service Type</label>
+                        <select class="form-select form-select-sm" id="global-filter-service">
+                            <option value="">All Service Types</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        <div class="sms-wrapper" id="sms-status-wrapper">
+                            <div class="sms-trigger" id="sms-status-trigger" onclick="toggleSMS('status')">
+                                <span class="sms-label" id="sms-status-label">All Statuses</span>
+                                <span class="sms-count-badge" id="sms-status-badge" style="display:none;"></span>
+                                <i class="bi bi-chevron-down sms-chevron"></i>
+                            </div>
+                            <div class="sms-dropdown" id="sms-status-dropdown">
+                                <div class="sms-search-box"><input type="text" placeholder="Search statuses..." id="sms-status-search" oninput="filterSMSOptions('status')" /></div>
+                                <div class="sms-actions">
+                                    <button onclick="selectAllSMS('status')">Select All</button>
+                                    <span class="sms-sep">|</span>
+                                    <button onclick="clearSMS('status')">Clear</button>
+                                </div>
+                                <div class="sms-options-list" id="sms-status-list"></div>
+                            </div>
+                        </div>
+                        <select id="global-filter-status" multiple style="display:none;"></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Assignment Level</label>
+                        <select class="form-select form-select-sm" id="global-filter-level" onchange="updateGlobalFilters()">
+                            <option value="">All Levels</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">SLA Status</label>
+                        <select class="form-select form-select-sm" id="global-filter-sla" onchange="updateGlobalFilters()">
+                            <option value="">All SLA Status</option>
+                            <option value="Violated">SLA Violated</option>
+                            <option value="Non-Violated">SLA Non-Violated</option>
+                        </select>
+                    </div>
+
+                </div><!-- /filter-drawer-body -->
+
+                <!-- Drawer Footer: close only -->
+                <div class="filter-drawer-footer">
+                    <button class="btn btn-sm btn-outline-secondary flex-fill" onclick="closeFilterDrawer()" style="font-size:0.78rem;">
+                        <i class="bi bi-check2 me-1"></i>Done
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger flex-fill" id="clear-filters-btn" disabled style="opacity:0.45;cursor:not-allowed;font-size:0.78rem;">
+                        <i class="bi bi-x-circle me-1"></i>Clear Filters
+                    </button>
                 </div>
+            </div><!-- /filter-drawer -->
+
+            <!-- ══════════════════════════════════════════
+                 TOP BAR: Mode banner | Filter FAB | PDF | Export | Clear | Count
+                 ROW 2:  Active filter pills (below, full width)
+            ══════════════════════════════════════════ -->
+            <div class="mb-2">
+                <!-- Row 1: controls -->
+                <div class="d-flex align-items-center gap-2 flex-wrap" style="min-height:38px;">
+
+                    <!-- Analysis mode pill -->
+                    <span id="analysis-mode-banner" class="mode-banner open-mode" style="cursor:default;">
+                        <i class="bi bi-folder2-open me-1"></i>Open Cases Analysis
+                    </span>
+
+                    <!-- Filter FAB -->
+                    <button id="filter-fab" onclick="openFilterDrawer()">
+                        <i class="bi bi-funnel-fill fab-icon"></i>
+                        <span>Filters</span>
+                        <span class="fab-badge" id="fab-badge-count">0</span>
+                    </button>
+
+                    <!-- Download PDF -->
+                    <button class="btn pdf-download-btn btn-sm" id="download-pdf-btn" style="font-size:0.78rem;padding:6px 14px;">
+                        <i class="bi bi-file-pdf me-1"></i>Download PDF
+                    </button>
+
+                    <!-- Excel Export -->
+                    <button class="btn btn-sm btn-success" onclick="exportFullData()" style="font-size:0.78rem;padding:6px 14px;font-weight:600;">
+                        <i class="bi bi-download me-1"></i>Excel Export
+                    </button>
+
+                    <!-- Clear Filters -->
+                    <button class="btn btn-sm btn-outline-danger" id="clear-filters-btn" disabled style="opacity:0.45;cursor:not-allowed;font-size:0.78rem;padding:6px 14px;font-weight:600;">
+                        <i class="bi bi-x-circle me-1"></i>Clear Filters
+                    </button>
+
+                    <!-- Cases count pushed to right -->
+                    <small class="text-muted ms-auto" id="filtered-cases-count" style="font-size:0.78rem;white-space:nowrap;">Showing 0 of 0 cases</small>
+                </div>
+
+                <!-- Row 2: active filter pills (shown only when filters are applied) -->
+                <div id="topbar-filter-pills" style="display:none;flex-wrap:wrap;gap:5px;align-items:center;margin-top:8px;"></div>
             </div>
 
-            <div class="d-flex align-items-center gap-3 mb-2">
-                <span id="analysis-mode-banner" class="mode-banner open-mode">
-                    <i class="bi bi-folder2-open me-1"></i>Open Cases Analysis
-                </span>
-                <small class="text-muted" id="filtered-cases-count" style="font-size:0.78rem;">Showing 0 of 0 cases</small>
-            </div>
             <ul class="nav nav-tabs main-view-tabs mb-0" id="mainViewTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="view-dashboard-tab" data-bs-toggle="tab" data-bs-target="#view-dashboard" type="button" role="tab">
@@ -1265,7 +1500,8 @@
                             </button></h2>
                             <div id="collapseOne" class="accordion-collapse collapse">
                                 <div class="accordion-body">
-                                    <div class="row g-2">
+                                    <!-- Open mode cards -->
+                                    <div class="row g-2" id="section1-open-cards">
                                         <div class="col-md-3"><div class="kpi-card" id="kpi-total-card">
                                             <span class="kpi-status-tag bg-info-tag" id="kpi-total-tag">INFO</span>
                                             <div class="kpi-title">Total Active Cases</div>
@@ -1289,6 +1525,27 @@
                                             <div class="kpi-title">Incident Management (INC)</div>
                                             <div class="kpi-value" id="kpi-inc">0</div>
                                             <div class="kpi-recommendation" id="kpi-inc-rec">Breakdown of active Incident Management cases.</div>
+                                        </div></div>
+                                    </div>
+                                    <!-- Closed mode cards (hidden until closed mode active) -->
+                                    <div class="row g-2" id="section1-closed-cards" style="display:none;">
+                                        <div class="col-md-4"><div class="kpi-card" id="kpi-closed-total-card" style="border-left-color:#10B981;">
+                                            <span class="kpi-status-tag bg-info-tag" id="kpi-closed-total-tag">INFO</span>
+                                            <div class="kpi-title">Total Closed Cases</div>
+                                            <div class="kpi-value" id="kpi-closed-total">0</div>
+                                            <div class="kpi-recommendation" id="kpi-closed-total-rec">Total closed cases in selected filters.</div>
+                                        </div></div>
+                                        <div class="col-md-4"><div class="kpi-card" id="kpi-closed-sr-card">
+                                            <span class="kpi-status-tag bg-info-tag" id="kpi-closed-sr-tag">INFO</span>
+                                            <div class="kpi-title">Service Requests (SR)</div>
+                                            <div class="kpi-value" id="kpi-closed-sr">0</div>
+                                            <div class="kpi-recommendation" id="kpi-closed-sr-rec">Breakdown of closed Service Requests.</div>
+                                        </div></div>
+                                        <div class="col-md-4"><div class="kpi-card" id="kpi-closed-inc-card">
+                                            <span class="kpi-status-tag bg-info-tag" id="kpi-closed-inc-tag">INFO</span>
+                                            <div class="kpi-title">Incident Management (INC)</div>
+                                            <div class="kpi-value" id="kpi-closed-inc">0</div>
+                                            <div class="kpi-recommendation" id="kpi-closed-inc-rec">Breakdown of closed Incident Management cases.</div>
                                         </div></div>
                                     </div>
                                 </div>
@@ -1320,108 +1577,195 @@
                             </div>
                         </div>
 
-                        <!-- ═══ SECTION 3: Aging & Old Cases ═══ -->
+                        <!-- ═══ SECTION 3: Aging & Old Cases / Closure Aging ═══ -->
                         <div class="accordion-item" id="accordion-section-3">
                             <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
-                                <i class="bi bi-hourglass-split me-2"></i>3. Aging & Old Cases <small class="text-muted ms-2" style="font-size:0.7rem;">(Age = TODAY() – Creation Date)</small>
+                                <i class="bi bi-hourglass-split me-2"></i><span id="section3-title">3. Aging &amp; Old Cases</span> <small class="text-muted ms-2" style="font-size:0.7rem;" id="section3-subtitle">(Age = TODAY() – Creation Date)</small>
                             </button></h2>
                             <div id="collapseThree" class="accordion-collapse collapse">
                                 <div class="accordion-body">
-                                    <div class="row g-2">
-                                        <div class="col-md-3"><div class="kpi-card" id="kpi-aging-15-card">
-                                            <span class="kpi-status-tag bg-good" id="kpi-aging-15-tag">GOOD</span>
-                                            <div class="kpi-title">Aging &gt; 15 Days</div>
-                                            <div class="kpi-value" id="kpi-aging-15">0</div>
-                                            <div class="kpi-recommendation" id="kpi-aging-15-rec">No cases have crossed the 15-day warning threshold.</div>
-                                        </div></div>
-                                        <div class="col-md-3"><div class="kpi-card" id="kpi-aging-25-card">
-                                            <span class="kpi-status-tag bg-good" id="kpi-aging-25-tag">GOOD</span>
-                                            <div class="kpi-title">Aging &gt; 25 Days <span style="font-size:0.58rem;background:rgba(239,68,68,0.1);color:#DC2626;padding:1px 6px;border-radius:8px;margin-left:4px;">Critical</span></div>
-                                            <div class="kpi-value" id="kpi-aging-25">0</div>
-                                            <div class="kpi-recommendation" id="kpi-aging-25-rec">No critical old cases requiring urgent action.</div>
-                                        </div></div>
-                                        <div class="col-md-3"><div class="kpi-card" id="kpi-aging-lt15-card" style="border-left-color:#F59E0B;">
-                                            <span class="kpi-status-tag bg-good" id="kpi-aging-lt15-tag">GOOD</span>
-                                            <div class="kpi-title">Aging &lt; 15 Days</div>
-                                            <div class="kpi-value" id="kpi-aging-lt15">0</div>
-                                            <div class="kpi-recommendation" id="kpi-aging-lt15-rec">Cases within the 15-day range — monitor for escalation.</div>
-                                        </div></div>
-                                        <div class="col-md-3"><div class="kpi-card" id="kpi-aging-lt7-card" style="border-left-color:#10B981;">
-                                            <span class="kpi-status-tag bg-good" id="kpi-aging-lt7-tag">GOOD</span>
-                                            <div class="kpi-title">Aging &lt; 7 Days</div>
-                                            <div class="kpi-value" id="kpi-aging-lt7">0</div>
-                                            <div class="kpi-recommendation" id="kpi-aging-lt7-rec">Recently opened cases — ensure timely progress.</div>
-                                        </div></div>
+                                    <!-- Open mode aging cards -->
+                                    <div id="section3-open-cards">
+                                        <div class="row g-2">
+                                            <div class="col-md-3"><div class="kpi-card" id="kpi-aging-15-card">
+                                                <span class="kpi-status-tag bg-good" id="kpi-aging-15-tag">GOOD</span>
+                                                <div class="kpi-title">Aging &gt; 15 Days</div>
+                                                <div class="kpi-value" id="kpi-aging-15">0</div>
+                                                <div class="kpi-recommendation" id="kpi-aging-15-rec">No cases have crossed the 15-day warning threshold.</div>
+                                            </div></div>
+                                            <div class="col-md-3"><div class="kpi-card" id="kpi-aging-25-card">
+                                                <span class="kpi-status-tag bg-good" id="kpi-aging-25-tag">GOOD</span>
+                                                <div class="kpi-title">Aging &gt; 25 Days <span style="font-size:0.58rem;background:rgba(239,68,68,0.1);color:#DC2626;padding:1px 6px;border-radius:8px;margin-left:4px;">Critical</span></div>
+                                                <div class="kpi-value" id="kpi-aging-25">0</div>
+                                                <div class="kpi-recommendation" id="kpi-aging-25-rec">No critical old cases requiring urgent action.</div>
+                                            </div></div>
+                                            <div class="col-md-3"><div class="kpi-card" id="kpi-aging-lt15-card" style="border-left-color:#F59E0B;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-aging-lt15-tag">GOOD</span>
+                                                <div class="kpi-title">Aging &lt; 15 Days</div>
+                                                <div class="kpi-value" id="kpi-aging-lt15">0</div>
+                                                <div class="kpi-recommendation" id="kpi-aging-lt15-rec">Cases within the 15-day range — monitor for escalation.</div>
+                                            </div></div>
+                                            <div class="col-md-3"><div class="kpi-card" id="kpi-aging-lt7-card" style="border-left-color:#10B981;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-aging-lt7-tag">GOOD</span>
+                                                <div class="kpi-title">Aging &lt; 7 Days</div>
+                                                <div class="kpi-value" id="kpi-aging-lt7">0</div>
+                                                <div class="kpi-recommendation" id="kpi-aging-lt7-rec">Recently opened cases — ensure timely progress.</div>
+                                            </div></div>
+                                        </div>
+                                    </div>
+                                    <!-- Closed mode closure aging cards -->
+                                    <div id="section3-closed-cards" style="display:none;">
+                                        <!-- FCR row -->
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-md-12"><div class="kpi-card" id="kpi-fcr-card" style="border-left-color:#10B981;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-fcr-tag">GOOD</span>
+                                                <div class="kpi-title">First Contact Resolution <span style="font-size:0.58rem;background:rgba(16,185,129,0.12);color:#065F46;padding:1px 6px;border-radius:8px;margin-left:4px;">Resolved within 24 hrs</span></div>
+                                                <div class="kpi-value" id="kpi-fcr">0</div>
+                                                <div class="kpi-recommendation" id="kpi-fcr-rec">Cases resolved within 24 hrs of creation (Col AL – Col H ≤ 24 hrs).</div>
+                                            </div></div>
+                                        </div>
+                                        <!-- INC aging row -->
+                                        <div class="kpi-section-title mt-2 mb-1">INC – Closure Aging (Resolved Time − Creation Time)</div>
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-md-3"><div class="kpi-card" id="kpi-closed-inc-lt7-card" style="border-left-color:#10B981;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-closed-inc-lt7-tag">GOOD</span>
+                                                <div class="kpi-title">Aging &lt; 7 Days Closed INC</div>
+                                                <div class="kpi-value" id="kpi-closed-inc-lt7">0</div>
+                                                <div class="kpi-recommendation" id="kpi-closed-inc-lt7-rec">Closed INC cases resolved within 7 days.</div>
+                                            </div></div>
+                                            <div class="col-md-3"><div class="kpi-card" id="kpi-closed-inc-gt7-card" style="border-left-color:#F59E0B;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-closed-inc-gt7-tag">GOOD</span>
+                                                <div class="kpi-title">Aging &gt; 7 Days Closed INC</div>
+                                                <div class="kpi-value" id="kpi-closed-inc-gt7">0</div>
+                                                <div class="kpi-recommendation" id="kpi-closed-inc-gt7-rec">Closed INC cases that took more than 7 days to resolve.</div>
+                                            </div></div>
+                                            <div class="col-md-3"><div class="kpi-card" id="kpi-closed-inc-lt15-card" style="border-left-color:#06B6D4;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-closed-inc-lt15-tag">GOOD</span>
+                                                <div class="kpi-title">Aging &lt; 15 Days Closed INC</div>
+                                                <div class="kpi-value" id="kpi-closed-inc-lt15">0</div>
+                                                <div class="kpi-recommendation" id="kpi-closed-inc-lt15-rec">Closed INC cases resolved within 15 days.</div>
+                                            </div></div>
+                                            <div class="col-md-3"><div class="kpi-card" id="kpi-closed-inc-gt15-card" style="border-left-color:#EF4444;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-closed-inc-gt15-tag">GOOD</span>
+                                                <div class="kpi-title">Aging &gt; 15 Days Closed INC</div>
+                                                <div class="kpi-value" id="kpi-closed-inc-gt15">0</div>
+                                                <div class="kpi-recommendation" id="kpi-closed-inc-gt15-rec">Closed INC cases that took more than 15 days to resolve.</div>
+                                            </div></div>
+                                        </div>
+                                        <!-- SR aging row -->
+                                        <div class="kpi-section-title mt-2 mb-1">SR – Closure Aging (Resolved Time − Creation Time)</div>
+                                        <div class="row g-2">
+                                            <div class="col-md-3"><div class="kpi-card" id="kpi-closed-sr-lt7-card" style="border-left-color:#10B981;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-closed-sr-lt7-tag">GOOD</span>
+                                                <div class="kpi-title">Aging &lt; 7 Days Closed SR</div>
+                                                <div class="kpi-value" id="kpi-closed-sr-lt7">0</div>
+                                                <div class="kpi-recommendation" id="kpi-closed-sr-lt7-rec">Closed SR cases resolved within 7 days.</div>
+                                            </div></div>
+                                            <div class="col-md-3"><div class="kpi-card" id="kpi-closed-sr-gt7-card" style="border-left-color:#F59E0B;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-closed-sr-gt7-tag">GOOD</span>
+                                                <div class="kpi-title">Aging &gt; 7 Days Closed SR</div>
+                                                <div class="kpi-value" id="kpi-closed-sr-gt7">0</div>
+                                                <div class="kpi-recommendation" id="kpi-closed-sr-gt7-rec">Closed SR cases that took more than 7 days to resolve.</div>
+                                            </div></div>
+                                            <div class="col-md-3"><div class="kpi-card" id="kpi-closed-sr-lt15-card" style="border-left-color:#06B6D4;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-closed-sr-lt15-tag">GOOD</span>
+                                                <div class="kpi-title">Aging &lt; 15 Days Closed SR</div>
+                                                <div class="kpi-value" id="kpi-closed-sr-lt15">0</div>
+                                                <div class="kpi-recommendation" id="kpi-closed-sr-lt15-rec">Closed SR cases resolved within 15 days.</div>
+                                            </div></div>
+                                            <div class="col-md-3"><div class="kpi-card" id="kpi-closed-sr-gt15-card" style="border-left-color:#EF4444;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-closed-sr-gt15-tag">GOOD</span>
+                                                <div class="kpi-title">Aging &gt; 15 Days Closed SR</div>
+                                                <div class="kpi-value" id="kpi-closed-sr-gt15">0</div>
+                                                <div class="kpi-recommendation" id="kpi-closed-sr-gt15-rec">Closed SR cases that took more than 15 days to resolve.</div>
+                                            </div></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- ═══ SECTION 4: Email Follow-up and Response Compliance ═══ -->
+                        <!-- ═══ SECTION 4: Email Follow-up and Response Compliance / Email Follow-up on Closure ═══ -->
                         <div class="accordion-item" id="accordion-section-4">
                             <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
-                                <i class="bi bi-envelope-check me-2"></i>4. Email Follow-up and Response Compliance
+                                <i class="bi bi-envelope-check me-2"></i><span id="section4-title">4. Email Follow-up and Response Compliance</span>
                             </button></h2>
                             <div id="collapseFour" class="accordion-collapse collapse">
                                 <div class="accordion-body">
-
-                                    <!-- 4a: Email Follow-up (Under Observation / Waiting on Customer — FROM sapphire) -->
-                                    <div class="sub-section-header mb-2">
-                                        <i class="bi bi-calendar-check me-1" style="color:var(--primary);"></i>
-                                        <strong>Email Follow-Up</strong>
-                                        <span class="badge ms-2" style="background:var(--primary-soft);color:var(--primary);font-size:0.68rem;">Under Observation &amp; Waiting on Customer — last email FROM sapphireims.com</span>
+                                    <!-- ── OPEN MODE ─────────────────────────────────── -->
+                                    <div id="section4-open-cards">
+                                        <!-- 4a: Email Follow-up (Under Observation / Waiting on Customer — FROM sapphire) -->
+                                        <div class="sub-section-header mb-2">
+                                            <i class="bi bi-calendar-check me-1" style="color:var(--primary);"></i>
+                                            <strong>Email Follow-Up</strong>
+                                            <span class="badge ms-2" style="background:var(--primary-soft);color:var(--primary);font-size:0.68rem;">Under Observation &amp; Waiting on Customer — last email FROM sapphireims.com</span>
+                                        </div>
+                                        <div class="row g-2 mb-3">
+                                            <div class="col-md-4"><div class="kpi-card" id="kpi-email-followup-missed-card" style="border-left-color:#EF4444;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-email-followup-missed-tag">GOOD</span>
+                                                <div class="kpi-title">Email Follow-up Missed <span style="font-size:0.58rem;background:rgba(239,68,68,0.1);color:#DC2626;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
+                                                <div class="kpi-value" id="kpi-email-followup-missed">0</div>
+                                                <div class="kpi-recommendation" id="kpi-email-followup-missed-rec">All email follow-ups are up to date.</div>
+                                            </div></div>
+                                            <div class="col-md-4"><div class="kpi-card" id="kpi-email-followup-today-card" style="border-left-color:#F59E0B;">
+                                                <span class="kpi-status-tag" id="kpi-email-followup-today-tag" style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#431407;">PROACTIVE</span>
+                                                <div class="kpi-title">Email Follow-up Due Today <span style="font-size:0.58rem;background:rgba(245,158,11,0.12);color:#B45309;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
+                                                <div class="kpi-value" id="kpi-email-followup-today" style="color:#D97706;">0</div>
+                                                <div class="kpi-recommendation" id="kpi-email-followup-today-rec">No email follow-ups due today.</div>
+                                            </div></div>
+                                            <div class="col-md-4"><div class="kpi-card" id="kpi-email-followup-tomorrow-card" style="border-left-color:#06B6D4;">
+                                                <span class="kpi-status-tag bg-info-tag" id="kpi-email-followup-tomorrow-tag">PROACTIVE</span>
+                                                <div class="kpi-title">Email Follow-up Due Tomorrow <span style="font-size:0.58rem;background:rgba(6,182,212,0.12);color:#0891B2;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
+                                                <div class="kpi-value" id="kpi-email-followup-tomorrow" style="color:#0891B2;">0</div>
+                                                <div class="kpi-recommendation" id="kpi-email-followup-tomorrow-rec">No email follow-ups due tomorrow.</div>
+                                            </div></div>
+                                        </div>
+                                        <!-- 4b: Email Response Compliance (other statuses — NOT from sapphire) -->
+                                        <div class="sub-section-header mb-2">
+                                            <i class="bi bi-envelope me-1" style="color:var(--primary);"></i>
+                                            <strong>Email Response Compliance</strong>
+                                            <span class="badge ms-2" style="background:var(--secondary-soft);color:#0891B2;font-size:0.68rem;">All other open statuses — last email NOT from sapphireims.com</span>
+                                        </div>
+                                        <div class="row g-2">
+                                            <div class="col-md-4"><div class="kpi-card" id="kpi-email-resp-missed-card" style="border-left-color:#EF4444;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-email-resp-missed-tag">GOOD</span>
+                                                <div class="kpi-title">Email Response Missed <span style="font-size:0.58rem;background:rgba(239,68,68,0.1);color:#DC2626;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
+                                                <div class="kpi-value" id="kpi-email-resp-missed">0</div>
+                                                <div class="kpi-recommendation" id="kpi-email-resp-missed-rec">No missed client email responses.</div>
+                                            </div></div>
+                                            <div class="col-md-4"><div class="kpi-card" id="kpi-email-resp-today-card" style="border-left-color:#F59E0B;">
+                                                <span class="kpi-status-tag" id="kpi-email-resp-today-tag" style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#431407;">PROACTIVE</span>
+                                                <div class="kpi-title">Email Resp Due Today <span style="font-size:0.58rem;background:rgba(245,158,11,0.12);color:#B45309;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
+                                                <div class="kpi-value" id="kpi-email-resp-today" style="color:#D97706;">0</div>
+                                                <div class="kpi-recommendation" id="kpi-email-resp-today-rec">No client responses due today.</div>
+                                            </div></div>
+                                            <div class="col-md-4"><div class="kpi-card" id="kpi-email-resp-tomorrow-card" style="border-left-color:#06B6D4;">
+                                                <span class="kpi-status-tag bg-info-tag" id="kpi-email-resp-tomorrow-tag">PROACTIVE</span>
+                                                <div class="kpi-title">Email Resp Due Tomorrow <span style="font-size:0.58rem;background:rgba(6,182,212,0.12);color:#0891B2;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
+                                                <div class="kpi-value" id="kpi-email-resp-tomorrow" style="color:#0891B2;">0</div>
+                                                <div class="kpi-recommendation" id="kpi-email-resp-tomorrow-rec">No client responses due tomorrow.</div>
+                                            </div></div>
+                                        </div>
+                                        <!-- Legacy hidden card for backward compat -->
+                                        <div id="kpi-email-followup-card" style="display:none;"><span id="kpi-email-followup-tag"></span><span id="kpi-email-followup"></span><span id="kpi-email-followup-rec"></span></div>
+                                        <div id="kpi-email-resp-card" style="display:none;"><span id="kpi-email-resp-tag"></span><span id="kpi-email-resp"></span><span id="kpi-email-resp-rec"></span></div>
                                     </div>
-                                    <div class="row g-2 mb-3">
-                                        <div class="col-md-4"><div class="kpi-card" id="kpi-email-followup-missed-card" style="border-left-color:#EF4444;">
-                                            <span class="kpi-status-tag bg-good" id="kpi-email-followup-missed-tag">GOOD</span>
-                                            <div class="kpi-title">Email Follow-up Missed <span style="font-size:0.58rem;background:rgba(239,68,68,0.1);color:#DC2626;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
-                                            <div class="kpi-value" id="kpi-email-followup-missed">0</div>
-                                            <div class="kpi-recommendation" id="kpi-email-followup-missed-rec">All email follow-ups are up to date.</div>
-                                        </div></div>
-                                        <div class="col-md-4"><div class="kpi-card" id="kpi-email-followup-today-card" style="border-left-color:#F59E0B;">
-                                            <span class="kpi-status-tag" id="kpi-email-followup-today-tag" style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#431407;">PROACTIVE</span>
-                                            <div class="kpi-title">Email Follow-up Due Today <span style="font-size:0.58rem;background:rgba(245,158,11,0.12);color:#B45309;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
-                                            <div class="kpi-value" id="kpi-email-followup-today" style="color:#D97706;">0</div>
-                                            <div class="kpi-recommendation" id="kpi-email-followup-today-rec">No email follow-ups due today.</div>
-                                        </div></div>
-                                        <div class="col-md-4"><div class="kpi-card" id="kpi-email-followup-tomorrow-card" style="border-left-color:#06B6D4;">
-                                            <span class="kpi-status-tag bg-info-tag" id="kpi-email-followup-tomorrow-tag">PROACTIVE</span>
-                                            <div class="kpi-title">Email Follow-up Due Tomorrow <span style="font-size:0.58rem;background:rgba(6,182,212,0.12);color:#0891B2;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
-                                            <div class="kpi-value" id="kpi-email-followup-tomorrow" style="color:#0891B2;">0</div>
-                                            <div class="kpi-recommendation" id="kpi-email-followup-tomorrow-rec">No email follow-ups due tomorrow.</div>
-                                        </div></div>
+                                    <!-- ── CLOSED MODE ───────────────────────────────── -->
+                                    <div id="section4-closed-cards" style="display:none;">
+                                        <div class="sub-section-header mb-2">
+                                            <i class="bi bi-envelope-open me-1" style="color:var(--primary);"></i>
+                                            <strong>Customer Follow-up on Closure Calls</strong>
+                                            <span class="badge ms-2" style="background:var(--accent-soft);color:#065F46;font-size:0.68rem;">Last email NOT from sapphireims.com · Closed statuses</span>
+                                        </div>
+                                        <div class="row g-2">
+                                            <div class="col-md-6"><div class="kpi-card" id="kpi-closure-followup-card" style="border-left-color:#F59E0B;">
+                                                <span class="kpi-status-tag bg-good" id="kpi-closure-followup-tag">GOOD</span>
+                                                <div class="kpi-title">Customer Follow-up on Closure Calls <span style="font-size:0.58rem;background:rgba(245,158,11,0.12);color:#B45309;padding:1px 6px;border-radius:8px;margin-left:4px;">Customer email pending</span></div>
+                                                <div class="kpi-value" id="kpi-closure-followup">0</div>
+                                                <div class="kpi-recommendation" id="kpi-closure-followup-rec">Closed cases where the last email was NOT from sapphireims.com.</div>
+                                            </div></div>
+                                        </div>
                                     </div>
-
-                                    <!-- 4b: Email Response Compliance (other statuses — NOT from sapphire) -->
-                                    <div class="sub-section-header mb-2">
-                                        <i class="bi bi-envelope me-1" style="color:var(--primary);"></i>
-                                        <strong>Email Response Compliance</strong>
-                                        <span class="badge ms-2" style="background:var(--secondary-soft);color:#0891B2;font-size:0.68rem;">All other open statuses — last email NOT from sapphireims.com</span>
-                                    </div>
-                                    <div class="row g-2">
-                                        <div class="col-md-4"><div class="kpi-card" id="kpi-email-resp-missed-card" style="border-left-color:#EF4444;">
-                                            <span class="kpi-status-tag bg-good" id="kpi-email-resp-missed-tag">GOOD</span>
-                                            <div class="kpi-title">Email Response Missed <span style="font-size:0.58rem;background:rgba(239,68,68,0.1);color:#DC2626;padding:1px 6px;border-radius:8px;margin-left:4px;">Already Missed</span></div>
-                                            <div class="kpi-value" id="kpi-email-resp-missed">0</div>
-                                            <div class="kpi-recommendation" id="kpi-email-resp-missed-rec">No missed client email responses.</div>
-                                        </div></div>
-                                        <div class="col-md-4"><div class="kpi-card" id="kpi-email-resp-today-card" style="border-left-color:#F59E0B;">
-                                            <span class="kpi-status-tag" id="kpi-email-resp-today-tag" style="background:linear-gradient(135deg,#F59E0B,#FCD34D);color:#431407;">PROACTIVE</span>
-                                            <div class="kpi-title">Email Resp Due Today <span style="font-size:0.58rem;background:rgba(245,158,11,0.12);color:#B45309;padding:1px 6px;border-radius:8px;margin-left:4px;">Act Now</span></div>
-                                            <div class="kpi-value" id="kpi-email-resp-today" style="color:#D97706;">0</div>
-                                            <div class="kpi-recommendation" id="kpi-email-resp-today-rec">No client responses due today.</div>
-                                        </div></div>
-                                        <div class="col-md-4"><div class="kpi-card" id="kpi-email-resp-tomorrow-card" style="border-left-color:#06B6D4;">
-                                            <span class="kpi-status-tag bg-info-tag" id="kpi-email-resp-tomorrow-tag">PROACTIVE</span>
-                                            <div class="kpi-title">Email Resp Due Tomorrow <span style="font-size:0.58rem;background:rgba(6,182,212,0.12);color:#0891B2;padding:1px 6px;border-radius:8px;margin-left:4px;">Plan Ahead</span></div>
-                                            <div class="kpi-value" id="kpi-email-resp-tomorrow" style="color:#0891B2;">0</div>
-                                            <div class="kpi-recommendation" id="kpi-email-resp-tomorrow-rec">No client responses due tomorrow.</div>
-                                        </div></div>
-                                    </div>
-                                    <!-- Legacy hidden card for backward compat -->
-                                    <div id="kpi-email-followup-card" style="display:none;"><span id="kpi-email-followup-tag"></span><span id="kpi-email-followup"></span><span id="kpi-email-followup-rec"></span></div>
-                                    <div id="kpi-email-resp-card" style="display:none;"><span id="kpi-email-resp-tag"></span><span id="kpi-email-resp"></span><span id="kpi-email-resp-rec"></span></div>
-
                                 </div>
                             </div>
                         </div>
@@ -1572,9 +1916,9 @@
                                         <th>Owner</th>
                                         <th>Performance Scorecard %</th>
                                         <th>Assignment Level</th>
-                                        <th>Total Open Cases</th>
-                                        <th>Total Open SR</th>
-                                        <th>Total Open INC</th>
+                                        <th id="scorecard-cases-header">Total Open Cases</th>
+                                        <th id="scorecard-sr-header">Total Open SR</th>
+                                        <th id="scorecard-inc-header">Total Open INC</th>
                                         <th>Aging &gt;15 Days</th>
                                         <th>Oldest &gt;25 Days</th>
                                         <th>Idle &gt;1 Day</th>
@@ -2537,6 +2881,140 @@
                 { key: 'creationDateDisplay', label: 'Creation Date' },
                 { key: 'modifiedDateDisplay', label: 'Modified Date' },
                 { key: 'slaStatus', label: 'SLA Status' }
+            ],
+            // ── Closed-case drill-down column definitions ──
+            'closedTotal': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'service', label: 'Service' },
+                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
+            ],
+            'closedSR': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
+            ],
+            'closedINC': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
+            ],
+            'closedFCR': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'service', label: 'Service' },
+                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
+            ],
+            'closedINCLt7': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
+            ],
+            'closedINCGt7': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
+            ],
+            'closedINCLt15': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
+            ],
+            'closedINCGt15': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
+            ],
+            'closedSRLt7': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
+            ],
+            'closedSRGt7': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
+            ],
+            'closedSRLt15': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
+            ],
+            'closedSRGt15': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
+            ],
+            'closureFollowup': [
+                { key: 'incidentId', label: 'Incident ID' },
+                { key: 'title', label: 'Title' },
+                { key: 'owner', label: 'Owner' },
+                { key: 'customerName', label: 'Customer Name' },
+                { key: 'currentStatus', label: 'Status' },
+                { key: 'service', label: 'Service' },
+                { key: 'lastEmailFrom', label: 'Last Email From' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ]
         };
 
@@ -2747,7 +3225,7 @@
             };
 
             document.getElementById('process-data-btn').onclick = processData;
-            document.getElementById('clear-filters-btn').onclick = clearAllFilters;
+            document.querySelectorAll('#clear-filters-btn').forEach(btn => btn.onclick = clearAllFilters);
             document.getElementById('download-pdf-btn').onclick = downloadDashboardPDF;
             
             // View toggle buttons
@@ -3016,7 +3494,8 @@
                 expectedSLAClosureTime: findCol(['Expected SLA Closure Time', 'SLA Closure']),
                 updatePendingSupportCounter: findCol(['Update Pending From Support Counter', 'Pending Counter']),
                 ageingLastModified: findCol(['Ageing from Last modified time', 'Last Modified Aging']),
-                steps: findCol(['Resolution Steps', 'Steps to be followed', 'Steps'])
+                steps: findCol(['Resolution Steps', 'Steps to be followed', 'Steps']),
+                resolvedTime: findCol(['Resolved Time', 'Resolution Time', 'Closure Time', 'Closed Time', 'Resolved Date'])
             };
 
             // Open statuses (include in open cases analysis)
@@ -3181,8 +3660,35 @@
 
                 const subsequentSLACount = parseNum(row[colMap.updatePendingSupportCounter] || '0');
 
+                // ── Resolved Time (Col AL) — for Closed Case View metrics ──
+                const resolvedTimeRaw = row[colMap.resolvedTime];
+                const resolvedTimeObj = parseAKDate(resolvedTimeRaw);
+
+                // Closed-case duration = Resolved Time − Creation Time (in days)
+                let closedAgingDays = 0;
+                let closedWithin24h = false;
+                if (resolvedTimeObj && creationDateObj) {
+                    const diffMs = resolvedTimeObj - creationDateObj;
+                    closedAgingDays = diffMs / 86400000; // fractional days
+                    closedWithin24h = diffMs <= 86400000; // <= 1 day (24 hrs)
+                } else {
+                    // fallback: use agingDays already computed from creation → today
+                    closedAgingDays = agingDays;
+                }
+
                 const isSR = service === 'Service Request';
                 const isINC = service === 'Incident Management';
+
+                // Closed-case aging buckets (INC)
+                const isClosedINCLt7  = isINC && closedAgingDays < 7;
+                const isClosedINCGt7  = isINC && closedAgingDays >= 7;
+                const isClosedINCLt15 = isINC && closedAgingDays < 15;
+                const isClosedINCGt15 = isINC && closedAgingDays >= 15;
+                // Closed-case aging buckets (SR)
+                const isClosedSRLt7   = isSR && closedAgingDays < 7;
+                const isClosedSRGt7   = isSR && closedAgingDays >= 7;
+                const isClosedSRLt15  = isSR && closedAgingDays < 15;
+                const isClosedSRGt15  = isSR && closedAgingDays >= 15;
                 const isOpenCase = OPEN_STATUSES.has(currentStatus);
                 const isClosedCase = CLOSED_STATUSES.has(currentStatus);
                 const isNew = currentStatus === 'New';
@@ -3257,6 +3763,18 @@
                     isOldest25, isIdle1, isIdle3,
                     isEmailFollowupMissed, isEmailFollowupToday, isEmailFollowupTomorrow,
                     isEmailRespMissed, isEmailRespToday, isEmailRespTomorrow,
+                    // Closed-case fields
+                    resolvedDateDisplay: resolvedTimeObj
+                        ? resolvedTimeObj.toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'})
+                        : (resolvedTimeRaw ? resolvedTimeRaw.toString() : ''),
+                    closedAgingDisplay: closedWithin24h
+                        ? 'Within 24 hrs'
+                        : (closedAgingDays >= 1
+                            ? Math.round(closedAgingDays) + (Math.round(closedAgingDays) === 1 ? ' Day' : ' Days')
+                            : (closedAgingDays > 0 ? 'Within 24 hrs' : '—')),
+                    closedAgingDays, closedWithin24h,
+                    isClosedINCLt7, isClosedINCGt7, isClosedINCLt15, isClosedINCGt15,
+                    isClosedSRLt7, isClosedSRGt7, isClosedSRLt15, isClosedSRGt15,
                     
                     _raw: row
                 };
@@ -3400,33 +3918,72 @@
             showLoading(false);
         }
 
+        function openFilterDrawer() {
+            document.getElementById('filter-drawer').classList.add('open');
+            document.getElementById('filter-drawer-overlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeFilterDrawer() {
+            document.getElementById('filter-drawer').classList.remove('open');
+            document.getElementById('filter-drawer-overlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
         function updateActiveFiltersDisplay() {
             const activeFilters = [];
             if (globalFilters.owner.length > 0) activeFilters.push({key: 'owner', label: 'Owner', value: globalFilters.owner.join(', ')});
-            if (globalFilters.submittedby.length > 0) activeFilters.push({key: 'submittedby', label: 'Customer Name', value: globalFilters.submittedby.join(', ')});
-            if (globalFilters.level) activeFilters.push({key: 'level', label: 'Assignment Level', value: globalFilters.level});
-            if (globalFilters.service) activeFilters.push({key: 'service', label: 'Service Type', value: globalFilters.service});
+            if (globalFilters.submittedby.length > 0) activeFilters.push({key: 'submittedby', label: 'Customer', value: globalFilters.submittedby.join(', ')});
+            if (globalFilters.level) activeFilters.push({key: 'level', label: 'Level', value: globalFilters.level});
+            if (globalFilters.service) activeFilters.push({key: 'service', label: 'Service', value: globalFilters.service});
             if (globalFilters.status.length > 0) activeFilters.push({key: 'status', label: 'Status', value: globalFilters.status.join(', ')});
-            if (globalFilters.sla) activeFilters.push({key: 'sla', label: 'SLA Status', value: globalFilters.sla});
+            if (globalFilters.sla) activeFilters.push({key: 'sla', label: 'SLA', value: globalFilters.sla});
 
-            const activeFiltersTags = document.getElementById('active-filters-tags');
-            const activeFiltersCount = document.getElementById('active-filters-count');
-            const filteredCasesCount = document.getElementById('filtered-cases-count');
-
-            if (activeFilters.length > 0) {
-                activeFiltersTags.innerHTML = activeFilters.map(filter => `
-                    <div class="filter-tag">
-                        <i class="bi bi-funnel"></i>
-                        ${filter.label}: ${filter.value}
-                        <span class="close" onclick="removeFilter('${filter.key}')">&times;</span>
-                    </div>
-                `).join('');
-                activeFiltersTags.style.display = 'flex';
-            } else {
-                activeFiltersTags.style.display = 'none';
+            // ── Inline topbar pills (row 2, below controls) ───────
+            const pillsEl = document.getElementById('topbar-filter-pills');
+            if (pillsEl) {
+                if (activeFilters.length > 0) {
+                    pillsEl.style.display = 'flex';
+                    pillsEl.innerHTML = activeFilters.map(f => `
+                        <span class="topbar-pill">
+                            <i class="bi bi-funnel" style="font-size:0.65rem;"></i>
+                            <span>${f.label}: ${f.value.length > 28 ? f.value.slice(0,26)+'…' : f.value}</span>
+                            <span class="pill-close" onclick="removeFilter('${f.key}')" title="Remove filter">&times;</span>
+                        </span>`).join('');
+                } else {
+                    pillsEl.style.display = 'none';
+                    pillsEl.innerHTML = '';
+                }
             }
 
-            activeFiltersCount.textContent = `${activeFilters.length} filter${activeFilters.length !== 1 ? 's' : ''} active`;
+            // ── FAB state ──────────────────────────────────────────
+            const fab = document.getElementById('filter-fab');
+            const fabBadge = document.getElementById('fab-badge-count');
+            if (fab) {
+                if (activeFilters.length > 0) {
+                    fab.classList.add('filters-active');
+                    if (fabBadge) { fabBadge.textContent = activeFilters.length; fabBadge.style.display = 'inline-flex'; }
+                } else {
+                    fab.classList.remove('filters-active');
+                    if (fabBadge) fabBadge.style.display = 'none';
+                }
+            }
+
+            // ── Drawer header badge ────────────────────────────────
+            const drawerBadge = document.getElementById('drawer-filter-count-badge');
+            if (drawerBadge) {
+                if (activeFilters.length > 0) {
+                    drawerBadge.textContent = `${activeFilters.length} active`;
+                    drawerBadge.style.display = 'inline-block';
+                } else {
+                    drawerBadge.style.display = 'none';
+                }
+            }
+
+            // ── Legacy active-filters-count (still referenced in some places) ──
+            const activeFiltersCount = document.getElementById('active-filters-count');
+            if (activeFiltersCount) activeFiltersCount.textContent = `${activeFilters.length} filter${activeFilters.length !== 1 ? 's' : ''} active`;
+
+            // ── Cases count banner ─────────────────────────────────
             // Fix #3: Use mode-aware total so "X of Y" reflects only open (or closed) cases
             const modeTotal = processedData.length > 0
                 ? (analysisMode === 'open'
@@ -3435,10 +3992,9 @@
                 : 0;
             const banner2 = document.getElementById('filtered-cases-count');
             if(banner2) banner2.textContent = `Showing ${filteredData.length} of ${modeTotal} cases`;
-            if(filteredCasesCount) filteredCasesCount.textContent = `Showing ${filteredData.length} of ${modeTotal} cases`;
-            // Fix #4: Enable/disable Clear All button based on whether any filters are active
-            const clearBtn = document.getElementById('clear-filters-btn');
-            if (clearBtn) {
+
+            // ── Clear Filters buttons enable/disable (topbar + drawer) ───
+            document.querySelectorAll('#clear-filters-btn').forEach(clearBtn => {
                 if (activeFilters.length > 0) {
                     clearBtn.disabled = false;
                     clearBtn.classList.remove('disabled');
@@ -3450,7 +4006,7 @@
                     clearBtn.style.opacity = '0.45';
                     clearBtn.style.cursor = 'not-allowed';
                 }
-            }
+            });
         }
 
         function removeFilter(filterKey) {
@@ -3533,15 +4089,43 @@
             const closedBtn = document.getElementById('mode-closed-btn');
             if (openBtn && closedBtn) {
                 if (mode === 'open') {
-                    openBtn.classList.add('active-mode');    openBtn.style.cssText = '';
+                    openBtn.classList.add('active-mode');
                     closedBtn.classList.remove('active-mode');
-                    closedBtn.style.cssText = 'background:transparent;border:none;color:var(--text-secondary);';
                 } else {
-                    closedBtn.classList.add('active-mode');  closedBtn.style.cssText = '';
+                    closedBtn.classList.add('active-mode');
                     openBtn.classList.remove('active-mode');
-                    openBtn.style.cssText = 'background:transparent;border:none;color:var(--text-secondary);';
                 }
             }
+
+            // ── Dual-mode UI toggles ───────────────────────────────────
+            const isClosed = mode === 'closed';
+            // Section 1
+            const s1open   = document.getElementById('section1-open-cards');
+            const s1closed = document.getElementById('section1-closed-cards');
+            if (s1open)   s1open.style.display   = isClosed ? 'none' : '';
+            if (s1closed) s1closed.style.display  = isClosed ? '' : 'none';
+            // Section 3
+            const s3open   = document.getElementById('section3-open-cards');
+            const s3closed = document.getElementById('section3-closed-cards');
+            if (s3open)   s3open.style.display   = isClosed ? 'none' : '';
+            if (s3closed) s3closed.style.display  = isClosed ? '' : 'none';
+            const s3title  = document.getElementById('section3-title');
+            const s3sub    = document.getElementById('section3-subtitle');
+            if (s3title) s3title.textContent = isClosed ? '3. Closure Aging' : '3. Aging & Old Cases';
+            if (s3sub)   s3sub.textContent   = isClosed ? '(Resolved Time − Creation Time)' : '(Age = TODAY() – Creation Date)';
+            // Section 4
+            const s4open   = document.getElementById('section4-open-cards');
+            const s4closed = document.getElementById('section4-closed-cards');
+            if (s4open)   s4open.style.display   = isClosed ? 'none' : '';
+            if (s4closed) s4closed.style.display  = isClosed ? '' : 'none';
+            const s4title  = document.getElementById('section4-title');
+            if (s4title) s4title.textContent = isClosed ? '4. Email Follow-up on Closure' : '4. Email Follow-up and Response Compliance';
+            // Section 5 & 6: hide in closed mode (not relevant for closed cases)
+            const s5 = document.getElementById('accordion-section-5');
+            const s6 = document.getElementById('accordion-section-6');
+            if (s5) s5.style.display = isClosed ? 'none' : '';
+            if (s6) s6.style.display = isClosed ? 'none' : '';
+            // ─────────────────────────────────────────────────────────────
             const banner = document.getElementById('analysis-mode-banner');
             if (banner) {
                 banner.className = 'mode-banner ' + (mode === 'open' ? 'open-mode' : 'closed-mode');
@@ -3673,6 +4257,18 @@
                 oldest25: filteredData.filter(d => d.isOldest25).length,
                 agingLt15: filteredData.filter(d => !d.isAging15Violated && d.agingDays > 0).length,
                 agingLt7: filteredData.filter(d => d.agingDays < 7).length,
+                // Closed-case metrics
+                closedFCR:        filteredData.filter(d => d.isClosedCase && d.closedWithin24h).length,
+                closedINCLt7:     filteredData.filter(d => d.isClosedCase && d.isClosedINCLt7).length,
+                closedINCGt7:     filteredData.filter(d => d.isClosedCase && d.isClosedINCGt7).length,
+                closedINCLt15:    filteredData.filter(d => d.isClosedCase && d.isClosedINCLt15).length,
+                closedINCGt15:    filteredData.filter(d => d.isClosedCase && d.isClosedINCGt15).length,
+                closedSRLt7:      filteredData.filter(d => d.isClosedCase && d.isClosedSRLt7).length,
+                closedSRGt7:      filteredData.filter(d => d.isClosedCase && d.isClosedSRGt7).length,
+                closedSRLt15:     filteredData.filter(d => d.isClosedCase && d.isClosedSRLt15).length,
+                closedSRGt15:     filteredData.filter(d => d.isClosedCase && d.isClosedSRGt15).length,
+                // Customer follow-up on closure: last email NOT from sapphireims.com, closed statuses
+                closureFollowup:  filteredData.filter(d => d.isClosedCase && d.lastEmailFrom && !d.lastEmailFrom.toLowerCase().includes('@sapphireims.com')).length,
                 // Section 4a: Email Follow-up (Under Observation / Waiting on Customer, FROM sapphire)
                 emailFollowupMissed:   filteredData.filter(d => d.isEmailFollowupMissed).length,
                 emailFollowupToday:    filteredData.filter(d => d.isEmailFollowupToday).length,
@@ -3833,6 +4429,56 @@
             updateSectionRAGStatus(5, [subRespRec, subRespTodayRec, subRespTomorrowRec, subSLARec]);
             updateSectionRAGStatus(6, [idle3Rec, edocRec, edocTodayRec, edocTomorrowRec]);
             
+            // ── Closed-mode Section 1 cards ───────────────────────
+            const closedDrillMap = {
+                'kpi-closed-total':     'closedTotal',
+                'kpi-closed-sr':        'closedSR',
+                'kpi-closed-inc':       'closedINC',
+                'kpi-fcr':              'closedFCR',
+                'kpi-closed-inc-lt7':   'closedINCLt7',
+                'kpi-closed-inc-gt7':   'closedINCGt7',
+                'kpi-closed-inc-lt15':  'closedINCLt15',
+                'kpi-closed-inc-gt15':  'closedINCGt15',
+                'kpi-closed-sr-lt7':    'closedSRLt7',
+                'kpi-closed-sr-gt7':    'closedSRGt7',
+                'kpi-closed-sr-lt15':   'closedSRLt15',
+                'kpi-closed-sr-gt15':   'closedSRGt15',
+                'kpi-closure-followup': 'closureFollowup',
+            };
+            const wireClosedDrill = (id, title) => {
+                const drillKey = closedDrillMap[id];
+                if (!drillKey) return;
+                const card = document.getElementById(`${id}-card`);
+                if (card) { card.style.cursor = 'pointer'; card.onclick = () => openDrillDown(drillKey, title); }
+            };
+            const setKV = (id, val) => {
+                const el = document.getElementById(id); if(el) el.textContent = val;
+                const cardEl = el && el.closest('.kpi-card');
+                const titleEl = cardEl && cardEl.querySelector('.kpi-title');
+                wireClosedDrill(id, titleEl ? titleEl.textContent.trim() : id);
+            };
+            setKV('kpi-closed-total', m.totalClosed);
+            setKV('kpi-closed-sr', filteredData.filter(d=>d.isClosedCase&&d.isSR).length);
+            setKV('kpi-closed-inc', filteredData.filter(d=>d.isClosedCase&&d.isINC).length);
+            const setCard = (id, val, tag, tagClass, rec) => {
+                const vEl=document.getElementById(id); if(vEl) vEl.textContent=val;
+                const tEl=document.getElementById(`${id}-tag`); if(tEl){tEl.textContent=tag;tEl.className=`kpi-status-tag ${tagClass}`;}
+                const rEl=document.getElementById(`${id}-rec`); if(rEl) rEl.textContent=rec;
+                wireClosedDrill(id, rec);
+            };
+            // Section 3 closed cards
+            setCard('kpi-fcr', m.closedFCR, m.closedFCR>0?'GOOD':'INFO', m.closedFCR>0?'bg-good':'bg-info-tag', `${m.closedFCR} cases resolved within 24 hrs (Col AL – Col H ≤ 24 hrs).`);
+            setCard('kpi-closed-inc-lt7',  m.closedINCLt7,  'INFO','bg-info-tag',  `${m.closedINCLt7} closed INC resolved within 7 days.`);
+            setCard('kpi-closed-inc-gt7',  m.closedINCGt7,  m.closedINCGt7>0?'MONITOR':'GOOD', m.closedINCGt7>0?'bg-monitor':'bg-good', `${m.closedINCGt7} closed INC took more than 7 days.`);
+            setCard('kpi-closed-inc-lt15', m.closedINCLt15, 'INFO','bg-info-tag',  `${m.closedINCLt15} closed INC resolved within 15 days.`);
+            setCard('kpi-closed-inc-gt15', m.closedINCGt15, m.closedINCGt15>0?'ACTION NEEDED':'GOOD', m.closedINCGt15>0?'bg-action-needed':'bg-good', `${m.closedINCGt15} closed INC took more than 15 days.`);
+            setCard('kpi-closed-sr-lt7',   m.closedSRLt7,   'INFO','bg-info-tag',  `${m.closedSRLt7} closed SR resolved within 7 days.`);
+            setCard('kpi-closed-sr-gt7',   m.closedSRGt7,   m.closedSRGt7>0?'MONITOR':'GOOD', m.closedSRGt7>0?'bg-monitor':'bg-good', `${m.closedSRGt7} closed SR took more than 7 days.`);
+            setCard('kpi-closed-sr-lt15',  m.closedSRLt15,  'INFO','bg-info-tag',  `${m.closedSRLt15} closed SR resolved within 15 days.`);
+            setCard('kpi-closed-sr-gt15',  m.closedSRGt15,  m.closedSRGt15>0?'ACTION NEEDED':'GOOD', m.closedSRGt15>0?'bg-action-needed':'bg-good', `${m.closedSRGt15} closed SR took more than 15 days.`);
+            // Section 4 closed card
+            setCard('kpi-closure-followup', m.closureFollowup, m.closureFollowup>0?'ACTION NEEDED':'GOOD', m.closureFollowup>0?'bg-action-needed':'bg-good', m.closureFollowup>0?`${m.closureFollowup} closed case(s) — last email not from sapphireims.com. Customer may need a follow-up.`:'All closed cases have a support email as last contact.');
+
             renderOwnerScorecard();
         }
 
@@ -3863,6 +4509,7 @@
         }
 
         function renderOwnerScorecard() {
+            const isClosed = analysisMode === 'closed';
             const counts = {};
             filteredData.forEach(d => {
                 if(!counts[d.owner]) counts[d.owner] = {
@@ -3873,7 +4520,7 @@
                     idle1: 0, idle3: 0, edocBreach: 0, edocMissing: 0,
                     levels: new Set()
                 };
-                if(!d.isOpenCase) return; // Scorecard counts open cases only
+                if(isClosed ? !d.isClosedCase : !d.isOpenCase) return;
                 counts[d.owner].openCases++;
                 if(d.assignmentLevel) counts[d.owner].levels.add(d.assignmentLevel);
                 if(d.isSR) counts[d.owner].sr++;
@@ -3914,8 +4561,8 @@
                 if (!hasAnyIssueColumn || stats.openCases === 0) {
                     performanceScore = 100.0;
                 } else {
-                    // Count distinct open cases that have at least one of these compliance issues
-                    const ownerOpenCases = filteredData.filter(d => d.owner === o && d.isOpenCase);
+                    // Count distinct cases (open or closed) that have at least one compliance issue
+                    const ownerOpenCases = filteredData.filter(d => d.owner === o && (isClosed ? d.isClosedCase : d.isOpenCase));
                     const casesWithIssue = ownerOpenCases.filter(d =>
                         d.isEmailFollowupMissed || d.isEmailFollowupToday || d.isEmailFollowupTomorrow ||
                         d.isEmailRespMissed     || d.isEmailRespToday     || d.isEmailRespTomorrow     ||
@@ -3924,13 +4571,24 @@
                     performanceScore = ((stats.openCases - casesWithIssue) / stats.openCases * 100).toFixed(1);
                 }
 
+                const caseLabel = isClosed ? 'Total Closed Cases' : 'Total Open Cases';
+                const srLabel   = isClosed ? 'Total Closed SR'    : 'Total Open SR';
+                const incLabel  = isClosed ? 'Total Closed INC'   : 'Total Open INC';
+                // Update static headers dynamically
+                const hdr = document.getElementById('scorecard-cases-header');
+                if (hdr) hdr.textContent = caseLabel;
+                const hdrSR = document.getElementById('scorecard-sr-header');
+                if (hdrSR) hdrSR.textContent = srLabel;
+                const hdrINC = document.getElementById('scorecard-inc-header');
+                if (hdrINC) hdrINC.textContent = incLabel;
+
                 scorecardData.push({
                     'Owner': o,
                     'Performance Scorecard %': performanceScore + '%',
                     'Assignment Level': levelStr,
-                    'Total Open Cases': stats.openCases,
-                    'Total Open SR': stats.sr,
-                    'Total Open INC': stats.inc,
+                    [caseLabel]: stats.openCases,
+                    [srLabel]: stats.sr,
+                    [incLabel]: stats.inc,
                     'Aging >15 Days': stats.aging15,
                     'Oldest >25 Days': stats.oldest25,
                     'Idle >1 Day': stats.idle1,
@@ -3999,7 +4657,7 @@
                     owners: new Set()
                 };
                 levelCounts[lvl].total++;
-                if (d.isOpenCase) levelCounts[lvl].openCases++;
+                if (analysisMode === 'closed' ? d.isClosedCase : d.isOpenCase) levelCounts[lvl].openCases++;
                 if (d.isSR) levelCounts[lvl].sr++;
                 if (d.isINC) levelCounts[lvl].inc++;
                 if (d.isEmailRespMissed)     levelCounts[lvl].emailResponseMissed++;
@@ -4028,7 +4686,7 @@
                                 </div>
                                 <div class="text-center my-2">
                                     <div class="fw-bold" style="font-size:1.6rem;color:var(--text-primary);">${s.openCases}</div>
-                                    <div class="text-muted" style="font-size:0.72rem;font-weight:600;">Total Open Cases</div>
+                                    <div class="text-muted" style="font-size:0.72rem;font-weight:600;">${analysisMode === 'closed' ? 'Total Closed Cases' : 'Total Open Cases'}</div>
                                 </div>
                                 <hr class="my-2">
                                 <div class="row g-1 text-center">
@@ -4052,8 +4710,9 @@
         }
 
         function openAssignmentLevelDrillDown(level) {
-            const data = filteredData.filter(d => (d.assignmentLevel || 'Unassigned') === level && d.isOpenCase);
-            drillDownTitleForExport = `Assignment Level: ${level} – Open Cases`;
+            const isClosed = analysisMode === 'closed';
+            const data = filteredData.filter(d => (d.assignmentLevel || 'Unassigned') === level && (isClosed ? d.isClosedCase : d.isOpenCase));
+            drillDownTitleForExport = `Assignment Level: ${level} – ${isClosed ? 'Closed' : 'Open'} Cases`;
             document.getElementById('drillDownTitle').textContent = drillDownTitleForExport;
             document.getElementById('drillDownCount').textContent = `${data.length} Cases`;
 
@@ -4191,6 +4850,46 @@
                     break;
                 case 'edocDueTomorrow':
                     drillDownData = filteredData.filter(d => d.isEdocDueTomorrow);
+                    break;
+                // ── Closed-case drill-downs ──
+                case 'closedTotal':
+                    drillDownData = filteredData.filter(d => d.isClosedCase);
+                    break;
+                case 'closedSR':
+                    drillDownData = filteredData.filter(d => d.isClosedCase && d.isSR);
+                    break;
+                case 'closedINC':
+                    drillDownData = filteredData.filter(d => d.isClosedCase && d.isINC);
+                    break;
+                case 'closedFCR':
+                    drillDownData = filteredData.filter(d => d.isClosedCase && d.closedWithin24h);
+                    break;
+                case 'closedINCLt7':
+                    drillDownData = filteredData.filter(d => d.isClosedCase && d.isClosedINCLt7);
+                    break;
+                case 'closedINCGt7':
+                    drillDownData = filteredData.filter(d => d.isClosedCase && d.isClosedINCGt7);
+                    break;
+                case 'closedINCLt15':
+                    drillDownData = filteredData.filter(d => d.isClosedCase && d.isClosedINCLt15);
+                    break;
+                case 'closedINCGt15':
+                    drillDownData = filteredData.filter(d => d.isClosedCase && d.isClosedINCGt15);
+                    break;
+                case 'closedSRLt7':
+                    drillDownData = filteredData.filter(d => d.isClosedCase && d.isClosedSRLt7);
+                    break;
+                case 'closedSRGt7':
+                    drillDownData = filteredData.filter(d => d.isClosedCase && d.isClosedSRGt7);
+                    break;
+                case 'closedSRLt15':
+                    drillDownData = filteredData.filter(d => d.isClosedCase && d.isClosedSRLt15);
+                    break;
+                case 'closedSRGt15':
+                    drillDownData = filteredData.filter(d => d.isClosedCase && d.isClosedSRGt15);
+                    break;
+                case 'closureFollowup':
+                    drillDownData = filteredData.filter(d => d.isClosedCase && d.lastEmailFrom && !d.lastEmailFrom.toLowerCase().includes('@sapphireims.com'));
                     break;
                 default:
                     drillDownData = [];
@@ -4989,7 +5688,7 @@
             const ws = XLSX.utils.json_to_sheet(scorecardData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Scorecard_Export");
-            XLSX.writeFile(wb, `Support_Scorecard_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+            XLSX.writeFile(wb, `MSP_Scorecard_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
         }
 
         function exportDrillDownToExcel() {
@@ -5011,7 +5710,7 @@
             const ws = XLSX.utils.json_to_sheet(filteredData.map(d => d._raw));
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "FilteredData");
-            XLSX.writeFile(wb, `Support_Filtered_Data_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+            XLSX.writeFile(wb, `MSP_Filtered_Data_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
         }
 
         // #3 CHANGE: Function to export tab data to Excel
@@ -5041,7 +5740,7 @@
             const ws = XLSX.utils.json_to_sheet(exportData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, `${tabId}_Export`);
-            XLSX.writeFile(wb, `Support_${tabId}_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+            XLSX.writeFile(wb, `MSP_${tabId}_Export_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
         }
 
         // #4 FIX: Enhanced PDF download function that expands all sections before capture
@@ -5209,13 +5908,13 @@
                         pdf.setPage(i);
                         pdf.setFontSize(8);
                         pdf.setTextColor(150, 150, 150);
-                        pdf.text(`Page ${i} of ${totalPages} - Generated by Support Engineers Dashboard`, 
+                        pdf.text(`Page ${i} of ${totalPages} - Generated by MSP Support Engineers Dashboard`, 
                                 pdf.internal.pageSize.width / 2, pdf.internal.pageSize.height - 10, 
                                 { align: 'center' });
                     }
                     
                     // Save the PDF
-                    pdf.save(`Support_Dashboard_${isDashboardView ? 'Overview' : 'Detailed'}_${new Date().toLocaleDateString().replace(/\//g,'-')}.pdf`);
+                    pdf.save(`MSP_Dashboard_${isDashboardView ? 'Overview' : 'Detailed'}_${new Date().toLocaleDateString().replace(/\//g,'-')}.pdf`);
                     
                     showLoading(false);
                 }).catch(error => {
