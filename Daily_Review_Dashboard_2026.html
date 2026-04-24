@@ -1322,6 +1322,48 @@
 
                     <!-- Filter fields -->
                     <div class="mb-3">
+                        <label class="form-label">L1 Team Member</label>
+                        <div class="sms-wrapper" id="sms-l1team-wrapper">
+                            <div class="sms-trigger" id="sms-l1team-trigger" onclick="toggleSMS('l1team')">
+                                <span class="sms-label" id="sms-l1team-label">Select L1 Team Member</span>
+                                <span class="sms-count-badge" id="sms-l1team-badge" style="display:none;"></span>
+                                <i class="bi bi-chevron-down sms-chevron"></i>
+                            </div>
+                            <div class="sms-dropdown" id="sms-l1team-dropdown">
+                                <div class="sms-search-box"><input type="text" placeholder="Search L1 team..." id="sms-l1team-search" oninput="filterSMSOptions('l1team')" /></div>
+                                <div class="sms-actions">
+                                    <button onclick="selectAllSMS('l1team')">All</button>
+                                    <span class="sms-sep">|</span>
+                                    <button onclick="clearSMS('l1team')">Clear</button>
+                                </div>
+                                <div class="sms-options-list" id="sms-l1team-list"></div>
+                            </div>
+                        </div>
+                        <select id="global-filter-l1team" multiple style="display:none;"></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">MSP Account</label>
+                        <div class="sms-wrapper" id="sms-mspaccount-wrapper">
+                            <div class="sms-trigger" id="sms-mspaccount-trigger" onclick="toggleSMS('mspaccount')">
+                                <span class="sms-label" id="sms-mspaccount-label">Select MSP Account</span>
+                                <span class="sms-count-badge" id="sms-mspaccount-badge" style="display:none;"></span>
+                                <i class="bi bi-chevron-down sms-chevron"></i>
+                            </div>
+                            <div class="sms-dropdown" id="sms-mspaccount-dropdown">
+                                <div class="sms-search-box"><input type="text" placeholder="Search MSP accounts..." id="sms-mspaccount-search" oninput="filterSMSOptions('mspaccount')" /></div>
+                                <div class="sms-actions">
+                                    <button onclick="selectAllSMS('mspaccount')">All</button>
+                                    <span class="sms-sep">|</span>
+                                    <button onclick="clearSMS('mspaccount')">Clear</button>
+                                </div>
+                                <div class="sms-options-list" id="sms-mspaccount-list"></div>
+                            </div>
+                        </div>
+                        <select id="global-filter-mspaccount" multiple style="display:none;"></select>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label">Owner</label>
                         <div class="sms-wrapper" id="sms-owner-wrapper">
                             <div class="sms-trigger" id="sms-owner-trigger" onclick="toggleSMS('owner')">
@@ -2475,7 +2517,7 @@
         let drillDownData = [];
         let drillDownTitleForExport = '';
         let drillDownExportData = [];
-        let globalFilters = { owner: [], submittedby: [], service: '', status: [], sla: '', level: '' };
+        let globalFilters = { owner: [], submittedby: [], service: '', status: [], sla: '', level: '', l1team: [], mspaccount: [] };
         let analysisMode = 'open'; // 'open' | 'closed'
         let charts = {};
         let scorecardData = [];
@@ -3046,7 +3088,9 @@
         const smsState = {
             owner:       { options: [], selected: new Set() },
             submittedby: { options: [], selected: new Set() },
-            status:      { options: [], selected: new Set() }
+            status:      { options: [], selected: new Set() },
+            l1team:      { options: ["Raju R", "Aparna JS", "Aswin Kumar A S", "Ramya R", "Dhanush M", "Jenish Velmurugan", "Rafnas P", "Keerthana R", "Shruti Yelamali"], selected: new Set() },
+            mspaccount:  { options: ["Columbia Asia Hospital - Malaysia", "First Capital Bank (Cloud)", "Nayara Energy", "First Capital Bank - ITOM", "Fino Payment Bank-CIMS", "Fino Payment Bank-CS", "Fino Paytech", "SMFG India Credit Co. Ltd", "JSW Steel Deployment", "JSW Energy-IPMS", "Tata Advanced System Limited - TASL", "TATA Advanced Systems Limited - TASL (Cloud)", "Tech Mahindra", "Xceedance"], selected: new Set() }
         };
 
         function toggleSMS(key) {
@@ -3054,7 +3098,7 @@
             const trigger  = document.getElementById(`sms-${key}-trigger`);
             const isOpen   = dropdown.classList.contains('open');
             // Close all other open dropdowns first
-            ['owner','submittedby','status'].forEach(k => {
+            ['owner','submittedby','status','l1team','mspaccount'].forEach(k => {
                 document.getElementById(`sms-${k}-dropdown`).classList.remove('open');
                 document.getElementById(`sms-${k}-trigger`).classList.remove('open');
             });
@@ -3069,7 +3113,7 @@
 
         // Close dropdowns when clicking outside
         document.addEventListener('click', function(e) {
-            ['owner','submittedby','status'].forEach(k => {
+            ['owner','submittedby','status','l1team','mspaccount'].forEach(k => {
                 const wrapper = document.getElementById(`sms-${k}-wrapper`);
                 if (wrapper && !wrapper.contains(e.target)) {
                     document.getElementById(`sms-${k}-dropdown`).classList.remove('open');
@@ -3146,7 +3190,7 @@
         }
 
         function syncSMSToSelect(key) {
-            const selectMap = { owner: 'global-filter-owner', submittedby: 'global-filter-submittedby', status: 'global-filter-status' };
+            const selectMap = { owner: 'global-filter-owner', submittedby: 'global-filter-submittedby', status: 'global-filter-status', l1team: 'global-filter-l1team', mspaccount: 'global-filter-mspaccount' };
             const select = document.getElementById(selectMap[key]);
             if (!select) return;
             Array.from(select.options).forEach(opt => {
@@ -3155,7 +3199,7 @@
         }
 
         function updateSMSTriggerLabel(key) {
-            const labelMap = { owner: 'All Owners', submittedby: 'All Customers', status: 'All Statuses' };
+            const labelMap = { owner: 'All Owners', submittedby: 'All Customers', status: 'All Statuses', l1team: 'Select L1 Team Member', mspaccount: 'Select MSP Account' };
             const labelEl  = document.getElementById(`sms-${key}-label`);
             const badgeEl  = document.getElementById(`sms-${key}-badge`);
             const count    = smsState[key].selected.size;
@@ -3177,7 +3221,7 @@
             smsState[key].options = options;
             smsState[key].selected.clear();
             // Rebuild the hidden <select> options
-            const selectMap = { owner: 'global-filter-owner', submittedby: 'global-filter-submittedby', status: 'global-filter-status' };
+            const selectMap = { owner: 'global-filter-owner', submittedby: 'global-filter-submittedby', status: 'global-filter-status', l1team: 'global-filter-l1team', mspaccount: 'global-filter-mspaccount' };
             const select = document.getElementById(selectMap[key]);
             if (select) {
                 select.innerHTML = '';
@@ -3259,6 +3303,17 @@
             });
 
             // Set up filter event listeners
+            // Populate static l1team and mspaccount hidden selects
+            (function() {
+                const l1Opts = ["Raju R", "Aparna JS", "Aswin Kumar A S", "Ramya R", "Dhanush M", "Jenish Velmurugan", "Rafnas P", "Keerthana R", "Shruti Yelamali"];
+                const mspOpts = ["Columbia Asia Hospital - Malaysia", "First Capital Bank (Cloud)", "Nayara Energy", "First Capital Bank - ITOM", "Fino Payment Bank-CIMS", "Fino Payment Bank-CS", "Fino Paytech", "SMFG India Credit Co. Ltd", "JSW Steel Deployment", "JSW Energy-IPMS", "Tata Advanced System Limited - TASL", "TATA Advanced Systems Limited - TASL (Cloud)", "Tech Mahindra", "Xceedance"];
+                const l1Sel = document.getElementById('global-filter-l1team');
+                const mspSel = document.getElementById('global-filter-mspaccount');
+                l1Opts.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; l1Sel.appendChild(o); });
+                mspOpts.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; mspSel.appendChild(o); });
+                smsState.l1team.options = l1Opts;
+                smsState.mspaccount.options = mspOpts;
+            })();
             document.getElementById('global-filter-service').addEventListener('change', updateGlobalFilters);
             document.getElementById('global-filter-owner').addEventListener('change', updateGlobalFilters);
             document.getElementById('global-filter-status').addEventListener('change', updateGlobalFilters);
@@ -3266,6 +3321,8 @@
             if (glvlEl) glvlEl.addEventListener('change', updateGlobalFilters);
             document.getElementById('global-filter-sla').addEventListener('change', updateGlobalFilters);
             document.getElementById('global-filter-submittedby').addEventListener('change', updateGlobalFilters);
+            document.getElementById('global-filter-l1team').addEventListener('change', updateGlobalFilters);
+            document.getElementById('global-filter-mspaccount').addEventListener('change', updateGlobalFilters);
             
             // Add event listener for Open Cases Analyses tab
             const openCasesTab = document.getElementById('view-opencases-tab');
@@ -3778,9 +3835,13 @@
                     
                     isL1ActionItem: (() => {
                         if (!creationDateObj) return false;
+                        // Ignore if already assigned to L2 or SME
+                        const lvl = (assignmentLevel || '').toString().trim().toUpperCase();
+                        if (lvl === 'L2' || lvl === 'SME') return false;
                         const ageMs = Date.now() - creationDateObj.getTime();
-                        const h36   = 36 * 3600000; // 1 Day + 12 hrs ceiling
-                        return ageMs >= 0 && ageMs <= h36;
+                        const min1  = 60 * 1000;              // 1 minute floor
+                        const h36   = 36 * 3600000;            // 1 Day + 12 hrs ceiling
+                        return ageMs >= min1 && ageMs <= h36;
                     })(),
                     loggedAging: (() => {
                         if (!creationDateObj) return '';
@@ -3919,6 +3980,8 @@
             };
 
             globalFilters.owner = getMultiSelectValues('global-filter-owner');
+            globalFilters.l1team = [...smsState.l1team.selected];
+            globalFilters.mspaccount = [...smsState.mspaccount.selected];
             globalFilters.submittedby = getMultiSelectValues('global-filter-submittedby');
             globalFilters.service = document.getElementById('global-filter-service').value;
             globalFilters.status = getMultiSelectValues('global-filter-status');
@@ -3930,6 +3993,8 @@
                 // Analysis mode gate — must come first
                 if (analysisMode === 'open'   && !d.isOpenCase)   return false;
                 if (analysisMode === 'closed' && !d.isClosedCase) return false;
+                if (globalFilters.l1team.length > 0 && !globalFilters.l1team.includes(d.owner)) return false;
+                if (globalFilters.mspaccount.length > 0 && !globalFilters.mspaccount.includes(d.customerName)) return false;
                 if (globalFilters.owner.length > 0 && !globalFilters.owner.includes(d.owner)) return false;
                 if (globalFilters.submittedby.length > 0 && !globalFilters.submittedby.includes(d.customerName)) return false;
                 if (globalFilters.service && d.service !== globalFilters.service) return false;
@@ -4086,7 +4151,7 @@
             if (lvlEl) lvlEl.value = '';
 
             // Fix #2: Also clear smsState so the UI labels/badges reset properly
-            ['owner', 'submittedby', 'status'].forEach(key => {
+            ['owner', 'submittedby', 'status', 'l1team', 'mspaccount'].forEach(key => {
                 smsState[key].selected.clear();
                 updateSMSTriggerLabel(key);
                 // Re-render the open dropdown options if any are open
@@ -4103,6 +4168,8 @@
             globalFilters.status = [];
             globalFilters.sla = '';
             globalFilters.level = '';
+            globalFilters.l1team = [];
+            globalFilters.mspaccount = [];
 
             // Fix #2: Respect analysisMode when rebuilding filteredData
             filteredData = processedData.filter(d =>
@@ -4294,7 +4361,14 @@
 
         function renderKPIDashboard() {
             if (!filteredData.length) {
+                // Zero out all KPI card values so stale numbers don't persist
+                document.querySelectorAll('.kpi-value').forEach(el => el.textContent = '0');
+                document.querySelectorAll('.kpi-recommendation').forEach(el => el.textContent = 'No data for the selected filters.');
+                document.querySelectorAll('.kpi-status-tag').forEach(el => { el.textContent = 'NO DATA'; el.className = 'kpi-status-tag bg-info-tag'; });
                 document.getElementById('owner-scorecard-body').innerHTML = '<tr><td colspan="18" class="text-center text-muted py-3">No data found for selected filters.</td></tr>';
+                // Also clear charts/tables that may hold stale data
+                const lvlDiv = document.getElementById('assignment-level-stats');
+                if (lvlDiv) lvlDiv.innerHTML = '<div class="text-muted text-center py-3" style="font-size:0.82rem;">No data for selected filters.</div>';
                 return;
             }
 
