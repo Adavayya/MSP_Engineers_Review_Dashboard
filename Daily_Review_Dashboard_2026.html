@@ -1528,7 +1528,7 @@
                                         </div></div>
                                         <div class="col-md-3"><div class="kpi-card" id="kpi-l1-action-card" style="border-left-color:#F59E0B;">
                                             <span class="kpi-status-tag bg-monitor" id="kpi-l1-action-tag">MONITOR</span>
-                                            <div class="kpi-title">⏱ L1 Team Action Items <span style="font-size:0.58rem;background:rgba(245,158,11,0.12);color:#92400E;padding:1px 6px;border-radius:8px;margin-left:4px;">24–36 hrs old</span></div>
+                                            <div class="kpi-title">⏱ L1 Team Action Items <span style="font-size:0.58rem;background:rgba(245,158,11,0.12);color:#92400E;padding:1px 6px;border-radius:8px;margin-left:4px;">≤ 1 Day 12 Hrs</span></div>
                                             <div class="kpi-value" id="kpi-l1-action" style="color:#F59E0B;">0</div>
                                             <div class="kpi-recommendation" id="kpi-l1-action-rec">The L1 team should assess the issue/request and decide whether it can be resolved at their level or needs to be escalated to the L2 team.</div>
                                         </div></div>
@@ -3551,8 +3551,10 @@
             const parseAKDate = (akVal) => {
                 if (!akVal && akVal !== 0) return null;
                 if (typeof akVal === 'number') {
-                    // Excel serial date
-                    const d = new Date(Math.round((akVal - 25569) * 86400 * 1000));
+                    // Excel serial datetime — preserve fractional part for time-of-day accuracy
+                    // Serial = days since 1899-12-30 (Excel epoch); fractional = time within day
+                    const ms = (akVal - 25569) * 86400 * 1000;
+                    const d = new Date(ms);
                     return isNaN(d.getTime()) ? null : d;
                 }
                 const d = new Date(akVal);
@@ -3616,9 +3618,8 @@
                 if (!serial || isNaN(serial)) return null;
                 const num = parseFloat(serial);
                 if (isNaN(num) || num < 1) return null;
-                // Excel serial: days since Jan 1 1900 (with leap year bug offset)
-                const utcDays = Math.floor(num - 25569);
-                const ms = utcDays * 86400 * 1000;
+                // Excel serial datetime — preserve fractional part for time-of-day accuracy
+                const ms = (num - 25569) * 86400 * 1000;
                 return new Date(ms);
             };
 
@@ -3777,11 +3778,9 @@
                     
                     isL1ActionItem: (() => {
                         if (!creationDateObj) return false;
-                        const nowMs  = Date.now();
-                        const ageMs  = nowMs - creationDateObj.getTime();
-                        const h24    = 24 * 3600000;
-                        const h36    = 36 * 3600000; // 24 + 12 hrs
-                        return ageMs >= h24 && ageMs <= h36;
+                        const ageMs = Date.now() - creationDateObj.getTime();
+                        const h36   = 36 * 3600000; // 1 Day + 12 hrs ceiling
+                        return ageMs >= 0 && ageMs <= h36;
                     })(),
                     loggedAging: (() => {
                         if (!creationDateObj) return '';
@@ -4430,8 +4429,8 @@
                 const l1Tag = document.getElementById('kpi-l1-action-tag');
                 if (l1Tag) { l1Tag.textContent = l1Count > 0 ? 'ACTION' : 'GOOD'; l1Tag.className = 'kpi-status-tag ' + (l1Count > 0 ? 'bg-action-needed' : 'bg-good'); }
                 document.getElementById('kpi-l1-action-rec').textContent = l1Count > 0
-                    ? `${l1Count} case${l1Count > 1 ? 's' : ''} in the 24–36 hr window. The L1 team should assess the issue/request and decide whether it can be resolved at their level or needs to be escalated to the L2 team.`
-                    : 'No cases in the 24–36 hr window. L1 team is on track.';
+                    ? `${l1Count} case${l1Count > 1 ? 's' : ''} logged within 1 Day 12 Hrs. The L1 team should assess the issue/request and decide whether it can be resolved at their level or needs to be escalated to the L2 team.`
+                    : 'No cases within 1 Day 12 Hrs window. L1 team is on track.';
                 l1Card.style.cursor = 'pointer';
                 l1Card.onclick = () => openDrillDown('l1ActionItems', 'L1 Team Action Items (24–36 hrs)');
             }
