@@ -1542,6 +1542,11 @@
                         <i class="bi bi-clipboard2-check-fill me-1"></i>Resolution Code Review
                     </button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="view-l1metrics-tab" data-bs-toggle="tab" data-bs-target="#view-l1metrics" type="button" role="tab" style="display:none;">
+                        <i class="bi bi-people-fill me-1"></i>L1 Team Metrics
+                    </button>
+                </li>
             </ul>
 
             <div class="tab-content view-content" id="mainViewTabsContent">
@@ -2787,6 +2792,296 @@
                     </div><!-- /p-3 -->
                 </div><!-- /view-resolutionreview -->
 
+                <!-- ═══════════════════════════════════════════════
+                     L1 TEAM METRICS TAB PANE
+                ═══════════════════════════════════════════════ -->
+                <div class="tab-pane fade" id="view-l1metrics" role="tabpanel">
+                    <div class="p-3">
+
+                        <!-- Header -->
+                        <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-4">
+                            <div>
+                                <h5 style="color:var(--primary);font-weight:800;margin-bottom:2px;">
+                                    <i class="bi bi-people-fill me-2"></i>L1 Team Metrics
+                                </h5>
+                                <p class="text-muted small mb-0">L1 team performance analysis — resolved call counts, compliance, KB/SOP usage, and feedback. Global filters applied. <span style="color:var(--primary);font-weight:600;"><i class="bi bi-cursor-fill me-1"></i>Click any chart bar or table row to drill down.</span></p>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm pdf-download-btn" onclick="downloadDashboardPDF()" style="font-size:0.78rem;padding:5px 13px;">
+                                    <i class="bi bi-file-pdf me-1"></i>PDF Export
+                                </button>
+                                <button class="btn btn-sm btn-success" onclick="exportL1TeamMetricsExcel()" style="font-size:0.78rem;padding:5px 13px;font-weight:600;">
+                                    <i class="bi bi-file-earmark-excel me-1"></i>Excel Export
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- ── KPI Summary Cards Row ── -->
+                        <div class="row g-3 mb-4" id="l1m-kpi-cards">
+                            <div class="col-6 col-md-3">
+                                <div class="kpi-card" style="border-left-color:#5B4FE9;">
+                                    <span class="kpi-status-tag bg-info-tag">INFO</span>
+                                    <div class="kpi-title">Total Logged (Closed)</div>
+                                    <div class="kpi-value" id="l1m-total-logged" style="color:var(--primary);">0</div>
+                                    <div class="kpi-recommendation">Total closed cases in current filter</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="kpi-card" style="border-left-color:#10B981;">
+                                    <span class="kpi-status-tag bg-good" id="l1m-resolved-tag">GOOD</span>
+                                    <div class="kpi-title">Resolved (L1 Closed)</div>
+                                    <div class="kpi-value" id="l1m-resolved-count" style="color:#10B981;">0</div>
+                                    <div class="kpi-recommendation" id="l1m-resolved-pct-rec">% of total logged</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="kpi-card" style="border-left-color:#06B6D4;">
+                                    <span class="kpi-status-tag bg-info-tag">KB/SOP</span>
+                                    <div class="kpi-title">KB/SOP Usage Rate</div>
+                                    <div class="kpi-value" id="l1m-kb-pct" style="color:#06B6D4;">0%</div>
+                                    <div class="kpi-recommendation" id="l1m-kb-rec">% of closed calls resolved by referring KB/SOP</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="kpi-card" style="border-left-color:#7C3AED;">
+                                    <span class="kpi-status-tag bg-urgent" id="l1m-l2fb-tag">REVIEW</span>
+                                    <div class="kpi-title">All Feedback Cases (L1/L2/SME)</div>
+                                    <div class="kpi-value" id="l1m-l2fb-count" style="color:#7C3AED;">0</div>
+                                    <div class="kpi-recommendation" id="l1m-l2fb-pct-rec">% cases with feedback from L1, L2, or SME</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── Section 1: Resolved Call Count & % Trend ── -->
+                        <div class="card mb-4" style="border:1.5px solid var(--border-strong);border-radius:16px;overflow:hidden;">
+                            <div style="background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 60%,var(--primary-light) 100%);padding:14px 20px;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-bar-chart-line-fill" style="color:#fff;font-size:1.1rem;"></i>
+                                    <span style="color:#fff;font-size:1rem;font-weight:800;letter-spacing:-0.2px;">1. Resolved Call Count &amp; % Against Logged (Per Engineer)</span>
+                                </div>
+                                <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:3px;">Grouped bars: total logged vs resolved per L1 engineer · % shown on bars</div>
+                            </div>
+                            <div class="p-3">
+                                <div style="position:relative;height:300px;">
+                                    <canvas id="l1m-resolved-trend-chart"></canvas>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm scorecard-table mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th style="text-align:left;min-width:140px;">Engineer</th>
+                                                    <th>Total Logged</th>
+                                                    <th>Resolved (Closed)</th>
+                                                    <th>Resolution Rate</th>
+                                                    <th>SR Closed</th>
+                                                    <th>INC Closed</th>
+                                                    <th>FCR (≤24h)</th>
+                                                    <th>Avg Resolution (Days)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="l1m-resolved-table-body">
+                                                <tr><td colspan="8" class="text-center text-muted py-3">Upload data to see metrics.</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── Section 2: Compliance Metrics ── -->
+                        <div class="card mb-4" style="border:1.5px solid var(--border-strong);border-radius:16px;overflow:hidden;">
+                            <div style="background:linear-gradient(135deg,#059669 0%,#10B981 60%,#34D399 100%);padding:14px 20px;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-shield-check-fill" style="color:#fff;font-size:1.1rem;"></i>
+                                    <span style="color:#fff;font-size:1rem;font-weight:800;letter-spacing:-0.2px;">2. Compliance Metrics (Per Engineer)</span>
+                                </div>
+                                <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:3px;">SLA compliance · Closure within 15 days · FCR rate · Email response compliance</div>
+                            </div>
+                            <div class="p-3">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <div style="position:relative;height:260px;">
+                                            <canvas id="l1m-compliance-sla-chart"></canvas>
+                                        </div>
+                                        <div class="text-center text-muted mt-1" style="font-size:0.72rem;">SLA Compliance Rate per Engineer</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div style="position:relative;height:260px;">
+                                            <canvas id="l1m-compliance-15d-chart"></canvas>
+                                        </div>
+                                        <div class="text-center text-muted mt-1" style="font-size:0.72rem;">Closed within 15 Days Rate per Engineer</div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm scorecard-table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align:left;min-width:140px;">Engineer</th>
+                                                <th>Total Closed</th>
+                                                <th>SLA Non-Violated</th>
+                                                <th>SLA Compliance %</th>
+                                                <th>Closed ≤15 Days</th>
+                                                <th>≤15 Days %</th>
+                                                <th>FCR Count</th>
+                                                <th>FCR %</th>
+                                                <th>Avg Age at Close (Days)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="l1m-compliance-table-body">
+                                            <tr><td colspan="9" class="text-center text-muted py-3">Upload data to see compliance metrics.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── Section 3: KB/SOP Usage ── -->
+                        <div class="card mb-4" style="border:1.5px solid var(--border-strong);border-radius:16px;overflow:hidden;">
+                            <div style="background:linear-gradient(135deg,#0369A1 0%,#06B6D4 60%,#22D3EE 100%);padding:14px 20px;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-book-half" style="color:#fff;font-size:1.1rem;"></i>
+                                    <span style="color:#fff;font-size:1rem;font-weight:800;letter-spacing:-0.2px;">3. KB/SOP Usage — % of Calls Resolved by Referring KB/SOP</span>
+                                </div>
+                                <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:3px;">Based on Column Z "Was KB Referred" — per engineer breakdown</div>
+                            </div>
+                            <div class="p-3">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-7">
+                                        <div style="position:relative;height:280px;">
+                                            <canvas id="l1m-kb-usage-chart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div style="position:relative;height:280px;display:flex;align-items:center;justify-content:center;">
+                                            <canvas id="l1m-kb-pie-chart"></canvas>
+                                        </div>
+                                        <div id="l1m-kb-pie-legend" class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size:0.75rem;"></div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm scorecard-table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align:left;min-width:140px;">Engineer</th>
+                                                <th>Closed Cases</th>
+                                                <th>KB/SOP Referred</th>
+                                                <th>KB/SOP Usage %</th>
+                                                <th style="min-width:160px;">Usage Bar</th>
+                                                <th>Assessment</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="l1m-kb-table-body">
+                                            <tr><td colspan="6" class="text-center text-muted py-3">Upload data to see KB/SOP usage.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── Section 4: All Feedback (L1 / L2 / SME) ── -->
+                        <div class="card mb-2" style="border:1.5px solid var(--border-strong);border-radius:16px;overflow:hidden;">
+                            <div style="background:linear-gradient(135deg,#7C3AED 0%,#A855F7 60%,#C084FC 100%);padding:14px 20px;">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-chat-dots-fill" style="color:#fff;font-size:1.1rem;"></i>
+                                        <span style="color:#fff;font-size:1rem;font-weight:800;letter-spacing:-0.2px;">4. Feedback Analysis — L1 / L2 / SME (% of Calls with Feedback &amp; Comments)</span>
+                                    </div>
+                                    <!-- Feedback Type Filter -->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <label style="color:rgba(255,255,255,0.85);font-size:0.75rem;font-weight:600;white-space:nowrap;margin-bottom:0;">Filter by Feedback Type:</label>
+                                        <select id="l1m-fb-type-filter" onchange="renderL1TeamMetrics()" style="font-size:0.78rem;padding:4px 10px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.15);color:#fff;cursor:pointer;min-width:110px;">
+                                            <option value="All" style="color:#1e293b;">All Types</option>
+                                            <option value="L1" style="color:#1e293b;">L1 Only</option>
+                                            <option value="L2" style="color:#1e293b;">L2 Only</option>
+                                            <option value="SME" style="color:#1e293b;">SME Only</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:3px;">Based on Column AA "Feedback To" and Column AB "Feedback" — all feedback types (L1, L2, SME). Use filter above to drill into a specific type.</div>
+                            </div>
+                            <div class="p-3">
+                                <!-- Insight banner -->
+                                <div id="l1m-l2fb-insight" class="mb-3" style="background:linear-gradient(135deg,#F5F3FF 0%,#EDE9FE 100%);border:1.5px solid #C4B5FD;border-left:5px solid #7C3AED;border-radius:12px;padding:14px 18px;">
+                                    <div class="fw-bold mb-1" style="font-size:0.88rem;color:#6D28D9;">
+                                        <i class="bi bi-info-circle-fill me-1"></i>Feedback Insight
+                                    </div>
+                                    <div id="l1m-l2fb-insight-content" style="font-size:0.82rem;color:#374151;line-height:1.7;">
+                                        <span class="text-muted">Upload and process data to see insights.</span>
+                                    </div>
+                                </div>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-7">
+                                        <div style="position:relative;height:280px;">
+                                            <canvas id="l1m-l2fb-bar-chart"></canvas>
+                                        </div>
+                                        <div class="text-center text-muted mt-1" style="font-size:0.72rem;" id="l1m-l2fb-chart-label">Feedback Cases per Engineer</div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div style="position:relative;height:260px;display:flex;align-items:center;justify-content:center;">
+                                            <canvas id="l1m-l2fb-pie-chart"></canvas>
+                                        </div>
+                                        <div id="l1m-l2fb-pie-legend" class="d-flex flex-wrap gap-2 mt-2 justify-content-center" style="font-size:0.75rem;"></div>
+                                    </div>
+                                </div>
+                                <!-- Summary table per engineer -->
+                                <div class="table-responsive mb-3">
+                                    <table class="table table-sm scorecard-table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align:left;min-width:140px;">Engineer (Feedback To)</th>
+                                                <th>Total Closed</th>
+                                                <th>Feedback Cases</th>
+                                                <th>Feedback %</th>
+                                                <th style="min-width:140px;">% Bar</th>
+                                                <th>L1</th><th>L2</th><th>SME</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="l1m-l2fb-table-body">
+                                            <tr><td colspan="8" class="text-center text-muted py-3">Upload data to see feedback metrics.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- Drill-down: All Feedback Comments -->
+                                <div style="border-top:2px dashed var(--border-color);padding-top:14px;">
+                                    <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+                                        <div style="font-size:0.88rem;font-weight:700;color:#6D28D9;">
+                                            <i class="bi bi-card-text me-1"></i>All Feedback Comments (Drill-Down)
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <input type="text" id="l1m-fb-comment-search" placeholder="Search comments / engineer / case…" oninput="filterFeedbackComments()" style="font-size:0.75rem;padding:4px 10px;border:1.5px solid var(--border-color);border-radius:8px;min-width:220px;background:var(--bg-card);color:var(--text-primary);">
+                                            <button class="btn btn-sm btn-success" onclick="exportFeedbackCommentsExcel()" style="font-size:0.75rem;padding:4px 12px;font-weight:600;">
+                                                <i class="bi bi-file-earmark-excel me-1"></i>Export Comments
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm scorecard-table mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th style="min-width:100px;">Case ID</th>
+                                                    <th style="min-width:200px;text-align:left;">Title</th>
+                                                    <th style="min-width:120px;">Owner</th>
+                                                    <th style="min-width:120px;">Feedback To</th>
+                                                    <th style="min-width:80px;">Type</th>
+                                                    <th style="min-width:300px;text-align:left;">Feedback Comment</th>
+                                                    <th style="min-width:100px;">Category</th>
+                                                    <th style="min-width:100px;">Resolved Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="l1m-fb-comments-body">
+                                                <tr><td colspan="8" class="text-center text-muted py-3">Upload data to see feedback comments.</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div id="l1m-fb-comments-count" style="font-size:0.72rem;color:#6B7280;margin-top:6px;text-align:right;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- /p-3 -->
+                </div><!-- /view-l1metrics -->
+
                 <div class="tab-pane fade" id="view-highpriority" role="tabpanel">
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
@@ -3745,6 +4040,14 @@
                     if (analysisMode === 'closed') requestAnimationFrame(() => renderResolutionReview());
                 });
             }
+
+            // L1 Team Metrics tab: render when tab is shown
+            const l1MetricsTabEl = document.getElementById('view-l1metrics-tab');
+            if (l1MetricsTabEl) {
+                l1MetricsTabEl.addEventListener('shown.bs.tab', () => {
+                    if (analysisMode === 'closed') requestAnimationFrame(() => renderL1TeamMetrics());
+                });
+            }
             
             // View toggle buttons
             document.getElementById('list-view-btn').addEventListener('click', () => {
@@ -3974,6 +4277,16 @@
                 }
                 return possibleNames[0];
             };
+            // Exact-match variant — only matches header that equals the search name (trimmed, case-insensitive)
+            const findColExact = (possibleNames, fallbackPartial) => {
+                for (const name of possibleNames) {
+                    const found = headers.find(h => h && h.toString().trim().toLowerCase() === name.toLowerCase());
+                    if (found) return found;
+                }
+                // Fall back to partial match with the given names if no exact hit
+                if (fallbackPartial) return findCol(fallbackPartial);
+                return possibleNames[0];
+            };
 
             // New column structure (A–AK):
             // A-SLNO B-Record ID C-Title D-Owner E-Submitted By F-Customer Name
@@ -4003,8 +4316,8 @@
                 srService: findCol(['SR Service', 'SR Service Type']),
                 internalRefId: findCol(['Internal Reference ID', 'Internal Ref']),
                 wasKBReferred: findCol(['Was KB Referred', 'KB Referred']),
-                feedbackTo: findCol(['Feedback To', 'Feedback Recipient']),
-                feedback: findCol(['Feedback', 'Customer Feedback']),
+                feedbackTo: findColExact(['Feedback To', 'FeedbackTo', 'Feedback Recipient'], ['Feedback To', 'Feedback Recipient']),
+                feedback:   findColExact(['Feedback', 'Feedback Comment', 'FeedbackComment'], ['Feedback Comment', 'Customer Feedback']),
                 srHoursDeducted: findCol(['SR Hours Deducted', 'Hours Deducted']),
                 oopApplied: findCol(['OOP Applied', 'OOP']),
                 problemStatement: findCol(['Requirement / Problem Statement', 'Problem Statement', 'Requirement']),
@@ -4353,6 +4666,9 @@
                     wasKBReferred:      (row[colMap.wasKBReferred]     || '').toString().trim(),
                     problemStatement:   (row[colMap.problemStatement]  || '').toString().trim(),
                     resolutionSteps:    (row[colMap.resolutionSteps]   || '').toString().trim(),
+                    // L1 Feedback fields (Cols AA, AB)
+                    feedbackTo:         (row[colMap.feedbackTo]        || '').toString().trim(),
+                    feedback:           (row[colMap.feedback]          || '').toString().trim(),
                     _raw: row
                 };
             }).filter(row => row !== null);
@@ -4699,10 +5015,7 @@
 
             // Helper: is this record flagged as SOP/KB used?
             // Accepts: Yes / Y / TRUE / 1 / yes / y / true  → true
-            const isSOP = (val) => {
-                const v = (val || '').toString().trim().toLowerCase();
-                return v === 'yes' || v === 'y' || v === 'true' || v === '1';
-            };
+            const isSOP = (val) => (val||'').toString().trim().toLowerCase() === 'yes';
 
             // ── Aggregate by resolution code ──────────────────────────────
             const rcMap = {};
@@ -6136,6 +6449,7 @@
             const perfTrendTabBtn = document.getElementById('view-perftrend-tab');
             const catAnalysisTabBtn = document.getElementById('view-catanalysis-tab');
             const rcReviewTabBtn = document.getElementById('view-resolutionreview-tab');
+            const l1MetricsTabBtn = document.getElementById('view-l1metrics-tab');
 
             if (mode === 'closed') {
                 if (detailedTabLi)  detailedTabLi.style.display  = 'none';
@@ -6144,6 +6458,7 @@
                 if (perfTrendTabBtn)   perfTrendTabBtn.style.display   = '';
                 if (catAnalysisTabBtn) catAnalysisTabBtn.style.display = '';
                 if (rcReviewTabBtn)    rcReviewTabBtn.style.display    = '';
+                if (l1MetricsTabBtn)   l1MetricsTabBtn.style.display   = '';
                 // Switch active tab to Dashboard View if one of the hidden tabs is active
                 const activePanes = ['view-detailed', 'view-opencases', 'view-highpriority'];
                 const anyHiddenActive = activePanes.some(id => {
@@ -6164,6 +6479,7 @@
                 if (perfTrendTabBtn)   perfTrendTabBtn.style.display   = 'none';
                 if (catAnalysisTabBtn) catAnalysisTabBtn.style.display = 'none';
                 if (rcReviewTabBtn)    rcReviewTabBtn.style.display    = 'none';
+                if (l1MetricsTabBtn)   l1MetricsTabBtn.style.display   = 'none';
             }
 
             updateGlobalFilters();
@@ -6238,6 +6554,11 @@
             const rcPane = document.getElementById('view-resolutionreview');
             if (rcPane && rcPane.classList.contains('active') && analysisMode === 'closed') {
                 requestAnimationFrame(() => renderResolutionReview());
+            }
+            // If L1 Team Metrics tab is active and we are in closed mode, refresh it
+            const l1mPane = document.getElementById('view-l1metrics');
+            if (l1mPane && l1mPane.classList.contains('active') && analysisMode === 'closed') {
+                requestAnimationFrame(() => renderL1TeamMetrics());
             }
             renderDetailedDashboard();
             // HP analysis runs automatically — no API needed, instant client-side scoring
@@ -6958,6 +7279,54 @@
             new bootstrap.Modal(document.getElementById('drillDownModal')).show();
         }
 
+        // ─────────────────────────────────────────────────────────────────────
+        // L1 TEAM METRICS — shared drill-down helper (reuses existing modal)
+        // ─────────────────────────────────────────────────────────────────────
+        function openL1DrillDown(title, data, colsOverride) {
+            const cols = colsOverride || [
+                { key: 'incidentId',          label: 'Case ID' },
+                { key: 'title',               label: 'Title' },
+                { key: 'owner',               label: 'Owner' },
+                { key: 'assignmentLevel',     label: 'Level' },
+                { key: 'service',             label: 'Service' },
+                { key: 'supportCategory',     label: 'Category' },
+                { key: 'resolutionCode',      label: 'Resolution Code' },
+                { key: 'wasKBReferred',       label: 'KB Referred' },
+                { key: 'isSlaViolated',       label: 'SLA Violated' },
+                { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+                { key: 'closedAgingDays',     label: 'Resolution (Days)' }
+            ];
+            drillDownTitleForExport = title;
+            document.getElementById('drillDownTitle').textContent = title;
+            document.getElementById('drillDownCount').textContent = `${data.length} Case${data.length!==1?'s':''}`;
+            drillDownData = data;
+            document.getElementById('drillDownHeader').innerHTML = cols.map(c=>`<th>${c.label}</th>`).join('');
+            document.getElementById('drillDownBody').innerHTML = data.length
+                ? data.map(d => {
+                    const gIdx = processedData.findIndex(p => p.incidentId === d.incidentId);
+                    return `<tr onclick="viewCaseDetail(${gIdx})" style="cursor:pointer;">${cols.map(c => {
+                        let v = d[c.key];
+                        if (c.key==='isSlaViolated') v = v?'Yes':'No';
+                        if (c.key==='closedAgingDays') v = (typeof v==='number')?v.toFixed(1)+'d':'—';
+                        v = (v===null||v===undefined||v==='')?'—':String(v);
+                        const disp = v.length>40?v.substring(0,40)+'…':v;
+                        return `<td title="${v.replace(/"/g,"'")}">${disp}</td>`;
+                    }).join('')}</tr>`;
+                }).join('')
+                : `<tr><td colspan="${cols.length}" class="text-center text-muted py-3">No cases found.</td></tr>`;
+            drillDownExportData = data.map(d => {
+                const row = {};
+                cols.forEach(c => {
+                    let v = d[c.key];
+                    if (c.key==='isSlaViolated') v = v?'Yes':'No';
+                    if (c.key==='closedAgingDays') v = (typeof v==='number')?parseFloat(v.toFixed(1)):'';
+                    row[c.label] = (v===null||v===undefined)?'':v;
+                });
+                return row;
+            });
+            new bootstrap.Modal(document.getElementById('drillDownModal')).show();
+        }
+
         function openDrillDown(kpi, title) {
             drillDownTitleForExport = title;
             document.getElementById('drillDownTitle').textContent = title;
@@ -7242,8 +7611,7 @@
                             cls = days > 15 ? 'text-danger fw-bold' : days > 7 ? 'text-warning fw-bold' : 'text-success';
                         }
                         if (col.key === 'wasKBReferred') {
-                            const v = val.toLowerCase();
-                            cls = (v==='yes'||v==='y'||v==='true'||v==='1') ? 'text-success fw-bold' : 'text-muted';
+                            cls = val.toLowerCase() === 'yes' ? 'text-success fw-bold' : 'text-muted';
                         }
                         const display = val.length > 35 ? val.substring(0, 35) + '…' : val;
                         return `<td class="${cls}" title="${val}">${display}</td>`;
@@ -8744,7 +9112,7 @@ ${bodyHTML}
         // ─────────────────────────────────────────────────────────────────────
         function downloadResolutionReviewPDF(mode, dateStr, timeStr) {
             const closed = filteredData.filter(d => d.isClosedCase);
-            const isSOP = (val) => { const v = (val||'').toString().trim().toLowerCase(); return v==='yes'||v==='y'||v==='true'||v==='1'; };
+            const isSOP = (val) => (val||'').toString().trim().toLowerCase() === 'yes';
 
             const rcMap = {};
             closed.forEach(d => {
@@ -9005,7 +9373,7 @@ ${bodyHTML}
             const wb = XLSX.utils.book_new();
             const dateTag = new Date().toLocaleDateString().replace(/\//g,'-');
             const closed = filteredData.filter(d => d.isClosedCase);
-            const isSOP = (val) => { const v=(val||'').toString().trim().toLowerCase(); return v==='yes'||v==='y'||v==='true'||v==='1'; };
+            const isSOP = (val) => (val||'').toString().trim().toLowerCase() === 'yes';
 
             // Build RC aggregate
             const rcMap = {};
@@ -9079,6 +9447,905 @@ ${bodyHTML}
             XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rawRows.length ? rawRows : [{}]), 'Raw Closed Cases');
 
             XLSX.writeFile(wb, `Resolution_Code_Review_Export_${dateTag}.xlsx`);
+        }
+
+        // ─────────────────────────────────────────────────────────────────────
+        // L1 TEAM METRICS — chart instances
+        // ─────────────────────────────────────────────────────────────────────
+        let l1mResolvedTrendChart = null;
+        let l1mComplianceSlaChart = null;
+        let l1mCompliance15dChart = null;
+        let l1mKbUsageChart      = null;
+        let l1mKbPieChart        = null;
+        let l1mL2fbBarChart      = null;
+        let l1mL2fbPieChart      = null;
+
+        // ─────────────────────────────────────────────────────────────────────
+        // FEEDBACK COMMENTS DRILL-DOWN — cached for search filtering
+        // ─────────────────────────────────────────────────────────────────────
+        let _l1mFbCommentsCache = [];   // all comment rows after type filter
+        function filterFeedbackComments() {
+            const q = (document.getElementById('l1m-fb-comment-search')?.value || '').toLowerCase();
+            const rows = q
+                ? _l1mFbCommentsCache.filter(r =>
+                    (r.incidentId||'').toLowerCase().includes(q) ||
+                    (r.title||'').toLowerCase().includes(q) ||
+                    (r.owner||'').toLowerCase().includes(q) ||
+                    (r.feedbackTo||'').toLowerCase().includes(q) ||
+                    (r.feedback||'').toLowerCase().includes(q) ||
+                    (r.fbType||'').toLowerCase().includes(q))
+                : _l1mFbCommentsCache;
+            _renderFbCommentRows(rows);
+        }
+
+        function _renderFbCommentRows(rows) {
+            const tbody = document.getElementById('l1m-fb-comments-body');
+            const countEl = document.getElementById('l1m-fb-comments-count');
+            if (!tbody) return;
+            if (!rows.length) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-3">No feedback comments found.</td></tr>';
+                if (countEl) countEl.textContent = '';
+                return;
+            }
+            const typeColors = { L1:'#5B4FE9', L2:'#06B6D4', SME:'#10B981' };
+            tbody.innerHTML = rows.map(r => {
+                const tc = typeColors[r.fbType] || '#7C3AED';
+                const fbText = (r.feedback||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                return `<tr>
+                    <td style="font-weight:700;font-size:0.76rem;color:var(--primary);">${r.incidentId||'—'}</td>
+                    <td style="text-align:left;max-width:200px;font-size:0.76rem;" title="${(r.title||'').replace(/"/g,"'")}">${(r.title||'—').slice(0,60)}${(r.title||'').length>60?'…':''}</td>
+                    <td style="font-size:0.76rem;">${r.owner||'—'}</td>
+                    <td style="font-weight:700;font-size:0.76rem;color:${tc};">${r.feedbackTo||'—'}</td>
+                    <td><span style="background:${tc}18;color:${tc};border:1px solid ${tc}40;border-radius:6px;padding:2px 8px;font-size:0.70rem;font-weight:800;">${r.fbType||'—'}</span></td>
+                    <td style="text-align:left;font-size:0.76rem;max-width:300px;white-space:pre-wrap;word-break:break-word;">${fbText||'—'}</td>
+                    <td style="font-size:0.73rem;">${r.supportCategory||'—'}</td>
+                    <td style="font-size:0.73rem;">${r.resolvedDateDisplay||'—'}</td>
+                </tr>`;
+            }).join('');
+            if (countEl) countEl.textContent = `Showing ${rows.length} feedback comment${rows.length!==1?'s':''}.`;
+        }
+
+        function exportFeedbackCommentsExcel() {
+            if (!_l1mFbCommentsCache.length) { alert('No feedback comment data to export.'); return; }
+            const wb = XLSX.utils.book_new();
+            const dateTag = new Date().toLocaleDateString().replace(/\//g,'-');
+            const q = (document.getElementById('l1m-fb-comment-search')?.value || '').toLowerCase();
+            const rows = q
+                ? _l1mFbCommentsCache.filter(r =>
+                    (r.incidentId||'').toLowerCase().includes(q) ||
+                    (r.title||'').toLowerCase().includes(q) ||
+                    (r.owner||'').toLowerCase().includes(q) ||
+                    (r.feedbackTo||'').toLowerCase().includes(q) ||
+                    (r.feedback||'').toLowerCase().includes(q) ||
+                    (r.fbType||'').toLowerCase().includes(q))
+                : _l1mFbCommentsCache;
+            const sheetData = rows.map(r => ({
+                'Case ID': r.incidentId,
+                'Title': r.title,
+                'Owner': r.owner,
+                'Feedback To': r.feedbackTo,
+                'Feedback Type': r.fbType,
+                'Feedback Comment': r.feedback,
+                'Support Category': r.supportCategory,
+                'Service': r.service,
+                'Resolution Code': r.resolutionCode,
+                'Was KB Referred': r.wasKBReferred,
+                'Resolved Date': r.resolvedDateDisplay,
+                'Resolution (Days)': r.closedAgingDays!=null ? parseFloat(r.closedAgingDays.toFixed(1)) : ''
+            }));
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheetData.length?sheetData:[{}]), 'Feedback Comments');
+            XLSX.writeFile(wb, `Feedback_Comments_Export_${dateTag}.xlsx`);
+        }
+
+        // ─────────────────────────────────────────────────────────────────────
+        // RENDER L1 TEAM METRICS
+        // ─────────────────────────────────────────────────────────────────────
+        function renderL1TeamMetrics() {
+            const closed = filteredData.filter(d => d.isClosedCase);
+            const total  = closed.length;
+
+            // ── Helpers ───────────────────────────────────────────────────
+            // Was KB Referred is a plain Yes/No column
+            const isSOP = v => (v||'').toString().trim().toLowerCase() === 'yes';
+
+            // ── Feedback type detection ───────────────────────────────────
+            // "Feedback To" column directly contains the team name: L1, L2, SME (or variants)
+            // We normalise it to 'L1' | 'L2' | 'SME' | 'Other'
+            const detectFbType = d => {
+                const ft = (d.feedbackTo||'').toString().trim().toUpperCase();
+                if (ft === 'L1' || ft.startsWith('L1 ') || ft.includes(' L1') || ft === 'L1TEAM' || ft === 'L1 TEAM') return 'L1';
+                if (ft === 'L2' || ft.startsWith('L2 ') || ft.includes(' L2') || ft === 'L2TEAM' || ft === 'L2 TEAM') return 'L2';
+                if (ft === 'SME' || ft.startsWith('SME ') || ft.includes(' SME') || ft === 'SME TEAM') return 'SME';
+                // If feedbackTo is non-empty but unrecognised, still include it as 'Other'
+                return ft.length ? 'Other' : '';
+            };
+
+            // Active feedback-type filter from the dropdown
+            const fbTypeFilter = (document.getElementById('l1m-fb-type-filter')?.value || 'All');
+
+            // A case has feedback if Feedback To (team name) is non-empty.
+            // Feedback comment (Col AB) is shown when available but is optional.
+            const hasFeedback = d => {
+                const ft = (d.feedbackTo||'').toString().trim();
+                if (!ft.length) return false;                     // no team named → skip
+                if (fbTypeFilter === 'All') return true;
+                const t = detectFbType(d);
+                return t === fbTypeFilter || (fbTypeFilter !== 'Other' && t === 'Other');
+            };
+
+            const COLORS = ['#5B4FE9','#06B6D4','#10B981','#F59E0B','#EF4444','#7C3AED','#3B82F6','#EC4899','#14B8A6','#F97316','#8B5CF6'];
+
+            // ── Aggregate per engineer ────────────────────────────────────
+            // "Total Logged" per engineer = all cases (open+closed) matching global filters
+            const allFiltered = processedData.filter(d => {
+                if (globalFilters.l1team.length   > 0 && !globalFilters.l1team.includes(d.owner))       return false;
+                if (globalFilters.mspaccount.length>0 && !globalFilters.mspaccount.includes(d.customerName)) return false;
+                if (globalFilters.owner.length     > 0 && !globalFilters.owner.includes(d.owner))       return false;
+                if (globalFilters.submittedby.length>0 && !globalFilters.submittedby.includes(d.customerName)) return false;
+                if (globalFilters.service && d.service !== globalFilters.service)                         return false;
+                if (globalFilters.level   && d.assignmentLevel !== globalFilters.level)                  return false;
+                if (globalFilters.sla==='Violated'     && !d.isSlaViolated)  return false;
+                if (globalFilters.sla==='Non-Violated' && d.isSlaViolated)   return false;
+                return true;
+            });
+
+            const engMap = {};
+            const ensureEng = eng => {
+                if (!engMap[eng]) engMap[eng] = {
+                    logged:0, resolved:0, srClosed:0, incClosed:0, fcrCount:0,
+                    closedDays:[], slaOk:0, within15:0, kbUsed:0,
+                    fbCount:0, fbL1:0, fbL2:0, fbSME:0
+                };
+            };
+
+            // Count logged (all cases)
+            allFiltered.forEach(d => {
+                const eng = d.owner||'Unassigned';
+                ensureEng(eng);
+                engMap[eng].logged++;
+            });
+
+            // Count closed metrics
+            closed.forEach(d => {
+                const eng = d.owner||'Unassigned';
+                ensureEng(eng);
+                engMap[eng].resolved++;
+                if (d.isSR)  engMap[eng].srClosed++;
+                if (d.isINC) engMap[eng].incClosed++;
+                if (d.closedWithin24h) engMap[eng].fcrCount++;
+                if (typeof d.closedAgingDays==='number') engMap[eng].closedDays.push(d.closedAgingDays);
+                if (!d.isSlaViolated) engMap[eng].slaOk++;
+                if (d.closedAgingDays <= 15) engMap[eng].within15++;
+                if (isSOP(d.wasKBReferred)) engMap[eng].kbUsed++;
+            });
+
+            // All Feedback — grouped by feedbackTo field, type-filtered
+            closed.filter(d => hasFeedback(d)).forEach(d => {
+                const ft = (d.feedbackTo||'').toString().trim() || d.owner || 'Unassigned';
+                ensureEng(ft);
+                engMap[ft].fbCount++;
+                const t = detectFbType(d);
+                if (t==='L1') engMap[ft].fbL1++;
+                else if (t==='L2') engMap[ft].fbL2++;
+                else if (t==='SME') engMap[ft].fbSME++;
+            });
+
+            const engineers = Object.keys(engMap).sort();
+            const engData = engineers.map(eng => {
+                const e = engMap[eng];
+                const avgDays = e.closedDays.length > 0 ? (e.closedDays.reduce((s,x)=>s+x,0)/e.closedDays.length) : null;
+                const resRate  = e.logged  > 0 ? (e.resolved/e.logged*100)  : 0;
+                const slaRate  = e.resolved> 0 ? (e.slaOk/e.resolved*100)   : 0;
+                const d15Rate  = e.resolved> 0 ? (e.within15/e.resolved*100): 0;
+                const kbRate   = e.resolved> 0 ? (e.kbUsed/e.resolved*100)  : 0;
+                const fcrRate  = e.resolved> 0 ? (e.fcrCount/e.resolved*100): 0;
+                const fbRate   = e.logged  > 0 ? (e.fbCount/e.logged*100)   : 0;
+                return { eng, ...e, avgDays, resRate, slaRate, d15Rate, kbRate, fcrRate, fbRate };
+            });
+
+            // ── Overall KPI cards ─────────────────────────────────────────
+            const totalLogged   = allFiltered.length;
+            const totalResolved = total;
+            const totalKbUsed   = closed.filter(d => isSOP(d.wasKBReferred)).length;
+            const totalFb       = closed.filter(d => hasFeedback(d)).length;
+            const overallResRate= totalLogged > 0 ? (totalResolved/totalLogged*100).toFixed(1) : '0.0';
+            const overallKbRate = total > 0 ? (totalKbUsed/total*100).toFixed(1) : '0.0';
+            const overallFbRate = totalLogged > 0 ? (totalFb/totalLogged*100).toFixed(1) : '0.0';
+
+            const setEl = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+            setEl('l1m-total-logged',   totalLogged);
+            setEl('l1m-resolved-count', totalResolved);
+            setEl('l1m-resolved-pct-rec', `${overallResRate}% of total logged closed`);
+            setEl('l1m-kb-pct',   overallKbRate + '%');
+            setEl('l1m-kb-rec',   `${totalKbUsed} of ${total} closed calls used KB/SOP`);
+            setEl('l1m-l2fb-count', totalFb);
+            const fbTypeLabel = fbTypeFilter === 'All' ? 'L1/L2/SME' : fbTypeFilter;
+            setEl('l1m-l2fb-pct-rec', `${overallFbRate}% of total logged — ${totalFb} ${fbTypeLabel} feedback case(s)`);
+
+            const resolvedTag = document.getElementById('l1m-resolved-tag');
+            if (resolvedTag) {
+                const rr = parseFloat(overallResRate);
+                resolvedTag.textContent = rr >= 80 ? 'GOOD' : rr >= 60 ? 'MONITOR' : 'ATTENTION';
+                resolvedTag.className = 'kpi-status-tag ' + (rr >= 80 ? 'bg-good' : rr >= 60 ? 'bg-monitor' : 'bg-urgent');
+            }
+            const fbTag = document.getElementById('l1m-l2fb-tag');
+            if (fbTag) {
+                const lr = parseFloat(overallFbRate);
+                fbTag.textContent = lr === 0 ? 'GOOD' : lr <= 10 ? 'MONITOR' : 'REVIEW';
+                fbTag.className   = 'kpi-status-tag ' + (lr === 0 ? 'bg-good' : lr <= 10 ? 'bg-monitor' : 'bg-urgent');
+            }
+
+            // ── Section 1: Resolved Trend Chart ──────────────────────────
+            const resolvedCanvas = document.getElementById('l1m-resolved-trend-chart');
+            if (resolvedCanvas) {
+                if (l1mResolvedTrendChart) { l1mResolvedTrendChart.destroy(); l1mResolvedTrendChart = null; }
+                if (!engData.length) {
+                    resolvedCanvas.parentElement.innerHTML = '<div class="text-muted text-center py-4">No data.</div>';
+                } else {
+                    l1mResolvedTrendChart = new Chart(resolvedCanvas, {
+                        type: 'bar',
+                        data: {
+                            labels: engData.map(e => e.eng),
+                            datasets: [
+                                { label: 'Total Logged', data: engData.map(e => e.logged),   backgroundColor: 'rgba(91,79,233,0.25)', borderColor: '#5B4FE9', borderWidth:1.5, borderRadius:4, borderSkipped:false },
+                                { label: 'Resolved (Closed)', data: engData.map(e => e.resolved), backgroundColor: 'rgba(16,185,129,0.75)', borderColor:'#10B981', borderWidth:1.5, borderRadius:4, borderSkipped:false }
+                            ]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            layout: { padding: { top: 24 } },
+                            plugins: {
+                                legend: { position:'top', labels:{ font:{size:11}, boxWidth:12 } },
+                                tooltip: { callbacks: { afterLabel: ctx => ctx.datasetIndex===1 ? `Resolution Rate: ${engData[ctx.dataIndex].resRate.toFixed(1)}%` : '' } }
+                            },
+                            scales: {
+                                x: { grid:{display:false}, ticks:{font:{size:10},maxRotation:35,color:'#374151'} },
+                                y: { beginAtZero:true, grid:{color:'#f3f4f6'}, ticks:{stepSize:1,font:{size:10},color:'#6B7280'},
+                                    title:{display:true,text:'Cases',font:{size:10},color:'#9CA3AF'} }
+                            },
+                            onClick: (evt, elements) => {
+                                if (!elements.length) return;
+                                const idx = elements[0].index;
+                                const dsIdx = elements[0].datasetIndex;
+                                const eng = engData[idx].eng;
+                                const label = dsIdx === 1 ? 'Resolved' : 'All';
+                                const cases = closed.filter(d => (d.owner||'Unassigned') === eng);
+                                const title = `${eng} — ${label} Cases`;
+                                openL1DrillDown(title, label==='Resolved' ? cases : allFiltered.filter(d=>(d.owner||'Unassigned')===eng));
+                            }
+                        },
+                        plugins: [{
+                            id:'l1mResLabels',
+                            afterDatasetsDraw(chart) {
+                                const {ctx} = chart;
+                                chart.data.datasets.forEach((ds, i) => {
+                                    if (i !== 1) return; // only label resolved bars
+                                    chart.getDatasetMeta(i).data.forEach((bar, j) => {
+                                        const pct = engData[j].resRate.toFixed(0);
+                                        ctx.save();
+                                        ctx.font='bold 9px Inter,sans-serif';
+                                        ctx.fillStyle='#1e293b';
+                                        ctx.textAlign='center';
+                                        ctx.textBaseline='bottom';
+                                        ctx.fillText(pct+'%', bar.x, bar.y-2);
+                                        ctx.restore();
+                                    });
+                                });
+                            }
+                        }]
+                    });
+                }
+            }
+
+            // Section 1 Table
+            const t1 = document.getElementById('l1m-resolved-table-body');
+            if (t1) {
+                if (!engData.length) { t1.innerHTML='<tr><td colspan="8" class="text-center text-muted py-3">No data.</td></tr>'; }
+                else {
+                    const grandLogged = engData.reduce((s,e)=>s+e.logged,0);
+                    const grandRes    = engData.reduce((s,e)=>s+e.resolved,0);
+                    const avgOverall  = engData.filter(e=>e.avgDays!==null).reduce((s,e)=>s+(e.avgDays||0),0) / (engData.filter(e=>e.avgDays!==null).length||1);
+                    t1.innerHTML = engData.map(e => {
+                        const rr = e.resRate;
+                        const col = rr>=80?'#10B981':rr>=60?'#D97706':'#EF4444';
+                        const avg = e.avgDays!==null?e.avgDays.toFixed(1)+'d':'—';
+                        const avgCol = e.avgDays===null?'#6B7280':e.avgDays<=3?'#10B981':e.avgDays<=7?'#06B6D4':e.avgDays<=15?'#D97706':'#EF4444';
+                        return `<tr style="cursor:pointer;" onclick="openL1DrillDown('${e.eng.replace(/'/g,"\\'")} — Resolved Cases', filteredData.filter(d=>d.isClosedCase&&(d.owner||'Unassigned')==='${e.eng.replace(/'/g,"\\'")}'))">
+                            <td style="text-align:left;font-weight:700;border-left:3px solid ${col};padding-left:10px;">${e.eng}</td>
+                            <td>${e.logged}</td>
+                            <td><span style="font-weight:700;color:#10B981;">${e.resolved}</span></td>
+                            <td>
+                                <span style="font-weight:800;color:${col};">${rr.toFixed(1)}%</span>
+                                <div style="background:#f0f0f0;border-radius:3px;height:5px;margin-top:3px;overflow:hidden;"><div style="width:${Math.min(rr,100)}%;height:5px;background:${col};border-radius:3px;"></div></div>
+                            </td>
+                            <td>${e.srClosed}</td>
+                            <td>${e.incClosed}</td>
+                            <td>${e.fcrCount} <span style="font-size:0.68rem;color:#6B7280;">(${e.fcrRate.toFixed(0)}%)</span></td>
+                            <td style="font-weight:700;color:${avgCol};">${avg}</td>
+                        </tr>`;
+                    }).join('') + `<tr style="background:#f8f9ff;font-weight:800;">
+                        <td style="text-align:left;border-left:3px solid #5B4FE9;padding-left:10px;color:#5B4FE9;">TOTAL / AVG</td>
+                        <td>${grandLogged}</td>
+                        <td style="color:#10B981;">${grandRes}</td>
+                        <td style="color:${grandLogged>0&&(grandRes/grandLogged*100)>=80?'#10B981':'#D97706'};">${grandLogged>0?(grandRes/grandLogged*100).toFixed(1):0}%</td>
+                        <td>${engData.reduce((s,e)=>s+e.srClosed,0)}</td>
+                        <td>${engData.reduce((s,e)=>s+e.incClosed,0)}</td>
+                        <td>${engData.reduce((s,e)=>s+e.fcrCount,0)}</td>
+                        <td>${avgOverall?avgOverall.toFixed(1)+'d':'—'}</td>
+                    </tr>`;
+                }
+            }
+
+            // ── Section 2: Compliance Charts ──────────────────────────────
+            const slaCanvas = document.getElementById('l1m-compliance-sla-chart');
+            if (slaCanvas) {
+                if (l1mComplianceSlaChart) { l1mComplianceSlaChart.destroy(); l1mComplianceSlaChart=null; }
+                if (engData.length) {
+                    l1mComplianceSlaChart = new Chart(slaCanvas, {
+                        type:'bar',
+                        data:{
+                            labels: engData.map(e=>e.eng),
+                            datasets:[{
+                                label:'SLA Compliance %',
+                                data: engData.map(e=>parseFloat(e.slaRate.toFixed(1))),
+                                backgroundColor: engData.map(e=>e.slaRate>=90?'rgba(16,185,129,0.78)':e.slaRate>=70?'rgba(245,158,11,0.78)':'rgba(239,68,68,0.78)'),
+                                borderRadius:5, borderSkipped:false
+                            }]
+                        },
+                        options:{
+                            responsive:true, maintainAspectRatio:false,
+                            layout:{padding:{top:22}},
+                            plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>` SLA OK: ${ctx.parsed.y}%`}}},
+                            scales:{
+                                x:{grid:{display:false},ticks:{font:{size:9},maxRotation:35,color:'#374151'}},
+                                y:{beginAtZero:true,max:100,grid:{color:'#f3f4f6'},ticks:{font:{size:10},color:'#6B7280'},
+                                    title:{display:true,text:'%',font:{size:10},color:'#9CA3AF'}}
+                            },
+                            onClick: (evt, elements) => {
+                                if (!elements.length) return;
+                                const eng = engData[elements[0].index].eng;
+                                const cases = closed.filter(d=>(d.owner||'Unassigned')===eng);
+                                openL1DrillDown(`${eng} — Compliance Drill-Down`, cases, [
+                                    {key:'incidentId',label:'Case ID'},{key:'title',label:'Title'},{key:'owner',label:'Owner'},
+                                    {key:'service',label:'Service'},{key:'isSlaViolated',label:'SLA Violated'},
+                                    {key:'closedAgingDays',label:'Resolution (Days)'},{key:'resolvedDateDisplay',label:'Resolved Date'}
+                                ]);
+                            }
+                        },
+                        plugins:[{id:'slaLbl',afterDatasetsDraw(c){
+                            const {ctx}=c;
+                            c.getDatasetMeta(0).data.forEach((bar,j)=>{
+                                const v=engData[j].slaRate.toFixed(0)+'%';
+                                ctx.save();ctx.font='bold 9px Inter,sans-serif';ctx.fillStyle='#1e293b';
+                                ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText(v,bar.x,bar.y-2);ctx.restore();
+                            });
+                        }}]
+                    });
+                } else { slaCanvas.parentElement.innerHTML='<div class="text-muted text-center py-4">No data.</div>'; }
+            }
+
+            const d15Canvas = document.getElementById('l1m-compliance-15d-chart');
+            if (d15Canvas) {
+                if (l1mCompliance15dChart) { l1mCompliance15dChart.destroy(); l1mCompliance15dChart=null; }
+                if (engData.length) {
+                    l1mCompliance15dChart = new Chart(d15Canvas, {
+                        type:'bar',
+                        data:{
+                            labels: engData.map(e=>e.eng),
+                            datasets:[{
+                                label:'Closed ≤15 Days %',
+                                data: engData.map(e=>parseFloat(e.d15Rate.toFixed(1))),
+                                backgroundColor: engData.map(e=>e.d15Rate>=80?'rgba(6,182,212,0.78)':e.d15Rate>=60?'rgba(245,158,11,0.78)':'rgba(239,68,68,0.78)'),
+                                borderRadius:5, borderSkipped:false
+                            }]
+                        },
+                        options:{
+                            responsive:true, maintainAspectRatio:false,
+                            layout:{padding:{top:22}},
+                            plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>` ≤15 Days: ${ctx.parsed.y}%`}}},
+                            scales:{
+                                x:{grid:{display:false},ticks:{font:{size:9},maxRotation:35,color:'#374151'}},
+                                y:{beginAtZero:true,max:100,grid:{color:'#f3f4f6'},ticks:{font:{size:10},color:'#6B7280'},
+                                    title:{display:true,text:'%',font:{size:10},color:'#9CA3AF'}}
+                            },
+                            onClick: (evt, elements) => {
+                                if (!elements.length) return;
+                                const eng = engData[elements[0].index].eng;
+                                const cases = closed.filter(d=>(d.owner||'Unassigned')===eng && typeof d.closedAgingDays==='number' && d.closedAgingDays<=15);
+                                openL1DrillDown(`${eng} — Closed ≤15 Days`, cases);
+                            }
+                        },
+                        plugins:[{id:'d15Lbl',afterDatasetsDraw(c){
+                            const {ctx}=c;
+                            c.getDatasetMeta(0).data.forEach((bar,j)=>{
+                                const v=engData[j].d15Rate.toFixed(0)+'%';
+                                ctx.save();ctx.font='bold 9px Inter,sans-serif';ctx.fillStyle='#1e293b';
+                                ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText(v,bar.x,bar.y-2);ctx.restore();
+                            });
+                        }}]
+                    });
+                } else { d15Canvas.parentElement.innerHTML='<div class="text-muted text-center py-4">No data.</div>'; }
+            }
+
+            // Section 2 Table
+            const t2 = document.getElementById('l1m-compliance-table-body');
+            if (t2) {
+                if (!engData.length) { t2.innerHTML='<tr><td colspan="9" class="text-center text-muted py-3">No data.</td></tr>'; }
+                else {
+                    t2.innerHTML = engData.map(e => {
+                        const sc = e.slaRate>=90?'#10B981':e.slaRate>=70?'#D97706':'#EF4444';
+                        const dc = e.d15Rate>=80?'#06B6D4':e.d15Rate>=60?'#D97706':'#EF4444';
+                        const avg = e.avgDays!==null?e.avgDays.toFixed(1):'—';
+                        const avgCol = e.avgDays===null?'#6B7280':e.avgDays<=3?'#10B981':e.avgDays<=7?'#06B6D4':e.avgDays<=15?'#D97706':'#EF4444';
+                        return `<tr style="cursor:pointer;" onclick="openL1DrillDown('${e.eng.replace(/'/g,"\\'")} — Compliance Cases', filteredData.filter(d=>d.isClosedCase&&(d.owner||'Unassigned')==='${e.eng.replace(/'/g,"\\'")}'), [{key:'incidentId',label:'Case ID'},{key:'title',label:'Title'},{key:'owner',label:'Owner'},{key:'service',label:'Service'},{key:'isSlaViolated',label:'SLA Violated'},{key:'closedAgingDays',label:'Resolution (Days)'},{key:'wasKBReferred',label:'KB Referred'},{key:'resolvedDateDisplay',label:'Resolved Date'}])">
+                            <td style="text-align:left;font-weight:700;border-left:3px solid ${sc};padding-left:10px;">${e.eng}</td>
+                            <td>${e.resolved}</td>
+                            <td>${e.slaOk}</td>
+                            <td><span style="font-weight:800;color:${sc};">${e.slaRate.toFixed(1)}%</span></td>
+                            <td>${e.within15}</td>
+                            <td><span style="font-weight:800;color:${dc};">${e.d15Rate.toFixed(1)}%</span></td>
+                            <td>${e.fcrCount}</td>
+                            <td><span style="font-weight:700;color:#06B6D4;">${e.fcrRate.toFixed(1)}%</span></td>
+                            <td style="font-weight:700;color:${avgCol};">${avg}</td>
+                        </tr>`;
+                    }).join('');
+                }
+            }
+
+            // ── Section 3: KB/SOP Usage Charts ────────────────────────────
+            const kbCanvas = document.getElementById('l1m-kb-usage-chart');
+            if (kbCanvas) {
+                if (l1mKbUsageChart) { l1mKbUsageChart.destroy(); l1mKbUsageChart=null; }
+                if (engData.length) {
+                    l1mKbUsageChart = new Chart(kbCanvas, {
+                        type:'bar',
+                        data:{
+                            labels: engData.map(e=>e.eng),
+                            datasets:[
+                                {label:'KB/SOP Used', data:engData.map(e=>e.kbUsed), backgroundColor:'rgba(6,182,212,0.75)', borderRadius:4, borderSkipped:false},
+                                {label:'Not Used',    data:engData.map(e=>e.resolved-e.kbUsed), backgroundColor:'rgba(209,213,219,0.55)', borderRadius:4, borderSkipped:false}
+                            ]
+                        },
+                        options:{
+                            responsive:true, maintainAspectRatio:false,
+                            layout:{padding:{top:22}},
+                            plugins:{
+                                legend:{position:'top',labels:{font:{size:11},boxWidth:12}},
+                                tooltip:{mode:'index',intersect:false}
+                            },
+                            scales:{
+                                x:{stacked:true,grid:{display:false},ticks:{font:{size:9},maxRotation:35,color:'#374151'}},
+                                y:{stacked:true,beginAtZero:true,grid:{color:'#f3f4f6'},ticks:{stepSize:1,font:{size:10},color:'#6B7280'}}
+                            },
+                            onClick: (evt, elements) => {
+                                if (!elements.length) return;
+                                const idx = elements[0].index;
+                                const dsIdx = elements[0].datasetIndex;
+                                const eng = engData[idx].eng;
+                                const isKB = dsIdx === 0;
+                                const kbCases = closed.filter(d => (d.owner||'Unassigned')===eng && (d.wasKBReferred||'').toLowerCase()===(isKB?'yes':'no'));
+                                openL1DrillDown(`${eng} — KB/SOP ${isKB?'Referred':'Not Referred'}`, kbCases, [
+                                    {key:'incidentId',label:'Case ID'},{key:'title',label:'Title'},{key:'owner',label:'Owner'},
+                                    {key:'service',label:'Service'},{key:'supportCategory',label:'Category'},
+                                    {key:'wasKBReferred',label:'KB Referred'},{key:'resolutionCode',label:'Resolution Code'},
+                                    {key:'resolvedDateDisplay',label:'Resolved Date'},{key:'closedAgingDays',label:'Resolution (Days)'}
+                                ]);
+                            }
+                        },
+                        plugins:[{id:'kbLbl',afterDatasetsDraw(c){
+                            const {ctx}=c;
+                            c.data.datasets.forEach((ds,i)=>{
+                                if(i!==0)return;
+                                c.getDatasetMeta(i).data.forEach((bar,j)=>{
+                                    const pct=engData[j].kbRate.toFixed(0)+'%';
+                                    ctx.save();ctx.font='bold 9px Inter,sans-serif';ctx.fillStyle='#1e293b';
+                                    ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText(pct,bar.x,bar.y-2);ctx.restore();
+                                });
+                            });
+                        }}]
+                    });
+                } else { kbCanvas.parentElement.innerHTML='<div class="text-muted text-center py-4">No data.</div>'; }
+            }
+
+            const kbPieCanvas = document.getElementById('l1m-kb-pie-chart');
+            if (kbPieCanvas) {
+                if (l1mKbPieChart) { l1mKbPieChart.destroy(); l1mKbPieChart=null; }
+                const kbTotal   = closed.filter(d=>isSOP(d.wasKBReferred)).length;
+                const kbNoTotal = total - kbTotal;
+                if (total > 0) {
+                    l1mKbPieChart = new Chart(kbPieCanvas, {
+                        type:'doughnut',
+                        data:{
+                            labels:['KB/SOP Referred','Not Referred'],
+                            datasets:[{data:[kbTotal,kbNoTotal], backgroundColor:['rgba(6,182,212,0.85)','rgba(209,213,219,0.65)'], borderWidth:2, borderColor:'#fff', hoverOffset:8}]
+                        },
+                        options:{responsive:true, maintainAspectRatio:false, cutout:'60%',
+                            plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} (${total>0?(ctx.parsed/total*100).toFixed(1):0}%)`}}}}
+                    });
+                    const leg = document.getElementById('l1m-kb-pie-legend');
+                    if (leg) leg.innerHTML = `
+                        <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#06B6D4;flex-shrink:0;"></span><span>KB/SOP Used: ${kbTotal} (${(kbTotal/total*100).toFixed(1)}%)</span></span>
+                        <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#D1D5DB;flex-shrink:0;"></span><span>Not Used: ${kbNoTotal} (${(kbNoTotal/total*100).toFixed(1)}%)</span></span>`;
+                }
+            }
+
+            // Section 3 Table
+            const t3 = document.getElementById('l1m-kb-table-body');
+            if (t3) {
+                if (!engData.length) { t3.innerHTML='<tr><td colspan="6" class="text-center text-muted py-3">No data.</td></tr>'; }
+                else {
+                    t3.innerHTML = engData.map((e,i) => {
+                        const kc = e.kbRate>=80?'#10B981':e.kbRate>=50?'#06B6D4':e.kbRate>=25?'#D97706':'#EF4444';
+                        const assess = e.kbRate>=80?'<span style="color:#065F46;background:rgba(16,185,129,0.1);border-radius:6px;padding:2px 8px;font-size:0.72rem;font-weight:700;">Strong KB Usage</span>'
+                            :e.kbRate>=50?'<span style="color:#0369A1;background:rgba(6,182,212,0.1);border-radius:6px;padding:2px 8px;font-size:0.72rem;font-weight:700;">Moderate Usage</span>'
+                            :e.kbRate>=25?'<span style="color:#B45309;background:rgba(245,158,11,0.1);border-radius:6px;padding:2px 8px;font-size:0.72rem;font-weight:700;">Needs Improvement</span>'
+                            :'<span style="color:#DC2626;background:rgba(239,68,68,0.1);border-radius:6px;padding:2px 8px;font-size:0.72rem;font-weight:700;">KB Not Used</span>';
+                        return `<tr style="cursor:pointer;" onclick="openL1DrillDown('${e.eng.replace(/'/g,"\\'")} — KB/SOP Usage', filteredData.filter(d=>d.isClosedCase&&(d.owner||'Unassigned')==='${e.eng.replace(/'/g,"\\'")}'), [{key:'incidentId',label:'Case ID'},{key:'title',label:'Title'},{key:'owner',label:'Owner'},{key:'service',label:'Service'},{key:'supportCategory',label:'Category'},{key:'wasKBReferred',label:'KB Referred'},{key:'resolutionCode',label:'Resolution Code'},{key:'resolvedDateDisplay',label:'Resolved Date'},{key:'closedAgingDays',label:'Resolution (Days)'}])">
+                            <td style="text-align:left;font-weight:700;border-left:3px solid ${COLORS[i%COLORS.length]};padding-left:10px;">${e.eng}</td>
+                            <td>${e.resolved}</td>
+                            <td><span style="font-weight:700;color:#06B6D4;">${e.kbUsed}</span></td>
+                            <td><span style="font-weight:800;color:${kc};">${e.kbRate.toFixed(1)}%</span></td>
+                            <td>
+                                <div style="background:#f0f0f0;border-radius:4px;height:8px;overflow:hidden;">
+                                    <div style="width:${Math.min(e.kbRate,100)}%;height:8px;background:${kc};border-radius:4px;"></div>
+                                </div>
+                            </td>
+                            <td>${assess}</td>
+                        </tr>`;
+                    }).join('');
+                }
+            }
+
+            // ── Section 4: All Feedback Charts, Summary Table & Comments ─
+            const fbMap = {};
+            // Collect all feedback cases (type-filtered via hasFeedback)
+            const allFbCases = closed.filter(d => hasFeedback(d));
+            allFbCases.forEach(d => {
+                const ft = (d.feedbackTo||'').toString().trim() || d.owner || 'Unassigned';
+                if (!fbMap[ft]) fbMap[ft] = { count:0, fbL1:0, fbL2:0, fbSME:0, totalLogged:0 };
+                fbMap[ft].count++;
+                const t = detectFbType(d);
+                if (t==='L1') fbMap[ft].fbL1++;
+                else if (t==='L2') fbMap[ft].fbL2++;
+                else if (t==='SME') fbMap[ft].fbSME++;
+            });
+            // Fill totalLogged per feedbackTo from allFiltered
+            allFiltered.forEach(d => {
+                const eng = d.owner||'Unassigned';
+                if (!fbMap[eng]) fbMap[eng] = { count:0, fbL1:0, fbL2:0, fbSME:0, totalLogged:0 };
+                fbMap[eng].totalLogged++;
+            });
+            const fbRows = Object.entries(fbMap).sort((a,b)=>b[1].count-a[1].count);
+
+            // Update chart label
+            const chartLabel = document.getElementById('l1m-l2fb-chart-label');
+            if (chartLabel) chartLabel.textContent = fbTypeFilter==='All' ? 'All Feedback Cases per Engineer (L1/L2/SME)' : `${fbTypeFilter} Feedback Cases per Engineer`;
+
+            // ── Insight banner ────────────────────────────────────────────
+            const insightEl = document.getElementById('l1m-l2fb-insight-content');
+            if (insightEl) {
+                if (!allFbCases.length) {
+                    insightEl.innerHTML = '<span style="color:#10B981;font-weight:600;">✅ No feedback cases found in current filter.</span>';
+                } else {
+                    const topEng = fbRows.find(([,v])=>v.count>0);
+                    const engCount = fbRows.filter(([,v])=>v.count>0).length;
+                    const l1c = allFbCases.filter(d=>detectFbType(d)==='L1').length;
+                    const l2c = allFbCases.filter(d=>detectFbType(d)==='L2').length;
+                    const smc = allFbCases.filter(d=>detectFbType(d)==='SME').length;
+                    let html = `<p style="margin:0 0 5px 0;"><b>${totalFb}</b> feedback case(s) across <b>${engCount}</b> engineer(s) — <b>${overallFbRate}%</b> of total logged. `;
+                    html += `Breakdown: <span style="color:#5B4FE9;font-weight:700;">L1: ${l1c}</span> · <span style="color:#06B6D4;font-weight:700;">L2: ${l2c}</span> · <span style="color:#10B981;font-weight:700;">SME: ${smc}</span></p>`;
+                    if (topEng) html += `<p style="margin:0 0 4px 0;color:#7C3AED;"><b>Top: ${topEng[0]}</b> — ${topEng[1].count} feedback case(s) (${topEng[1].totalLogged>0?(topEng[1].count/topEng[1].totalLogged*100).toFixed(1):0}% of their logged).</p>`;
+                    const samples = allFbCases.filter(d=>(d.feedback||'').trim()).slice(0,3);
+                    if (samples.length) html += `<p style="margin:4px 0 0 0;font-size:0.78rem;color:#6B7280;"><b>Sample comments:</b> ${samples.map(d=>'"'+(d.feedback||'').slice(0,80)+((d.feedback||'').length>80?'…':'')+'"').join(' · ')}</p>`;
+                    insightEl.innerHTML = html;
+                }
+            }
+
+            // ── Bar chart ─────────────────────────────────────────────────
+            const fbBarCanvas = document.getElementById('l1m-l2fb-bar-chart');
+            if (fbBarCanvas) {
+                if (l1mL2fbBarChart) { l1mL2fbBarChart.destroy(); l1mL2fbBarChart=null; }
+                if (fbRows.length && totalFb > 0) {
+                    const visRows = fbRows.filter(([,v])=>v.count>0);
+                    const fbEngLabels = visRows.map(([k])=>k);
+                    const makeDs = (label, key, color) => ({
+                        label, data: visRows.map(([,v])=>v[key]||0),
+                        backgroundColor: color, borderRadius:4, borderSkipped:false, stack:'fb'
+                    });
+                    l1mL2fbBarChart = new Chart(fbBarCanvas, {
+                        type:'bar',
+                        data:{ labels:fbEngLabels, datasets:[
+                            makeDs('L1','fbL1','rgba(91,79,233,0.80)'),
+                            makeDs('L2','fbL2','rgba(6,182,212,0.80)'),
+                            makeDs('SME','fbSME','rgba(16,185,129,0.80)')
+                        ]},
+                        options:{
+                            indexAxis:'y', responsive:true, maintainAspectRatio:false,
+                            layout:{padding:{right:36}},
+                            plugins:{
+                                legend:{position:'top',labels:{font:{size:10},boxWidth:10}},
+                                tooltip:{mode:'index',intersect:false}
+                            },
+                            scales:{
+                                x:{stacked:true,beginAtZero:true,grid:{color:'#f3f4f6'},ticks:{stepSize:1,font:{size:10},color:'#6B7280'}},
+                                y:{stacked:true,grid:{display:false},ticks:{font:{size:10},color:'#374151'}}
+                            },
+                            onClick: (evt, elements) => {
+                                if (!elements.length) return;
+                                const idx = elements[0].index;
+                                const visRows = fbRows.filter(([,v])=>v.count>0);
+                                const ft = visRows[idx][0];
+                                const fbCases = closed.filter(d => hasFeedback(d) && ((d.feedbackTo||'').toString().trim()||d.owner||'Unassigned')===ft);
+                                openL1DrillDown(`Feedback → ${ft}`, fbCases, [
+                                    {key:'incidentId',label:'Case ID'},{key:'title',label:'Title'},{key:'owner',label:'Owner'},
+                                    {key:'feedbackTo',label:'Feedback To'},{key:'feedback',label:'Feedback Comment'},
+                                    {key:'service',label:'Service'},{key:'supportCategory',label:'Category'},
+                                    {key:'wasKBReferred',label:'KB Referred'},{key:'resolvedDateDisplay',label:'Resolved Date'}
+                                ]);
+                            }
+                        },
+                        plugins:[{id:'fbLbl',afterDatasetsDraw(c){
+                            const{ctx}=c;
+                            // Only label the last dataset (totals on right)
+                            const totals = visRows.map(([,v])=>v.count);
+                            c.getDatasetMeta(2).data.forEach((bar,j)=>{
+                                if(!totals[j]) return;
+                                ctx.save();ctx.font='bold 9px Inter,sans-serif';ctx.fillStyle='#1e293b';
+                                ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText(totals[j],bar.x+4,bar.y);ctx.restore();
+                            });
+                        }}]
+                    });
+                } else {
+                    fbBarCanvas.parentElement.innerHTML='<div class="text-muted text-center py-5"><i class="bi bi-check2-circle" style="font-size:2rem;color:#10B981;opacity:0.5;"></i><div class="mt-2 small">No feedback data in current filter.</div></div>';
+                }
+            }
+
+            // ── Doughnut pie ──────────────────────────────────────────────
+            const fbPieCanvas = document.getElementById('l1m-l2fb-pie-chart');
+            if (fbPieCanvas) {
+                if (l1mL2fbPieChart) { l1mL2fbPieChart.destroy(); l1mL2fbPieChart=null; }
+                const l1c = allFbCases.filter(d=>detectFbType(d)==='L1').length;
+                const l2c = allFbCases.filter(d=>detectFbType(d)==='L2').length;
+                const smc = allFbCases.filter(d=>detectFbType(d)==='SME').length;
+                if (totalFb > 0) {
+                    l1mL2fbPieChart = new Chart(fbPieCanvas, {
+                        type:'doughnut',
+                        data:{ labels:['L1','L2','SME'], datasets:[{
+                            data:[l1c,l2c,smc],
+                            backgroundColor:['rgba(91,79,233,0.85)','rgba(6,182,212,0.85)','rgba(16,185,129,0.85)'],
+                            borderWidth:2, borderColor:'#fff', hoverOffset:8
+                        }]},
+                        options:{responsive:true, maintainAspectRatio:false, cutout:'58%',
+                            plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.parsed} (${totalFb>0?(ctx.parsed/totalFb*100).toFixed(1):0}%)`}}}}
+                    });
+                    const leg = document.getElementById('l1m-l2fb-pie-legend');
+                    if (leg) {
+                        const typeColors=['#5B4FE9','#06B6D4','#10B981'];
+                        const typeCounts=[l1c,l2c,smc];
+                        leg.innerHTML = ['L1','L2','SME'].map((l,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:${typeColors[i]};flex-shrink:0;"></span><span style="font-size:0.72rem;color:#374151;font-weight:700;">${l}: ${typeCounts[i]} (${totalFb>0?(typeCounts[i]/totalFb*100).toFixed(1):0}%)</span></span>`).join('');
+                    }
+                }
+            }
+
+            // ── Summary table per engineer ────────────────────────────────
+            const t4 = document.getElementById('l1m-l2fb-table-body');
+            if (t4) {
+                if (!fbRows.length || totalFb === 0) {
+                    t4.innerHTML='<tr><td colspan="8" class="text-center py-4" style="color:#10B981;font-weight:600;">✅ No feedback data in current filter.</td></tr>';
+                } else {
+                    t4.innerHTML = fbRows.filter(([,v])=>v.count>0).map(([ft,v],i) => {
+                        const pct = v.totalLogged > 0 ? (v.count/v.totalLogged*100).toFixed(1) : '0.0';
+                        const pctNum = parseFloat(pct);
+                        const pctCol = pctNum===0?'#10B981':pctNum<=10?'#D97706':'#EF4444';
+                        const safeEng = ft.replace(/'/g,"\\'");
+                        return `<tr style="cursor:pointer;" onclick="openL1DrillDown('Feedback → ${safeEng}', filteredData.filter(d=>d.isClosedCase&&(d.feedbackTo||'').toString().trim()==='${safeEng}'), [{key:'incidentId',label:'Case ID'},{key:'title',label:'Title'},{key:'owner',label:'Owner'},{key:'feedbackTo',label:'Feedback To'},{key:'feedback',label:'Feedback Comment'},{key:'service',label:'Service'},{key:'supportCategory',label:'Category'},{key:'wasKBReferred',label:'KB Referred'},{key:'resolvedDateDisplay',label:'Resolved Date'}])">
+                            <td style="text-align:left;font-weight:700;border-left:3px solid ${COLORS[i%COLORS.length]};padding-left:10px;">${ft}</td>
+                            <td>${v.totalLogged}</td>
+                            <td><span style="font-weight:700;color:#7C3AED;">${v.count}</span></td>
+                            <td>
+                                <span style="font-weight:800;color:${pctCol};">${pct}%</span>
+                                <div style="background:#f0f0f0;border-radius:3px;height:5px;margin-top:3px;overflow:hidden;"><div style="width:${Math.min(pctNum,100)}%;height:5px;background:${pctCol};border-radius:3px;"></div></div>
+                            </td>
+                            <td style="min-width:130px;">
+                                <div style="background:#f0f0f0;border-radius:4px;height:8px;overflow:hidden;">
+                                    <div style="width:${Math.min(pctNum,100)}%;height:8px;background:${pctCol};border-radius:4px;"></div>
+                                </div>
+                            </td>
+                            <td><span style="font-weight:700;color:#5B4FE9;">${v.fbL1||0}</span></td>
+                            <td><span style="font-weight:700;color:#06B6D4;">${v.fbL2||0}</span></td>
+                            <td><span style="font-weight:700;color:#10B981;">${v.fbSME||0}</span></td>
+                        </tr>`;
+                    }).join('');
+                }
+            }
+
+            // ── All Feedback Comments drill-down ──────────────────────────
+            _l1mFbCommentsCache = allFbCases.map(d => ({
+                incidentId:       d.incidentId,
+                title:            d.title,
+                owner:            d.owner,
+                feedbackTo:       (d.feedbackTo||'').toString().trim() || d.owner || 'Unassigned',
+                fbType:           detectFbType(d),
+                feedback:         (d.feedback||'').toString().trim(),
+                supportCategory:  d.supportCategory,
+                service:          d.service,
+                resolutionCode:   d.resolutionCode,
+                wasKBReferred:    d.wasKBReferred,
+                resolvedDateDisplay: d.resolvedDateDisplay,
+                closedAgingDays:  d.closedAgingDays
+            })).sort((a,b)=>(a.feedbackTo||'').localeCompare(b.feedbackTo||''));
+
+            // Reset search input and render all
+            const searchInput = document.getElementById('l1m-fb-comment-search');
+            if (searchInput) searchInput.value = '';
+            _renderFbCommentRows(_l1mFbCommentsCache);
+        }
+
+        // ─────────────────────────────────────────────────────────────────────
+        // EXCEL EXPORT: L1 Team Metrics — all sections shown on screen
+        // ─────────────────────────────────────────────────────────────────────
+        function exportL1TeamMetricsExcel() {
+            if (!filteredData.length) { alert('No data to export. Upload data first.'); return; }
+            const closed = filteredData.filter(d => d.isClosedCase);
+            if (!closed.length) { alert('No closed cases in current filter.'); return; }
+
+            const wb = XLSX.utils.book_new();
+            const dateTag = new Date().toLocaleDateString().replace(/\//g,'-');
+            const isSOP = v => (v||'').toString().trim().toLowerCase() === 'yes';
+
+            // Mirror detectFbType — Feedback To column directly contains team name (L1/L2/SME)
+            const detectType = d => {
+                const ft = (d.feedbackTo||'').toString().trim().toUpperCase();
+                if (ft === 'L1' || ft.startsWith('L1 ') || ft.includes(' L1') || ft === 'L1 TEAM') return 'L1';
+                if (ft === 'L2' || ft.startsWith('L2 ') || ft.includes(' L2') || ft === 'L2 TEAM') return 'L2';
+                if (ft === 'SME' || ft.startsWith('SME ') || ft.includes(' SME') || ft === 'SME TEAM') return 'SME';
+                return ft.length ? 'Other' : '';
+            };
+            const fbTypeFilter = (document.getElementById('l1m-fb-type-filter')?.value||'All');
+            const hasFb = d => {
+                const ft = (d.feedbackTo||'').toString().trim();
+                if (!ft.length) return false;
+                if (fbTypeFilter === 'All') return true;
+                const t = detectType(d);
+                return t === fbTypeFilter || (fbTypeFilter !== 'Other' && t === 'Other');
+            };
+
+            // ── Global filter re-apply ────────────────────────────────────
+            const allFiltered = processedData.filter(d => {
+                if (globalFilters.l1team.length>0    && !globalFilters.l1team.includes(d.owner))          return false;
+                if (globalFilters.mspaccount.length>0 && !globalFilters.mspaccount.includes(d.customerName)) return false;
+                if (globalFilters.owner.length>0      && !globalFilters.owner.includes(d.owner))          return false;
+                if (globalFilters.submittedby.length>0 && !globalFilters.submittedby.includes(d.customerName)) return false;
+                if (globalFilters.service && d.service!==globalFilters.service)                            return false;
+                if (globalFilters.level   && d.assignmentLevel!==globalFilters.level)                     return false;
+                if (globalFilters.sla==='Violated'     && !d.isSlaViolated)  return false;
+                if (globalFilters.sla==='Non-Violated' && d.isSlaViolated)   return false;
+                return true;
+            });
+
+            // ── Sheet 1: L1 Team Metrics Summary ─────────────────────────
+            const engMap = {};
+            const ensure = eng => { if(!engMap[eng]) engMap[eng]={logged:0,resolved:0,srClosed:0,incClosed:0,fcrCount:0,closedDays:[],slaOk:0,within15:0,kbUsed:0,fbCount:0,fbL1:0,fbL2:0,fbSME:0}; };
+            allFiltered.forEach(d=>{const e=d.owner||'Unassigned';ensure(e);engMap[e].logged++;});
+            closed.forEach(d=>{
+                const eng=d.owner||'Unassigned'; ensure(eng);
+                engMap[eng].resolved++;
+                if(d.isSR)  engMap[eng].srClosed++;
+                if(d.isINC) engMap[eng].incClosed++;
+                if(d.closedWithin24h) engMap[eng].fcrCount++;
+                if(typeof d.closedAgingDays==='number') engMap[eng].closedDays.push(d.closedAgingDays);
+                if(!d.isSlaViolated) engMap[eng].slaOk++;
+                if(d.closedAgingDays<=15) engMap[eng].within15++;
+                if(isSOP(d.wasKBReferred)) engMap[eng].kbUsed++;
+            });
+            closed.filter(d=>hasFb(d)).forEach(d=>{
+                const ft=(d.feedbackTo||d.owner||'Unassigned').toString().trim(); ensure(ft);
+                engMap[ft].fbCount++;
+                const t=detectType(d);
+                if(t==='L1')engMap[ft].fbL1++; else if(t==='L2')engMap[ft].fbL2++; else if(t==='SME')engMap[ft].fbSME++;
+            });
+            const engRows = Object.keys(engMap).sort().map(eng => {
+                const e=engMap[eng];
+                const avg=e.closedDays.length>0?(e.closedDays.reduce((s,x)=>s+x,0)/e.closedDays.length):null;
+                return {
+                    'Engineer': eng,
+                    'Total Logged': e.logged,
+                    'Total Resolved (Closed)': e.resolved,
+                    'Resolution Rate %': e.logged>0?parseFloat((e.resolved/e.logged*100).toFixed(1)):0,
+                    'SR Closed': e.srClosed,
+                    'INC Closed': e.incClosed,
+                    'FCR Count (≤24h)': e.fcrCount,
+                    'FCR %': e.resolved>0?parseFloat((e.fcrCount/e.resolved*100).toFixed(1)):0,
+                    'Avg Resolution (Days)': avg!==null?parseFloat(avg.toFixed(1)):'',
+                    'SLA Non-Violated': e.slaOk,
+                    'SLA Compliance %': e.resolved>0?parseFloat((e.slaOk/e.resolved*100).toFixed(1)):0,
+                    'Closed ≤15 Days': e.within15,
+                    '≤15 Days %': e.resolved>0?parseFloat((e.within15/e.resolved*100).toFixed(1)):0,
+                    'KB/SOP Used': e.kbUsed,
+                    'KB/SOP Usage %': e.resolved>0?parseFloat((e.kbUsed/e.resolved*100).toFixed(1)):0,
+                    [`Total Feedback (${fbTypeFilter})`]: e.fbCount,
+                    'Feedback % of Logged': e.logged>0?parseFloat((e.fbCount/e.logged*100).toFixed(1)):0,
+                    'L1 Feedback': e.fbL1,
+                    'L2 Feedback': e.fbL2,
+                    'SME Feedback': e.fbSME
+                };
+            });
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(engRows.length?engRows:[{}]), 'L1 Team Metrics Summary');
+
+            // ── Sheet 2: All Feedback Comments (full drill-down) ──────────
+            const fbDetails = closed.filter(d=>hasFb(d)).map(d=>({
+                'Case ID': d.incidentId,
+                'Title': d.title,
+                'Owner': d.owner,
+                'Assignment Level': d.assignmentLevel,
+                'Feedback To (Col AA)': d.feedbackTo,
+                'Feedback Type': detectType(d),
+                'Feedback Comment (Col AB)': d.feedback,
+                'Support Category': d.supportCategory,
+                'Service': d.service,
+                'Customer': d.customerName,
+                'Resolution Code': d.resolutionCode,
+                'Was KB Referred': d.wasKBReferred,
+                'SLA Status': d.isSlaViolated?'Violated':'Non-Violated',
+                'Resolved Date': d.resolvedDateDisplay,
+                'Resolution (Days)': typeof d.closedAgingDays==='number'?parseFloat(d.closedAgingDays.toFixed(1)):''
+            }));
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(fbDetails.length?fbDetails:[{}]), 'All Feedback Comments');
+
+            // ── Sheet 3: KB/SOP Usage by Case ────────────────────────────
+            const kbDetails = closed.map(d=>({
+                'Case ID': d.incidentId,
+                'Title': d.title,
+                'Owner': d.owner,
+                'Assignment Level': d.assignmentLevel,
+                'Service': d.service,
+                'Support Category': d.supportCategory,
+                'Resolution Code': d.resolutionCode,
+                'Was KB Referred (Col Z)': d.wasKBReferred,
+                'KB Used (Yes/No)': isSOP(d.wasKBReferred)?'Yes':'No',
+                'SLA Status': d.isSlaViolated?'Violated':'Non-Violated',
+                'Resolved Date': d.resolvedDateDisplay,
+                'Resolution (Days)': typeof d.closedAgingDays==='number'?parseFloat(d.closedAgingDays.toFixed(1)):''
+            }));
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(kbDetails.length?kbDetails:[{}]), 'KB-SOP Usage by Case');
+
+            // ── Sheet 4: Resolved Cases Drill-Down ───────────────────────
+            const resolvedDrill = closed.map(d=>({
+                'Case ID': d.incidentId,
+                'Title': d.title,
+                'Owner': d.owner,
+                'Assignment Level': d.assignmentLevel,
+                'Type': d.isSR?'SR':d.isINC?'INC':'Other',
+                'Service': d.service,
+                'Support Category': d.supportCategory,
+                'Customer': d.customerName,
+                'Resolution Code': d.resolutionCode,
+                'Was KB Referred': d.wasKBReferred,
+                'SLA Status': d.isSlaViolated?'Violated':'Non-Violated',
+                'FCR (≤24h)': d.closedWithin24h?'Yes':'No',
+                'Closed ≤15 Days': (typeof d.closedAgingDays==='number'&&d.closedAgingDays<=15)?'Yes':'No',
+                'Resolved Date': d.resolvedDateDisplay,
+                'Resolution (Days)': typeof d.closedAgingDays==='number'?parseFloat(d.closedAgingDays.toFixed(1)):''
+            }));
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(resolvedDrill.length?resolvedDrill:[{}]), 'Resolved Cases Drill-Down');
+
+            // ── Sheet 5: Compliance Drill-Down ────────────────────────────
+            const complianceDrill = closed.map(d=>({
+                'Case ID': d.incidentId,
+                'Title': d.title,
+                'Owner': d.owner,
+                'Assignment Level': d.assignmentLevel,
+                'SLA Status': d.isSlaViolated?'Violated':'Non-Violated',
+                'Closed ≤15 Days': (typeof d.closedAgingDays==='number'&&d.closedAgingDays<=15)?'Yes':'No',
+                'FCR (≤24h)': d.closedWithin24h?'Yes':'No',
+                'Resolution (Days)': typeof d.closedAgingDays==='number'?parseFloat(d.closedAgingDays.toFixed(1)):'',
+                'Service': d.service,
+                'Support Category': d.supportCategory,
+                'Resolved Date': d.resolvedDateDisplay
+            }));
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(complianceDrill.length?complianceDrill:[{}]), 'Compliance Drill-Down');
+
+            XLSX.writeFile(wb, `L1_Team_Metrics_Export_${dateTag}.xlsx`);
         }
 
         function showLoading(show) {
