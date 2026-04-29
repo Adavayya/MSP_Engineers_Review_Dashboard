@@ -1544,7 +1544,12 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="view-l1metrics-tab" data-bs-toggle="tab" data-bs-target="#view-l1metrics" type="button" role="tab" style="display:none;">
-                        <i class="bi bi-people-fill me-1"></i>L1 Team Metrics
+                        <i class="bi bi-people-fill me-1"></i>Team Level Metrics
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="view-resolutionquality-tab" data-bs-toggle="tab" data-bs-target="#view-resolutionquality" type="button" role="tab" style="display:none;">
+                        <i class="bi bi-journal-check me-1"></i>Resolution Review
                     </button>
                 </li>
             </ul>
@@ -2802,7 +2807,7 @@
                         <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-4">
                             <div>
                                 <h5 style="color:var(--primary);font-weight:800;margin-bottom:2px;">
-                                    <i class="bi bi-people-fill me-2"></i>L1 Team Metrics
+                                    <i class="bi bi-people-fill me-2"></i>Team Level Metrics
                                 </h5>
                                 <p class="text-muted small mb-0">L1 team performance analysis — resolved call counts, compliance, KB/SOP usage, and feedback. Global filters applied. <span style="color:var(--primary);font-weight:600;"><i class="bi bi-cursor-fill me-1"></i>Click any chart bar or table row to drill down.</span></p>
                             </div>
@@ -3181,6 +3186,195 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- ═══════════════════════════════════════════════
+                     RESOLUTION REVIEW TAB PANE
+                ═══════════════════════════════════════════════ -->
+                <div class="tab-pane fade" id="view-resolutionquality" role="tabpanel">
+                    <div class="p-3">
+                        <!-- Header -->
+                        <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-4">
+                            <div>
+                                <h5 style="color:var(--primary);font-weight:800;margin-bottom:2px;">
+                                    <i class="bi bi-journal-check me-2"></i>Resolution Review
+                                </h5>
+                                <p class="text-muted small mb-0">Comprehensive assessment of documentation quality — Resolution Code, Requirement/Problem Statement, and Resolution Steps — analysed team-wise. Global filters applied. <span style="color:var(--primary);font-weight:600;"><i class="bi bi-cursor-fill me-1"></i>Click any metric or table row to drill down and export.</span></p>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm pdf-download-btn" onclick="exportResolutionQualityPDF()" style="font-size:0.78rem;padding:5px 13px;">
+                                    <i class="bi bi-file-pdf me-1"></i>PDF Export
+                                </button>
+                                <button class="btn btn-sm btn-success" onclick="exportResolutionQualityExcel()" style="font-size:0.78rem;padding:5px 13px;font-weight:600;">
+                                    <i class="bi bi-file-earmark-excel me-1"></i>Excel Export
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Purpose banner -->
+                        <div class="mb-4" style="background:linear-gradient(135deg,#EEF0FF 0%,#E0F9FF 100%);border:1.5px solid var(--border-strong);border-left:5px solid var(--primary);border-radius:14px;padding:18px 20px;">
+                            <div class="fw-bold mb-2" style="font-size:0.92rem;color:var(--primary);">
+                                <i class="bi bi-bullseye me-1" style="color:#F59E0B;"></i>Purpose &amp; Objectives
+                            </div>
+                            <div class="row g-3" style="font-size:0.82rem;color:var(--text-secondary);line-height:1.7;">
+                                <div class="col-md-4">
+                                    <div style="background:rgba(91,79,233,0.06);border-radius:8px;padding:10px 12px;border-left:3px solid var(--primary);">
+                                        <b style="color:var(--primary);">📝 Documentation Quality</b><br>
+                                        Enable teams to improve completeness of Requirement/Problem Statement and Resolution Steps fields for every closed case.
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div style="background:rgba(16,185,129,0.06);border-radius:8px;padding:10px 12px;border-left:3px solid var(--accent);">
+                                        <b style="color:var(--accent);">📚 SOP / KB Creation</b><br>
+                                        Help customers leverage this data to create Self-Resolution Knowledge Bases and Standard Operating Procedures for future use.
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div style="background:rgba(6,182,212,0.06);border-radius:8px;padding:10px 12px;border-left:3px solid var(--secondary);">
+                                        <b style="color:var(--secondary);">🤖 AI-Ready Handling</b><br>
+                                        Support the transition towards AI-driven case handling — currently managed manually. Quality data is the foundation for automation.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KPI Summary Cards -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-6 col-md-3">
+                                <div class="kpi-card" style="border-left-color:var(--primary);cursor:pointer;" onclick="rqDrillDown('total','All Closed Cases — Resolution Review')">
+                                    <span class="kpi-status-tag bg-info-tag">TOTAL</span>
+                                    <div class="kpi-title">Total Closed Cases</div>
+                                    <div class="kpi-value" id="rq-total" style="color:var(--primary);">0</div>
+                                    <div class="kpi-recommendation">All closed cases in current filter scope</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="kpi-card" style="border-left-color:#10B981;cursor:pointer;" onclick="rqDrillDown('psOk','Cases with Problem Statement Documented')">
+                                    <span class="kpi-status-tag bg-good" id="rq-ps-tag">GOOD</span>
+                                    <div class="kpi-title">Problem Statement Documented</div>
+                                    <div class="kpi-value" id="rq-ps-pct" style="color:#10B981;">0%</div>
+                                    <div class="kpi-recommendation" id="rq-ps-rec">% of cases where Requirement/Problem Statement is filled</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="kpi-card" style="border-left-color:#06B6D4;cursor:pointer;" onclick="rqDrillDown('rsOk','Cases with Resolution Steps Captured')">
+                                    <span class="kpi-status-tag bg-info-tag" id="rq-rs-tag">REVIEW</span>
+                                    <div class="kpi-title">Resolution Steps Captured</div>
+                                    <div class="kpi-value" id="rq-rs-pct" style="color:#06B6D4;">0%</div>
+                                    <div class="kpi-recommendation" id="rq-rs-rec">% of cases where Resolution Steps are clearly documented</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="kpi-card" style="border-left-color:#EF4444;cursor:pointer;" onclick="rqDrillDown('bothMissing','Cases with Both Fields Missing')">
+                                    <span class="kpi-status-tag bg-urgent" id="rq-both-tag">ACTION</span>
+                                    <div class="kpi-title">Both Fields Missing</div>
+                                    <div class="kpi-value" id="rq-both-miss" style="color:#EF4444;">0</div>
+                                    <div class="kpi-recommendation" id="rq-both-rec">Cases missing both Problem Statement AND Resolution Steps</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Team-wise Analysis Table -->
+                        <div class="card mb-4" style="border:1.5px solid var(--border-strong);border-radius:16px;overflow:hidden;">
+                            <div style="background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 60%,var(--primary-light) 100%);padding:14px 20px;">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-people-fill" style="color:#fff;font-size:1.1rem;"></i>
+                                        <span style="color:#fff;font-size:1rem;font-weight:800;letter-spacing:-0.2px;">Team-wise Documentation Quality Analysis</span>
+                                        <span class="badge ms-1" style="background:rgba(255,255,255,0.18);color:#fff;font-size:0.68rem;font-weight:600;border-radius:20px;padding:3px 10px;">Per Engineer · Closed Cases Only</span>
+                                    </div>
+                                    <button class="btn btn-sm" style="background:rgba(255,255,255,0.18);color:#fff;font-size:0.75rem;font-weight:700;border:1px solid rgba(255,255,255,0.35);" onclick="exportResolutionQualityExcel()">
+                                        <i class="bi bi-download me-1"></i>Export Table
+                                    </button>
+                                </div>
+                                <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:3px;">Click any row to drill into individual cases for that engineer</div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm scorecard-table mb-0" id="rq-team-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:left;min-width:150px;">Engineer</th>
+                                            <th>Total Closed</th>
+                                            <th>RC Specified</th>
+                                            <th>RC Fill %</th>
+                                            <th>Problem Stmt Filled</th>
+                                            <th>PS Fill %</th>
+                                            <th style="min-width:120px;">PS Quality Bar</th>
+                                            <th>Resolution Steps Filled</th>
+                                            <th>RS Fill %</th>
+                                            <th style="min-width:120px;">RS Quality Bar</th>
+                                            <th>Both Fields OK</th>
+                                            <th>Both Missing</th>
+                                            <th>Documentation Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rq-team-table-body">
+                                        <tr><td colspan="13" class="text-center text-muted py-3" style="font-size:0.82rem;">Upload data to see team-wise documentation quality.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Resolution Code × Documentation Quality Matrix -->
+                        <div class="card mb-4" style="border:1.5px solid var(--border-strong);border-radius:16px;overflow:hidden;">
+                            <div style="background:linear-gradient(135deg,#0369A1 0%,#06B6D4 60%,#22D3EE 100%);padding:14px 20px;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-grid-3x3-gap-fill" style="color:#fff;font-size:1.1rem;"></i>
+                                    <span style="color:#fff;font-size:1rem;font-weight:800;letter-spacing:-0.2px;">Resolution Code × Documentation Quality Matrix</span>
+                                </div>
+                                <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:3px;">Which resolution codes have the best/worst documentation? Click any row to drill into cases.</div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm scorecard-table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:left;min-width:180px;">Resolution Code</th>
+                                            <th>Total Cases</th>
+                                            <th>PS Filled</th>
+                                            <th>PS Fill %</th>
+                                            <th>RS Filled</th>
+                                            <th>RS Fill %</th>
+                                            <th>Both Filled</th>
+                                            <th>Both Missing</th>
+                                            <th>Doc Score</th>
+                                            <th style="min-width:120px;">AI-Readiness</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rq-rc-table-body">
+                                        <tr><td colspan="10" class="text-center text-muted py-3" style="font-size:0.82rem;">Upload data to see resolution code documentation analysis.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Key Observations & Gaps -->
+                        <div class="card mb-4" style="border:1.5px solid var(--border-strong);border-radius:16px;overflow:hidden;">
+                            <div style="background:linear-gradient(135deg,#7C3AED 0%,#A855F7 60%,#C084FC 100%);padding:14px 20px;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-binoculars-fill" style="color:#fff;font-size:1.1rem;"></i>
+                                    <span style="color:#fff;font-size:1rem;font-weight:800;letter-spacing:-0.2px;">Key Observations &amp; Gaps Across Teams</span>
+                                </div>
+                            </div>
+                            <div class="p-4" id="rq-observations-content">
+                                <span class="text-muted small">Upload and process data to see key observations.</span>
+                            </div>
+                        </div>
+
+                        <!-- Recommendations -->
+                        <div class="card mb-2" style="border:1.5px solid var(--border-strong);border-radius:16px;overflow:hidden;">
+                            <div style="background:linear-gradient(135deg,#059669 0%,#10B981 60%,#34D399 100%);padding:14px 20px;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-lightbulb-fill" style="color:#fff;font-size:1.1rem;"></i>
+                                    <span style="color:#fff;font-size:1rem;font-weight:800;letter-spacing:-0.2px;">Recommendations &amp; Improvement Suggestions</span>
+                                </div>
+                                <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:3px;">Actionable steps to improve documentation quality and enable AI-driven case resolution</div>
+                            </div>
+                            <div class="p-4" id="rq-recommendations-content">
+                                <span class="text-muted small">Upload and process data to see recommendations.</span>
+                            </div>
+                        </div>
+
+                    </div><!-- /p-3 -->
+                </div><!-- /view-resolutionquality -->
 
             </div>
         </div>
@@ -4048,6 +4242,14 @@
                     if (analysisMode === 'closed') requestAnimationFrame(() => renderL1TeamMetrics());
                 });
             }
+
+            // Resolution Review tab: render when tab is shown
+            const rqTabEl = document.getElementById('view-resolutionquality-tab');
+            if (rqTabEl) {
+                rqTabEl.addEventListener('shown.bs.tab', () => {
+                    if (analysisMode === 'closed') requestAnimationFrame(() => renderResolutionQuality());
+                });
+            }
             
             // View toggle buttons
             document.getElementById('list-view-btn').addEventListener('click', () => {
@@ -4810,6 +5012,12 @@
                     });
                 }
                 renderHighPriorityCases();
+            }
+
+            // Update Resolution Review if that tab is currently visible
+            const rqTab2 = document.getElementById('view-resolutionquality');
+            if (rqTab2 && rqTab2.classList.contains('active') && analysisMode === 'closed') {
+                requestAnimationFrame(() => renderResolutionQuality());
             }
             
             showLoading(false);
@@ -6450,6 +6658,7 @@
             const catAnalysisTabBtn = document.getElementById('view-catanalysis-tab');
             const rcReviewTabBtn = document.getElementById('view-resolutionreview-tab');
             const l1MetricsTabBtn = document.getElementById('view-l1metrics-tab');
+            const rqTabBtn = document.getElementById('view-resolutionquality-tab');
 
             if (mode === 'closed') {
                 if (detailedTabLi)  detailedTabLi.style.display  = 'none';
@@ -6459,6 +6668,7 @@
                 if (catAnalysisTabBtn) catAnalysisTabBtn.style.display = '';
                 if (rcReviewTabBtn)    rcReviewTabBtn.style.display    = '';
                 if (l1MetricsTabBtn)   l1MetricsTabBtn.style.display   = '';
+                if (rqTabBtn)          rqTabBtn.style.display          = '';
                 // Switch active tab to Dashboard View if one of the hidden tabs is active
                 const activePanes = ['view-detailed', 'view-opencases', 'view-highpriority'];
                 const anyHiddenActive = activePanes.some(id => {
@@ -6480,6 +6690,7 @@
                 if (catAnalysisTabBtn) catAnalysisTabBtn.style.display = 'none';
                 if (rcReviewTabBtn)    rcReviewTabBtn.style.display    = 'none';
                 if (l1MetricsTabBtn)   l1MetricsTabBtn.style.display   = 'none';
+                if (rqTabBtn)          rqTabBtn.style.display          = 'none';
             }
 
             updateGlobalFilters();
@@ -6559,6 +6770,11 @@
             const l1mPane = document.getElementById('view-l1metrics');
             if (l1mPane && l1mPane.classList.contains('active') && analysisMode === 'closed') {
                 requestAnimationFrame(() => renderL1TeamMetrics());
+            }
+            // If Resolution Review tab is active and we are in closed mode, refresh it
+            const rqPane = document.getElementById('view-resolutionquality');
+            if (rqPane && rqPane.classList.contains('active') && analysisMode === 'closed') {
+                requestAnimationFrame(() => renderResolutionQuality());
             }
             renderDetailedDashboard();
             // HP analysis runs automatically — no API needed, instant client-side scoring
@@ -8403,6 +8619,8 @@
             if (activeTabId === '#view-perftrend') { downloadPerfTrendPDF(mode, dateStr, timeStr); return; }
             if (activeTabId === '#view-catanalysis') { downloadCategoryAnalysisPDF(mode, dateStr, timeStr); return; }
             if (activeTabId === '#view-resolutionreview') { downloadResolutionReviewPDF(mode, dateStr, timeStr); return; }
+            if (activeTabId === '#view-resolutionquality') { exportResolutionQualityPDF(); return; }
+            if (activeTabId === '#view-l1metrics') { downloadL1MetricsPDF ? downloadL1MetricsPDF(mode, dateStr, timeStr) : exportResolutionQualityPDF(); return; }
             // Default: Dashboard View (original logic below)
 
 
@@ -11143,7 +11361,471 @@ ${bodyHTML}
                 </div>`;
         }
 
-        // ── EXPORT ─────────────────────────────────────────────────────
+        // ─────────────────────────────────────────────────────────────────────
+        // RESOLUTION REVIEW — render, drill-down, PDF & Excel exports
+        // ─────────────────────────────────────────────────────────────────────
+        const RQ_DD_COLS = [
+            { key: 'incidentId',       label: 'Case ID' },
+            { key: 'title',            label: 'Title' },
+            { key: 'owner',            label: 'Engineer' },
+            { key: 'customerName',     label: 'Customer' },
+            { key: 'service',          label: 'Service' },
+            { key: 'currentStatus',    label: 'Status' },
+            { key: 'resolutionCode',   label: 'Resolution Code' },
+            { key: 'problemStatement', label: 'Requirement / Problem Statement' },
+            { key: 'resolutionSteps',  label: 'Resolution Steps' },
+            { key: 'resolvedDateDisplay', label: 'Resolved Date' },
+            { key: 'closedAgingDisplay',  label: 'Resolution Time' }
+        ];
+
+        function _rqIsFilled(val) {
+            const v = (val || '').toString().trim();
+            return v.length > 0 && v.toLowerCase() !== 'n/a' && v.toLowerCase() !== 'na' && v !== '-' && v !== '--';
+        }
+
+        function _rqScore(psFilled, rsFilled) {
+            if (psFilled && rsFilled) return 100;
+            if (psFilled || rsFilled) return 50;
+            return 0;
+        }
+
+        function _rqScoreLabel(score) {
+            if (score >= 90) return { label: '🟢 Excellent', color: '#10B981' };
+            if (score >= 70) return { label: '🟡 Good', color: '#F59E0B' };
+            if (score >= 40) return { label: '🟠 Needs Improvement', color: '#F97316' };
+            return { label: '🔴 Poor', color: '#EF4444' };
+        }
+
+        function _rqAIReadiness(score) {
+            if (score >= 90) return { label: '✅ AI-Ready', color: '#10B981', bg: 'rgba(16,185,129,0.1)', border: 'rgba(16,185,129,0.3)' };
+            if (score >= 60) return { label: '⚙️ Partially Ready', color: '#F59E0B', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.3)' };
+            return { label: '❌ Not Ready', color: '#EF4444', bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.3)' };
+        }
+
+        function renderResolutionQuality() {
+            const closed = filteredData.filter(d => d.isClosedCase);
+            const total  = closed.length;
+
+            if (!total) {
+                ['rq-total','rq-ps-pct','rq-rs-pct','rq-both-miss'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = id === 'rq-total' ? '0' : id === 'rq-both-miss' ? '0' : '0%';
+                });
+                ['rq-team-table-body','rq-rc-table-body'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = `<tr><td colspan="${id==='rq-team-table-body'?13:10}" class="text-center text-muted py-3">No closed case data in current filter.</td></tr>`;
+                });
+                document.getElementById('rq-observations-content').innerHTML = '<span class="text-muted small">No data available.</span>';
+                document.getElementById('rq-recommendations-content').innerHTML = '<span class="text-muted small">No data available.</span>';
+                return;
+            }
+
+            const psFilled  = closed.filter(d => _rqIsFilled(d.problemStatement)).length;
+            const rsFilled  = closed.filter(d => _rqIsFilled(d.resolutionSteps)).length;
+            const bothFilled = closed.filter(d => _rqIsFilled(d.problemStatement) && _rqIsFilled(d.resolutionSteps)).length;
+            const bothMissing = closed.filter(d => !_rqIsFilled(d.problemStatement) && !_rqIsFilled(d.resolutionSteps)).length;
+            const psPct  = total > 0 ? (psFilled / total * 100).toFixed(1) : 0;
+            const rsPct  = total > 0 ? (rsFilled / total * 100).toFixed(1) : 0;
+            const bothMissPct = total > 0 ? (bothMissing / total * 100).toFixed(1) : 0;
+            const overallScore = total > 0 ? ((psFilled + rsFilled) / (total * 2) * 100).toFixed(1) : 0;
+
+            // KPI cards
+            document.getElementById('rq-total').textContent = total;
+            document.getElementById('rq-ps-pct').textContent = psPct + '%';
+            document.getElementById('rq-rs-pct').textContent = rsPct + '%';
+            document.getElementById('rq-both-miss').textContent = bothMissing;
+            document.getElementById('rq-ps-rec').textContent = `${psFilled} of ${total} cases have Problem Statement filled`;
+            document.getElementById('rq-rs-rec').textContent = `${rsFilled} of ${total} cases have Resolution Steps filled`;
+            document.getElementById('rq-both-rec').textContent = `${bothMissPct}% of cases have neither field documented`;
+
+            // PS tag
+            const psTag = document.getElementById('rq-ps-tag');
+            if (psTag) { const v = parseFloat(psPct); psTag.textContent = v >= 80 ? 'GOOD' : v >= 50 ? 'MONITOR' : 'ACTION'; psTag.className = 'kpi-status-tag ' + (v >= 80 ? 'bg-good' : v >= 50 ? 'bg-monitor' : 'bg-urgent'); }
+            const rsTag = document.getElementById('rq-rs-tag');
+            if (rsTag) { const v = parseFloat(rsPct); rsTag.textContent = v >= 80 ? 'GOOD' : v >= 50 ? 'MONITOR' : 'ACTION'; rsTag.className = 'kpi-status-tag ' + (v >= 80 ? 'bg-good' : v >= 50 ? 'bg-monitor' : 'bg-urgent'); }
+            const bothTag = document.getElementById('rq-both-tag');
+            if (bothTag) { bothTag.textContent = bothMissing === 0 ? 'GOOD' : bothMissing <= 5 ? 'MONITOR' : 'ACTION'; bothTag.className = 'kpi-status-tag ' + (bothMissing === 0 ? 'bg-good' : bothMissing <= 5 ? 'bg-monitor' : 'bg-urgent'); }
+
+            // ── Team-wise table ──
+            const engMap = {};
+            closed.forEach(d => {
+                const eng = d.owner || 'Unassigned';
+                if (!engMap[eng]) engMap[eng] = { total:0, rcSpecified:0, psFilled:0, rsFilled:0, bothFilled:0, bothMissing:0, cases:[] };
+                engMap[eng].total++;
+                engMap[eng].cases.push(d);
+                if (d.resolutionCode && d.resolutionCode !== 'Not Specified') engMap[eng].rcSpecified++;
+                if (_rqIsFilled(d.problemStatement)) engMap[eng].psFilled++;
+                if (_rqIsFilled(d.resolutionSteps))  engMap[eng].rsFilled++;
+                if (_rqIsFilled(d.problemStatement) && _rqIsFilled(d.resolutionSteps)) engMap[eng].bothFilled++;
+                if (!_rqIsFilled(d.problemStatement) && !_rqIsFilled(d.resolutionSteps)) engMap[eng].bothMissing++;
+            });
+
+            const engRows = Object.entries(engMap).sort((a,b)=>b[1].total-a[1].total).map(([eng, s]) => {
+                const rcPct = s.total > 0 ? (s.rcSpecified/s.total*100).toFixed(0) : 0;
+                const psPct = s.total > 0 ? (s.psFilled/s.total*100).toFixed(0) : 0;
+                const rsPct = s.total > 0 ? (s.rsFilled/s.total*100).toFixed(0) : 0;
+                const docScore = s.total > 0 ? ((s.psFilled + s.rsFilled) / (s.total * 2) * 100).toFixed(0) : 0;
+                const sl = _rqScoreLabel(parseFloat(docScore));
+                const psBar = `<div style="width:100%;background:#f0f0f0;border-radius:4px;height:8px;overflow:hidden;"><div style="width:${psPct}%;background:${parseFloat(psPct)>=80?'#10B981':parseFloat(psPct)>=50?'#F59E0B':'#EF4444'};height:8px;"></div></div>`;
+                const rsBar = `<div style="width:100%;background:#f0f0f0;border-radius:4px;height:8px;overflow:hidden;"><div style="width:${rsPct}%;background:${parseFloat(rsPct)>=80?'#10B981':parseFloat(rsPct)>=50?'#F59E0B':'#EF4444'};height:8px;"></div></div>`;
+                return `<tr style="cursor:pointer;" onclick="rqDrillDownByEngineer('${eng.replace(/'/g,"\\'")}','${eng}')">
+                    <td style="text-align:left;font-weight:700;">${eng}</td>
+                    <td>${s.total}</td>
+                    <td>${s.rcSpecified}</td>
+                    <td><span style="font-weight:700;color:${parseFloat(rcPct)>=80?'#10B981':parseFloat(rcPct)>=50?'#F59E0B':'#EF4444'};">${rcPct}%</span></td>
+                    <td>${s.psFilled}</td>
+                    <td><span style="font-weight:700;color:${parseFloat(psPct)>=80?'#10B981':parseFloat(psPct)>=50?'#F59E0B':'#EF4444'};">${psPct}%</span></td>
+                    <td>${psBar} <span style="font-size:0.68rem;color:#6B7280;">${psPct}%</span></td>
+                    <td>${s.rsFilled}</td>
+                    <td><span style="font-weight:700;color:${parseFloat(rsPct)>=80?'#10B981':parseFloat(rsPct)>=50?'#F59E0B':'#EF4444'};">${rsPct}%</span></td>
+                    <td>${rsBar} <span style="font-size:0.68rem;color:#6B7280;">${rsPct}%</span></td>
+                    <td>${s.bothFilled}</td>
+                    <td style="font-weight:700;color:${s.bothMissing===0?'#10B981':s.bothMissing>3?'#EF4444':'#F59E0B'};">${s.bothMissing}</td>
+                    <td><span style="font-weight:800;color:${sl.color};">${docScore}%</span> <span style="font-size:0.68rem;">${sl.label}</span></td>
+                </tr>`;
+            }).join('');
+
+            document.getElementById('rq-team-table-body').innerHTML = engRows || '<tr><td colspan="13" class="text-center text-muted py-3">No engineer data available.</td></tr>';
+
+            // ── Resolution Code × Documentation table ──
+            const rcMap = {};
+            closed.forEach(d => {
+                const rc = d.resolutionCode || 'Not Specified';
+                if (!rcMap[rc]) rcMap[rc] = { total:0, psFilled:0, rsFilled:0, bothFilled:0, bothMissing:0 };
+                rcMap[rc].total++;
+                if (_rqIsFilled(d.problemStatement)) rcMap[rc].psFilled++;
+                if (_rqIsFilled(d.resolutionSteps))  rcMap[rc].rsFilled++;
+                if (_rqIsFilled(d.problemStatement) && _rqIsFilled(d.resolutionSteps)) rcMap[rc].bothFilled++;
+                if (!_rqIsFilled(d.problemStatement) && !_rqIsFilled(d.resolutionSteps)) rcMap[rc].bothMissing++;
+            });
+
+            const rcRows = Object.entries(rcMap).sort((a,b)=>b[1].total-a[1].total).map(([rc, s]) => {
+                const psPct = s.total > 0 ? (s.psFilled/s.total*100).toFixed(0) : 0;
+                const rsPct = s.total > 0 ? (s.rsFilled/s.total*100).toFixed(0) : 0;
+                const docScore = s.total > 0 ? ((s.psFilled + s.rsFilled) / (s.total * 2) * 100).toFixed(0) : 0;
+                const ai = _rqAIReadiness(parseFloat(docScore));
+                return `<tr style="cursor:pointer;" onclick="rqDrillDownByRC('${rc.replace(/'/g,"\\'")}','RC: ${rc}')">
+                    <td style="text-align:left;font-weight:700;">${rc}</td>
+                    <td>${s.total}</td>
+                    <td>${s.psFilled}</td>
+                    <td><span style="font-weight:700;color:${parseFloat(psPct)>=80?'#10B981':parseFloat(psPct)>=50?'#F59E0B':'#EF4444'};">${psPct}%</span></td>
+                    <td>${s.rsFilled}</td>
+                    <td><span style="font-weight:700;color:${parseFloat(rsPct)>=80?'#10B981':parseFloat(rsPct)>=50?'#F59E0B':'#EF4444'};">${rsPct}%</span></td>
+                    <td>${s.bothFilled}</td>
+                    <td style="font-weight:700;color:${s.bothMissing===0?'#10B981':s.bothMissing>3?'#EF4444':'#F59E0B'};">${s.bothMissing}</td>
+                    <td style="font-weight:800;">${docScore}%</td>
+                    <td><span style="background:${ai.bg};color:${ai.color};border:1px solid ${ai.border};border-radius:6px;padding:2px 8px;font-size:0.7rem;font-weight:800;">${ai.label}</span></td>
+                </tr>`;
+            }).join('');
+
+            document.getElementById('rq-rc-table-body').innerHTML = rcRows || '<tr><td colspan="10" class="text-center text-muted py-3">No resolution code data available.</td></tr>';
+
+            // ── Key Observations ──
+            const worstEngs = Object.entries(engMap).filter(([,s])=>s.total>=2).sort((a,b)=>(a[1].psFilled/a[1].total)-(b[1].psFilled/b[1].total)).slice(0,3);
+            const bestEngs  = Object.entries(engMap).filter(([,s])=>s.total>=2).sort((a,b)=>(b[1].psFilled/b[1].total)-(a[1].psFilled/a[1].total)).slice(0,3);
+            const rcGaps    = Object.entries(rcMap).filter(([,s])=>s.bothMissing>0&&s.total>=2).sort((a,b)=>b[1].bothMissing-a[1].bothMissing).slice(0,3);
+            var rcGapsHtml = rcGaps.length ? '<li>Resolution Codes with most gaps: <b>' + rcGaps.map(function(e){return e[0]+' ('+e[1].bothMissing+' missing)';}).join(', ') + '</b></li>' : '';
+            var worstEngsHtml = worstEngs.length
+                ? worstEngs.map(function(e){var eng=e[0],s=e[1]; return '<li><b>'+eng+'</b>: PS '+(s.total>0?(s.psFilled/s.total*100).toFixed(0):0)+'%, RS '+(s.total>0?(s.rsFilled/s.total*100).toFixed(0):0)+'% ('+s.total+' cases)</li>';}).join('')
+                : '<li>All engineers performing well</li>';
+            var bestEngsHtml = bestEngs.length
+                ? bestEngs.map(function(e){var eng=e[0],s=e[1]; return '<li><b>'+eng+'</b>: PS '+(s.total>0?(s.psFilled/s.total*100).toFixed(0):0)+'%, RS '+(s.total>0?(s.rsFilled/s.total*100).toFixed(0):0)+'% ('+s.total+' cases)</li>';}).join('')
+                : '<li>No data</li>';
+            const obsHTML =
+                '<div class="row g-3">' +
+                    '<div class="col-md-4">' +
+                        '<div style="background:rgba(239,68,68,0.06);border:1.5px solid rgba(239,68,68,0.2);border-radius:12px;padding:14px;">' +
+                            '<div class="fw-bold mb-2" style="font-size:0.88rem;color:#DC2626;"><i class="bi bi-exclamation-triangle-fill me-1"></i>Documentation Gaps</div>' +
+                            '<ul class="mb-0 ps-3" style="font-size:0.82rem;color:var(--text-secondary);line-height:1.8;">' +
+                                '<li>' + (100-parseFloat(psPct)).toFixed(1) + '% of cases (' + (total-psFilled) + ') have NO Problem Statement</li>' +
+                                '<li>' + (100-parseFloat(rsPct)).toFixed(1) + '% of cases (' + (total-rsFilled) + ') have NO Resolution Steps</li>' +
+                                '<li>' + bothMissPct + '% of cases (' + bothMissing + ') are missing BOTH fields</li>' +
+                                rcGapsHtml +
+                            '</ul>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="col-md-4">' +
+                        '<div style="background:rgba(245,158,11,0.06);border:1.5px solid rgba(245,158,11,0.2);border-radius:12px;padding:14px;">' +
+                            '<div class="fw-bold mb-2" style="font-size:0.88rem;color:#B45309;"><i class="bi bi-person-exclamation me-1"></i>Engineers Needing Coaching</div>' +
+                            '<ul class="mb-0 ps-3" style="font-size:0.82rem;color:var(--text-secondary);line-height:1.8;">' + worstEngsHtml + '</ul>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="col-md-4">' +
+                        '<div style="background:rgba(16,185,129,0.06);border:1.5px solid rgba(16,185,129,0.2);border-radius:12px;padding:14px;">' +
+                            '<div class="fw-bold mb-2" style="font-size:0.88rem;color:#065F46;"><i class="bi bi-trophy-fill me-1"></i>Top Performers</div>' +
+                            '<ul class="mb-0 ps-3" style="font-size:0.82rem;color:var(--text-secondary);line-height:1.8;">' + bestEngsHtml + '</ul>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="mt-3 p-3" style="background:var(--primary-soft);border-radius:10px;font-size:0.82rem;color:var(--primary);font-weight:600;">' +
+                    '<i class="bi bi-info-circle me-1"></i>' +
+                    'Overall Documentation Score: <b>' + overallScore + '%</b> &nbsp;&middot;&nbsp; ' +
+                    psFilled + ' of ' + total + ' cases have Problem Statement &nbsp;&middot;&nbsp; ' +
+                    rsFilled + ' of ' + total + ' cases have Resolution Steps &nbsp;&middot;&nbsp; ' +
+                    bothFilled + ' of ' + total + ' cases have both fields complete.' +
+                '</div>';
+            document.getElementById('rq-observations-content').innerHTML = obsHTML;
+
+            // ── Recommendations ──
+            const recItems = [
+                { icon:'bi-person-check-fill', color:'#5B4FE9', title:'Mandatory Field Policy', desc:'Make <b>Requirement/Problem Statement</b> and <b>Resolution Steps</b> mandatory fields at case closure. Currently only ' + psPct + '% and ' + rsPct + '% of cases are filled respectively.' },
+                { icon:'bi-mortarboard-fill', color:'#F59E0B', title:'Targeted Engineer Coaching', desc:'Identify and coach engineers with &lt;50% documentation scores. ' + (worstEngs.length ? 'Priority list: <b>' + worstEngs.map(function(e){return e[0];}).join(', ') + '</b>.' : 'All engineers are performing at acceptable levels.') },
+                { icon:'bi-book-fill', color:'#10B981', title:'KB / SOP Seed Data', desc:'The ' + bothFilled + ' cases with both fields fully documented are <b>prime candidates for SOP/KB creation</b>. Use these as templates for self-resolution guides.' },
+                { icon:'bi-robot', color:'#06B6D4', title:'AI Readiness Roadmap', desc:'Only resolution codes with \u226580% documentation scores are AI-ready. Currently ' + Object.entries(rcMap).filter(function(e){var s=e[1];return s.total>0&&(s.psFilled+s.rsFilled)/(s.total*2)>=0.8;}).length + ' of ' + Object.keys(rcMap).length + ' resolution codes qualify. Improve documentation to expand AI coverage.' },
+                { icon:'bi-bar-chart-fill', color:'#7C3AED', title:'Weekly Documentation Review', desc:'Add a documentation quality KPI to the weekly review cycle. Target: <b>90%+ fill rate for both fields within 3 months</b>. Track progress per engineer and per resolution code.' },
+                { icon:'bi-clipboard-check-fill', color:'#EF4444', title:'Close-Out Checklist', desc:'Introduce a close-out checklist that requires engineers to confirm Requirement/Problem Statement and Resolution Steps are filled before a case can be marked as Resolved or Closed.' }
+            ];
+            const recHTML = '<div class="row g-3">' + recItems.map(function(r) {
+                var rgb = r.color==='#5B4FE9'?'91,79,233':r.color==='#F59E0B'?'245,158,11':r.color==='#10B981'?'16,185,129':r.color==='#06B6D4'?'6,182,212':r.color==='#7C3AED'?'124,58,237':'239,68,68';
+                return '<div class="col-md-6">' +
+                    '<div style="background:rgba(' + rgb + ',0.05);border:1.5px solid rgba(' + rgb + ',0.2);border-radius:12px;padding:14px;">' +
+                        '<div class="fw-bold mb-1" style="font-size:0.88rem;color:' + r.color + ';"><i class="bi ' + r.icon + ' me-1"></i>' + r.title + '</div>' +
+                        '<div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.6;">' + r.desc + '</div>' +
+                    '</div>' +
+                '</div>';
+            }).join('') + '</div>';
+            document.getElementById('rq-recommendations-content').innerHTML = recHTML;
+        }
+
+        // Drill-down helpers for Resolution Review
+        function rqDrillDown(type, title) {
+            const closed = filteredData.filter(d => d.isClosedCase);
+            let data = [];
+            if (type === 'total') data = closed;
+            else if (type === 'psOk')       data = closed.filter(d => _rqIsFilled(d.problemStatement));
+            else if (type === 'rsOk')       data = closed.filter(d => _rqIsFilled(d.resolutionSteps));
+            else if (type === 'bothMissing') data = closed.filter(d => !_rqIsFilled(d.problemStatement) && !_rqIsFilled(d.resolutionSteps));
+            _rqOpenModal(data, title);
+        }
+
+        function rqDrillDownByEngineer(eng, title) {
+            const data = filteredData.filter(d => d.isClosedCase && d.owner === eng);
+            _rqOpenModal(data, `Engineer: ${title}`);
+        }
+
+        function rqDrillDownByRC(rc, title) {
+            const data = filteredData.filter(d => d.isClosedCase && (d.resolutionCode || 'Not Specified') === rc);
+            _rqOpenModal(data, title);
+        }
+
+        function _rqOpenModal(data, title) {
+            drillDownTitleForExport = title;
+            document.getElementById('drillDownTitle').textContent = title;
+            document.getElementById('drillDownCount').textContent = `${data.length} Cases`;
+            drillDownData = data;
+            drillDownExportData = data.map(d => {
+                const row = {};
+                RQ_DD_COLS.forEach(col => { row[col.label] = d[col.key] || ''; });
+                return row;
+            });
+            document.getElementById('drillDownHeader').innerHTML = RQ_DD_COLS.map(col => `<th>${col.label}</th>`).join('');
+            document.getElementById('drillDownBody').innerHTML = data.length
+                ? data.map(d => {
+                    const globalIndex = processedData.findIndex(p => p.incidentId === d.incidentId);
+                    const cells = RQ_DD_COLS.map(col => {
+                        const val = (d[col.key] || '').toString();
+                        let cls = '';
+                        if (col.key === 'problemStatement' || col.key === 'resolutionSteps') {
+                            cls = _rqIsFilled(val) ? 'text-success fw-bold' : 'text-danger';
+                        }
+                        const display = val.length > 60 ? val.substring(0, 60) + '…' : val;
+                        return `<td class="${cls}" title="${val.replace(/"/g,"'")}">${display || '<span class="text-muted fst-italic">— missing —</span>'}</td>`;
+                    }).join('');
+                    return `<tr onclick="viewCaseDetail(${globalIndex})" style="cursor:pointer;">${cells}</tr>`;
+                }).join('')
+                : '<tr><td colspan="11" class="text-center text-muted py-3">No cases found.</td></tr>';
+            new bootstrap.Modal(document.getElementById('drillDownModal')).show();
+        }
+
+        // ── PDF Export: Resolution Review ──
+        function exportResolutionQualityPDF() {
+            const closed = filteredData.filter(d => d.isClosedCase);
+            if (!closed.length) { alert('No closed case data to export.'); return; }
+
+            const psFilled  = closed.filter(d => _rqIsFilled(d.problemStatement)).length;
+            const rsFilled  = closed.filter(d => _rqIsFilled(d.resolutionSteps)).length;
+            const bothFilled = closed.filter(d => _rqIsFilled(d.problemStatement) && _rqIsFilled(d.resolutionSteps)).length;
+            const bothMissing = closed.filter(d => !_rqIsFilled(d.problemStatement) && !_rqIsFilled(d.resolutionSteps)).length;
+            const total = closed.length;
+            const psPct  = (psFilled / total * 100).toFixed(1);
+            const rsPct  = (rsFilled / total * 100).toFixed(1);
+
+            // Eng table rows
+            const engMap2 = {};
+            closed.forEach(d => {
+                const eng = d.owner || 'Unassigned';
+                if (!engMap2[eng]) engMap2[eng] = {total:0,rcSpec:0,psF:0,rsF:0,bothF:0,bothM:0};
+                engMap2[eng].total++;
+                if (d.resolutionCode && d.resolutionCode !== 'Not Specified') engMap2[eng].rcSpec++;
+                if (_rqIsFilled(d.problemStatement)) engMap2[eng].psF++;
+                if (_rqIsFilled(d.resolutionSteps))  engMap2[eng].rsF++;
+                if (_rqIsFilled(d.problemStatement) && _rqIsFilled(d.resolutionSteps)) engMap2[eng].bothF++;
+                if (!_rqIsFilled(d.problemStatement) && !_rqIsFilled(d.resolutionSteps)) engMap2[eng].bothM++;
+            });
+
+            const rcMap2 = {};
+            closed.forEach(d => {
+                const rc = d.resolutionCode || 'Not Specified';
+                if (!rcMap2[rc]) rcMap2[rc] = {total:0,psF:0,rsF:0,bothF:0,bothM:0};
+                rcMap2[rc].total++;
+                if (_rqIsFilled(d.problemStatement)) rcMap2[rc].psF++;
+                if (_rqIsFilled(d.resolutionSteps))  rcMap2[rc].rsF++;
+                if (_rqIsFilled(d.problemStatement) && _rqIsFilled(d.resolutionSteps)) rcMap2[rc].bothF++;
+                if (!_rqIsFilled(d.problemStatement) && !_rqIsFilled(d.resolutionSteps)) rcMap2[rc].bothM++;
+            });
+
+            const overallScore = ((psFilled + rsFilled) / (total * 2) * 100).toFixed(1);
+            const now = new Date();
+            const mode = analysisMode === 'closed' ? 'Closed Cases' : 'All Cases';
+            const dateStr = now.toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'});
+            const timeStr = now.toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'});
+
+            const summaryHTML = `
+<div class="section-block">
+  <div class="section-title">Resolution Review – Summary</div>
+  <div class="stat-grid">
+    <div class="stat-card" style="border-left-color:#5B4FE9;"><div class="stat-label">Total Closed Cases</div><div class="stat-val" style="color:#5B4FE9;">${total}</div></div>
+    <div class="stat-card" style="border-left-color:#10B981;"><div class="stat-label">Problem Stmt Fill %</div><div class="stat-val" style="color:#10B981;">${psPct}%</div></div>
+    <div class="stat-card" style="border-left-color:#06B6D4;"><div class="stat-label">Resolution Steps Fill %</div><div class="stat-val" style="color:#06B6D4;">${rsPct}%</div></div>
+    <div class="stat-card" style="border-left-color:#EF4444;"><div class="stat-label">Both Fields Missing</div><div class="stat-val" style="color:#EF4444;">${bothMissing}</div></div>
+    <div class="stat-card" style="border-left-color:#F59E0B;"><div class="stat-label">Overall Doc Score</div><div class="stat-val" style="color:#D97706;">${overallScore}%</div></div>
+    <div class="stat-card" style="border-left-color:#10B981;"><div class="stat-label">Both Fields Complete</div><div class="stat-val" style="color:#10B981;">${bothFilled}</div></div>
+  </div>
+</div>`;
+
+            const engTableRows = Object.entries(engMap2).sort((a,b)=>b[1].total-a[1].total).map(([eng,s]) => {
+                const score = s.total > 0 ? ((s.psF+s.rsF)/(s.total*2)*100).toFixed(0) : 0;
+                return `<tr><td>${eng}</td><td>${s.total}</td><td>${s.psF} (${s.total>0?(s.psF/s.total*100).toFixed(0):0}%)</td><td>${s.rsF} (${s.total>0?(s.rsF/s.total*100).toFixed(0):0}%)</td><td>${s.bothF}</td><td>${s.bothM}</td><td>${score}%</td></tr>`;
+            }).join('');
+            const engTableHTML = `<div class="section-block" style="margin-top:16px;"><div class="section-title">Team-wise Documentation Quality</div><table class="pdf-table"><thead><tr><th>Engineer</th><th>Total Closed</th><th>PS Filled</th><th>RS Filled</th><th>Both OK</th><th>Both Missing</th><th>Doc Score</th></tr></thead><tbody>${engTableRows||'<tr><td colspan="7">No data</td></tr>'}</tbody></table></div>`;
+
+            const rcTableRows = Object.entries(rcMap2).sort((a,b)=>b[1].total-a[1].total).map(([rc,s]) => {
+                const score = s.total > 0 ? ((s.psF+s.rsF)/(s.total*2)*100).toFixed(0) : 0;
+                const ai = _rqAIReadiness(parseFloat(score));
+                return `<tr><td>${rc}</td><td>${s.total}</td><td>${s.psF} (${s.total>0?(s.psF/s.total*100).toFixed(0):0}%)</td><td>${s.rsF} (${s.total>0?(s.rsF/s.total*100).toFixed(0):0}%)</td><td>${s.bothF}</td><td>${s.bothM}</td><td>${score}%</td><td>${ai.label}</td></tr>`;
+            }).join('');
+            const rcTableHTML = `<div class="section-block" style="margin-top:16px;"><div class="section-title">Resolution Code × Documentation Quality Matrix</div><table class="pdf-table"><thead><tr><th>Resolution Code</th><th>Total</th><th>PS Filled</th><th>RS Filled</th><th>Both OK</th><th>Both Missing</th><th>Doc Score</th><th>AI-Readiness</th></tr></thead><tbody>${rcTableRows||'<tr><td colspan="8">No data</td></tr>'}</tbody></table></div>`;
+
+            const recHTML2 = `<div class="section-block" style="margin-top:16px;"><div class="section-title">Recommendations</div><ul style="font-size:9.5px;line-height:1.8;padding-left:16px;"><li>Make Problem Statement &amp; Resolution Steps mandatory at case closure</li><li>Coach engineers with &lt;50% documentation scores</li><li>Use the ${bothFilled} fully-documented cases as SOP/KB seed content</li><li>Target: 90%+ fill rate for both fields within 3 months</li><li>Add documentation score KPI to the weekly review cycle</li><li>Implement a close-out checklist to enforce field completion</li></ul></div>`;
+
+            _pdfShell('Resolution Review Report', mode, dateStr, timeStr, _filterLine(), summaryHTML + engTableHTML + rcTableHTML + recHTML2);
+        }
+
+        // ── Excel Export: Resolution Review ──
+        function exportResolutionQualityExcel() {
+            const closed = filteredData.filter(d => d.isClosedCase);
+            if (!closed.length) { alert('No closed case data to export.'); return; }
+
+            const wb = XLSX.utils.book_new();
+            const dateTag = new Date().toLocaleDateString().replace(/\//g,'-');
+            const total = closed.length;
+            const psFilled  = closed.filter(d => _rqIsFilled(d.problemStatement)).length;
+            const rsFilled  = closed.filter(d => _rqIsFilled(d.resolutionSteps)).length;
+            const bothFilled = closed.filter(d => _rqIsFilled(d.problemStatement) && _rqIsFilled(d.resolutionSteps)).length;
+            const bothMissing = closed.filter(d => !_rqIsFilled(d.problemStatement) && !_rqIsFilled(d.resolutionSteps)).length;
+
+            // Sheet 1: Summary KPIs
+            const summarySheet = [
+                ['Metric', 'Value', 'Percentage'],
+                ['Total Closed Cases', total, '100%'],
+                ['Problem Statement Filled', psFilled, total>0?(psFilled/total*100).toFixed(1)+'%':'0%'],
+                ['Problem Statement Missing', total-psFilled, total>0?((total-psFilled)/total*100).toFixed(1)+'%':'0%'],
+                ['Resolution Steps Filled', rsFilled, total>0?(rsFilled/total*100).toFixed(1)+'%':'0%'],
+                ['Resolution Steps Missing', total-rsFilled, total>0?((total-rsFilled)/total*100).toFixed(1)+'%':'0%'],
+                ['Both Fields Complete', bothFilled, total>0?(bothFilled/total*100).toFixed(1)+'%':'0%'],
+                ['Both Fields Missing', bothMissing, total>0?(bothMissing/total*100).toFixed(1)+'%':'0%'],
+                ['Overall Documentation Score', '', total>0?((psFilled+rsFilled)/(total*2)*100).toFixed(1)+'%':'0%'],
+            ];
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(summarySheet), 'Summary KPIs');
+
+            // Sheet 2: Team-wise Analysis
+            const engMap3 = {};
+            closed.forEach(d => {
+                const eng = d.owner || 'Unassigned';
+                if (!engMap3[eng]) engMap3[eng] = {total:0,rcSpec:0,psF:0,rsF:0,bothF:0,bothM:0};
+                engMap3[eng].total++;
+                if (d.resolutionCode && d.resolutionCode !== 'Not Specified') engMap3[eng].rcSpec++;
+                if (_rqIsFilled(d.problemStatement)) engMap3[eng].psF++;
+                if (_rqIsFilled(d.resolutionSteps))  engMap3[eng].rsF++;
+                if (_rqIsFilled(d.problemStatement) && _rqIsFilled(d.resolutionSteps)) engMap3[eng].bothF++;
+                if (!_rqIsFilled(d.problemStatement) && !_rqIsFilled(d.resolutionSteps)) engMap3[eng].bothM++;
+            });
+            const teamSheet = [['Engineer','Total Closed','RC Specified','RC Fill %','PS Filled','PS Fill %','RS Filled','RS Fill %','Both OK','Both Missing','Documentation Score']];
+            Object.entries(engMap3).sort((a,b)=>b[1].total-a[1].total).forEach(([eng,s]) => {
+                teamSheet.push([eng, s.total, s.rcSpec,
+                    s.total>0?(s.rcSpec/s.total*100).toFixed(1)+'%':'0%',
+                    s.psF, s.total>0?(s.psF/s.total*100).toFixed(1)+'%':'0%',
+                    s.rsF, s.total>0?(s.rsF/s.total*100).toFixed(1)+'%':'0%',
+                    s.bothF, s.bothM,
+                    s.total>0?((s.psF+s.rsF)/(s.total*2)*100).toFixed(1)+'%':'0%']);
+            });
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(teamSheet), 'Team-wise Analysis');
+
+            // Sheet 3: Resolution Code Matrix
+            const rcMap3 = {};
+            closed.forEach(d => {
+                const rc = d.resolutionCode || 'Not Specified';
+                if (!rcMap3[rc]) rcMap3[rc] = {total:0,psF:0,rsF:0,bothF:0,bothM:0};
+                rcMap3[rc].total++;
+                if (_rqIsFilled(d.problemStatement)) rcMap3[rc].psF++;
+                if (_rqIsFilled(d.resolutionSteps))  rcMap3[rc].rsF++;
+                if (_rqIsFilled(d.problemStatement) && _rqIsFilled(d.resolutionSteps)) rcMap3[rc].bothF++;
+                if (!_rqIsFilled(d.problemStatement) && !_rqIsFilled(d.resolutionSteps)) rcMap3[rc].bothM++;
+            });
+            const rcSheet2 = [['Resolution Code','Total Cases','PS Filled','PS Fill %','RS Filled','RS Fill %','Both OK','Both Missing','Doc Score','AI-Readiness']];
+            Object.entries(rcMap3).sort((a,b)=>b[1].total-a[1].total).forEach(([rc,s]) => {
+                const docScore = s.total>0?((s.psF+s.rsF)/(s.total*2)*100).toFixed(1):0;
+                rcSheet2.push([rc, s.total, s.psF,
+                    s.total>0?(s.psF/s.total*100).toFixed(1)+'%':'0%',
+                    s.rsF, s.total>0?(s.rsF/s.total*100).toFixed(1)+'%':'0%',
+                    s.bothF, s.bothM, docScore+'%', _rqAIReadiness(parseFloat(docScore)).label]);
+            });
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rcSheet2), 'RC Documentation Matrix');
+
+            // Sheet 4: Raw Cases — with all three fields
+            const rawSheet = closed.map(d => ({
+                'Case ID': d.incidentId,
+                'Title': d.title,
+                'Engineer': d.owner,
+                'Customer': d.customerName,
+                'Service': d.service,
+                'Status': d.currentStatus,
+                'Resolution Code': d.resolutionCode,
+                'Requirement / Problem Statement': d.problemStatement || '',
+                'PS Filled': _rqIsFilled(d.problemStatement) ? 'Yes' : 'No',
+                'Resolution Steps': d.resolutionSteps || '',
+                'RS Filled': _rqIsFilled(d.resolutionSteps) ? 'Yes' : 'No',
+                'Both Fields OK': (_rqIsFilled(d.problemStatement) && _rqIsFilled(d.resolutionSteps)) ? 'Yes' : 'No',
+                'Both Missing': (!_rqIsFilled(d.problemStatement) && !_rqIsFilled(d.resolutionSteps)) ? 'Yes' : 'No',
+                'Resolved Date': d.resolvedDateDisplay || '',
+                'Resolution Time': d.closedAgingDisplay || ''
+            }));
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rawSheet.length?rawSheet:[{}]), 'Raw Closed Cases');
+
+            // Sheet 5: Cases Missing PS
+            const psMissing = closed.filter(d => !_rqIsFilled(d.problemStatement)).map(d => ({
+                'Case ID': d.incidentId, 'Title': d.title, 'Engineer': d.owner,
+                'Resolution Code': d.resolutionCode, 'Resolution Steps': d.resolutionSteps||'',
+                'RS Filled': _rqIsFilled(d.resolutionSteps)?'Yes':'No',
+                'Resolved Date': d.resolvedDateDisplay||''
+            }));
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(psMissing.length?psMissing:[{}]), 'Missing Problem Statement');
+
+            // Sheet 6: Cases Missing RS
+            const rsMissing = closed.filter(d => !_rqIsFilled(d.resolutionSteps)).map(d => ({
+                'Case ID': d.incidentId, 'Title': d.title, 'Engineer': d.owner,
+                'Resolution Code': d.resolutionCode, 'Problem Statement': d.problemStatement||'',
+                'PS Filled': _rqIsFilled(d.problemStatement)?'Yes':'No',
+                'Resolved Date': d.resolvedDateDisplay||''
+            }));
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rsMissing.length?rsMissing:[{}]), 'Missing Resolution Steps');
+
+            XLSX.writeFile(wb, `Resolution_Review_Export_${dateTag}.xlsx`);
+        }
+
+        // ─────────────────────────────────────────────────────────────────────
+        // ── HIGH PRIORITY CASES ──────────────────────────────────────────────
+        // ─────────────────────────────────────────────────────────────────────
         function exportHighPriorityToExcel() {
             if (!highPriorityData.length) {
                 alert('No high priority data to export. Upload data first.');
