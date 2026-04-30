@@ -4458,7 +4458,7 @@
             const l1MetricsTabEl = document.getElementById('view-l1metrics-tab');
             if (l1MetricsTabEl) {
                 l1MetricsTabEl.addEventListener('shown.bs.tab', () => {
-                    if (analysisMode === 'closed') requestAnimationFrame(() => renderL1TeamMetrics());
+                    if (analysisMode === 'closed') setTimeout(() => renderL1TeamMetrics(), 80);
                 });
             }
 
@@ -7068,7 +7068,7 @@
             // If L1 Team Metrics tab is active and we are in closed mode, refresh it
             const l1mPane = document.getElementById('view-l1metrics');
             if (l1mPane && l1mPane.classList.contains('active') && analysisMode === 'closed') {
-                requestAnimationFrame(() => renderL1TeamMetrics());
+                setTimeout(() => renderL1TeamMetrics(), 80);
             }
             // If Resolution Review tab is active and we are in closed mode, refresh it
             const rqPane = document.getElementById('view-resolutionquality');
@@ -10357,6 +10357,8 @@ ${bodyHTML}
                 { key:'owner', label:'Owner' },
                 { key:'assignmentLevel', label:'Level' },
                 { key:'service', label:'Service' },
+                { key:'creationTimeDisplay', label:'Creation Time' },
+                { key:'submittedBy', label:'Submitted By' },
                 { key:'resolutionCode', label:'Resolution Code' },
                 { key:'wasKBReferred', label:'KB Referred' },
                 { key:'isSlaViolated', label:'SLA Violated' },
@@ -10472,6 +10474,30 @@ ${bodyHTML}
                 'Feedback % (of logged)': parseFloat(r.fbPct),
                 'Engineers': (TLM_FUNCTION_MAP[r.fn]||[]).filter(o=>_tlmSelectedOwners.has(o)).join(', ')
             }));
+            // Add Overall Total row
+            const totIn  = _tlmReconRowsCache.reduce((s,r)=>s+r.incoming,0);
+            const totRes = _tlmReconRowsCache.reduce((s,r)=>s+r.resolved,0);
+            const totSR  = _tlmReconRowsCache.reduce((s,r)=>s+r.sr,0);
+            const totINC = _tlmReconRowsCache.reduce((s,r)=>s+r.inc,0);
+            const totKB  = _tlmReconRowsCache.reduce((s,r)=>s+r.kb,0);
+            const totFB  = _tlmReconRowsCache.reduce((s,r)=>s+r.fb,0);
+            const totClosure = totIn>0 ? parseFloat((totRes/totIn*100).toFixed(1)) : 0;
+            const totKbPct   = totRes>0 ? parseFloat((totKB/totRes*100).toFixed(1)) : 0;
+            const totFbPct   = totIn>0  ? parseFloat((totFB/totIn*100).toFixed(1))  : 0;
+            sheet.push({
+                'Function': 'OVERALL TOTAL',
+                'Module': '—',
+                'Incoming (All Logged)': totIn,
+                'Resolved (Closed)': totRes,
+                'Closure %': totClosure,
+                'SR Closed': totSR,
+                'INC Closed': totINC,
+                'KB/SOP Used': totKB,
+                'KB Usage % (of closed)': totKbPct,
+                'Feedback Cases': totFB,
+                'Feedback % (of logged)': totFbPct,
+                'Engineers': ''
+            });
             XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Function Reconciliation');
             XLSX.writeFile(wb, `Function_Reconciliation_${dateTag}.xlsx`);
         }
@@ -11165,6 +11191,14 @@ ${bodyHTML}
 
             // ── Function-wise Reconciliation Table ────────────────────────
             renderTlmReconciliation(closed, allFiltered);
+
+            // ── Force chart resize to fix rendering in hidden/lazy tabs ───
+            setTimeout(() => {
+                [l1mResolvedTrendChart, l1mComplianceSlaChart, l1mCompliance15dChart,
+                 l1mKbUsageChart, l1mKbPieChart, l1mL2fbBarChart, l1mL2fbPieChart].forEach(ch => {
+                    try { if (ch) ch.resize(); } catch(e) {}
+                });
+            }, 50);
         }
 
         // ─────────────────────────────────────────────────────────────────────
