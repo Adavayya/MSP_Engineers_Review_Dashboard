@@ -1434,7 +1434,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Assignment Level</label>
+                        <label class="form-label">Assigned To</label>
                         <select class="form-select form-select-sm" id="global-filter-level" onchange="updateGlobalFilters()">
                             <option value="">All Levels</option>
                         </select>
@@ -1446,6 +1446,44 @@
                             <option value="">All SLA Status</option>
                             <option value="Violated">SLA Violated</option>
                             <option value="Non-Violated">SLA Non-Violated</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" style="font-weight:700;color:var(--primary);"><i class="bi bi-calendar3 me-1"></i>Timescale</label>
+                        <select class="form-select form-select-sm" id="global-filter-timescale" onchange="updateGlobalFilters()" style="font-size:0.8rem;">
+                            <option value="all">All Time (Default)</option>
+                            <optgroup label="── Current / Recent ──">
+                                <option value="current_month">Current Month</option>
+                                <option value="last_month">Last Month</option>
+                                <option value="last_month_plus_current">Last Month + Current Month</option>
+                            </optgroup>
+                            <optgroup label="── Last N Months ──">
+                                <option value="last_2">Last 2 Months</option>
+                                <option value="last_2_plus_current">Last 2 Months + Current Month</option>
+                                <option value="last_3">Last 3 Months</option>
+                                <option value="last_3_plus_current">Last 3 Months + Current Month</option>
+                                <option value="last_4">Last 4 Months</option>
+                                <option value="last_4_plus_current">Last 4 Months + Current Month</option>
+                                <option value="last_5">Last 5 Months</option>
+                                <option value="last_5_plus_current">Last 5 Months + Current Month</option>
+                                <option value="last_6">Last 6 Months</option>
+                                <option value="last_6_plus_current">Last 6 Months + Current Month</option>
+                                <option value="last_7">Last 7 Months</option>
+                                <option value="last_7_plus_current">Last 7 Months + Current Month</option>
+                                <option value="last_8">Last 8 Months</option>
+                                <option value="last_8_plus_current">Last 8 Months + Current Month</option>
+                                <option value="last_9">Last 9 Months</option>
+                                <option value="last_9_plus_current">Last 9 Months + Current Month</option>
+                                <option value="last_10">Last 10 Months</option>
+                                <option value="last_10_plus_current">Last 10 Months + Current Month</option>
+                                <option value="last_11">Last 11 Months</option>
+                                <option value="last_11_plus_current">Last 11 Months + Current Month</option>
+                            </optgroup>
+                            <optgroup label="── Year ──">
+                                <option value="current_year">Current Year</option>
+                                <option value="last_year">Last Year</option>
+                            </optgroup>
                         </select>
                     </div>
 
@@ -1659,7 +1697,7 @@
                         <!-- ═══ SECTION 3: Aging & Old Cases / Closure Aging ═══ -->
                         <div class="accordion-item" id="accordion-section-3">
                             <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
-                                <i class="bi bi-hourglass-split me-2"></i><span id="section3-title">3. Aging &amp; Old Cases</span> <small class="text-muted ms-2" style="font-size:0.7rem;" id="section3-subtitle">(Age = TODAY() – Creation Date)</small>
+                                <i class="bi bi-hourglass-split me-2"></i><span id="section3-title">3. Aging &amp; Old Cases</span> <small class="text-muted ms-2" style="font-size:0.7rem;" id="section3-subtitle">(Age = TODAY() – Creation Time)</small>
                             </button></h2>
                             <div id="collapseThree" class="accordion-collapse collapse">
                                 <div class="accordion-body">
@@ -1905,7 +1943,7 @@
                                     <div class="sub-section-header mb-2">
                                         <i class="bi bi-hourglass me-1" style="color:var(--primary);"></i>
                                         <strong>Idle Cases</strong>
-                                        <span class="badge ms-2" style="background:var(--primary-soft);color:var(--primary);font-size:0.68rem;">Based on Modified Date (Col J)</span>
+                                        <span class="badge ms-2" style="background:var(--primary-soft);color:var(--primary);font-size:0.68rem;">Based on Update Time (Col G)</span>
                                     </div>
                                     <div class="row g-2 mb-3">
                                         <div class="col-md-6"><div class="kpi-card" id="kpi-idle-1-card">
@@ -1980,10 +2018,10 @@
                         <div class="card p-3 mb-3" style="border-left: 4px solid var(--primary);">
                             <div class="d-flex align-items-center mb-2">
                                 <i class="bi bi-diagram-3-fill me-2" style="color:var(--primary);font-size:1.1rem;"></i>
-                                <h6 class="mb-0 fw-bold">Assignment Level – Team Stats &amp; Details</h6>
+                                <h6 class="mb-0 fw-bold">Assigned To – Team Stats &amp; Details</h6>
                             </div>
                             <div id="assignment-level-stats" class="row g-2">
-                                <div class="col-12 text-muted small">Load data to see team breakdown by Assignment Level (L1 / L2 / SME).</div>
+                                <div class="col-12 text-muted small">Load data to see team breakdown by Assigned To (L1 / L2 / SME).</div>
                             </div>
                         </div>
 
@@ -1994,7 +2032,7 @@
                                     <tr>
                                         <th>Owner</th>
                                         <th>Performance Scorecard %</th>
-                                        <th>Assignment Level</th>
+                                        <th>Assigned To</th>
                                         <th id="scorecard-cases-header">Total Open Cases</th>
                                         <th id="scorecard-sr-header">Total Open SR</th>
                                         <th id="scorecard-inc-header">Total Open INC</th>
@@ -2804,12 +2842,12 @@
                     <div class="p-3">
 
                         <!-- Header -->
-                        <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-4">
+                        <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-3">
                             <div>
                                 <h5 style="color:var(--primary);font-weight:800;margin-bottom:2px;">
                                     <i class="bi bi-people-fill me-2"></i>Team Level Metrics
                                 </h5>
-                                <p class="text-muted small mb-0">L1 team performance analysis — resolved call counts, compliance, KB/SOP usage, and feedback. Global filters applied. <span style="color:var(--primary);font-weight:600;"><i class="bi bi-cursor-fill me-1"></i>Click any chart bar or table row to drill down.</span></p>
+                                <p class="text-muted small mb-0">Multi-function team performance analysis (L1, L2, SME) across ITSM &amp; ITOM — resolved call counts, compliance, KB/SOP usage, feedback, and logged vs closed %. <span style="color:var(--primary);font-weight:600;"><i class="bi bi-cursor-fill me-1"></i>Click any chart bar or table row to drill down.</span></p>
                             </div>
                             <div class="d-flex gap-2">
                                 <button class="btn btn-sm pdf-download-btn" onclick="downloadDashboardPDF()" style="font-size:0.78rem;padding:5px 13px;">
@@ -2821,38 +2859,217 @@
                             </div>
                         </div>
 
-                        <!-- ── KPI Summary Cards Row ── -->
-                        <div class="row g-3 mb-4" id="l1m-kpi-cards">
-                            <div class="col-6 col-md-3">
-                                <div class="kpi-card" style="border-left-color:#5B4FE9;">
-                                    <span class="kpi-status-tag bg-info-tag">INFO</span>
-                                    <div class="kpi-title">Total Logged (Closed)</div>
-                                    <div class="kpi-value" id="l1m-total-logged" style="color:var(--primary);">0</div>
-                                    <div class="kpi-recommendation">Total closed cases in current filter</div>
+                        <!-- ── Function / Owner Filter (Team Level Metrics only) ── -->
+                        <div class="mb-4 p-3" style="background:linear-gradient(135deg,#EEF0FF 0%,#E0F9FF 100%);border:1.5px solid var(--border-strong);border-left:4px solid var(--primary);border-radius:14px;">
+                            <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                                <div class="fw-bold" style="font-size:0.85rem;color:var(--primary);"><i class="bi bi-funnel-fill me-1"></i>Team-Level Filters <span style="font-weight:400;font-size:0.75rem;color:var(--text-secondary);">(applies only to this section)</span></div>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="resetTlmFilters()" style="font-size:0.78rem;padding:4px 12px;font-weight:600;">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i>Reset All
+                                </button>
+                            </div>
+
+                            <!-- L1 Row -->
+                            <div class="tlm-filter-row mb-2 p-2" style="background:#fff;border:1.5px solid #E0E0F8;border-left:4px solid #5B4FE9;border-radius:10px;">
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-12 col-md-auto d-flex gap-2 flex-wrap">
+                                        <div class="form-check m-0" style="min-width:130px;background:#EEF0FF;border:1.5px solid #C7C2F8;border-radius:7px;padding:5px 10px 5px 28px;cursor:pointer;">
+                                            <input class="form-check-input" type="checkbox" id="tlm-fn-L1-ITSM" value="L1-ITSM" onchange="applyTlmFilters()" checked>
+                                            <label class="form-check-label" for="tlm-fn-L1-ITSM" style="font-size:0.76rem;font-weight:700;cursor:pointer;color:#5B4FE9;">L1 Team – ITSM</label>
+                                        </div>
+                                        <div class="form-check m-0" style="min-width:130px;background:#EEF0FF;border:1.5px solid #C7C2F8;border-radius:7px;padding:5px 10px 5px 28px;cursor:pointer;">
+                                            <input class="form-check-input" type="checkbox" id="tlm-fn-L1-ITOM" value="L1-ITOM" onchange="applyTlmFilters()" checked>
+                                            <label class="form-check-label" for="tlm-fn-L1-ITOM" style="font-size:0.76rem;font-weight:700;cursor:pointer;color:#5B4FE9;">L1 Team – ITOM</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div style="position:relative;">
+                                            <div class="sms-trigger" id="tlm-owner-L1-trigger" onclick="toggleTlmOwnerDropdown('L1')" style="border-color:#C7C2F8;font-size:0.76rem;">
+                                                <span class="sms-label" id="tlm-owner-L1-label">All L1 Owners</span>
+                                                <span class="sms-count-badge" id="tlm-owner-L1-badge" style="display:none;background:#5B4FE9;">0</span>
+                                                <i class="bi bi-chevron-down sms-chevron"></i>
+                                            </div>
+                                            <div class="sms-dropdown" id="tlm-owner-L1-dropdown" style="z-index:1050;">
+                                                <div class="sms-search-box"><input type="text" placeholder="Search L1 owner…" oninput="filterTlmOwnerOptions('L1',this.value)" id="tlm-owner-L1-search"></div>
+                                                <div class="sms-actions">
+                                                    <button onclick="tlmOwnerSelectAll('L1')">All</button>
+                                                    <span class="sms-sep">|</span>
+                                                    <button onclick="tlmOwnerClearAll('L1')">Clear</button>
+                                                </div>
+                                                <div class="sms-options-list" id="tlm-owner-L1-options"></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="kpi-card" style="border-left-color:#10B981;">
+
+                            <!-- L2 Row -->
+                            <div class="tlm-filter-row mb-2 p-2" style="background:#fff;border:1.5px solid #CCEEFF;border-left:4px solid #06B6D4;border-radius:10px;">
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-12 col-md-auto d-flex gap-2 flex-wrap">
+                                        <div class="form-check m-0" style="min-width:130px;background:#E0F9FF;border:1.5px solid #A5E9F7;border-radius:7px;padding:5px 10px 5px 28px;cursor:pointer;">
+                                            <input class="form-check-input" type="checkbox" id="tlm-fn-L2-ITSM" value="L2-ITSM" onchange="applyTlmFilters()" checked>
+                                            <label class="form-check-label" for="tlm-fn-L2-ITSM" style="font-size:0.76rem;font-weight:700;cursor:pointer;color:#06B6D4;">L2 Team – ITSM</label>
+                                        </div>
+                                        <div class="form-check m-0" style="min-width:130px;background:#E0F9FF;border:1.5px solid #A5E9F7;border-radius:7px;padding:5px 10px 5px 28px;cursor:pointer;">
+                                            <input class="form-check-input" type="checkbox" id="tlm-fn-L2-ITOM" value="L2-ITOM" onchange="applyTlmFilters()" checked>
+                                            <label class="form-check-label" for="tlm-fn-L2-ITOM" style="font-size:0.76rem;font-weight:700;cursor:pointer;color:#06B6D4;">L2 Team – ITOM</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div style="position:relative;">
+                                            <div class="sms-trigger" id="tlm-owner-L2-trigger" onclick="toggleTlmOwnerDropdown('L2')" style="border-color:#A5E9F7;font-size:0.76rem;">
+                                                <span class="sms-label" id="tlm-owner-L2-label">All L2 Owners</span>
+                                                <span class="sms-count-badge" id="tlm-owner-L2-badge" style="display:none;background:#06B6D4;">0</span>
+                                                <i class="bi bi-chevron-down sms-chevron"></i>
+                                            </div>
+                                            <div class="sms-dropdown" id="tlm-owner-L2-dropdown" style="z-index:1050;">
+                                                <div class="sms-search-box"><input type="text" placeholder="Search L2 owner…" oninput="filterTlmOwnerOptions('L2',this.value)" id="tlm-owner-L2-search"></div>
+                                                <div class="sms-actions">
+                                                    <button onclick="tlmOwnerSelectAll('L2')">All</button>
+                                                    <span class="sms-sep">|</span>
+                                                    <button onclick="tlmOwnerClearAll('L2')">Clear</button>
+                                                </div>
+                                                <div class="sms-options-list" id="tlm-owner-L2-options"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SME Row -->
+                            <div class="tlm-filter-row mb-2 p-2" style="background:#fff;border:1.5px solid #C3EFE1;border-left:4px solid #10B981;border-radius:10px;">
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-12 col-md-auto d-flex gap-2 flex-wrap">
+                                        <div class="form-check m-0" style="min-width:130px;background:#D1FAE5;border:1.5px solid #6EE7B7;border-radius:7px;padding:5px 10px 5px 28px;cursor:pointer;">
+                                            <input class="form-check-input" type="checkbox" id="tlm-fn-SME-ITSM" value="SME-ITSM" onchange="applyTlmFilters()" checked>
+                                            <label class="form-check-label" for="tlm-fn-SME-ITSM" style="font-size:0.76rem;font-weight:700;cursor:pointer;color:#059669;">SME – ITSM</label>
+                                        </div>
+                                        <div class="form-check m-0" style="min-width:130px;background:#D1FAE5;border:1.5px solid #6EE7B7;border-radius:7px;padding:5px 10px 5px 28px;cursor:pointer;">
+                                            <input class="form-check-input" type="checkbox" id="tlm-fn-SME-ITOM" value="SME-ITOM" onchange="applyTlmFilters()" checked>
+                                            <label class="form-check-label" for="tlm-fn-SME-ITOM" style="font-size:0.76rem;font-weight:700;cursor:pointer;color:#059669;">SME – ITOM</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div style="position:relative;">
+                                            <div class="sms-trigger" id="tlm-owner-SME-trigger" onclick="toggleTlmOwnerDropdown('SME')" style="border-color:#6EE7B7;font-size:0.76rem;">
+                                                <span class="sms-label" id="tlm-owner-SME-label">All SME Owners</span>
+                                                <span class="sms-count-badge" id="tlm-owner-SME-badge" style="display:none;background:#10B981;">0</span>
+                                                <i class="bi bi-chevron-down sms-chevron"></i>
+                                            </div>
+                                            <div class="sms-dropdown" id="tlm-owner-SME-dropdown" style="z-index:1050;">
+                                                <div class="sms-search-box"><input type="text" placeholder="Search SME owner…" oninput="filterTlmOwnerOptions('SME',this.value)" id="tlm-owner-SME-search"></div>
+                                                <div class="sms-actions">
+                                                    <button onclick="tlmOwnerSelectAll('SME')">All</button>
+                                                    <span class="sms-sep">|</span>
+                                                    <button onclick="tlmOwnerClearAll('SME')">Clear</button>
+                                                </div>
+                                                <div class="sms-options-list" id="tlm-owner-SME-options"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Active filter pills -->
+                            <div id="tlm-active-pills" style="display:none;flex-wrap:wrap;gap:5px;margin-top:8px;"></div>
+                        </div>
+
+                        <!-- ── KPI Summary Cards Row ── -->
+                        <div class="row g-3 mb-4" id="l1m-kpi-cards">
+                            <div class="col-6 col-md-4 col-lg" style="min-width:0;">
+                                <div class="kpi-card" style="border-left-color:#5B4FE9;cursor:pointer;" onclick="tlmKpiDrillDown('logged','Total Logged Cases')">
+                                    <span class="kpi-status-tag bg-info-tag">INFO</span>
+                                    <div class="kpi-title">Total Logged (All Cases)</div>
+                                    <div class="kpi-value" id="l1m-total-logged" style="color:var(--primary);">0</div>
+                                    <div class="kpi-recommendation" id="l1m-total-logged-rec">Total closed cases in current filter</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 col-lg" style="min-width:0;">
+                                <div class="kpi-card" style="border-left-color:#10B981;cursor:pointer;" onclick="tlmKpiDrillDown('resolved','Resolved (Closed) Cases')">
                                     <span class="kpi-status-tag bg-good" id="l1m-resolved-tag">GOOD</span>
-                                    <div class="kpi-title">Resolved (L1 Closed)</div>
+                                    <div class="kpi-title">Resolved (Closed)</div>
                                     <div class="kpi-value" id="l1m-resolved-count" style="color:#10B981;">0</div>
                                     <div class="kpi-recommendation" id="l1m-resolved-pct-rec">% of total logged</div>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="kpi-card" style="border-left-color:#06B6D4;">
+                            <div class="col-6 col-md-4 col-lg" style="min-width:0;">
+                                <div class="kpi-card" style="border-left-color:#06B6D4;cursor:pointer;" onclick="tlmKpiDrillDown('kb','KB/SOP Usage Cases')">
                                     <span class="kpi-status-tag bg-info-tag">KB/SOP</span>
                                     <div class="kpi-title">KB/SOP Usage Rate</div>
                                     <div class="kpi-value" id="l1m-kb-pct" style="color:#06B6D4;">0%</div>
                                     <div class="kpi-recommendation" id="l1m-kb-rec">% of closed calls resolved by referring KB/SOP</div>
                                 </div>
                             </div>
-                            <div class="col-6 col-md-3">
-                                <div class="kpi-card" style="border-left-color:#7C3AED;">
+                            <div class="col-6 col-md-4 col-lg" style="min-width:0;">
+                                <div class="kpi-card" style="border-left-color:#7C3AED;cursor:pointer;" onclick="tlmKpiDrillDown('feedback','All Feedback Cases')">
                                     <span class="kpi-status-tag bg-urgent" id="l1m-l2fb-tag">REVIEW</span>
                                     <div class="kpi-title">All Feedback Cases (L1/L2/SME)</div>
                                     <div class="kpi-value" id="l1m-l2fb-count" style="color:#7C3AED;">0</div>
                                     <div class="kpi-recommendation" id="l1m-l2fb-pct-rec">% cases with feedback from L1, L2, or SME</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4 col-lg" style="min-width:0;">
+                                <div class="kpi-card" style="border-left-color:#F59E0B;cursor:pointer;" onclick="tlmKpiDrillDown('loggedvsclosed','Logged vs Closed Analysis')">
+                                    <span class="kpi-status-tag bg-monitor" id="l1m-lvc-tag">MONITOR</span>
+                                    <div class="kpi-title">Logged v/s Closed %</div>
+                                    <div class="kpi-value" id="l1m-lvc-pct" style="color:#F59E0B;">0%</div>
+                                    <div class="kpi-recommendation" id="l1m-lvc-rec">Closure rate across all functions</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ── Function-wise Reconciliation Summary ── -->
+                        <div class="card mb-4" style="border:1.5px solid var(--border-strong);border-radius:16px;overflow:hidden;">
+                            <div style="background:linear-gradient(135deg,#1E3A5F 0%,#2563EB 60%,#3B82F6 100%);padding:14px 20px;">
+                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-grid-3x3-gap-fill" style="color:#fff;font-size:1.1rem;"></i>
+                                        <span style="color:#fff;font-size:1rem;font-weight:800;letter-spacing:-0.2px;">Function-wise Reconciliation — Incoming, Resolved &amp; Closure % (L1 / L2 / SME × ITSM / ITOM)</span>
+                                    </div>
+                                    <button class="btn btn-sm" onclick="exportTlmReconToExcel()" style="background:#fff;color:#1E3A5F;font-size:0.75rem;padding:4px 12px;font-weight:700;border-radius:8px;border:none;">
+                                        <i class="bi bi-file-earmark-excel me-1" style="color:#10B981;"></i>Excel Export
+                                    </button>
+                                </div>
+                                <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:3px;">Closure % = Closed ÷ All Logged (open+closed) · Click any row to drill down into all logged cases</div>
+                            </div>
+                            <div class="p-3">
+                                <div class="table-responsive">
+                                    <table class="table table-sm scorecard-table mb-0" id="tlm-recon-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align:left;min-width:130px;">Function</th>
+                                                <th>Module</th>
+                                                <th title="All logged cases (open + closed) for this function">Incoming (All Logged)</th>
+                                                <th title="Cases closed/resolved">Resolved (Closed)</th>
+                                                <th title="Closed ÷ All Logged">Closure %</th>
+                                                <th>SR Closed</th>
+                                                <th>INC Closed</th>
+                                                <th>KB Used</th>
+                                                <th title="KB Used ÷ Resolved">KB %</th>
+                                                <th>Feedback Cases</th>
+                                                <th title="Feedback ÷ All Logged">Feedback %</th>
+                                                <th>Drill Down</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tlm-recon-table-body">
+                                            <tr><td colspan="12" class="text-center text-muted py-3">Upload data to see reconciliation.</td></tr>
+                                        </tbody>
+                                        <tfoot id="tlm-recon-table-foot" style="display:none;">
+                                            <tr style="background:var(--primary-soft);font-weight:800;border-top:2px solid var(--border-strong);">
+                                                <td style="text-align:left;color:var(--primary);" colspan="2">Overall Total</td>
+                                                <td id="tlm-recon-tot-incoming">—</td>
+                                                <td id="tlm-recon-tot-resolved">—</td>
+                                                <td id="tlm-recon-tot-closure">—</td>
+                                                <td id="tlm-recon-tot-sr">—</td>
+                                                <td id="tlm-recon-tot-inc">—</td>
+                                                <td id="tlm-recon-tot-kb">—</td>
+                                                <td id="tlm-recon-tot-kbpct">—</td>
+                                                <td id="tlm-recon-tot-fb">—</td>
+                                                <td id="tlm-recon-tot-fbpct">—</td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -2863,8 +3080,9 @@
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="bi bi-bar-chart-line-fill" style="color:#fff;font-size:1.1rem;"></i>
                                     <span style="color:#fff;font-size:1rem;font-weight:800;letter-spacing:-0.2px;">1. Resolved Call Count &amp; % Against Logged (Per Engineer)</span>
+                                    <span id="tlm-section1-fn-tag" class="badge ms-2" style="background:rgba(255,255,255,0.2);color:#fff;font-size:0.68rem;font-weight:600;border-radius:20px;padding:3px 10px;">All Functions</span>
                                 </div>
-                                <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:3px;">Grouped bars: total logged vs resolved per L1 engineer · % shown on bars</div>
+                                <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:3px;">Grouped bars: total logged vs resolved per engineer · % shown on bars · Filtered by selected functions &amp; owners</div>
                             </div>
                             <div class="p-3">
                                 <div style="position:relative;height:300px;">
@@ -2900,8 +3118,9 @@
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="bi bi-shield-check-fill" style="color:#fff;font-size:1.1rem;"></i>
                                     <span style="color:#fff;font-size:1rem;font-weight:800;letter-spacing:-0.2px;">2. Compliance Metrics (Per Engineer)</span>
+                                    <span id="tlm-section2-fn-tag" class="badge ms-2" style="background:rgba(255,255,255,0.2);color:#fff;font-size:0.68rem;font-weight:600;border-radius:20px;padding:3px 10px;">All Functions</span>
                                 </div>
-                                <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:3px;">SLA compliance · Closure within 15 days · FCR rate · Email response compliance</div>
+                                <div style="font-size:0.72rem;color:rgba(255,255,255,0.7);margin-top:3px;">SLA compliance · Closure within 15 days · FCR rate · Filtered by selected functions &amp; owners</div>
                             </div>
                             <div class="p-3">
                                 <div class="row g-3 mb-3">
@@ -3435,7 +3654,7 @@
         let drillDownData = [];
         let drillDownTitleForExport = '';
         let drillDownExportData = [];
-        let globalFilters = { owner: [], submittedby: [], service: '', status: [], sla: '', level: '', l1team: [], mspaccount: [] };
+        let globalFilters = { owner: [], submittedby: [], service: '', status: [], sla: '', level: '', l1team: [], mspaccount: [], timescale: 'all' };
         let analysisMode = 'open'; // 'open' | 'closed'
         let charts = {};
         let scorecardData = [];
@@ -3454,7 +3673,7 @@
                 { key: 'title', label: 'Title' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'agingDays', label: 'Aging' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'lastEmailFrom', label: 'Last Email From' }
             ],
             'aging15': [
@@ -3466,8 +3685,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'aging15Status', label: 'Aging >15 days Status' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'oldest25': [
@@ -3479,8 +3698,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'aging15Status', label: 'Aging >15 days Status' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'agingLt15': [
@@ -3491,8 +3710,8 @@
                 { key: 'service', label: 'Service' },
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'agingLt7': [
@@ -3503,8 +3722,8 @@
                 { key: 'service', label: 'Service' },
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'followUpMissed': [
@@ -3515,8 +3734,8 @@
                 { key: 'service', label: 'Service' },
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'followUpDueToday': [
@@ -3527,8 +3746,8 @@
                 { key: 'service', label: 'Service' },
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'followUpDueTomorrow': [
@@ -3539,8 +3758,8 @@
                 { key: 'service', label: 'Service' },
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'emailNoFollowup': [
@@ -3552,8 +3771,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'emailCompliance', label: 'Email Response Compliance' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'emailResponseMissed': [
@@ -3565,8 +3784,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'emailCompliance', label: 'Email Response Compliance' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'subsequentResponseMissed': [
@@ -3578,8 +3797,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'expectedResponseTime', label: 'Expected Response Time' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'subRespDueToday': [
@@ -3591,8 +3810,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'expectedResponseTime', label: 'Expected Response Time' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'subRespDueTomorrow': [
@@ -3604,8 +3823,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'expectedResponseTime', label: 'Expected Response Time' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'edocBreach': [
@@ -3617,8 +3836,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'expectedResolution', label: 'SR EDOC' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'edocDueToday': [
@@ -3630,8 +3849,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'expectedResolution', label: 'SR EDOC' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'edocDueTomorrow': [
@@ -3643,8 +3862,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'expectedResolution', label: 'SR EDOC' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'subsequentSLAMiss': [
@@ -3656,8 +3875,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'updatePendingSupportCounter', label: 'Update Pending From Support Counter' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'idle1': [
@@ -3669,8 +3888,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'ageingLastModified', label: 'Ageing from Last modified time' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'idle3': [
@@ -3682,8 +3901,8 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'ageingLastModified', label: 'Ageing from Last modified time' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'totalOpen': [
@@ -3695,8 +3914,8 @@
                 { key: 'service', label: 'Service' },
                 { key: 'expectedResolution', label: 'SR EDOC' },
                 { key: 'agingDays', label: 'Aging' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaViolationStatus', label: 'SLA Status' }
             ],
             'totalSR': [
@@ -3708,8 +3927,8 @@
                 { key: 'service', label: 'Service' },
                 { key: 'expectedResolution', label: 'SR EDOC' },
                 { key: 'agingDays', label: 'Aging' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaViolationStatus', label: 'SLA Status' }
             ],
             'totalINC': [
@@ -3719,8 +3938,8 @@
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'agingDays', label: 'Aging' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaViolationStatus', label: 'SLA Status' }
             ],
             'slaSR': [
@@ -3730,8 +3949,8 @@
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'agingDays', label: 'Aging' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaViolationStatus', label: 'SLA Status' }
             ],
             'emailFollowupMissed': [
@@ -3745,8 +3964,8 @@
                 { key: 'emailCompliance', label: 'Email Follow-up Compliance' },
                 { key: 'lastEmailFrom', label: 'Last Email From' },
                 { key: 'lastEmailSentTime', label: 'Last Email Sent Time' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'emailFollowupToday': [
@@ -3760,8 +3979,8 @@
                 { key: 'emailCompliance', label: 'Email Follow-up Compliance' },
                 { key: 'lastEmailFrom', label: 'Last Email From' },
                 { key: 'lastEmailSentTime', label: 'Last Email Sent Time' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'emailFollowupTomorrow': [
@@ -3775,8 +3994,8 @@
                 { key: 'emailCompliance', label: 'Email Follow-up Compliance' },
                 { key: 'lastEmailFrom', label: 'Last Email From' },
                 { key: 'lastEmailSentTime', label: 'Last Email Sent Time' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'emailRespMissed': [
@@ -3790,8 +4009,8 @@
                 { key: 'emailCompliance', label: 'Email Response Compliance' },
                 { key: 'lastEmailFrom', label: 'Last Email From' },
                 { key: 'lastEmailSentTime', label: 'Last Email Sent Time' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'emailRespToday': [
@@ -3805,8 +4024,8 @@
                 { key: 'emailCompliance', label: 'Email Response Compliance' },
                 { key: 'lastEmailFrom', label: 'Last Email From' },
                 { key: 'lastEmailSentTime', label: 'Last Email Sent Time' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'emailRespTomorrow': [
@@ -3820,8 +4039,8 @@
                 { key: 'emailCompliance', label: 'Email Response Compliance' },
                 { key: 'lastEmailFrom', label: 'Last Email From' },
                 { key: 'lastEmailSentTime', label: 'Last Email Sent Time' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             'slaINC': [
@@ -3831,8 +4050,8 @@
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'agingDays', label: 'Aging' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaViolationStatus', label: 'SLA Status' }
             ],
             'edocMissing': [
@@ -3844,8 +4063,8 @@
                 { key: 'service', label: 'Service' },
                 { key: 'expectedResolution', label: 'SR EDOC' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
             ],
             // ── Closed-case drill-down column definitions ──
@@ -3856,7 +4075,7 @@
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'service', label: 'Service' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
@@ -3866,7 +4085,7 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
@@ -3876,7 +4095,7 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
@@ -3887,7 +4106,7 @@
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'service', label: 'Service' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
@@ -3897,7 +4116,7 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
@@ -3907,7 +4126,7 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
@@ -3917,7 +4136,7 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
@@ -3927,7 +4146,7 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
@@ -3937,7 +4156,7 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
@@ -3947,7 +4166,7 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
@@ -3957,7 +4176,7 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
@@ -3967,7 +4186,7 @@
                 { key: 'owner', label: 'Owner' },
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'resolvedDateDisplay', label: 'Resolved Date' },
                 { key: 'closedAgingDisplay', label: 'Closure Aging' }
             ],
@@ -4492,7 +4711,7 @@
 
             // New column structure (A–AK):
             // A-SLNO B-Record ID C-Title D-Owner E-Submitted By F-Customer Name
-            // G-Last Modified Time H-Creation Time I-Creation Date J-Modified Date K-Current Status
+            // G-Update Time H-Creation Time I-Creation Date J-Modified Date K-Current Status
             // L-Submitter Name M-Submitter Email N-Submitter Phone O-Service P-Urgency Q-Priority
             // R-Severity S-Support Category T-Feature U-Sub Feature V-Assignment Level
             // W-SR EDOC X-SR Service Y-Internal Reference ID Z-Was KB Referred
@@ -4506,11 +4725,11 @@
                 customerName: findCol(['Customer Name', 'Submitted By', 'Customer']),
                 currentStatus: findCol(['Current Status', 'CurrentStatus', 'Status', 'State']),
                 service: findCol(['Service', 'Service Type', 'Type']),
-                owner: findCol(['Owner', 'Assigned To', 'Engineer']),
-                assignmentLevel: findCol(['Assignment Level', 'Assign Level', 'Level']),
-                creationDate: findCol(['Creation Date', 'Created Date', 'Created On']),
-                modifiedDate: findCol(['Modified Date', 'Last Modified Date']),
-                lastModifiedTime: findCol(['Last Modified Time', 'Modified Time']),
+                owner: findCol(['Owner', 'Assign To', 'Engineer']),
+                assignmentLevel: findCol(['Assign To', 'Assignment Level', 'Assign Level', 'Level']),
+                creationDate: findCol(['Creation Time', 'Creation Date', 'Created Date', 'Created On']),
+                modifiedDate: findCol(['Update Time', 'Modified Date', 'Last Modified Date']),
+                lastModifiedTime: findCol(['Update Time', 'Last Modified Time', 'Modified Time']),
                 urgency: findCol(['Urgency', 'Priority Level']),
                 priority: findCol(['Priority', 'Ticket Priority']),
                 severity: findCol(['Severity', 'Severity Level']),
@@ -4541,7 +4760,7 @@
                 updatePendingSupportCounter: findCol(['Update Pending From Support Counter', 'Pending Counter']),
                 ageingLastModified: findCol(['Ageing from Last modified time', 'Last Modified Aging']),
                 steps: findCol(['Resolution Steps', 'Steps to be followed', 'Steps']),
-                resolvedTime: findCol(['Resolved Time', 'Resolution Time', 'Closure Time', 'Closed Time', 'Resolved Date']),
+                resolvedTime: findCol(['Resolved Time', 'Resolve Time', 'Resolution Time', 'Closure Time', 'Closed Time', 'Resolved Date']),
                 supportCategory: findCol(['Support Category', 'SupportCategory', 'Category']),
                 feature: findCol(['Feature', 'Feature Name']),
                 subFeature: findCol(['Sub Feature', 'SubFeature', 'Sub-Feature'])
@@ -4773,6 +4992,7 @@
                 const isEmailRespTomorrow = emailResponseCompliance === 'Email Resp Due Tomorrow';
 
                 return {
+                    _creationDate: creationDateObj,
                     incidentId: row[colMap.incidentId] || 'N/A',
                     owner: row[colMap.owner] || 'Unassigned',
                     title: row[colMap.title] || 'No Title',
@@ -4803,6 +5023,7 @@
                     ageingLastModified: agingFromLastModified.toString(),
                     creationDateDisplay: creationDateObj ? creationDateObj.toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}) : (row[colMap.creationDate] ? row[colMap.creationDate].toString() : ''),
                     modifiedDateDisplay: modifiedDateObj ? modifiedDateObj.toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}) : (row[colMap.modifiedDate] ? row[colMap.modifiedDate].toString() : ''),
+                    updateTimeDisplay: modifiedDateObj ? modifiedDateObj.toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}) : (row[colMap.modifiedDate] ? row[colMap.modifiedDate].toString() : ''),
                     
                     isL1ActionItem: (() => {
                         if (!creationDateObj) return false;
@@ -4952,6 +5173,56 @@
             populateSMSStatus(statusList);
         }
 
+        // ── Timescale helper ──────────────────────────────────────────────────
+        function _timescaleMatch(creationDate, ts) {
+            if (!creationDate || !(creationDate instanceof Date) || isNaN(creationDate.getTime())) return true;
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = now.getMonth(); // 0-based
+
+            const startOf = (yr, mo) => new Date(yr, mo, 1); // first ms of month
+            const endOf   = (yr, mo) => new Date(yr, mo + 1, 0, 23, 59, 59, 999); // last ms of month
+
+            let from = null, to = null;
+
+            if (ts === 'current_month') {
+                from = startOf(y, m); to = endOf(y, m);
+            } else if (ts === 'last_month') {
+                const lm = m === 0 ? 11 : m - 1; const ly = m === 0 ? y - 1 : y;
+                from = startOf(ly, lm); to = endOf(ly, lm);
+            } else if (ts === 'last_month_plus_current') {
+                const lm = m === 0 ? 11 : m - 1; const ly = m === 0 ? y - 1 : y;
+                from = startOf(ly, lm); to = endOf(y, m);
+            } else if (ts === 'current_year') {
+                from = startOf(y, 0); to = endOf(y, 11);
+            } else if (ts === 'last_year') {
+                from = startOf(y - 1, 0); to = endOf(y - 1, 11);
+            } else {
+                // Pattern: last_N or last_N_plus_current
+                const matchPlus = ts.match(/^last_(\d+)_plus_current$/);
+                const matchOnly = ts.match(/^last_(\d+)$/);
+                if (matchPlus) {
+                    const n = parseInt(matchPlus[1]);
+                    const startM = ((m - n) % 12 + 12) % 12;
+                    const startY = y - Math.ceil((n - m) / 12) - (m < n ? 0 : 0);
+                    // Calculate correct start year
+                    let sm = m - n; let sy = y;
+                    while (sm < 0) { sm += 12; sy--; }
+                    from = startOf(sy, sm); to = endOf(y, m);
+                } else if (matchOnly) {
+                    const n = parseInt(matchOnly[1]);
+                    let sm = m - n; let sy = y;
+                    while (sm < 0) { sm += 12; sy--; }
+                    let em = m - 1; let ey = y;
+                    if (em < 0) { em += 12; ey--; }
+                    from = startOf(sy, sm); to = endOf(ey, em);
+                }
+            }
+
+            if (!from || !to) return true;
+            return creationDate >= from && creationDate <= to;
+        }
+
         function updateGlobalFilters() {
             showLoading(true);
             
@@ -4970,6 +5241,8 @@
             globalFilters.sla = document.getElementById('global-filter-sla').value;
             const levelEl = document.getElementById('global-filter-level');
             globalFilters.level = levelEl ? levelEl.value : '';
+            const tsEl = document.getElementById('global-filter-timescale');
+            globalFilters.timescale = tsEl ? tsEl.value : 'all';
 
             filteredData = processedData.filter(d => {
                 // Analysis mode gate — must come first
@@ -4984,6 +5257,10 @@
                 if (globalFilters.level && d.assignmentLevel !== globalFilters.level) return false;
                 if (globalFilters.sla === 'Violated' && !d.isSlaViolated) return false;
                 if (globalFilters.sla === 'Non-Violated' && d.isSlaViolated) return false;
+                // Timescale filter — applied to Creation Time (creationDateObj stored on d)
+                if (globalFilters.timescale && globalFilters.timescale !== 'all') {
+                    if (!_timescaleMatch(d._creationDate, globalFilters.timescale)) return false;
+                }
                 return true;
             });
 
@@ -5034,8 +5311,27 @@
             document.body.style.overflow = '';
         }
 
+        // Build a human-readable label for timescale value
+        function _timescaleLabel(ts) {
+            if (!ts || ts === 'all') return '';
+            const map = {
+                current_month: 'Current Month', last_month: 'Last Month',
+                last_month_plus_current: 'Last Month + Current',
+                current_year: 'Current Year', last_year: 'Last Year'
+            };
+            if (map[ts]) return map[ts];
+            const mp = ts.match(/^last_(\d+)_plus_current$/);
+            if (mp) return `Last ${mp[1]} Months + Current`;
+            const mo = ts.match(/^last_(\d+)$/);
+            if (mo) return `Last ${mo[1]} Months`;
+            return ts;
+        }
+
         function updateActiveFiltersDisplay() {
             const activeFilters = [];
+            if (globalFilters.timescale && globalFilters.timescale !== 'all') {
+                activeFilters.push({key: 'timescale', label: 'Timescale', value: _timescaleLabel(globalFilters.timescale)});
+            }
             if (globalFilters.owner.length > 0) activeFilters.push({key: 'owner', label: 'Owner', value: globalFilters.owner.join(', ')});
             if (globalFilters.submittedby.length > 0) activeFilters.push({key: 'submittedby', label: 'Customer', value: globalFilters.submittedby.join(', ')});
             if (globalFilters.level) activeFilters.push({key: 'level', label: 'Level', value: globalFilters.level});
@@ -5125,6 +5421,9 @@
         }
 
         function clearAllFilters() {
+            const tsEl = document.getElementById('global-filter-timescale');
+            if (tsEl) tsEl.value = 'all';
+            globalFilters.timescale = 'all';
             // Clear hidden select elements
             const clearMulti = (id) => {
                 const el = document.getElementById(id);
@@ -6619,7 +6918,7 @@
             const s3title  = document.getElementById('section3-title');
             const s3sub    = document.getElementById('section3-subtitle');
             if (s3title) s3title.textContent = isClosed ? '3. Closure Aging' : '3. Aging & Old Cases';
-            if (s3sub)   s3sub.textContent   = isClosed ? '(Resolved Time − Creation Time)' : '(Age = TODAY() – Creation Date)';
+            if (s3sub)   s3sub.textContent   = isClosed ? '(Resolved Time − Creation Time)' : '(Age = TODAY() – Creation Time)';
             // Section 4
             const s4open   = document.getElementById('section4-open-cards');
             const s4closed = document.getElementById('section4-closed-cards');
@@ -7140,7 +7439,7 @@
                 theadOpen.innerHTML = `
                     <th>Owner</th>
                     <th>Performance Scorecard %</th>
-                    <th>Assignment Level</th>
+                    <th>Assigned To</th>
                     <th id="scorecard-cases-header">Total Open Cases</th>
                     <th id="scorecard-sr-header">Total Open SR</th>
                     <th id="scorecard-inc-header">Total Open INC</th>
@@ -7264,7 +7563,7 @@
                 thead.innerHTML = `
                     <th>Owner</th>
                     <th>Performance Scorecard %</th>
-                    <th>Assignment Level</th>
+                    <th>Assigned To</th>
                     <th>Total Closed Cases</th>
                     <th>Outstanding Open Cases</th>
                     <th>Total Closed SR</th>
@@ -7465,8 +7764,8 @@
                 { key: 'title',               label: 'Title' },
                 { key: 'owner',               label: 'Owner' },
                 { key: 'submittedBy',         label: 'Submitted By' },
-                { key: 'creationDateDisplay', label: 'Creation Date' },
-                { key: 'modifiedDateDisplay', label: 'Modified Date' },
+                { key: 'creationTimeDisplay', label: 'Creation Time' },
+                { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'currentStatus',       label: 'Current Status' },
                 { key: 'service',             label: 'Service' },
                 { key: 'expectedResolution',  label: 'SR EDOC' },
@@ -8735,7 +9034,7 @@
                 if (lvlCards) {
                     assignmentLevelHTML = `
                     <div class="section-block" style="margin-top:24px;">
-                        <div class="section-title">Assignment Level – Team Stats &amp; Details</div>
+                        <div class="section-title">Assigned To – Team Stats &amp; Details</div>
                         <div class="lvl-grid">${lvlCards}</div>
                     </div>`;
                 }
@@ -9756,11 +10055,470 @@ ${bodyHTML}
         }
 
         // ─────────────────────────────────────────────────────────────────────
+        // TEAM LEVEL METRICS — FUNCTION/OWNER FILTER SYSTEM
+        // ─────────────────────────────────────────────────────────────────────
+
+        // Function → Owner mapping
+        const TLM_FUNCTION_MAP = {
+            'L1-ITSM': ['Aparna JS','Aswin Kumar A S','Dhanush M','Jenish Velmurugan','Keerthana R','Rafnas P','Raju R','Ramya R','Shruti Yelamali'],
+            'L1-ITOM': ['Sankar K','Jaya Soorya'],
+            'L2-ITSM': ['Hitesh Shetty','Shahana Begum','Kiruthika S','Mohammed Imthiyaz','Rajpraveen'],
+            'L2-ITOM': ['Mugesh Marachan','Vidhyappratha M S'],
+            'SME-ITSM': ['Charles','Rajkumar Iyyappaprakash','Raja BT'],
+            'SME-ITOM': ['Arshad Khan','Nitin Panwar']
+        };
+
+        // All owners derived from map
+        const TLM_ALL_OWNERS = [...new Set(Object.values(TLM_FUNCTION_MAP).flat())].sort();
+
+        // Colour per function
+        const TLM_FN_COLORS = {
+            'L1-ITSM':'#5B4FE9','L1-ITOM':'#7B72EE',
+            'L2-ITSM':'#06B6D4','L2-ITOM':'#0E9FC1',
+            'SME-ITSM':'#10B981','SME-ITOM':'#059669'
+        };
+        const TLM_FN_DISPLAY = {
+            'L1-ITSM':'L1 Team – ITSM','L1-ITOM':'L1 Team – ITOM',
+            'L2-ITSM':'L2 Team – ITSM','L2-ITOM':'L2 Team – ITOM',
+            'SME-ITSM':'SME – ITSM','SME-ITOM':'SME – ITOM'
+        };
+
+        // ── Per-function owner selection state ─────────────────────────────────
+        // Each tier (L1/L2/SME) has its own selected-owners Set
+        const _tlmTiers = ['L1','L2','SME'];
+        const _tlmTierFns = {
+            'L1': ['L1-ITSM','L1-ITOM'],
+            'L2': ['L2-ITSM','L2-ITOM'],
+            'SME': ['SME-ITSM','SME-ITOM']
+        };
+        // Build initial selected set per tier (all owners selected)
+        function _tlmInitTierOwners() {
+            const state = {};
+            _tlmTiers.forEach(tier => {
+                const owners = _tlmTierFns[tier].flatMap(fn => TLM_FUNCTION_MAP[fn]||[]);
+                state[tier] = new Set(owners);
+            });
+            return state;
+        }
+        let _tlmTierSelected = _tlmInitTierOwners();
+        let _tlmOpenTier = null; // which tier dropdown is open
+
+        // _tlmSelectedOwners is derived from tier selections — kept as unified Set for filter fns
+        let _tlmSelectedOwners = new Set(TLM_ALL_OWNERS);
+        function _syncTlmSelectedOwners() {
+            _tlmSelectedOwners = new Set();
+            _tlmTiers.forEach(tier => {
+                _tlmTierSelected[tier].forEach(o => _tlmSelectedOwners.add(o));
+            });
+        }
+
+        function _tlmCheckedFunctions() {
+            const fns = Object.keys(TLM_FUNCTION_MAP);
+            return fns.filter(fn => {
+                const el = document.getElementById('tlm-fn-' + fn);
+                return el ? el.checked : true;
+            });
+        }
+
+        // Get owners belonging to a tier that are in checked functions
+        function _tlmTierAllowedOwners(tier) {
+            const fns = _tlmTierFns[tier]||[];
+            // Only include owners from checked functions within this tier
+            return fns.flatMap(fn => {
+                const el = document.getElementById('tlm-fn-' + fn);
+                return (el && el.checked) ? (TLM_FUNCTION_MAP[fn]||[]) : [];
+            });
+        }
+
+        function _buildTlmOwnerOptions(tier, filterText) {
+            const container = document.getElementById('tlm-owner-' + tier + '-options');
+            if (!container) return;
+            const q = (filterText||'').toLowerCase();
+            const allowed = _tlmTierAllowedOwners(tier);
+            const list = allowed.filter(o => !q || o.toLowerCase().includes(q));
+            if (!list.length) {
+                container.innerHTML = '<div class="sms-no-results">No owners found</div>';
+                return;
+            }
+            container.innerHTML = list.map(o => {
+                const sel = _tlmTierSelected[tier] && _tlmTierSelected[tier].has(o);
+                const esc = o.replace(/'/g, "\\'");
+                return `<div class="sms-option ${sel?'selected':''}" onclick="tlmOwnerToggle('${tier}','${esc}')">
+                    <input type="checkbox" ${sel?'checked':''} readonly> <span>${o}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function toggleTlmOwnerDropdown(tier) {
+            const dd      = document.getElementById('tlm-owner-' + tier + '-dropdown');
+            const trigger = document.getElementById('tlm-owner-' + tier + '-trigger');
+            if (!dd) return;
+            // Close previously open tier
+            if (_tlmOpenTier && _tlmOpenTier !== tier) {
+                const oldDd = document.getElementById('tlm-owner-' + _tlmOpenTier + '-dropdown');
+                const oldTr = document.getElementById('tlm-owner-' + _tlmOpenTier + '-trigger');
+                if (oldDd) oldDd.classList.remove('open');
+                if (oldTr) oldTr.classList.remove('open');
+            }
+            const nowOpen = !dd.classList.contains('open');
+            dd.classList.toggle('open', nowOpen);
+            trigger.classList.toggle('open', nowOpen);
+            _tlmOpenTier = nowOpen ? tier : null;
+            if (nowOpen) {
+                const si = document.getElementById('tlm-owner-' + tier + '-search');
+                if (si) si.value = '';
+                _buildTlmOwnerOptions(tier, '');
+            }
+        }
+
+        function filterTlmOwnerOptions(tier, val) { _buildTlmOwnerOptions(tier, val); }
+
+        function tlmOwnerToggle(tier, owner) {
+            if (!_tlmTierSelected[tier]) _tlmTierSelected[tier] = new Set();
+            if (_tlmTierSelected[tier].has(owner)) _tlmTierSelected[tier].delete(owner);
+            else _tlmTierSelected[tier].add(owner);
+            const si = document.getElementById('tlm-owner-' + tier + '-search');
+            _buildTlmOwnerOptions(tier, si ? si.value : '');
+            _syncTlmSelectedOwners();
+            _updateTlmOwnerTrigger(tier);
+            _updateTlmPills();
+            renderL1TeamMetrics();
+        }
+
+        function tlmOwnerSelectAll(tier) {
+            const allowed = _tlmTierAllowedOwners(tier);
+            if (!_tlmTierSelected[tier]) _tlmTierSelected[tier] = new Set();
+            allowed.forEach(o => _tlmTierSelected[tier].add(o));
+            const si = document.getElementById('tlm-owner-' + tier + '-search');
+            _buildTlmOwnerOptions(tier, si ? si.value : '');
+            _syncTlmSelectedOwners();
+            _updateTlmOwnerTrigger(tier);
+            _updateTlmPills();
+            renderL1TeamMetrics();
+        }
+
+        function tlmOwnerClearAll(tier) {
+            _tlmTierSelected[tier] = new Set();
+            const si = document.getElementById('tlm-owner-' + tier + '-search');
+            _buildTlmOwnerOptions(tier, si ? si.value : '');
+            _syncTlmSelectedOwners();
+            _updateTlmOwnerTrigger(tier);
+            _updateTlmPills();
+            renderL1TeamMetrics();
+        }
+
+        function _updateTlmOwnerTrigger(tier) {
+            const allowed = _tlmTierAllowedOwners(tier);
+            const sel = _tlmTierSelected[tier]||new Set();
+            const active = allowed.filter(o => sel.has(o));
+            const label  = document.getElementById('tlm-owner-' + tier + '-label');
+            const badge  = document.getElementById('tlm-owner-' + tier + '-badge');
+            if (!label) return;
+            const tierLabel = tier === 'SME' ? 'SME' : tier;
+            if (active.length === 0) {
+                label.textContent = 'No ' + tierLabel + ' owners selected';
+                if (badge) badge.style.display = 'none';
+            } else if (active.length === allowed.length) {
+                label.textContent = 'All ' + tierLabel + ' Owners';
+                if (badge) badge.style.display = 'none';
+            } else {
+                label.textContent = active.length + ' owner' + (active.length > 1 ? 's' : '') + ' selected';
+                if (badge) { badge.textContent = active.length; badge.style.display = ''; }
+            }
+        }
+
+        function applyTlmFilters() {
+            // When function checkboxes change, re-sync owners per tier
+            _tlmTiers.forEach(tier => {
+                const allowed = new Set(_tlmTierAllowedOwners(tier));
+                if (!_tlmTierSelected[tier]) _tlmTierSelected[tier] = new Set();
+                // Add newly available owners (from newly checked functions)
+                allowed.forEach(o => _tlmTierSelected[tier].add(o));
+                // Remove owners whose functions are now unchecked
+                [..._tlmTierSelected[tier]].forEach(o => { if (!allowed.has(o)) _tlmTierSelected[tier].delete(o); });
+                _updateTlmOwnerTrigger(tier);
+            });
+            _syncTlmSelectedOwners();
+            _updateTlmPills();
+            renderL1TeamMetrics();
+        }
+
+        function resetTlmFilters() {
+            Object.keys(TLM_FUNCTION_MAP).forEach(fn => {
+                const el = document.getElementById('tlm-fn-' + fn);
+                if (el) el.checked = true;
+            });
+            _tlmTierSelected = _tlmInitTierOwners();
+            _syncTlmSelectedOwners();
+            _tlmTiers.forEach(tier => {
+                _updateTlmOwnerTrigger(tier);
+                const dd = document.getElementById('tlm-owner-' + tier + '-dropdown');
+                if (dd) dd.classList.remove('open');
+                const tr = document.getElementById('tlm-owner-' + tier + '-trigger');
+                if (tr) tr.classList.remove('open');
+            });
+            _tlmOpenTier = null;
+            _updateTlmPills();
+            renderL1TeamMetrics();
+        }
+
+        function _updateTlmPills() {
+            const container = document.getElementById('tlm-active-pills');
+            if (!container) return;
+            const checkedFns = _tlmCheckedFunctions();
+            const allFns = Object.keys(TLM_FUNCTION_MAP);
+
+            const fnPills = (checkedFns.length < allFns.length)
+                ? checkedFns.map(fn => `<span class="filter-tag"><span style="background:${TLM_FN_COLORS[fn]||'var(--primary)'};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;"></span>${TLM_FN_DISPLAY[fn]||fn}</span>`).join('')
+                : '';
+
+            let ownerPills = '';
+            _tlmTiers.forEach(tier => {
+                const allowed = _tlmTierAllowedOwners(tier);
+                const sel = [...(_tlmTierSelected[tier]||[])].filter(o => allowed.includes(o));
+                if (sel.length > 0 && sel.length < allowed.length) {
+                    ownerPills += sel.slice(0,3).map(o => `<span class="filter-tag"><i class="bi bi-person me-1"></i>${o}</span>`).join('');
+                    if (sel.length > 3) ownerPills += `<span class="filter-tag">+${sel.length-3} ${tier}</span>`;
+                }
+            });
+
+            const html = fnPills + ownerPills;
+            container.style.display = html ? 'flex' : 'none';
+            container.innerHTML = html || '';
+        }
+
+
+
+        // Build active TLM owner set (intersection of checked functions x selected owners)
+        // When ALL functions are checked and ALL mapped owners selected → include ALL data owners
+        function _tlmActiveOwnerSet() {
+            const checkedFns = _tlmCheckedFunctions();
+            const allFns = Object.keys(TLM_FUNCTION_MAP);
+            const allMappedOwners = new Set(allFns.flatMap(fn => TLM_FUNCTION_MAP[fn]||[]));
+            const allowedFromChecked = new Set(checkedFns.flatMap(fn => TLM_FUNCTION_MAP[fn]||[]));
+
+            // If every function is checked and every mapped owner is selected → show all data owners
+            const everythingSelected = checkedFns.length === allFns.length &&
+                [...allMappedOwners].every(o => _tlmSelectedOwners.has(o));
+            if (everythingSelected) {
+                return new Set((processedData||[]).map(d => d.owner).filter(Boolean));
+            }
+            // Otherwise restrict to selected owners within checked functions
+            return new Set([..._tlmSelectedOwners].filter(o => allowedFromChecked.has(o)));
+        }
+
+        // Closed cases filtered by TLM owner set
+        function _tlmFilteredClosed() {
+            const ownerSet = _tlmActiveOwnerSet();
+            return filteredData.filter(d => d.isClosedCase && ownerSet.has(d.owner));
+        }
+
+        // ALL logged (open+closed) for TLM owners — uses processedData so open cases are included
+        function _tlmFilteredAll() {
+            const ownerSet = _tlmActiveOwnerSet();
+            return (processedData||[]).filter(d => {
+                if (!ownerSet.has(d.owner)) return false;
+                if (globalFilters.mspaccount.length > 0 && !globalFilters.mspaccount.includes(d.customerName)) return false;
+                if (globalFilters.submittedby.length > 0 && !globalFilters.submittedby.includes(d.customerName)) return false;
+                if (globalFilters.service && d.service !== globalFilters.service) return false;
+                if (globalFilters.level && d.assignmentLevel !== globalFilters.level) return false;
+                if (globalFilters.sla === 'Violated' && !d.isSlaViolated) return false;
+                if (globalFilters.sla === 'Non-Violated' && d.isSlaViolated) return false;
+                if (globalFilters.timescale && globalFilters.timescale !== 'all') {
+                    if (!_timescaleMatch(d._creationDate, globalFilters.timescale)) return false;
+                }
+                return true;
+            });
+        }
+
+        // Get function label for an owner
+        function _tlmOwnerFunction(owner) {
+            for (const [fn, owners] of Object.entries(TLM_FUNCTION_MAP)) {
+                if (owners.includes(owner)) return fn;
+            }
+            return 'Other';
+        }
+
+        // Get active function labels for subtitle tags
+        function _tlmActiveFnLabel() {
+            const fns = _tlmCheckedFunctions();
+            if (fns.length === Object.keys(TLM_FUNCTION_MAP).length) return 'All Functions';
+            return fns.map(f => TLM_FN_DISPLAY[f]||f).join(', ');
+        }
+
+        // KPI card drill-down handler for TLM cards
+        function tlmKpiDrillDown(type, title) {
+            const closed = _tlmFilteredClosed();
+            const allF   = _tlmFilteredAll();
+            let data, cols;
+            const baseCols = [
+                { key:'incidentId', label:'Case ID' },
+                { key:'title', label:'Title' },
+                { key:'owner', label:'Owner' },
+                { key:'assignmentLevel', label:'Level' },
+                { key:'service', label:'Service' },
+                { key:'resolutionCode', label:'Resolution Code' },
+                { key:'wasKBReferred', label:'KB Referred' },
+                { key:'isSlaViolated', label:'SLA Violated' },
+                { key:'resolvedDateDisplay', label:'Resolved Date' },
+                { key:'closedAgingDays', label:'Resolution (Days)' }
+            ];
+            if (type==='logged') { data=allF; cols=baseCols; }
+            else if (type==='resolved') { data=closed; cols=baseCols; }
+            else if (type==='kb') { data=closed.filter(d=>(d.wasKBReferred||'').toLowerCase()==='yes'); cols=baseCols; }
+            else if (type==='feedback') { data=closed.filter(d=>(d.feedbackTo||'').trim().length>0); cols=[...baseCols,{key:'feedbackTo',label:'Feedback To'},{key:'feedback',label:'Feedback Comment'}]; }
+            else if (type==='loggedvsclosed') { data=allF; cols=[...baseCols,{key:'currentStatus',label:'Status'}]; }
+            else { data=closed; cols=baseCols; }
+            openL1DrillDown(title, data, cols);
+        }
+
+        // ─────────────────────────────────────────────────────────────────────
+        // ─────────────────────────────────────────────────────────────────────
+        // RENDER FUNCTION-WISE RECONCILIATION TABLE
+        // ─────────────────────────────────────────────────────────────────────
+        let _tlmReconRowsCache = []; // cache for Excel export
+
+        function renderTlmReconciliation(closedCases, allCases) {
+            const tbody = document.getElementById('tlm-recon-table-body');
+            const tfoot = document.getElementById('tlm-recon-table-foot');
+            if (!tbody) return;
+            const isSOP = v => (v||'').toString().trim().toLowerCase()==='yes';
+            const hasFb = d => (d.feedbackTo||'').toString().trim().length>0;
+
+            const checkedFns = _tlmCheckedFunctions();
+            _tlmReconRowsCache = [];
+            let totIn=0, totRes=0, totSR=0, totINC=0, totKB=0, totFB=0;
+
+            checkedFns.forEach(fn => {
+                const fnOwners = new Set((TLM_FUNCTION_MAP[fn]||[]).filter(o=>_tlmSelectedOwners.has(o)));
+                if (!fnOwners.size) return;
+                // allCases = _tlmFilteredAll() = processedData-based (open+closed) for true logged count
+                const fnAll    = allCases.filter(d => fnOwners.has(d.owner));
+                const fnClosed = closedCases.filter(d => fnOwners.has(d.owner));
+                const incoming = fnAll.length;
+                const resolved = fnClosed.length;
+                const closure  = incoming>0?(resolved/incoming*100).toFixed(1):'0.0';
+                const sr = fnClosed.filter(d=>d.isSR).length;
+                const inc= fnClosed.filter(d=>d.isINC).length;
+                const kb = fnClosed.filter(d=>isSOP(d.wasKBReferred)).length;
+                const kbPct = resolved>0?(kb/resolved*100).toFixed(1):'0.0';
+                const fb = fnClosed.filter(d=>hasFb(d)).length;
+                const fbPct = incoming>0?(fb/incoming*100).toFixed(1):'0.0';
+                const closureColor = parseFloat(closure)>=80?'#10B981':parseFloat(closure)>=60?'#D97706':'#EF4444';
+                const module = fn.endsWith('-ITSM')?'ITSM':'ITOM';
+                const fnColor = TLM_FN_COLORS[fn]||'#6B7280';
+                _tlmReconRowsCache.push({ fn, module, incoming, resolved, closure, sr, inc, kb, kbPct, fb, fbPct, fnColor, closureColor });
+                totIn+=incoming; totRes+=resolved; totSR+=sr; totINC+=inc; totKB+=kb; totFB+=fb;
+            });
+
+            tbody.innerHTML = _tlmReconRowsCache.length ? _tlmReconRowsCache.map(r => {
+                const fnEsc = r.fn.replace(/'/g,'\\\'');
+                return `<tr style="cursor:pointer;" onclick="_tlmReconDrillDown('${fnEsc}')">
+                    <td style="text-align:left;border-left:3px solid ${r.fnColor};padding-left:8px;font-weight:700;color:${r.fnColor};">${TLM_FN_DISPLAY[r.fn]||r.fn}</td>
+                    <td><span class="badge" style="background:${r.fnColor}18;color:${r.fnColor};border:1px solid ${r.fnColor}40;border-radius:6px;font-size:0.7rem;font-weight:700;">${r.module}</span></td>
+                    <td style="font-weight:700;">${r.incoming}</td>
+                    <td style="font-weight:700;color:#10B981;">${r.resolved}</td>
+                    <td><span class="fw-bold" style="color:${r.closureColor};">${r.closure}%</span></td>
+                    <td>${r.sr}</td>
+                    <td>${r.inc}</td>
+                    <td>${r.kb}</td>
+                    <td>${r.kbPct}%</td>
+                    <td>${r.fb}</td>
+                    <td>${r.fbPct}%</td>
+                    <td>
+                        <button class="btn btn-sm" style="font-size:0.68rem;padding:2px 7px;background:var(--primary-soft);color:var(--primary);border:1px solid var(--border-strong);border-radius:6px;" onclick="event.stopPropagation();_tlmReconDrillDown('${fnEsc}')"><i class="bi bi-zoom-in me-1"></i>Drill</button>
+                    </td>
+                </tr>`;
+            }).join('') : '<tr><td colspan="12" class="text-center text-muted py-3">No data for selected functions/owners.</td></tr>';
+
+            // Footer totals
+            if (tfoot && _tlmReconRowsCache.length) {
+                tfoot.style.display='';
+                const totClosure = totIn>0?(totRes/totIn*100).toFixed(1):'0.0';
+                const totKbPct   = totRes>0?(totKB/totRes*100).toFixed(1):'0.0';
+                const totFbPct   = totIn>0?(totFB/totIn*100).toFixed(1):'0.0';
+                const cc = parseFloat(totClosure)>=80?'#10B981':parseFloat(totClosure)>=60?'#D97706':'#EF4444';
+                const setF = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+                setF('tlm-recon-tot-incoming',totIn);
+                setF('tlm-recon-tot-resolved',totRes);
+                setF('tlm-recon-tot-closure',totClosure+'%');
+                const ccEl = document.getElementById('tlm-recon-tot-closure');
+                if (ccEl) ccEl.style.color=cc;
+                setF('tlm-recon-tot-sr',totSR);
+                setF('tlm-recon-tot-inc',totINC);
+                setF('tlm-recon-tot-kb',totKB);
+                setF('tlm-recon-tot-kbpct',totKbPct+'%');
+                setF('tlm-recon-tot-fb',totFB);
+                setF('tlm-recon-tot-fbpct',totFbPct+'%');
+            } else if (tfoot) { tfoot.style.display='none'; }
+        }
+
+        // Reconciliation Excel export
+        function exportTlmReconToExcel() {
+            if (!_tlmReconRowsCache.length) { alert('No reconciliation data. Upload data and switch to Closed Cases view first.'); return; }
+            const wb = XLSX.utils.book_new();
+            const dateTag = new Date().toLocaleDateString().replace(/\//g,'-');
+            const sheet = _tlmReconRowsCache.map(r => ({
+                'Function': TLM_FN_DISPLAY[r.fn]||r.fn,
+                'Module': r.module,
+                'Incoming (All Logged)': r.incoming,
+                'Resolved (Closed)': r.resolved,
+                'Closure %': parseFloat(r.closure),
+                'SR Closed': r.sr,
+                'INC Closed': r.inc,
+                'KB/SOP Used': r.kb,
+                'KB Usage % (of closed)': parseFloat(r.kbPct),
+                'Feedback Cases': r.fb,
+                'Feedback % (of logged)': parseFloat(r.fbPct),
+                'Engineers': (TLM_FUNCTION_MAP[r.fn]||[]).filter(o=>_tlmSelectedOwners.has(o)).join(', ')
+            }));
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(sheet), 'Function Reconciliation');
+            XLSX.writeFile(wb, `Function_Reconciliation_${dateTag}.xlsx`);
+        }
+
+        // Reconciliation drill-down by function (shows all logged — open+closed)
+        function _tlmReconDrillDown(fn) {
+            const fnOwners = new Set((TLM_FUNCTION_MAP[fn]||[]).filter(o=>_tlmSelectedOwners.has(o)));
+            const allData = _tlmFilteredAll().filter(d => fnOwners.has(d.owner));
+            openL1DrillDown(`${TLM_FN_DISPLAY[fn]||fn} — All Logged Cases`, allData, [
+                {key:'incidentId',label:'Case ID'},{key:'title',label:'Title'},{key:'owner',label:'Owner'},
+                {key:'currentStatus',label:'Status'},{key:'assignmentLevel',label:'Level'},
+                {key:'service',label:'Service'},{key:'resolutionCode',label:'Resolution Code'},
+                {key:'wasKBReferred',label:'KB Referred'},{key:'isSlaViolated',label:'SLA Violated'},
+                {key:'resolvedDateDisplay',label:'Resolved Date'},{key:'closedAgingDays',label:'Resolution (Days)'}
+            ]);
+        }
+
+        // Close TLM owner dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.tlm-filter-row') && !e.target.closest('#tlm-owner-L1-dropdown') && !e.target.closest('#tlm-owner-L2-dropdown') && !e.target.closest('#tlm-owner-SME-dropdown')) {
+                ['L1','L2','SME'].forEach(tier => {
+                    const dd = document.getElementById('tlm-owner-' + tier + '-dropdown');
+                    const tr = document.getElementById('tlm-owner-' + tier + '-trigger');
+                    if (dd) dd.classList.remove('open');
+                    if (tr) tr.classList.remove('open');
+                });
+                _tlmOpenTier = null;
+            }
+        });
+
+        // ─────────────────────────────────────────────────────────────────────
         // RENDER L1 TEAM METRICS
         // ─────────────────────────────────────────────────────────────────────
         function renderL1TeamMetrics() {
-            const closed = filteredData.filter(d => d.isClosedCase);
+            const closed = _tlmFilteredClosed();
+            const allFiltered = _tlmFilteredAll();
             const total  = closed.length;
+
+            // Update function tag labels on section headers
+            const fnLabel = _tlmActiveFnLabel();
+            ['tlm-section1-fn-tag','tlm-section2-fn-tag'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = fnLabel;
+            });
+
+            // Update active filter pills
+            _updateTlmPills();
 
             // ── Helpers ───────────────────────────────────────────────────
             // Was KB Referred is a plain Yes/No column
@@ -9794,18 +10552,6 @@ ${bodyHTML}
             const COLORS = ['#5B4FE9','#06B6D4','#10B981','#F59E0B','#EF4444','#7C3AED','#3B82F6','#EC4899','#14B8A6','#F97316','#8B5CF6'];
 
             // ── Aggregate per engineer ────────────────────────────────────
-            // "Total Logged" per engineer = all cases (open+closed) matching global filters
-            const allFiltered = processedData.filter(d => {
-                if (globalFilters.l1team.length   > 0 && !globalFilters.l1team.includes(d.owner))       return false;
-                if (globalFilters.mspaccount.length>0 && !globalFilters.mspaccount.includes(d.customerName)) return false;
-                if (globalFilters.owner.length     > 0 && !globalFilters.owner.includes(d.owner))       return false;
-                if (globalFilters.submittedby.length>0 && !globalFilters.submittedby.includes(d.customerName)) return false;
-                if (globalFilters.service && d.service !== globalFilters.service)                         return false;
-                if (globalFilters.level   && d.assignmentLevel !== globalFilters.level)                  return false;
-                if (globalFilters.sla==='Violated'     && !d.isSlaViolated)  return false;
-                if (globalFilters.sla==='Non-Violated' && d.isSlaViolated)   return false;
-                return true;
-            });
 
             const engMap = {};
             const ensureEng = eng => {
@@ -9871,14 +10617,31 @@ ${bodyHTML}
             const overallFbRate = totalLogged > 0 ? (totalFb/totalLogged*100).toFixed(1) : '0.0';
 
             const setEl = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+
+            // Derive function display labels for taglines
+            const checkedFns = _tlmCheckedFunctions();
+            const fnLabel2 = checkedFns.length===Object.keys(TLM_FUNCTION_MAP).length ? 'All Functions' : checkedFns.map(f=>TLM_FN_DISPLAY[f]||f).join(' / ');
+
             setEl('l1m-total-logged',   totalLogged);
+            setEl('l1m-total-logged-rec', `Closed cases across ${fnLabel2}`);
             setEl('l1m-resolved-count', totalResolved);
-            setEl('l1m-resolved-pct-rec', `${overallResRate}% of total logged closed`);
+            setEl('l1m-resolved-pct-rec', `${overallResRate}% closure rate — ${fnLabel2}`);
             setEl('l1m-kb-pct',   overallKbRate + '%');
-            setEl('l1m-kb-rec',   `${totalKbUsed} of ${total} closed calls used KB/SOP`);
+            setEl('l1m-kb-rec',   `${totalKbUsed} of ${total} closed calls used KB/SOP — ${fnLabel2}`);
             setEl('l1m-l2fb-count', totalFb);
             const fbTypeLabel = fbTypeFilter === 'All' ? 'L1/L2/SME' : fbTypeFilter;
-            setEl('l1m-l2fb-pct-rec', `${overallFbRate}% of total logged — ${totalFb} ${fbTypeLabel} feedback case(s)`);
+            setEl('l1m-l2fb-pct-rec', `${overallFbRate}% of total — ${totalFb} ${fbTypeLabel} feedback case(s) — ${fnLabel2}`);
+
+            // Logged vs Closed card
+            const lvcPct = totalLogged > 0 ? (totalResolved/totalLogged*100).toFixed(1) : '0.0';
+            setEl('l1m-lvc-pct', lvcPct + '%');
+            setEl('l1m-lvc-rec', `${totalResolved} closed of ${totalLogged} logged — ${fnLabel2}`);
+            const lvcTag = document.getElementById('l1m-lvc-tag');
+            if (lvcTag) {
+                const lp = parseFloat(lvcPct);
+                lvcTag.textContent = lp>=80?'GOOD':lp>=60?'MONITOR':'ATTENTION';
+                lvcTag.className = 'kpi-status-tag ' + (lp>=80?'bg-good':lp>=60?'bg-monitor':'bg-urgent');
+            }
 
             const resolvedTag = document.getElementById('l1m-resolved-tag');
             if (resolvedTag) {
@@ -9968,8 +10731,10 @@ ${bodyHTML}
                         const col = rr>=80?'#10B981':rr>=60?'#D97706':'#EF4444';
                         const avg = e.avgDays!==null?e.avgDays.toFixed(1)+'d':'—';
                         const avgCol = e.avgDays===null?'#6B7280':e.avgDays<=3?'#10B981':e.avgDays<=7?'#06B6D4':e.avgDays<=15?'#D97706':'#EF4444';
-                        return `<tr style="cursor:pointer;" onclick="openL1DrillDown('${e.eng.replace(/'/g,"\\'")} — Resolved Cases', filteredData.filter(d=>d.isClosedCase&&(d.owner||'Unassigned')==='${e.eng.replace(/'/g,"\\'")}'))">
-                            <td style="text-align:left;font-weight:700;border-left:3px solid ${col};padding-left:10px;">${e.eng}</td>
+                        const fnKey = _tlmOwnerFunction(e.eng);
+                        const fnColor = TLM_FN_COLORS[fnKey]||'#5B4FE9';
+                        return `<tr style="cursor:pointer;" onclick="openL1DrillDown('${e.eng.replace(/'/g,"\\'")} — Resolved Cases', _tlmFilteredClosed().filter(d=>(d.owner||'Unassigned')==='${e.eng.replace(/'/g,"\\'")}'))">
+                            <td style="text-align:left;font-weight:700;border-left:3px solid ${fnColor};padding-left:10px;">${e.eng} <span style="background:${fnColor}18;color:${fnColor};border:1px solid ${fnColor}40;border-radius:5px;font-size:0.6rem;font-weight:700;padding:1px 5px;margin-left:3px;">${(TLM_FN_DISPLAY[fnKey]||fnKey).replace('Team – ','').replace(' – ','/')}</span></td>
                             <td>${e.logged}</td>
                             <td><span style="font-weight:700;color:#10B981;">${e.resolved}</span></td>
                             <td>
@@ -10397,6 +11162,9 @@ ${bodyHTML}
             const searchInput = document.getElementById('l1m-fb-comment-search');
             if (searchInput) searchInput.value = '';
             _renderFbCommentRows(_l1mFbCommentsCache);
+
+            // ── Function-wise Reconciliation Table ────────────────────────
+            renderTlmReconciliation(closed, allFiltered);
         }
 
         // ─────────────────────────────────────────────────────────────────────
@@ -10404,8 +11172,9 @@ ${bodyHTML}
         // ─────────────────────────────────────────────────────────────────────
         function exportL1TeamMetricsExcel() {
             if (!filteredData.length) { alert('No data to export. Upload data first.'); return; }
-            const closed = filteredData.filter(d => d.isClosedCase);
-            if (!closed.length) { alert('No closed cases in current filter.'); return; }
+            const closed = _tlmFilteredClosed();
+            const allFiltered = _tlmFilteredAll();
+            if (!closed.length) { alert('No closed cases in current TLM filter.'); return; }
 
             const wb = XLSX.utils.book_new();
             const dateTag = new Date().toLocaleDateString().replace(/\//g,'-');
@@ -10427,19 +11196,6 @@ ${bodyHTML}
                 const t = detectType(d);
                 return t === fbTypeFilter || (fbTypeFilter !== 'Other' && t === 'Other');
             };
-
-            // ── Global filter re-apply ────────────────────────────────────
-            const allFiltered = processedData.filter(d => {
-                if (globalFilters.l1team.length>0    && !globalFilters.l1team.includes(d.owner))          return false;
-                if (globalFilters.mspaccount.length>0 && !globalFilters.mspaccount.includes(d.customerName)) return false;
-                if (globalFilters.owner.length>0      && !globalFilters.owner.includes(d.owner))          return false;
-                if (globalFilters.submittedby.length>0 && !globalFilters.submittedby.includes(d.customerName)) return false;
-                if (globalFilters.service && d.service!==globalFilters.service)                            return false;
-                if (globalFilters.level   && d.assignmentLevel!==globalFilters.level)                     return false;
-                if (globalFilters.sla==='Violated'     && !d.isSlaViolated)  return false;
-                if (globalFilters.sla==='Non-Violated' && d.isSlaViolated)   return false;
-                return true;
-            });
 
             // ── Sheet 1: L1 Team Metrics Summary ─────────────────────────
             const engMap = {};
@@ -10563,7 +11319,56 @@ ${bodyHTML}
             }));
             XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(complianceDrill.length?complianceDrill:[{}]), 'Compliance Drill-Down');
 
-            XLSX.writeFile(wb, `L1_Team_Metrics_Export_${dateTag}.xlsx`);
+            // ── Sheet 6: Logged vs Closed (All cases in TLM filter) ───────
+            const lvcDrill = allFiltered.map(d=>({
+                'Case ID': d.incidentId,
+                'Title': d.title,
+                'Owner': d.owner,
+                'Function': _tlmOwnerFunction(d.owner),
+                'Assignment Level': d.assignmentLevel,
+                'Status': d.currentStatus,
+                'Is Closed': d.isClosedCase?'Yes':'No',
+                'Service': d.service,
+                'Support Category': d.supportCategory,
+                'Aging (Days)': d.agingDays,
+                'Resolution (Days)': typeof d.closedAgingDays==='number'?parseFloat(d.closedAgingDays.toFixed(1)):'',
+                'Resolved Date': d.resolvedDateDisplay||''
+            }));
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(lvcDrill.length?lvcDrill:[{}]), 'Logged vs Closed');
+
+            // ── Sheet 7: Function-wise Reconciliation ─────────────────────
+            const reconRows = [];
+            const checkedFns = _tlmCheckedFunctions();
+            checkedFns.forEach(fn => {
+                const fnOwners = new Set((TLM_FUNCTION_MAP[fn]||[]).filter(o=>_tlmSelectedOwners.has(o)));
+                if (!fnOwners.size) return;
+                const fnAll    = allFiltered.filter(d => fnOwners.has(d.owner));
+                const fnClosed = closed.filter(d => fnOwners.has(d.owner));
+                const incoming = fnAll.length;
+                const resolved = fnClosed.length;
+                const sr = fnClosed.filter(d=>d.isSR).length;
+                const inc= fnClosed.filter(d=>d.isINC).length;
+                const kb = fnClosed.filter(d=>isSOP(d.wasKBReferred)).length;
+                const fb = fnClosed.filter(d=>hasFb(d)).length;
+                reconRows.push({
+                    'Function': TLM_FN_DISPLAY[fn]||fn,
+                    'Module': fn.endsWith('-ITSM')?'ITSM':'ITOM',
+                    'Incoming (All Logged)': incoming,
+                    'Resolved (Closed)': resolved,
+                    'Closure %': incoming>0?parseFloat((resolved/incoming*100).toFixed(1)):0,
+                    'Resolution % (of closed)': resolved>0?100:0,
+                    'SR Closed': sr,
+                    'INC Closed': inc,
+                    'KB/SOP Used': kb,
+                    'KB Usage %': resolved>0?parseFloat((kb/resolved*100).toFixed(1)):0,
+                    'Feedback Cases': fb,
+                    'Feedback % of Logged': incoming>0?parseFloat((fb/incoming*100).toFixed(1)):0,
+                    'Engineers': [...fnOwners].join(', ')
+                });
+            });
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(reconRows.length?reconRows:[{}]), 'Function Reconciliation');
+
+            XLSX.writeFile(wb, `Team_Level_Metrics_Export_${dateTag}.xlsx`);
         }
 
         function showLoading(show) {
