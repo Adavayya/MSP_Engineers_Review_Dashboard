@@ -1815,7 +1815,7 @@
                                         <div class="sub-section-header mb-2">
                                             <i class="bi bi-calendar-check me-1" style="color:var(--primary);"></i>
                                             <strong>Email Follow-Up</strong>
-                                            <span class="badge ms-2" style="background:var(--primary-soft);color:var(--primary);font-size:0.68rem;">Under Observation &amp; Waiting on Customer — last email FROM sapphireims.com</span>
+                                            <span class="badge ms-2" style="background:var(--primary-soft);color:var(--primary);font-size:0.68rem;">All Open Statuses — last email FROM sapphireims.com &gt; 1 Day 12 Hrs ago</span>
                                         </div>
                                         <div class="row g-2 mb-3">
                                             <div class="col-md-4"><div class="kpi-card" id="kpi-email-followup-missed-card" style="border-left-color:#EF4444;">
@@ -3835,7 +3835,7 @@
                 { key: 'service', label: 'Service' },
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
-                { key: 'expectedResolution', label: 'SR EDOC' },
+                { key: 'expectedResolutionDisplay', label: 'SR EDOC' },
                 { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
@@ -3848,7 +3848,7 @@
                 { key: 'service', label: 'Service' },
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
-                { key: 'expectedResolution', label: 'SR EDOC' },
+                { key: 'expectedResolutionDisplay', label: 'SR EDOC' },
                 { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
@@ -3861,7 +3861,7 @@
                 { key: 'service', label: 'Service' },
                 { key: 'owner', label: 'Owner' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
-                { key: 'expectedResolution', label: 'SR EDOC' },
+                { key: 'expectedResolutionDisplay', label: 'SR EDOC' },
                 { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
@@ -3912,7 +3912,7 @@
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'service', label: 'Service' },
-                { key: 'expectedResolution', label: 'SR EDOC' },
+                { key: 'expectedResolutionDisplay', label: 'SR EDOC' },
                 { key: 'agingDays', label: 'Aging' },
                 { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'updateTimeDisplay', label: 'Update Time' },
@@ -3925,7 +3925,7 @@
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'Status' },
                 { key: 'service', label: 'Service' },
-                { key: 'expectedResolution', label: 'SR EDOC' },
+                { key: 'expectedResolutionDisplay', label: 'SR EDOC' },
                 { key: 'agingDays', label: 'Aging' },
                 { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'updateTimeDisplay', label: 'Update Time' },
@@ -3963,7 +3963,7 @@
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'emailCompliance', label: 'Email Follow-up Compliance' },
                 { key: 'lastEmailFrom', label: 'Last Email From' },
-                { key: 'lastEmailSentTime', label: 'Last Email Sent Time' },
+                { key: 'lastEmailSentTimeDisplay', label: 'Last Email Sent Time' },
                 { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
@@ -3978,7 +3978,7 @@
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'emailCompliance', label: 'Email Follow-up Compliance' },
                 { key: 'lastEmailFrom', label: 'Last Email From' },
-                { key: 'lastEmailSentTime', label: 'Last Email Sent Time' },
+                { key: 'lastEmailSentTimeDisplay', label: 'Last Email Sent Time' },
                 { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
@@ -3993,7 +3993,7 @@
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'emailCompliance', label: 'Email Follow-up Compliance' },
                 { key: 'lastEmailFrom', label: 'Last Email From' },
-                { key: 'lastEmailSentTime', label: 'Last Email Sent Time' },
+                { key: 'lastEmailSentTimeDisplay', label: 'Last Email Sent Time' },
                 { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
@@ -4008,7 +4008,7 @@
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'emailCompliance', label: 'Email Response Compliance' },
                 { key: 'lastEmailFrom', label: 'Last Email From' },
-                { key: 'lastEmailSentTime', label: 'Last Email Sent Time' },
+                { key: 'lastEmailSentTimeDisplay', label: 'Last Email Sent Time' },
                 { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
@@ -4023,7 +4023,7 @@
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'emailCompliance', label: 'Email Response Compliance' },
                 { key: 'lastEmailFrom', label: 'Last Email From' },
-                { key: 'lastEmailSentTime', label: 'Last Email Sent Time' },
+                { key: 'lastEmailSentTimeDisplay', label: 'Last Email Sent Time' },
                 { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
@@ -4038,7 +4038,7 @@
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'emailCompliance', label: 'Email Response Compliance' },
                 { key: 'lastEmailFrom', label: 'Last Email From' },
-                { key: 'lastEmailSentTime', label: 'Last Email Sent Time' },
+                { key: 'lastEmailSentTimeDisplay', label: 'Last Email Sent Time' },
                 { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'slaStatus', label: 'SLA Status' }
@@ -4061,7 +4061,7 @@
                 { key: 'customerName', label: 'Customer Name' },
                 { key: 'currentStatus', label: 'CurrentStatus' },
                 { key: 'service', label: 'Service' },
-                { key: 'expectedResolution', label: 'SR EDOC' },
+                { key: 'expectedResolutionDisplay', label: 'SR EDOC' },
                 { key: 'agingRoundoff', label: 'Aging(Roundoff)' },
                 { key: 'creationTimeDisplay', label: 'Creation Time' },
                 { key: 'updateTimeDisplay', label: 'Update Time' },
@@ -4200,7 +4200,7 @@
                 { key: 'service',                label: 'Service' },
                 { key: 'assignmentLevel',        label: 'Assignment Level' },
                 { key: 'loggedAging',            label: 'Logged Aging' },
-                { key: 'expectedResolution',     label: 'SR EDOC' },
+                { key: 'expectedResolutionDisplay', label: 'SR EDOC' },
                 { key: 'service',                label: 'SR Service' },
                 { key: 'lastEmailFrom',          label: 'Last Email From' },
                 { key: 'lastEmailSentTimeDisplay', label: 'Last Email Sent Time' }
@@ -4619,12 +4619,12 @@
 
             const headers = data[0].map(h => h ? h.toString().trim() : '');
             rawData = data.slice(1).map(row => {
-                const rowObj = {};
+                const rowObj = { _raw: row };  // keep raw array for direct index access
                 headers.forEach((header, index) => {
                     rowObj[header] = row[index];
                 });
                 return rowObj;
-            }).filter(row => Object.values(row).some(v => v && v.toString().trim() !== ''));
+            }).filter(row => row._raw && row._raw.some(v => v !== null && v !== undefined && v.toString().trim() !== ''));
 
             document.getElementById('row-count').textContent = `${rawData.length} rows loaded`;
             
@@ -4709,15 +4709,23 @@
                 return possibleNames[0];
             };
 
-            // New column structure (A–AK):
+            // Column structure — SR EDOC is at column BE (index 56) in actual uploaded file
             // A-SLNO B-Record ID C-Title D-Owner E-Submitted By F-Customer Name
             // G-Update Time H-Creation Time I-Creation Date J-Modified Date K-Current Status
             // L-Submitter Name M-Submitter Email N-Submitter Phone O-Service P-Urgency Q-Priority
             // R-Severity S-Support Category T-Feature U-Sub Feature V-Assignment Level
-            // W-SR EDOC X-SR Service Y-Internal Reference ID Z-Was KB Referred
+            // W-SR EDOC (original layout) — actual file has SR EDOC at BE (index 56)
             // AA-Feedback To AB-Feedback AC-SR Hours Deducted AD-OOP Applied
             // AE-Requirement/Problem Statement AF-Resolution Steps AG-Resolution Code AH-RCA
             // AI-Source AJ-Last Email From AK-Last Email Sent Time
+            // Find SR EDOC by index 56 (BE) first, fall back to header name match
+            const _srEDOCColIndex = (() => {
+                // Try to find by header name first
+                const byName = headers.findIndex(h => h && (h.toString().trim().toUpperCase() === 'SR EDOC' || h.toString().trim().toUpperCase() === 'EDOC'));
+                if (byName !== -1) return byName;
+                // Fall back to column BE = index 56
+                return 56;
+            })();
             const colMap = {
                 incidentId: findCol(['Record ID', 'Incident ID', 'Ticket ID', 'Case ID']),
                 title: findCol(['Title', 'Subject', 'Description']),
@@ -4781,9 +4789,12 @@
             // Excluded statuses (Cancel, Duplicate - skip entirely)
             const EXCLUDED_STATUSES = new Set(['Cancel', 'Duplicate']);
 
-            // Email Follow-up: Under Observation / Waiting on Customer — last email FROM sapphireims.com
+            // Email Follow-up: ALL open statuses — last email FROM sapphireims.com, sent > 1 day 12 hrs ago
             const EMAIL_FOLLOWUP_STATUSES = new Set([
-                'Under Observation', 'Waiting on Customer'
+                'New', 'Acknowledged', 'Work In Progress', 'Waiting on Customer',
+                'Information Provided', 'Under Observation', 'Issue Resurfaced',
+                'Re-Open', 'Pending for Effort Approval',
+                'Customer Accept', 'Under Sales Discussion', 'Assign', 'Classification'
             ]);
 
             // Email Response Compliance: other open statuses — last email NOT from sapphireims.com
@@ -4797,6 +4808,10 @@
             // Parse AK (Last Email Sent Time) - handles both Excel serial and date string
             const parseAKDate = (akVal) => {
                 if (!akVal && akVal !== 0) return null;
+                // XLSX.js may return a native JS Date object directly
+                if (akVal instanceof Date) {
+                    return isNaN(akVal.getTime()) ? null : akVal;
+                }
                 if (typeof akVal === 'number') {
                     // Excel serial datetime — preserve fractional part for time-of-day accuracy
                     // Serial = days since 1899-12-30 (Excel epoch); fractional = time within day
@@ -4820,18 +4835,26 @@
                 return 'future';
             };
 
-            // Email Follow-up compliance: for Under Observation / Waiting on Customer
-            // Last email FROM sapphireims → classify AK date
+            // Email Follow-up compliance: for ALL open statuses
+            // Last email FROM sapphireims.com, sent > 1 day 12 hrs (36 hrs) ago → Missed
+            // Between 24–36 hrs ago → Due Today (approaching threshold)
+            // Between 12–24 hrs ago → Due Tomorrow (plan ahead)
             const computeEmailFollowupCompliance = (currentStatus, lastEmailFrom, lastEmailSentTime) => {
                 if (!EMAIL_FOLLOWUP_STATUSES.has(currentStatus)) return '';
                 const ajVal = (lastEmailFrom || '').toString().trim();
                 if (!ajVal) return '';
-                if (!ajVal.toLowerCase().includes('@sapphireims.com')) return ''; // must be from support
+                if (!ajVal.toLowerCase().includes('@sapphireims.com')) return ''; // must be from sapphireims.com
                 const akDate = parseAKDate(lastEmailSentTime);
-                const cls = classifyDate(akDate);
-                if (cls === 'missed') return 'Email Followup Missed';
-                if (cls === 'today')  return 'Email Followup Due Today';
-                if (cls === 'tomorrow') return 'Email Followup Due Tomorrow';
+                if (!akDate) return '';
+                const now = new Date();
+                const diffMs = now - akDate;
+                const diffHrs = diffMs / (1000 * 60 * 60);
+                // > 36 hours (1 day 12 hrs) since last sapphireims email → already missed
+                if (diffHrs > 36) return 'Email Followup Missed';
+                // 24–36 hrs → due today (act now)
+                if (diffHrs > 24) return 'Email Followup Due Today';
+                // 12–24 hrs → due tomorrow (plan ahead)
+                if (diffHrs > 12) return 'Email Followup Due Tomorrow';
                 return '';
             };
 
@@ -4891,7 +4914,44 @@
                 const slaViolationStatus = row[colMap.slaViolationStatus] || 'Non-Violated';
                 const agingRoundoff = row[colMap.agingRoundoff] || '0';
                 const aging15Status = row[colMap.aging15Status] || 'Non-Violated';
-                const srEDOC = row[colMap.srEDOC] || '';
+                // SR EDOC: parse raw value (may be Excel serial number or date string) → JS Date → display string
+                // SR EDOC — read by resolved column index (BE=56 or header-matched index)
+                const _srEDOCRaw = (row._raw && row._raw[_srEDOCColIndex] !== undefined && row._raw[_srEDOCColIndex] !== null && row._raw[_srEDOCColIndex] !== '')
+                    ? row._raw[_srEDOCColIndex]
+                    : row[colMap.srEDOC];
+                const _srEDOCDate = (() => {
+                    if (_srEDOCRaw === null || _srEDOCRaw === undefined || _srEDOCRaw === '') return null;
+                    // XLSX JS Date object (auto-parsed by XLSX.js)
+                    if (_srEDOCRaw instanceof Date) {
+                        if (isNaN(_srEDOCRaw.getTime())) return null;
+                        return new Date(_srEDOCRaw.getFullYear(), _srEDOCRaw.getMonth(), _srEDOCRaw.getDate());
+                    }
+                    const raw = _srEDOCRaw.toString().trim();
+                    if (!raw || raw === '--' || raw.toUpperCase() === 'NA' || raw.toUpperCase() === 'NULL') return null;
+                    // Mirror Excel formula: =TEXT(DATE(LEFT(BE,4),MID(BE,6,2),MID(BE,9,2)),"yyyy-mm-dd")
+                    // "2026-05-04T00:00:00+05:30" → positions 0-3=year, 5-6=month, 8-9=day
+                    if (raw.length >= 10) {
+                        const y  = parseInt(raw.substring(0, 4), 10);
+                        const mo = parseInt(raw.substring(5, 7), 10);
+                        const d  = parseInt(raw.substring(8, 10), 10);
+                        if (y > 2000 && mo >= 1 && mo <= 12 && d >= 1 && d <= 31) {
+                            return new Date(y, mo - 1, d);
+                        }
+                    }
+                    // Fallback: Excel serial number
+                    const num = parseFloat(raw);
+                    if (!isNaN(num) && num > 59 && String(num) === raw.replace(/\.0+$/, '')) {
+                        const d2 = new Date((num - 25569) * 86400 * 1000);
+                        if (!isNaN(d2.getTime())) return new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
+                    }
+                    return null;
+                })();
+                // Normalised date-only values for classification helpers
+                const _srEDOCY = _srEDOCDate ? _srEDOCDate.getFullYear()  : null;
+                const _srEDOCM = _srEDOCDate ? _srEDOCDate.getMonth()     : null;
+                const _srEDOCD = _srEDOCDate ? _srEDOCDate.getDate()      : null;
+                // srEDOC kept as a plain object reference — EDOC flags use _srEDOCDate directly below
+                const srEDOC = _srEDOCDate ? _srEDOCDate : null;
                 const nextFollowUp = row[colMap.nextFollowUpDate] || '';
                 const expectedResponseTime = row[colMap.expectedResponseTime] || '';
                 const assignmentLevel = (row[colMap.assignmentLevel] || '').toString().trim();
@@ -4977,10 +5037,20 @@
                 const isSubsequentResponseDueTomorrow = isDateValid(expectedResponseTime) && isTomorrowDate(expectedResponseTime) && isINC;
                 
                 const isSubsequentSLABreach = subsequentSLACount > 0;
-                const isEdocBreached   = (isSR && isAlreadyPast(srEDOC));
-                const isEdocDueToday   = (isSR && isDateValid(srEDOC) && isTodayDate(srEDOC));
-                const isEdocDueTomorrow= (isSR && isDateValid(srEDOC) && isTomorrowDate(srEDOC));
-                const isEdocMissing    = (isSR && (!srEDOC || srEDOC.toString().trim() === '' || srEDOC === '--' || srEDOC === 'NA'));
+                const _todayY = new Date().getFullYear();
+                const _todayM = new Date().getMonth();
+                const _todayD = new Date().getDate();
+                const _tomD   = new Date(new Date().setDate(_todayD + 1));
+                const _tomY   = _tomD.getFullYear();
+                const _tomMo  = _tomD.getMonth();
+                const _tomDy  = _tomD.getDate();
+                const isEdocBreached   = isSR && _srEDOCDate !== null &&
+                    (_srEDOCY < _todayY || (_srEDOCY === _todayY && (_srEDOCM < _todayM || (_srEDOCM === _todayM && _srEDOCD < _todayD))));
+                const isEdocDueToday   = isSR && _srEDOCDate !== null &&
+                    _srEDOCY === _todayY && _srEDOCM === _todayM && _srEDOCD === _todayD;
+                const isEdocDueTomorrow= isSR && _srEDOCDate !== null &&
+                    _srEDOCY === _tomY && _srEDOCM === _tomMo && _srEDOCD === _tomDy;
+                const isEdocMissing    = isSR && _srEDOCDate === null;
 
                 // Email Follow-up flags
                 const isEmailFollowupMissed   = emailFollowupCompliance === 'Email Followup Missed';
@@ -5012,6 +5082,9 @@
                     emailFollowupCompliance: emailFollowupCompliance,
                     emailResponseCompliance: emailResponseCompliance,
                     expectedResolution: srEDOC,
+                    expectedResolutionDisplay: _srEDOCDate
+                        ? _srEDOCDate.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'})
+                        : '',
                     subsequentSLABreachCount: subsequentSLACount,
                     
                     // For drill-down exports
@@ -7460,7 +7533,7 @@
                 const stats = counts[o];
                 const levelStr = stats.levels.size > 0 ? [...stats.levels].sort().join(', ') : '—';
                 const issueColumns = [stats.emailFollowupMissed,stats.emailFollowupToday,stats.emailFollowupTomorrow,
-                    stats.emailRespMissed,stats.emailRespToday,stats.emailRespTomorrow,stats.edocBreach,stats.edocMissing];
+                    stats.emailRespMissed,stats.emailRespToday,stats.emailRespTomorrow,stats.edocBreach];
                 const hasAnyIssueColumn = issueColumns.some(v => v > 0);
                 let performanceScore;
                 if (!hasAnyIssueColumn || stats.openCases === 0) {
@@ -7470,7 +7543,7 @@
                     const casesWithIssue = ownerCases.filter(d =>
                         d.isEmailFollowupMissed||d.isEmailFollowupToday||d.isEmailFollowupTomorrow||
                         d.isEmailRespMissed||d.isEmailRespToday||d.isEmailRespTomorrow||
-                        d.isEdocBreached||d.isEdocMissing).length;
+                        d.isEdocBreached).length;
                     performanceScore = ((stats.openCases - casesWithIssue) / stats.openCases * 100).toFixed(1);
                 }
                 scorecardData.push({
@@ -7768,11 +7841,11 @@
                 { key: 'updateTimeDisplay', label: 'Update Time' },
                 { key: 'currentStatus',       label: 'Current Status' },
                 { key: 'service',             label: 'Service' },
-                { key: 'expectedResolution',  label: 'SR EDOC' },
+                { key: 'expectedResolutionDisplay', label: 'SR EDOC' },
                 { key: 'assignmentLevel',     label: 'Assignment Level' },
                 { key: 'srService',           label: 'SR Service' },
                 { key: 'lastEmailFrom',       label: 'Last Email From' },
-                { key: 'lastEmailSentTime',   label: 'Last Email Sent Time' }
+                { key: 'lastEmailSentTimeDisplay', label: 'Last Email Sent Time' }
             ];
 
             document.getElementById('drillDownHeader').innerHTML = cols.map(c => `<th>${c.label}</th>`).join('');
@@ -8806,7 +8879,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-6"><strong>Expected Resolution:</strong></div>
-                            <div class="col-6 ${d.isEdocBreached ? 'text-danger fw-bold' : 'text-success'}">${d.expectedResolution || '--'}</div>
+                            <div class="col-6 ${d.isEdocBreached ? 'text-danger fw-bold' : 'text-success'}">${d.expectedResolutionDisplay || d.expectedResolution || '--'}</div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-6"><strong>Sub. SLA Miss Count:</strong></div>
@@ -8889,7 +8962,7 @@
                     'Aging (Days)': d.agingDays,
                     'SLA Status': d.slaViolationStatus,
                     'Email Compliance': d.emailCompliance || '',
-                    'Expected Resolution': d.expectedResolution || '--',
+                    'Expected Resolution': d.expectedResolutionDisplay || d.expectedResolution || '--',
                     'Subsequent SLA Miss Count': d.subsequentSLABreachCount
                 };
             });
